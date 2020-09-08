@@ -16,7 +16,7 @@ import Footer from "../components/footer";
 initFirebase();
 
 const Account = (props: any) => {
-  const { AuthUserInfo, environment } = props;
+  const { AuthUserInfo } = props;
   var authUser = get(AuthUserInfo, "AuthUser");
 
   useEffect(() => {
@@ -39,7 +39,6 @@ const Account = (props: any) => {
             </Link>
             <p>{authUser.displayName}</p>
           </div>
-          <p>{`env: ${environment}`}</p>
           <p>
             <button
               onClick={async () => {
@@ -59,14 +58,6 @@ const Account = (props: any) => {
       )}
     </>
   );
-};
-
-Account.getInitialProps = async function() {
-  const getEnvironment = firebase.functions().httpsCallable("getEnvironment");
-  const result = await getEnvironment({});
-  return {
-    environment: result.data.environment
-  };
 };
 
 export default withAuthUser(withAuthUserInfo(Account));
