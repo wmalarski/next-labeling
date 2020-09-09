@@ -24,12 +24,12 @@ const initial: Inputs = {
 };
 
 export interface SpacesCreateProps {
-  AuthUserInfo?: AuthUserInfo;
+  authUserInfo?: AuthUserInfo;
 }
 
 function SpacesCreate(props: SpacesCreateProps): JSX.Element {
-  const { AuthUserInfo } = props;
-  const authUser = AuthUserInfo?.AuthUser;
+  const { authUserInfo } = props;
+  const authUser = authUserInfo?.authUser;
   var firstInput: HTMLInputElement | null = null;
 
   const [inputs, setInputs] = useState(initial);

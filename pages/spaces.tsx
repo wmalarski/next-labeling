@@ -14,12 +14,12 @@ import { AuthUserInfo } from "../utils/auth/user";
 initFirebase();
 
 export interface SpacesProps {
-  AuthUserInfo?: AuthUserInfo;
+  authUserInfo?: AuthUserInfo;
 }
 
 function Spaces(props: SpacesProps): JSX.Element {
-  const { AuthUserInfo } = props;
-  const authUser = AuthUserInfo?.AuthUser;
+  const { authUserInfo } = props;
+  const authUser = authUserInfo?.authUser;
 
   useEffect(() => {
     if (!authUser) {

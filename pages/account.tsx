@@ -14,12 +14,12 @@ import { AuthUserInfo } from "../utils/auth/user";
 initFirebase();
 
 export interface AccountProps {
-  AuthUserInfo: AuthUserInfo;
+  authUserInfo: AuthUserInfo;
 }
 
-function Account(props: any): JSX.Element {
-  const { AuthUserInfo } = props;
-  var authUser = AuthUserInfo.AuthUser;
+function Account(props: AccountProps): JSX.Element {
+  const { authUserInfo } = props;
+  var authUser = authUserInfo.authUser;
 
   useEffect(() => {
     if (!authUser) {

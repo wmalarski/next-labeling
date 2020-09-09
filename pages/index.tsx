@@ -7,12 +7,12 @@ import Footer from "../components/footer";
 import { AuthUserInfo } from "../utils/auth/user";
 
 export interface IndexProps {
-  AuthUserInfo?: AuthUserInfo;
+  authUserInfo?: AuthUserInfo;
 }
 
-const Index = (props: any) => {
-  const { AuthUserInfo } = props;
-  const authUser = AuthUserInfo.AuthUser;
+function Index(props: IndexProps): JSX.Element {
+  const { authUserInfo } = props;
+  const authUser = authUserInfo?.authUser;
 
   return (
     <>
@@ -51,6 +51,6 @@ const Index = (props: any) => {
       </>
     </>
   );
-};
+}
 
 export default withAuthUser(withAuthUserInfo(Index));

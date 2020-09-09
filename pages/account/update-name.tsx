@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import { get } from "lodash";
@@ -9,27 +9,36 @@ import withAuthUserInfo from "../../utils/pageWrappers/withAuthUserInfo";
 import initFirebase from "../../utils/auth/initFirebase";
 import Header from "../../components/header";
 import Footer from "../../components/footer";
-import { AuthUserInfo } from "../../utils/auth/user";
+import { AuthUserInfo, AuthUser } from "../../utils/auth/user";
+import { auth } from "firebase-admin";
 
 initFirebase();
 
 export interface AccountUpdateNameProps {
-  AuthUserInfo: AuthUserInfo;
+  authUserInfo: AuthUserInfo;
 }
 
-const AccountUpdateName = (props: any) => {
-  const { AuthUserInfo } = props;
-  var authUser = get(AuthUserInfo, "AuthUser");
+const AccountUpdateName = (props: AccountUpdateNameProps) => {
+  const { authUserInfo } = props;
+  var authUser = authUserInfo.authUser;
   var input: HTMLInputElement | null = null;
 
+  const [currentUser, setCurrentUser] = useState<AuthUser | null>(authUser);
+
   const handleDisplayNameSubmit = async () => {
+    if (!authUser) return;
     try {
       var user = firebase.auth().currentUser;
       if (user) {
         await user.updateProfile({
           displayName: input?.value || "",
         });
-        authUser = user;
+        setCurrentUser({
+          displayName: user.displayName ?? "",
+          email: user.email,
+          emailVerified: user.emailVerified,
+          id: authUser.id,
+        });
       }
       Router.push("/account");
     } catch (error) {
@@ -49,7 +58,7 @@ const AccountUpdateName = (props: any) => {
 
   return (
     <>
-      {!authUser ? (
+      {!currentUser ? (
         <></>
       ) : (
         <>

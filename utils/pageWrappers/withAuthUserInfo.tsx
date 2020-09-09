@@ -6,27 +6,27 @@ import { NextPageContext } from "next";
 import { AuthUserInfo } from "../auth/user";
 
 export interface WithAuthUserInfoCompProps {
-  AuthUserInfo: AuthUserInfo;
+  authUserInfo: AuthUserInfo;
 }
 
 // Provides an AuthUserInfo prop to the composed component.
 export default function withAuthUserInfo(ComposedComponent: any) {
-  const WithAuthUserInfoComp = (props: WithAuthUserInfoCompProps) => {
-    const { AuthUserInfo: AuthUserInfoFromSession, ...otherProps } = props;
+  const withAuthUserInfoComp = (props: WithAuthUserInfoCompProps) => {
+    const { authUserInfo: AuthUserInfoFromSession, ...otherProps } = props;
     return (
       <AuthUserInfoContext.Consumer>
-        {(AuthUserInfo) => (
+        {(authUserInfo) => (
           <ComposedComponent
             {...otherProps}
-            AuthUserInfo={AuthUserInfo || AuthUserInfoFromSession}
+            authUserInfo={authUserInfo || AuthUserInfoFromSession}
           />
         )}
       </AuthUserInfoContext.Consumer>
     );
   };
 
-  WithAuthUserInfoComp.getInitialProps = async (ctx: NextPageContext) => {
-    const AuthUserInfo = get(ctx, "myCustomData.AuthUserInfo", null);
+  withAuthUserInfoComp.getInitialProps = async (ctx: NextPageContext) => {
+    const authUserInfo = get(ctx, "myCustomData.authUserInfo", null);
 
     // Evaluate the composed component's getInitialProps().
     let composedInitialProps = {};
@@ -36,13 +36,13 @@ export default function withAuthUserInfo(ComposedComponent: any) {
 
     return {
       ...composedInitialProps,
-      AuthUserInfo,
+      authUserInfo,
     };
   };
 
-  WithAuthUserInfoComp.displayName = `WithAuthUserInfo(${ComposedComponent.displayName})`;
+  withAuthUserInfoComp.displayName = `WithAuthUserInfo(${ComposedComponent.displayName})`;
 
-  WithAuthUserInfoComp.defaultProps = {};
+  withAuthUserInfoComp.defaultProps = {};
 
-  return WithAuthUserInfoComp;
+  return withAuthUserInfoComp;
 }

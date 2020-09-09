@@ -6,7 +6,7 @@ import { createAuthUser, createAuthUserInfo, AuthUserInfo } from "../auth/user";
 import { NextPageContext } from "next";
 
 export interface WithAuthUserCompProps {
-  AuthUserInfo: AuthUserInfo;
+  authUserInfo: AuthUserInfo;
 }
 
 export function getAuthUserInfo(ctx: NextPageContext): AuthUserInfo {
@@ -45,35 +45,35 @@ export function getAuthUserInfo(ctx: NextPageContext): AuthUserInfo {
 }
 
 // Gets the authenticated user from the Firebase JS SDK, when client-side,
-// or from the request object, when server-side. Add the AuthUserInfo to
+// or from the request object, when server-side. Add the authUserInfo to
 // context.
 export default function withAuthUser(ComposedComponent: any) {
-  const WithAuthUserComp = (props: WithAuthUserCompProps) => {
-    const { AuthUserInfo, ...otherProps } = props;
+  const withAuthUserComp = (props: WithAuthUserCompProps) => {
+    const { authUserInfo, ...otherProps } = props;
 
     // We'll use the authed user from client-side auth (Firebase JS SDK)
     // when available. On the server side, we'll use the authed user from
     // the session. This allows us to server-render while also using Firebase's
     // client-side auth functionality.
     const { user: firebaseUser } = useFirebaseAuth();
-    const AuthUserFromClient = createAuthUser(firebaseUser);
-    const { AuthUser: AuthUserFromSession, token } = AuthUserInfo;
-    const AuthUser = AuthUserFromClient || AuthUserFromSession || null;
+    const authUserFromClient = createAuthUser(firebaseUser);
+    const { authUser: authUserFromSession, token } = authUserInfo;
+    const authUser = authUserFromClient || authUserFromSession || null;
 
     return (
-      <AuthUserInfoContext.Provider value={{ AuthUser, token }}>
+      <AuthUserInfoContext.Provider value={{ authUser, token }}>
         <ComposedComponent {...otherProps} />
       </AuthUserInfoContext.Provider>
     );
   };
 
-  WithAuthUserComp.getInitialProps = async (ctx: NextPageContext) => {
+  withAuthUserComp.getInitialProps = async (ctx: NextPageContext) => {
     // Get the AuthUserInfo object.
     const authUserInfo = getAuthUserInfo(ctx);
 
     // Explicitly add the user to a custom prop in the getInitialProps
     // context for ease of use in child components.
-    set(ctx, "myCustomData.AuthUserInfo", authUserInfo);
+    set(ctx, "myCustomData.authUserInfo", authUserInfo);
 
     // Evaluate the composed component's getInitialProps().
     let composedInitialProps = {};
@@ -83,13 +83,11 @@ export default function withAuthUser(ComposedComponent: any) {
 
     return {
       ...composedInitialProps,
-      AuthUserInfo: authUserInfo,
+      authUserInfo: authUserInfo,
     };
   };
 
-  WithAuthUserComp.displayName = `WithAuthUser(${ComposedComponent.displayName})`;
+  withAuthUserComp.displayName = `WithAuthUser(${ComposedComponent.displayName})`;
 
-  WithAuthUserComp.defaultProps = {};
-
-  return WithAuthUserComp;
+  return withAuthUserComp;
 }

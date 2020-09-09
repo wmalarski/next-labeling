@@ -37,7 +37,7 @@ export const createAuthUser = (
 };
 
 export interface AuthUserInfo {
-  AuthUser: AuthUser | null;
+  authUser: AuthUser | null;
   token: string | null;
 }
 
@@ -56,7 +56,7 @@ export const createAuthUserInfo = ({
   token = null,
 } = {}): AuthUserInfo => {
   return {
-    AuthUser: createAuthUser(firebaseUser),
+    authUser: createAuthUser(firebaseUser),
     token,
   };
 };
