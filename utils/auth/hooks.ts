@@ -3,14 +3,16 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import initFirebase from "./initFirebase";
 import { setSession } from "./firebaseSessionHandler";
-import { createAuthUserInfo } from "./user";
+import { createAuthUserInfo, AuthUserInfo } from "./user";
 
 initFirebase();
 
 // https://benmcmahen.com/using-firebase-with-react-hooks/
 
 // Defaults to empty AuthUserInfo object.
-export const AuthUserInfoContext = React.createContext(createAuthUserInfo());
+export const AuthUserInfoContext = React.createContext<AuthUserInfo>(
+  createAuthUserInfo()
+);
 
 export const useAuthUserInfo = () => {
   return React.useContext(AuthUserInfoContext);
@@ -22,7 +24,7 @@ export const useFirebaseAuth = () => {
     const user = firebase.auth().currentUser;
     return {
       initializing: !user,
-      user
+      user,
     };
   });
 

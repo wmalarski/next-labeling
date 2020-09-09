@@ -1,16 +1,18 @@
-import "../css/main.css";
 import React from "react";
-import PropTypes from "prop-types";
-import { get } from "lodash";
 import Link from "next/link";
 import withAuthUser from "../utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../utils/pageWrappers/withAuthUserInfo";
 import Header from "../components/header";
 import Footer from "../components/footer";
+import { AuthUserInfo } from "../utils/auth/user";
+
+export interface IndexProps {
+  AuthUserInfo?: AuthUserInfo;
+}
 
 const Index = (props: any) => {
   const { AuthUserInfo } = props;
-  const authUser = get(AuthUserInfo, "AuthUser");
+  const authUser = AuthUserInfo.AuthUser;
 
   return (
     <>
@@ -49,21 +51,6 @@ const Index = (props: any) => {
       </>
     </>
   );
-};
-
-Index.propTypes = {
-  AuthUserInfo: PropTypes.shape({
-    AuthUser: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-      emailVerified: PropTypes.bool.isRequired
-    }),
-    token: PropTypes.string
-  })
-};
-
-Index.defaultProps = {
-  AuthUserInfo: null
 };
 
 export default withAuthUser(withAuthUserInfo(Index));

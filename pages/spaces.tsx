@@ -1,9 +1,6 @@
-import "../css/main.css";
 import React, { useEffect } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import PropTypes from "prop-types";
-import { get } from "lodash";
 import Link from "next/link";
 import Router from "next/router";
 import withAuthUser from "../utils/pageWrappers/withAuthUser";
@@ -12,12 +9,17 @@ import initFirebase from "../utils/auth/initFirebase";
 import usePagination from "firestore-pagination-hook";
 import Header from "../components/header";
 import Footer from "../components/footer";
+import { AuthUserInfo } from "../utils/auth/user";
 
 initFirebase();
 
-const Spaces = (props: any) => {
+export interface SpacesProps {
+  AuthUserInfo?: AuthUserInfo;
+}
+
+function Spaces(props: SpacesProps): JSX.Element {
   const { AuthUserInfo } = props;
-  const authUser = get(AuthUserInfo, "AuthUser");
+  const authUser = AuthUserInfo?.AuthUser;
 
   useEffect(() => {
     if (!authUser) {
@@ -26,21 +28,13 @@ const Spaces = (props: any) => {
   });
 
   const db = firebase.firestore();
-  const {
-    loading,
-    loadingError,
-    loadingMore,
-    loadingMoreError,
-    hasMore,
-    items,
-    loadMore
-  } = usePagination(
+  const { loading, loadingMore, hasMore, items, loadMore } = usePagination(
     db
       .collection("spaces")
       .where("uid", "==", authUser?.id || "")
       .orderBy("spaceId", "asc"),
     {
-      limit: 10
+      limit: 10,
     }
   );
 
@@ -57,31 +51,20 @@ const Spaces = (props: any) => {
           </Link>
           <div>
             {loading && <div>...</div>}
-            {items.map(item => (
-              <pre className="text-xs">{JSON.stringify(item.data() || {}, null, 2)}</pre>
+            {items.map((item) => (
+              <pre className="text-xs">
+                {JSON.stringify(item.data() || {}, null, 2)}
+              </pre>
             ))}
-            {hasMore && !loadingMore && <button onClick={loadMore}>[ more ]</button>}
+            {hasMore && !loadingMore && (
+              <button onClick={loadMore}>[ more ]</button>
+            )}
           </div>
           <Footer />
         </>
       )}
     </>
   );
-};
-
-Spaces.propTypes = {
-  AuthUserInfo: PropTypes.shape({
-    AuthUser: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-      emailVerified: PropTypes.bool.isRequired
-    }),
-    token: PropTypes.string
-  })
-};
-
-Spaces.defaultProps = {
-  AuthUserInfo: null
-};
+}
 
 export default withAuthUser(withAuthUserInfo(Spaces));

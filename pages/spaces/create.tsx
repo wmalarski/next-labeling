@@ -1,4 +1,3 @@
-import "../../css/main.css";
 import React, { useState, useEffect, ChangeEvent } from "react";
 import firebase from "firebase/app";
 import PropTypes from "prop-types";
@@ -10,6 +9,7 @@ import withAuthUserInfo from "../../utils/pageWrappers/withAuthUserInfo";
 import initFirebase from "../../utils/auth/initFirebase";
 import Header from "../../components/header";
 import Footer from "../../components/footer";
+import { AuthUserInfo } from "../../utils/auth/user";
 
 initFirebase();
 
@@ -18,20 +18,25 @@ type Inputs = {
   title: string;
 };
 
-const SpacesCreate = (props: any) => {
-  const { AuthUserInfo } = props;
-  const authUser = get(AuthUserInfo, "AuthUser");
-  var firstInput: HTMLInputElement | null = null;
+const initial: Inputs = {
+  spaceId: "",
+  title: "",
+};
 
-  const initial: Inputs = {
-    spaceId: "",
-    title: ""
-  };
+export interface SpacesCreateProps {
+  AuthUserInfo?: AuthUserInfo;
+}
+
+function SpacesCreate(props: SpacesCreateProps): JSX.Element {
+  const { AuthUserInfo } = props;
+  const authUser = AuthUserInfo?.AuthUser;
+  var firstInput: HTMLInputElement | null = null;
 
   const [inputs, setInputs] = useState(initial);
 
   const handleSubmit = async (e: ChangeEvent<any>) => {
     e.preventDefault();
+    if (!authUser) return;
     try {
       if (inputs.spaceId.length === 0) {
         throw `space ID can't be empty`;
@@ -51,7 +56,7 @@ const SpacesCreate = (props: any) => {
       await ref.set({
         spaceId: inputs.spaceId,
         title: inputs.title,
-        uid: authUser.id
+        uid: authUser.id,
       });
       Router.push("/spaces");
     } catch (error) {
@@ -63,7 +68,7 @@ const SpacesCreate = (props: any) => {
     e.persist();
     setInputs({
       ...inputs,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -92,7 +97,7 @@ const SpacesCreate = (props: any) => {
                 name="spaceId"
                 onChange={handleInputChange}
                 value={inputs.spaceId}
-                ref={r => (firstInput = r)}
+                ref={(r) => (firstInput = r)}
               />
             </p>
             <p>
@@ -119,22 +124,7 @@ const SpacesCreate = (props: any) => {
       )}
     </>
   );
-};
-
-SpacesCreate.propTypes = {
-  AuthUserInfo: PropTypes.shape({
-    AuthUser: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-      emailVerified: PropTypes.bool.isRequired
-    }),
-    token: PropTypes.string
-  })
-};
-
-SpacesCreate.defaultProps = {
-  AuthUserInfo: null
-};
+}
 
 // Use `withAuthUser` to get the authed user server-side, which
 // disables static rendering.

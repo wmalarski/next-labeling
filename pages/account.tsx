@@ -1,8 +1,5 @@
-import "../css/main.css";
-import React, { useState, useEffect } from "react";
-import firebase from "firebase/app";
+import React, { useEffect } from "react";
 import "firebase/auth";
-import "firebase/functions";
 import { get } from "lodash";
 import Link from "next/link";
 import Router from "next/router";
@@ -12,12 +9,17 @@ import initFirebase from "../utils/auth/initFirebase";
 import logout from "../utils/auth/logout";
 import Header from "../components/header";
 import Footer from "../components/footer";
+import { AuthUserInfo } from "../utils/auth/user";
 
 initFirebase();
 
-const Account = (props: any) => {
+export interface AccountProps {
+  AuthUserInfo: AuthUserInfo;
+}
+
+function Account(props: any): JSX.Element {
   const { AuthUserInfo } = props;
-  var authUser = get(AuthUserInfo, "AuthUser");
+  var authUser = AuthUserInfo.AuthUser;
 
   useEffect(() => {
     if (!authUser) {
@@ -58,6 +60,6 @@ const Account = (props: any) => {
       )}
     </>
   );
-};
+}
 
 export default withAuthUser(withAuthUserInfo(Account));

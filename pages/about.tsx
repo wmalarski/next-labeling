@@ -1,9 +1,8 @@
-import "../css/main.css";
 import React from "react";
 import Header from "../components/header";
 import Footer from "../components/footer";
 
-const About = () => {
+export default function About(): JSX.Element {
   return (
     <>
       <Header />
@@ -11,6 +10,4 @@ const About = () => {
       <Footer />
     </>
   );
-};
-
-export default About;
+}

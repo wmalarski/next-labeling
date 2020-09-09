@@ -1,6 +1,13 @@
 import { get, has } from "lodash";
 // having trouble getting types from lodash/object
 
+export interface AuthUser {
+  id: string;
+  email: string | null;
+  emailVerified: boolean;
+  displayName: string;
+}
+
 /**
  * Take the user object from Firebase (from either the Firebase admin SDK or
  * or the client-side Firebase JS SDK) and return a consistent AuthUser object.
@@ -11,7 +18,9 @@ import { get, has } from "lodash";
  * @return {String} AuthUser.email - The user's email
  * @return {Boolean} AuthUser.emailVerified - Whether the user has verified their email
  */
-export const createAuthUser = (firebaseUser: firebase.User | null) => {
+export const createAuthUser = (
+  firebaseUser: firebase.User | null
+): AuthUser | null => {
   if (!firebaseUser || !firebaseUser.uid) {
     return null;
   }
@@ -23,9 +32,14 @@ export const createAuthUser = (firebaseUser: firebase.User | null) => {
       : get(firebaseUser, "email_verified"), // admin SDK
     displayName: has(firebaseUser, "displayName")
       ? get(firebaseUser, "displayName") // client SDK
-      : get(firebaseUser, "display_name") // admin SDK
+      : get(firebaseUser, "display_name"), // admin SDK
   };
 };
+
+export interface AuthUserInfo {
+  AuthUser: AuthUser | null;
+  token: string | null;
+}
 
 /**
  * Create an object with an AuthUser object and AuthUserToken value.
@@ -37,9 +51,12 @@ export const createAuthUser = (firebaseUser: firebase.User | null) => {
  *   `createAuthUser` above).
  * @return {String} AuthUser.token - The user's encoded Firebase token.
  */
-export const createAuthUserInfo = ({ firebaseUser = null, token = null } = {}) => {
+export const createAuthUserInfo = ({
+  firebaseUser = null,
+  token = null,
+} = {}): AuthUserInfo => {
   return {
     AuthUser: createAuthUser(firebaseUser),
-    token
+    token,
   };
 };

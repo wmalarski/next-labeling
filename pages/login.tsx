@@ -1,4 +1,3 @@
-import "../css/main.css";
 import React, { useState, useEffect, ChangeEvent } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -14,11 +13,12 @@ type Inputs = {
   password: string;
 };
 
-function Login() {
-  const initial: Inputs = {
-    email: "",
-    password: ""
-  };
+const initial: Inputs = {
+  email: "",
+  password: "",
+};
+
+export default function Login(): JSX.Element {
   var firstInput: HTMLInputElement | null = null;
 
   const [inputs, setInputs] = useState(initial);
@@ -26,7 +26,9 @@ function Login() {
   const handleSubmit = async (e: ChangeEvent<any>) => {
     e.preventDefault();
     try {
-      await firebase.auth().signInWithEmailAndPassword(inputs.email, inputs.password);
+      await firebase
+        .auth()
+        .signInWithEmailAndPassword(inputs.email, inputs.password);
       Router.push("/");
     } catch (error) {
       alert(error);
@@ -37,7 +39,7 @@ function Login() {
     e.persist();
     setInputs({
       ...inputs,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -56,7 +58,7 @@ function Login() {
             name="email"
             onChange={handleInputChange}
             value={inputs.email}
-            ref={r => (firstInput = r)}
+            ref={(r) => (firstInput = r)}
           />
         </p>
         <p>
@@ -83,5 +85,3 @@ function Login() {
     </>
   );
 }
-
-export default Login;

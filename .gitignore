@@ -27,19 +27,4 @@ yarn-error.log*
 # secrets - staging
 .env.build
 .env
-
-# functions
-
-## Compiled JavaScript files
-/functions/**/*.js
-/functions/**/*.js.map
-
-# Typescript v1 declaration files
-/functions/typings/
-
-/functions/node_modules/
-
-serviceAccount*
-/functions/serviceAccount*
-/functions/serviceAccount-staging.json
-/functions/serviceAccount-production.json
+.vercel

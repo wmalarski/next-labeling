@@ -1,6 +1,6 @@
 import commonMiddleware from "../../utils/middleware/commonMiddleware";
 import { verifyIdToken } from "../../utils/auth/firebaseAdmin";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 
 // req type: CookieSession?
 const handler = async (req: any, res: NextApiResponse) => {

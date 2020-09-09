@@ -1,5 +1,4 @@
-import "../../css/main.css";
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import { get } from "lodash";
@@ -10,8 +9,13 @@ import withAuthUserInfo from "../../utils/pageWrappers/withAuthUserInfo";
 import initFirebase from "../../utils/auth/initFirebase";
 import Header from "../../components/header";
 import Footer from "../../components/footer";
+import { AuthUserInfo } from "../../utils/auth/user";
 
 initFirebase();
+
+export interface AccountUpdateNameProps {
+  AuthUserInfo: AuthUserInfo;
+}
 
 const AccountUpdateName = (props: any) => {
   const { AuthUserInfo } = props;
@@ -23,7 +27,7 @@ const AccountUpdateName = (props: any) => {
       var user = firebase.auth().currentUser;
       if (user) {
         await user.updateProfile({
-          displayName: input?.value || ""
+          displayName: input?.value || "",
         });
         authUser = user;
       }
@@ -56,7 +60,7 @@ const AccountUpdateName = (props: any) => {
               type="text"
               id="displayName"
               name="displayName"
-              ref={r => (input = r)}
+              ref={(r) => (input = r)}
               defaultValue=""
             />
           </p>

@@ -1,17 +1,21 @@
 /* eslint react/jsx-props-no-spreading: 0 */
 import React from "react";
-import PropTypes from "prop-types";
 import { get } from "lodash";
 import { AuthUserInfoContext } from "../auth/hooks";
 import { NextPageContext } from "next";
+import { AuthUserInfo } from "../auth/user";
+
+export interface WithAuthUserInfoCompProps {
+  AuthUserInfo: AuthUserInfo;
+}
 
 // Provides an AuthUserInfo prop to the composed component.
-export default (ComposedComponent: any) => {
-  const WithAuthUserInfoComp = (props: any) => {
+export default function withAuthUserInfo(ComposedComponent: any) {
+  const WithAuthUserInfoComp = (props: WithAuthUserInfoCompProps) => {
     const { AuthUserInfo: AuthUserInfoFromSession, ...otherProps } = props;
     return (
       <AuthUserInfoContext.Consumer>
-        {AuthUserInfo => (
+        {(AuthUserInfo) => (
           <ComposedComponent
             {...otherProps}
             AuthUserInfo={AuthUserInfo || AuthUserInfoFromSession}
@@ -32,24 +36,13 @@ export default (ComposedComponent: any) => {
 
     return {
       ...composedInitialProps,
-      AuthUserInfo
+      AuthUserInfo,
     };
   };
 
   WithAuthUserInfoComp.displayName = `WithAuthUserInfo(${ComposedComponent.displayName})`;
 
-  WithAuthUserInfoComp.propTypes = {
-    AuthUserInfo: PropTypes.shape({
-      AuthUser: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        email: PropTypes.string.isRequired,
-        emailVerified: PropTypes.bool.isRequired
-      }),
-      token: PropTypes.string
-    })
-  };
-
   WithAuthUserInfoComp.defaultProps = {};
 
   return WithAuthUserInfoComp;
-};
+}
