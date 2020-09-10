@@ -5,6 +5,7 @@ import Link from "next/link";
 import Router from "next/router";
 import initFirebase from "../utils/auth/initFirebase";
 import Footer from "../components/footer";
+import { googleAuthProvider } from "../utils/auth/authProviders";
 
 initFirebase();
 
@@ -29,6 +30,16 @@ export default function Login(): JSX.Element {
       await firebase
         .auth()
         .signInWithEmailAndPassword(inputs.email, inputs.password);
+      Router.push("/");
+    } catch (error) {
+      alert(error);
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    console.log("handleGoogleLogin");
+    try {
+      await firebase.auth().signInWithPopup(googleAuthProvider);
       Router.push("/");
     } catch (error) {
       alert(error);
@@ -75,6 +86,9 @@ export default function Login(): JSX.Element {
           <button type="submit">[ log in ]</button>
         </p>
       </form>
+      <p>
+        <button onClick={handleGoogleLogin}>[ Sing in with Google]</button>
+      </p>
       <p>
         {"or "}
         <Link href="/signup">

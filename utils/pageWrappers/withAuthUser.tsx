@@ -18,6 +18,7 @@ export function getAuthUserInfo(ctx: NextPageContext): AuthUserInfo {
     // https://arunoda.me/blog/ssr-and-server-only-modules
     const { addSession } = require("../middleware/cookieSession");
     addSession(req, res);
+    console.log("server-side");
     return createAuthUserInfo({
       firebaseUser: get(req, "session.decodedToken", null),
       token: get(req, "session.token", null),
@@ -47,7 +48,9 @@ export function getAuthUserInfo(ctx: NextPageContext): AuthUserInfo {
 // Gets the authenticated user from the Firebase JS SDK, when client-side,
 // or from the request object, when server-side. Add the authUserInfo to
 // context.
-export default function withAuthUser(ComposedComponent: any) {
+export default function withAuthUser(
+  ComposedComponent: any
+): (props: WithAuthUserCompProps) => JSX.Element {
   const withAuthUserComp = (props: WithAuthUserCompProps) => {
     const { authUserInfo, ...otherProps } = props;
 

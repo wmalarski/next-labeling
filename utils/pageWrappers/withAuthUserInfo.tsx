@@ -10,7 +10,9 @@ export interface WithAuthUserInfoCompProps {
 }
 
 // Provides an AuthUserInfo prop to the composed component.
-export default function withAuthUserInfo(ComposedComponent: any) {
+export default function withAuthUserInfo(
+  ComposedComponent: any
+): (props: WithAuthUserInfoCompProps) => JSX.Element {
   const withAuthUserInfoComp = (props: WithAuthUserInfoCompProps) => {
     const { authUserInfo: AuthUserInfoFromSession, ...otherProps } = props;
     return (
@@ -41,8 +43,6 @@ export default function withAuthUserInfo(ComposedComponent: any) {
   };
 
   withAuthUserInfoComp.displayName = `WithAuthUserInfo(${ComposedComponent.displayName})`;
-
-  withAuthUserInfoComp.defaultProps = {};
 
   return withAuthUserInfoComp;
 }
