@@ -8,6 +8,8 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.56",
     "@zeit/next-css": "^1.0.1",
     "D": "^1.0.0",
     "cookie-session": "1.4.0",

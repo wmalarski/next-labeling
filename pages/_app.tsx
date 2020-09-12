@@ -1,13 +1,27 @@
 import React from "react";
-import PropTypes from "prop-types";
 import Head from "next/head";
-import { ThemeProvider } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import type { AppProps /*, AppContext */ } from "next/app";
 import theme from "../src/themes/theme";
+import Header from "../src/components/common/header";
+import Footer from "../src/components/common/footer";
+import { makeStyles, Theme, ThemeProvider } from "@material-ui/core/styles";
+import CssBaseline from "@material-ui/core/CssBaseline";
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "100vh",
+  },
+  main: {
+    marginTop: theme.spacing(8),
+    marginBottom: theme.spacing(2),
+  },
+}));
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props;
+  const classes = useStyles();
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.
@@ -29,13 +43,10 @@ export default function MyApp(props: AppProps) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Component {...pageProps} />
+        <div className={classes.root}>
+          <Component {...pageProps} />
+        </div>
       </ThemeProvider>
     </React.Fragment>
   );
 }
-
-MyApp.propTypes = {
-  Component: PropTypes.elementType.isRequired,
-  pageProps: PropTypes.object.isRequired,
-};

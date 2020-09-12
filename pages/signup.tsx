@@ -1,40 +1,37 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import Link from "next/link";
 import Router from "next/router";
 import initFirebase from "../src/utils/auth/initFirebase";
 import Footer from "../src/components/common/footer";
+import { useUserFormStyles } from "../src/themes/styles";
+import Container from "@material-ui/core/Container";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
+import Avatar from "@material-ui/core/Avatar";
+import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
 initFirebase();
 
-type Inputs = {
-  email: string;
-  password: string;
-  displayName: string;
-};
-
-const initialValues: Inputs = {
-  email: "",
-  password: "",
-  displayName: "",
-};
-
 export default function Signup(): JSX.Element {
-  var firstInput: HTMLInputElement | null = null;
-
-  const [inputs, setInputs] = useState(initialValues);
+  const classes = useUserFormStyles();
 
   const handleSubmit = async (e: React.ChangeEvent<any>) => {
     e.preventDefault();
+    e.persist();
     try {
       await firebase
         .auth()
-        .createUserWithEmailAndPassword(inputs.email, inputs.password);
-      var user = firebase.auth().currentUser;
+        .createUserWithEmailAndPassword(
+          e.target.email.value,
+          e.target.password1.value
+        );
+      const user = firebase.auth().currentUser;
       if (user) {
         await user.updateProfile({
-          displayName: inputs.displayName,
+          displayName: e.target.displayName.value,
         });
       }
       Router.push("/");
@@ -43,62 +40,66 @@ export default function Signup(): JSX.Element {
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<any>) => {
-    e.persist();
-    setInputs({
-      ...inputs,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  useEffect(() => {
-    firstInput?.focus();
-  }, []); // [] = run once
-
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <p>
-          <label htmlFor="email">email: </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            onChange={handleInputChange}
-            value={inputs.email}
-            ref={(r) => (firstInput = r)}
-          />
-        </p>
-        <p>
-          <label htmlFor="password">password: </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            onChange={handleInputChange}
-            value={inputs.password}
-          />
-        </p>
-        <p>
-          <label htmlFor="displayName">display name: </label>
-          <input
-            type="text"
-            id="displayName"
-            name="displayName"
-            onChange={handleInputChange}
-            value={inputs.displayName}
-          />
-        </p>
-        <p>
-          <button type="submit">[ create account ]</button>
-        </p>
-      </form>
-      <p>
-        {"or "}
-        <Link href="/login">
-          <a>[ log in ]</a>
-        </Link>
-      </p>
+      <Container component="main" maxWidth="xs">
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOpenIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+
+          <form onSubmit={handleSubmit}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password1"
+              label="Password"
+              type="password"
+              id="password1"
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="displayName"
+              label="Display Name"
+              name="displayName"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Create Account
+            </Button>
+          </form>
+          <p>
+            {"or "}
+            <Link href="/login">
+              <a>log in</a>
+            </Link>
+          </p>
+        </div>
+      </Container>
       <Footer />
     </>
   );

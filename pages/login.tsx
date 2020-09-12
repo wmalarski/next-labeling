@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from "react";
+import React, { ChangeEvent } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
 import Link from "next/link";
@@ -6,30 +6,28 @@ import Router from "next/router";
 import initFirebase from "../src/utils/auth/initFirebase";
 import Footer from "../src/components/common/footer";
 import { googleAuthProvider } from "../src/utils/auth/authProviders";
+import Container from "@material-ui/core/Container";
+import Avatar from "@material-ui/core/Avatar";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
+import { useUserFormStyles } from "../src/themes/styles";
 
 initFirebase();
 
-type Inputs = {
-  email: string;
-  password: string;
-};
-
-const initial: Inputs = {
-  email: "",
-  password: "",
-};
-
 export default function Login(): JSX.Element {
-  var firstInput: HTMLInputElement | null = null;
-
-  const [inputs, setInputs] = useState(initial);
+  const classes = useUserFormStyles();
 
   const handleSubmit = async (e: ChangeEvent<any>) => {
     e.preventDefault();
     try {
       await firebase
         .auth()
-        .signInWithEmailAndPassword(inputs.email, inputs.password);
+        .signInWithEmailAndPassword(
+          e.target.email.value,
+          e.target.password.value
+        );
       Router.push("/");
     } catch (error) {
       alert(error);
@@ -37,7 +35,6 @@ export default function Login(): JSX.Element {
   };
 
   const handleGoogleLogin = async () => {
-    console.log("handleGoogleLogin");
     try {
       await firebase.auth().signInWithPopup(googleAuthProvider);
       Router.push("/");
@@ -46,55 +43,66 @@ export default function Login(): JSX.Element {
     }
   };
 
-  const handleInputChange = (e: ChangeEvent<any>) => {
-    e.persist();
-    setInputs({
-      ...inputs,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  useEffect(() => {
-    firstInput?.focus();
-  }, []); // [] = run once
-
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <p>
-          <label htmlFor="email">email: </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            onChange={handleInputChange}
-            value={inputs.email}
-            ref={(r) => (firstInput = r)}
-          />
-        </p>
-        <p>
-          <label htmlFor="password">password: </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            onChange={handleInputChange}
-            value={inputs.password}
-          />
-        </p>
-        <p>
-          <button type="submit">[ log in ]</button>
-        </p>
-      </form>
-      <p>
-        <button onClick={handleGoogleLogin}>[ Sing in with Google]</button>
-      </p>
-      <p>
-        {"or "}
-        <Link href="/signup">
-          <a>[ create account ]</a>
-        </Link>
-      </p>
+      <Container component="main" maxWidth="xs">
+        <div className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign in
+          </Typography>
+          <form className={classes.form} onSubmit={handleSubmit}>
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              id="email"
+              label="Email"
+              name="email"
+              autoComplete="email"
+              autoFocus
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+            />
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              Sign In
+            </Button>
+          </form>
+          <Button
+            fullWidth
+            variant="contained"
+            color="secondary"
+            className={classes.submit}
+            onClick={handleGoogleLogin}
+          >
+            Sing in with Google
+          </Button>
+          <p>
+            {"or "}
+            <Link href="/signup">
+              <a>create account</a>
+            </Link>
+          </p>
+        </div>
+      </Container>
       <Footer />
     </>
   );

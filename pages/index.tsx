@@ -17,38 +17,7 @@ function Index(props: IndexProps): JSX.Element {
   return (
     <>
       <Header />
-      {!authUser ? (
-        <>
-          <div>not signed in.</div>
-          <div>
-            <Link href={"/login"}>
-              <a>[ log in ]</a>
-            </Link>
-          </div>
-          <p>
-            <Link href={"/signup"}>
-              <a>[ create account ]</a>
-            </Link>
-          </p>
-        </>
-      ) : (
-        <>
-          <pre className="text-xs">{JSON.stringify(authUser, null, 2)}</pre>
-          <p>
-            <Link href={"/account"}>
-              <a>[ account ]</a>
-            </Link>
-          </p>
-          <p>
-            <Link href={"/spaces"}>
-              <a>[ spaces ]</a>
-            </Link>
-          </p>
-        </>
-      )}
-      <>
-        <Footer />
-      </>
+      <Footer />
     </>
   );
 }
