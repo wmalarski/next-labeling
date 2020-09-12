@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import Link from "next/link";
@@ -9,17 +9,12 @@ import initFirebase from "../../src/utils/auth/initFirebase";
 import usePagination from "firestore-pagination-hook";
 import Header from "../../src/components/common/header";
 import Footer from "../../src/components/common/footer";
-import { AuthUserInfo } from "../../src/utils/auth/user";
+import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 
 initFirebase();
 
-export interface SpacesProps {
-  authUserInfo?: AuthUserInfo;
-}
-
-function Spaces(props: SpacesProps): JSX.Element {
-  const { authUserInfo } = props;
-  const authUser = authUserInfo?.authUser;
+function Spaces(): JSX.Element {
+  const { authUser } = useContext(AuthUserInfoContext);
 
   useEffect(() => {
     if (!authUser) {
@@ -45,8 +40,8 @@ function Spaces(props: SpacesProps): JSX.Element {
       ) : (
         <>
           <Header />
-          <label>spaces</label>{" "}
-          <Link href={"/spaces/create"}>
+          <label>schema</label>{" "}
+          <Link href={"/schema/create"}>
             <a>[ create ]</a>
           </Link>
           <div>
@@ -60,9 +55,9 @@ function Spaces(props: SpacesProps): JSX.Element {
               <button onClick={loadMore}>[ more ]</button>
             )}
           </div>
-          <Footer />
         </>
       )}
+      <Footer />
     </>
   );
 }

@@ -55,8 +55,8 @@ export default function UserHeader(): JSX.Element {
       open={isAppsMenuOpen}
       onClose={() => setAnchorAppsEl(null)}
     >
-      <MenuItem onClick={() => router.push("/spaces")}>Schemas</MenuItem>
-      <MenuItem onClick={() => router.push("/spaces")}>Labeling</MenuItem>
+      <MenuItem onClick={() => router.push("/schema")}>Schemas</MenuItem>
+      <MenuItem onClick={() => router.push("/schema")}>Labeling</MenuItem>
     </Menu>
   );
 

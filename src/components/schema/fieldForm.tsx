@@ -1,0 +1,167 @@
+import React, { useState } from "react";
+import Typography from "@material-ui/core/Typography";
+import Accordion from "@material-ui/core/Accordion";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import {
+  LabelingFieldSchema,
+  LabelingObjectSchema,
+} from "../../utils/schema/types";
+import Divider from "@material-ui/core/Divider";
+import AccordionActions from "@material-ui/core/AccordionActions";
+import Button from "@material-ui/core/Button";
+import AddIcon from "@material-ui/icons/Add";
+import ReplayIcon from "@material-ui/icons/Replay";
+import SaveIcon from "@material-ui/icons/Save";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import FileCopyIcon from "@material-ui/icons/FileCopy";
+import RemoveIcon from "@material-ui/icons/Remove";
+import {
+  FieldType,
+  labelingFieldAttributesDefaults,
+} from "../../utils/schema/fields";
+import TextField from "@material-ui/core/TextField";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import AttributesForm from "./attributesForm";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    paper: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      width: "100%",
+      justifyContent: "space-between",
+    },
+    column: {
+      flexBasis: "33.33%",
+    },
+    heading: {
+      fontSize: theme.typography.pxToRem(15),
+      fontWeight: theme.typography.fontWeightRegular,
+    },
+    secondaryHeading: {
+      fontSize: theme.typography.pxToRem(15),
+      color: theme.palette.text.secondary,
+    },
+  })
+);
+
+export interface FieldFormProps {
+  fieldSchema: LabelingFieldSchema;
+  onChange: (fieldSchema: LabelingFieldSchema) => void;
+  onRemove: () => void;
+  onCopy: () => void;
+  onMove: (diff: number) => void;
+}
+
+export default function FieldForm(props: FieldFormProps): JSX.Element {
+  const { fieldSchema, onChange, onRemove, onCopy, onMove } = props;
+  const { name, perFrame, type, attributes } = fieldSchema;
+  const classes = useStyles();
+
+  return (
+    <div>
+      <div className={classes.paper}>
+        <TextField
+          variant="outlined"
+          fullWidth
+          label="Name"
+          value={name}
+          margin="dense"
+          onChange={(event) =>
+            onChange({ ...fieldSchema, name: event.target.value })
+          }
+        />
+        <FormControl>
+          <InputLabel id="select-field-type-label">Field Type</InputLabel>
+          <Select
+            labelId="select-field-type-label"
+            id="select-field-type"
+            value={type}
+            onChange={(event) => {
+              const newType = event.target.value as FieldType;
+              if (newType === type) return;
+              onChange({
+                ...fieldSchema,
+                type: newType,
+                attributes: labelingFieldAttributesDefaults[newType],
+              });
+            }}
+          >
+            {Object.entries(FieldType).map(
+              ([, name]): JSX.Element => (
+                <MenuItem value={name} key={name}>
+                  {name}
+                </MenuItem>
+              )
+            )}
+          </Select>
+        </FormControl>
+        <AttributesForm
+          type={type}
+          attributes={attributes}
+          onChange={(newAttributes) =>
+            onChange({
+              ...fieldSchema,
+              attributes: newAttributes,
+            })
+          }
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={perFrame}
+              onChange={() => onChange({ ...fieldSchema, perFrame: !perFrame })}
+              value={perFrame}
+            />
+          }
+          label="Label value per frame"
+        />
+        <Divider />
+      </div>
+      <div>
+        <Button
+          size="small"
+          color="primary"
+          startIcon={<ArrowUpwardIcon />}
+          onClick={() => onMove(1)}
+        >
+          Move up
+        </Button>
+        <Button
+          size="small"
+          color="primary"
+          startIcon={<ArrowDownwardIcon />}
+          onClick={() => onMove(-1)}
+        >
+          Move down
+        </Button>
+        <Button
+          size="small"
+          color="primary"
+          startIcon={<FileCopyIcon />}
+          onClick={onCopy}
+        >
+          Copy field
+        </Button>
+        <Button
+          size="small"
+          color="primary"
+          startIcon={<RemoveIcon />}
+          onClick={onRemove}
+        >
+          Remove field
+        </Button>
+      </div>
+    </div>
+  );
+}
