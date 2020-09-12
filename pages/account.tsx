@@ -1,15 +1,14 @@
 import React, { useEffect } from "react";
 import "firebase/auth";
-import { get } from "lodash";
 import Link from "next/link";
 import Router from "next/router";
-import withAuthUser from "../utils/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../utils/pageWrappers/withAuthUserInfo";
-import initFirebase from "../utils/auth/initFirebase";
-import logout from "../utils/auth/logout";
-import Header from "../components/header";
-import Footer from "../components/footer";
-import { AuthUserInfo } from "../utils/auth/user";
+import withAuthUser from "../src/utils/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../src/utils/pageWrappers/withAuthUserInfo";
+import initFirebase from "../src/utils/auth/initFirebase";
+import logout from "../src/utils/auth/logout";
+import Header from "../src/components/common/header";
+import Footer from "../src/components/common/footer";
+import { AuthUserInfo } from "../src/utils/auth/user";
 
 initFirebase();
 

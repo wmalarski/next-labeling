@@ -1,4 +1,4 @@
-import commonMiddleware from "../../utils/middleware/commonMiddleware";
+import commonMiddleware from "../../src/utils/middleware/commonMiddleware";
 import { NextApiResponse } from "next";
 
 // req type: CookieSession?

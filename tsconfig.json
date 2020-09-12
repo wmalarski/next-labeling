@@ -19,7 +19,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "utils/auth/initFirebase.ts",
-    "utils/auth/user.ts"
+    "src/utils/auth/initFirebase.ts",
+    "src/utils/auth/user.ts",
+    "src/components/common/link.jsx"
   ]
 }

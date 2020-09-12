@@ -2,7 +2,7 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 
-export default async () => {
+export default async function logout(): Promise<boolean> {
   try {
     await firebase.auth().signOut();
     // Sign-out successful.
@@ -19,4 +19,4 @@ export default async () => {
     console.error(e);
     return false;
   }
-};
+}

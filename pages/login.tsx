@@ -3,9 +3,9 @@ import firebase from "firebase/app";
 import "firebase/auth";
 import Link from "next/link";
 import Router from "next/router";
-import initFirebase from "../utils/auth/initFirebase";
-import Footer from "../components/footer";
-import { googleAuthProvider } from "../utils/auth/authProviders";
+import initFirebase from "../src/utils/auth/initFirebase";
+import Footer from "../src/components/common/footer";
+import { googleAuthProvider } from "../src/utils/auth/authProviders";
 
 initFirebase();
 
