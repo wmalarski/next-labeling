@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { defaultLabelingSchema } from "./defaults";
 import { LabelingSchema } from "./types";
 
@@ -7,12 +7,19 @@ export interface SchemaState {
   message: string;
 }
 
+export type NullableSchemaState = SchemaState | undefined;
+
+export interface SchemaHistoryState {
+  history: SchemaState[];
+  index: number;
+}
+
 export interface UseSchemaHistoryResult {
   schema: LabelingSchema;
   message: string;
-  push: (schema: LabelingSchema, message: string) => void;
-  undo: () => void;
-  redo: () => void;
+  setSchema: (setter: (schema: LabelingSchema) => NullableSchemaState) => void;
+  undoSchema: () => void;
+  redoSchema: () => void;
   undoMessage?: string;
   redoMessage?: string;
 }
@@ -22,26 +29,55 @@ export default function useSchemaHistory(
   maxSize?: number
 ): UseSchemaHistoryResult {
   const bufferSize = useRef(maxSize ?? 20);
-  const [schemaHistory, setSchemaHistory] = useState<SchemaState[]>([
-    { schema: initial ?? defaultLabelingSchema, message: "Schema loaded" },
-  ]);
-  const [index, setIndex] = useState(0);
+  const [state, setState] = useState<SchemaHistoryState>({
+    history: [
+      { schema: initial ?? defaultLabelingSchema, message: "Schema loaded" },
+    ],
+    index: 0,
+  });
+
+  const undoSchema = useCallback(
+    (): void =>
+      setState((value) => ({ ...value, index: Math.max(value.index - 1, 0) })),
+    [setState]
+  );
+  const redoSchema = useCallback(
+    (): void =>
+      setState((value) => ({
+        ...value,
+        index: Math.min(value.index + 1, value.history.length - 1),
+      })),
+    [setState]
+  );
+  const setSchema = useCallback(
+    (setter: (schema: LabelingSchema) => NullableSchemaState): void =>
+      setState((value) => {
+        const result = setter(value.history[value.index].schema);
+        if (!result) return value;
+        const { schema, message } = result;
+        const newHistory = [...value.history];
+        newHistory.splice(value.index + 1);
+        if (newHistory.length < bufferSize.current) {
+          return {
+            history: [...newHistory, { schema, message }],
+            index: value.index + 1,
+          };
+        }
+        newHistory.shift();
+        return {
+          history: [...newHistory, { schema, message }],
+          index: value.index,
+        };
+      }),
+    [setState]
+  );
 
   return {
-    ...schemaHistory[index],
-    push: (schema, message) => {
-      const newHistory = [...schemaHistory];
-      newHistory.splice(index + 1);
-      if (newHistory.length < bufferSize.current) {
-        setIndex(index + 1);
-      } else {
-        newHistory.shift();
-      }
-      setSchemaHistory([...newHistory, { schema, message }]);
-    },
-    undo: () => setIndex(Math.max(index - 1, 0)),
-    redo: () => setIndex(Math.min(index + 1, schemaHistory.length - 1)),
-    undoMessage: schemaHistory[index - 1]?.message,
-    redoMessage: schemaHistory[index + 1]?.message,
+    ...state.history[state.index],
+    undoSchema,
+    redoSchema,
+    setSchema,
+    undoMessage: state.history[state.index - 1]?.message,
+    redoMessage: state.history[state.index + 1]?.message,
   };
 }

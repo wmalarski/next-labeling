@@ -35,9 +35,9 @@ function SpacesCreate(): JSX.Element {
     message,
     undoMessage,
     redoMessage,
-    push: pushSchema,
-    undo: undoSchema,
-    redo: redoSchema,
+    setSchema,
+    undoSchema,
+    redoSchema,
   } = useSchemaHistory();
 
   useEffect(() => {
@@ -116,7 +116,7 @@ function SpacesCreate(): JSX.Element {
           </Button>
         </ButtonGroup>
       </Header>
-      <SchemaForm schema={schema} push={pushSchema} />
+      <SchemaForm schema={schema} setSchema={setSchema} />
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",

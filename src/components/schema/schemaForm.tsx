@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import uniqueId from "lodash/uniqueId";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -7,6 +7,7 @@ import AddIcon from "@material-ui/icons/Add";
 import { LabelingSchema } from "../../utils/schema/types";
 import ObjectForm from "./objectForm";
 import Button from "@material-ui/core/Button";
+import { NullableSchemaState } from "../../utils/schema/useSchemaHistory";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -19,13 +20,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export interface SchemaFormProps {
   schema: LabelingSchema;
-  push: (schema: LabelingSchema, message: string) => void;
+  setSchema: (setter: (schema: LabelingSchema) => NullableSchemaState) => void;
 }
 
 export default function SchemaForm(props: SchemaFormProps): JSX.Element {
-  const { schema, push } = props;
+  const { schema, setSchema } = props;
   const classes = useStyles();
-
   return (
     <div className={classes.root}>
       <Typography component="h1" variant="h5">
@@ -38,7 +38,10 @@ export default function SchemaForm(props: SchemaFormProps): JSX.Element {
         value={schema.name}
         margin="dense"
         onChange={(event) =>
-          push({ ...schema, name: event.target.value }, "Schema name changed")
+          setSchema((sch) => ({
+            schema: { ...sch, name: event.target.value },
+            message: "Schema name changed",
+          }))
         }
       />
       <TextField
@@ -48,10 +51,10 @@ export default function SchemaForm(props: SchemaFormProps): JSX.Element {
         value={schema.description}
         margin="dense"
         onChange={(event) =>
-          push(
-            { ...schema, description: event.target.value },
-            "Schema description changed"
-          )
+          setSchema((sch) => ({
+            schema: { ...sch, description: event.target.value },
+            message: "Schema description changed",
+          }))
         }
       />
       <TextField
@@ -61,31 +64,31 @@ export default function SchemaForm(props: SchemaFormProps): JSX.Element {
         value={schema.version}
         margin="dense"
         onChange={(event) =>
-          push(
-            { ...schema, version: event.target.value },
-            "Schema description changed"
-          )
+          setSchema((sch) => ({
+            schema: { ...sch, version: event.target.value },
+            message: "Schema version changed",
+          }))
         }
       />
       <Button
         startIcon={<AddIcon />}
         onClick={() =>
-          push(
-            {
-              ...schema,
+          setSchema((sch) => ({
+            schema: {
+              ...sch,
               objects: [
-                ...schema.objects,
+                ...sch.objects,
                 {
                   id: uniqueId("object_"),
-                  name: `Object ${schema.objects.length + 1}`,
+                  name: `Object ${sch.objects.length + 1}`,
                   description: "",
                   fields: [],
                   singleton: false,
                 },
               ],
             },
-            "New object added"
-          )
+            message: "New object added",
+          }))
         }
       >
         Add object
@@ -95,31 +98,43 @@ export default function SchemaForm(props: SchemaFormProps): JSX.Element {
           <ObjectForm
             key={object.id}
             objectSchema={object}
-            onChange={(object, message) => {
-              const objects = [...schema.objects];
-              objects[index] = object;
-              push({ ...schema, objects }, message);
-            }}
+            onChange={(object, message) =>
+              setSchema((sch) => {
+                const objects = [...sch.objects];
+                objects[index] = object;
+                return { schema: { ...sch, objects }, message };
+              })
+            }
             onCopy={(object) =>
-              push(
-                { ...schema, objects: [...schema.objects, object] },
-                "Object copied"
-              )
+              setSchema((sch) => ({
+                schema: { ...sch, objects: [...sch.objects, object] },
+                message: "Object copied",
+              }))
             }
             onRemove={() => {
-              const objects = [...schema.objects];
-              objects.splice(index, 1);
-              push({ ...schema, objects }, "Object removed");
+              setSchema((sch) => {
+                const objects = [...sch.objects];
+                objects.splice(index, 1);
+                return {
+                  schema: { ...sch, objects },
+                  message: "Object removed",
+                };
+              });
             }}
             onMove={(diff) => {
-              const objects = [...schema.objects];
-              const newIndex = index - diff;
-              if (newIndex < 0 || newIndex >= objects.length) return;
-              [objects[index], objects[newIndex]] = [
-                objects[newIndex],
-                objects[index],
-              ];
-              push({ ...schema, objects }, "Object priority changed");
+              setSchema((sch) => {
+                const objects = [...sch.objects];
+                const newIndex = index - diff;
+                if (newIndex < 0 || newIndex >= objects.length) return;
+                [objects[index], objects[newIndex]] = [
+                  objects[newIndex],
+                  objects[index],
+                ];
+                return {
+                  schema: { ...sch, objects },
+                  message: "Object priority changed",
+                };
+              });
             }}
           />
         )
