@@ -12,6 +12,7 @@ export interface LabelingObjectSchema {
   id?: string;
   name: string;
   description: string;
+  singleton: boolean;
   fields: LabelingFieldSchema[];
 }
 

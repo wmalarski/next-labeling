@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import uniqueId from "lodash/uniqueId";
 import Typography from "@material-ui/core/Typography";
 import Accordion from "@material-ui/core/Accordion";
@@ -11,8 +11,6 @@ import Divider from "@material-ui/core/Divider";
 import AccordionActions from "@material-ui/core/AccordionActions";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
-import ReplayIcon from "@material-ui/icons/Replay";
-import SaveIcon from "@material-ui/icons/Save";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import RemoveIcon from "@material-ui/icons/Remove";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
@@ -20,6 +18,8 @@ import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import { FieldType } from "../../utils/schema/fields";
 import TextField from "@material-ui/core/TextField";
 import FieldForm from "./fieldForm";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,7 +54,7 @@ export interface ObjectFormProps {
 
 export default function ObjectForm(props: ObjectFormProps): JSX.Element {
   const { objectSchema, onChange, onRemove, onCopy, onMove } = props;
-  const { name, description, fields } = objectSchema;
+  const { name, description, fields, singleton } = objectSchema;
   const classes = useStyles();
 
   return (
@@ -95,6 +95,18 @@ export default function ObjectForm(props: ObjectFormProps): JSX.Element {
             onChange={(event) =>
               onChange({ ...objectSchema, description: event.target.value })
             }
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={singleton}
+                onChange={() =>
+                  onChange({ ...objectSchema, singleton: !singleton })
+                }
+                value={singleton}
+              />
+            }
+            label="Is singleton?"
           />
           <Divider />
           {fields.map(
@@ -189,6 +201,7 @@ export default function ObjectForm(props: ObjectFormProps): JSX.Element {
               name: `${name} - Copy`,
               description,
               fields,
+              singleton,
             })
           }
         >

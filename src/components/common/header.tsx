@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, PropsWithChildren } from "react";
 import { makeStyles } from "@material-ui/styles";
 import { Theme } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
@@ -9,6 +9,7 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import SignUpHeader from "./signUpHeader";
+import CodeIcon from "@material-ui/icons/Code";
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
@@ -27,8 +28,10 @@ export interface HeaderProps {
   siteTitle?: string;
 }
 
-export default function Header(props: HeaderProps): JSX.Element {
-  const { siteTitle = "Next Labeling" } = props;
+export default function Header(
+  props: PropsWithChildren<HeaderProps>
+): JSX.Element {
+  const { siteTitle = "Next Labeling", children } = props;
   const classes = useStyles();
   const { authUser } = useContext(AuthUserInfoContext);
 
@@ -37,9 +40,12 @@ export default function Header(props: HeaderProps): JSX.Element {
       <Toolbar>
         <Typography variant="h6" className={classes.title}>
           <Link href="/" passHref>
-            <Button component="a">{siteTitle}</Button>
+            <Button color="inherit" startIcon={<CodeIcon />} component="a">
+              {siteTitle}
+            </Button>
           </Link>
         </Typography>
+        {children}
         <div className={classes.grow} />
         {authUser ? <UserHeader /> : <SignUpHeader />}
       </Toolbar>

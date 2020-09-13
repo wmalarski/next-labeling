@@ -20,10 +20,14 @@ import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import SaveIcon from "@material-ui/icons/Save";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
+import LibraryAddIcon from "@material-ui/icons/LibraryAdd";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import ObjectForm from "../../src/components/schema/objectForm";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
@@ -72,6 +76,7 @@ function SpacesCreate(): JSX.Element {
         id: uniqueId("object_"),
         name: "Car",
         description: "Tip: Only moving vehicles",
+        singleton: false,
         fields: [
           {
             id: uniqueId("field_"),
@@ -142,16 +147,13 @@ function SpacesCreate(): JSX.Element {
 
   if (!authUser) return <></>;
 
+  // TODO: remove text on small screens
   return (
     <div>
-      <Header />
-      <div className={classes.root}>
-        <Typography component="h1" variant="h5">
-          Create new schema
-        </Typography>
+      <Header>
         <Button
           startIcon={<AddIcon />}
-          color="primary"
+          color="inherit"
           onClick={() =>
             setSchema({
               ...schema,
@@ -162,29 +164,52 @@ function SpacesCreate(): JSX.Element {
                   name: `Object ${schema.objects.length + 1}`,
                   description: "",
                   fields: [],
+                  singleton: false,
                 },
               ],
             })
           }
         >
-          Add new object
+          Add object
         </Button>
-        <Button color="primary" startIcon={<UndoIcon />} onClick={() => {}}>
+        <Button color="inherit" startIcon={<UndoIcon />} onClick={() => {}}>
           Undo
         </Button>
-        <Button color="primary" startIcon={<RedoIcon />} onClick={() => {}}>
+        <Button color="inherit" startIcon={<RedoIcon />} onClick={() => {}}>
           Redo
         </Button>
+        <Button color="inherit" startIcon={<SaveIcon />} onClick={() => {}}>
+          Save
+        </Button>
         <Button
-          color="primary"
+          color="inherit"
           startIcon={<CloudUploadIcon />}
           onClick={() => {}}
         >
-          Import Schema
+          Import
         </Button>
-        <Button color="primary" startIcon={<SaveAltIcon />} onClick={() => {}}>
-          Export Schema
+        <Button color="inherit" startIcon={<SaveAltIcon />} onClick={() => {}}>
+          Export
         </Button>
+        <Button
+          color="inherit"
+          startIcon={<DeleteOutlineIcon />}
+          onClick={() => {}}
+        >
+          Remove
+        </Button>
+        <Button
+          color="inherit"
+          startIcon={<ExitToAppIcon />}
+          onClick={() => {}}
+        >
+          Quit
+        </Button>
+      </Header>
+      <div className={classes.root}>
+        <Typography component="h1" variant="h5">
+          Create new schema
+        </Typography>
         {schema.objects.map(
           (object, index): JSX.Element => (
             <ObjectForm

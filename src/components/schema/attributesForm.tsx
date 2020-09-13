@@ -28,6 +28,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import { CompactPicker } from "react-color";
+import ComboBoxForm from "./comboBoxForm";
+import SelectForm from "./selectForm";
+import MulSelectForm from "./mulSelectForm";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -69,27 +72,106 @@ export default function AttributesForm(
     case FieldType.POINT:
     case FieldType.POLYGON:
     case FieldType.RECTANGLE:
-      const typeAttributes = attributes as LabelingFieldAttributes[typeof type];
+      const colorAttributes = attributes as LabelingFieldAttributes[typeof type];
       return (
-        <div>
-          <CompactPicker
-            color={typeAttributes.color}
-            onChangeComplete={(color) => onChange({ color: color.hex })}
-          />
-        </div>
+        <CompactPicker
+          color={colorAttributes.color}
+          onChangeComplete={(color) => onChange({ color: color.hex })}
+        />
       );
     case FieldType.CHECKBOX:
-      return <></>;
-    case FieldType.COMBOBOX:
-      return <></>;
+      const checkBoxAttributes = attributes as LabelingFieldAttributes[typeof type];
+      return (
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={checkBoxAttributes.default}
+              onChange={(event) => onChange({ default: event.target.value })}
+              value={checkBoxAttributes.default}
+            />
+          }
+          label="Default value"
+        />
+      );
     case FieldType.TEXT:
-      return <></>;
+      const textAttributes = attributes as LabelingFieldAttributes[typeof type];
+      return (
+        <TextField
+          label="Default"
+          variant="outlined"
+          value={textAttributes.default}
+          onChange={(event) => onChange({ default: event.target.value })}
+        />
+      );
     case FieldType.NUMBER:
-      return <></>;
+      const numberAttributes = attributes as LabelingFieldAttributes[typeof type];
+      return (
+        <>
+          <TextField
+            label="Default"
+            type="number"
+            value={numberAttributes.default}
+            onChange={(event) =>
+              onChange({
+                ...numberAttributes,
+                default: Number(event.target.value),
+              })
+            }
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            label="Min"
+            type="number"
+            value={numberAttributes.min}
+            onChange={(event) =>
+              onChange({ ...numberAttributes, min: Number(event.target.value) })
+            }
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            label="Max"
+            type="number"
+            value={numberAttributes.max}
+            onChange={(event) =>
+              onChange({ ...numberAttributes, max: Number(event.target.value) })
+            }
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <TextField
+            label="Step"
+            type="number"
+            value={numberAttributes.step}
+            onChange={(event) =>
+              onChange({
+                ...numberAttributes,
+                step: Number(event.target.value),
+              })
+            }
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+        </>
+      );
+    case FieldType.COMBOBOX:
+      const comboBoxAttributes = attributes as LabelingFieldAttributes[typeof type];
+      return (
+        <ComboBoxForm attributes={comboBoxAttributes} onChange={onChange} />
+      );
     case FieldType.SELECT:
-      return <></>;
+      const selectAttributes = attributes as LabelingFieldAttributes[typeof type];
+      return <SelectForm attributes={selectAttributes} onChange={onChange} />;
     case FieldType.MULSELECT:
-      return <></>;
+      const multiselectAttributes = attributes as LabelingFieldAttributes[typeof type];
+      return (
+        <MulSelectForm attributes={multiselectAttributes} onChange={onChange} />
+      );
     default:
       return <></>;
   }
