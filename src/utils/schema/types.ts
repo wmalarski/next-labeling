@@ -23,4 +23,5 @@ export interface LabelingSchema {
   created: Date;
   description: string;
   objects: LabelingObjectSchema[];
+  previousVersionId?: string;
 }

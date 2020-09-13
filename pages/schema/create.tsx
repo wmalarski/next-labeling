@@ -1,61 +1,28 @@
 import React, { useState, useEffect, ChangeEvent, useContext } from "react";
 import firebase from "firebase/app";
-import uniqueId from "lodash/uniqueId";
 import Link from "next/link";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
 import initFirebase from "../../src/utils/auth/initFirebase";
 import Header from "../../src/components/common/header";
 import Footer from "../../src/components/common/footer";
-import { AuthUserInfo } from "../../src/utils/auth/user";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
-import Typography from "@material-ui/core/Typography";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import SaveIcon from "@material-ui/icons/Save";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
-import LibraryAddIcon from "@material-ui/icons/LibraryAdd";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
-import ObjectForm from "../../src/components/schema/objectForm";
 import Button from "@material-ui/core/Button";
-import AddIcon from "@material-ui/icons/Add";
-import { LabelingSchema } from "../../src/utils/schema/types";
-import { FieldType } from "../../src/utils/schema/fields";
-import IconButton from "@material-ui/core/IconButton";
 import Box from "@material-ui/core/Box";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import useSchemaHistory from "../../src/utils/schema/useSchemaHistory";
 import Tooltip from "@material-ui/core/Tooltip";
+import SchemaForm from "../../src/components/schema/schemaForm";
 
 initFirebase();
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      margin: 10,
-    },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: "center",
-      color: theme.palette.text.secondary,
-    },
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightRegular,
-    },
-  })
-);
 
 type Inputs = {
   spaceId: string;
@@ -68,8 +35,8 @@ const initial: Inputs = {
 };
 
 function SpacesCreate(): JSX.Element {
-  const classes = useStyles();
   const { authUser } = useContext(AuthUserInfoContext);
+  const router = useRouter();
 
   const {
     schema,
@@ -109,7 +76,7 @@ function SpacesCreate(): JSX.Element {
         title: inputs.title,
         uid: authUser.id,
       });
-      Router.push("/schema");
+      router.push("/schema");
     } catch (error) {
       alert(error);
     }
@@ -125,7 +92,7 @@ function SpacesCreate(): JSX.Element {
 
   useEffect(() => {
     if (!authUser) {
-      Router.push("/");
+      router.push("/");
     } else {
       firstInput?.focus();
     }
@@ -133,35 +100,12 @@ function SpacesCreate(): JSX.Element {
 
   if (!authUser) return <></>;
 
-  const buttonDisplay = { xs: "none", sm: "none", md: "block" };
+  const buttonDisplay = { xs: "block" };
 
   return (
     <div>
       <Header>
         <ButtonGroup size="small" color="inherit" variant="text">
-          <Button
-            startIcon={<AddIcon />}
-            onClick={() =>
-              pushSchema(
-                {
-                  ...schema,
-                  objects: [
-                    ...schema.objects,
-                    {
-                      id: uniqueId("object_"),
-                      name: `Object ${schema.objects.length + 1}`,
-                      description: "",
-                      fields: [],
-                      singleton: false,
-                    },
-                  ],
-                },
-                "New object added"
-              )
-            }
-          >
-            <Box display={buttonDisplay}>Add object</Box>
-          </Button>
           {undoMessage ? (
             <Tooltip title={message}>
               <Button startIcon={<UndoIcon />} onClick={undoSchema}>
@@ -193,53 +137,23 @@ function SpacesCreate(): JSX.Element {
           <Button startIcon={<SaveAltIcon />} onClick={() => {}}>
             <Box display={buttonDisplay}>Export</Box>
           </Button>
-          <Button startIcon={<DeleteOutlineIcon />} onClick={() => {}}>
+          <Button
+            startIcon={<DeleteOutlineIcon />}
+            onClick={() => {
+              router.push("/schema");
+            }}
+          >
             <Box display={buttonDisplay}>Remove</Box>
           </Button>
-          <Button startIcon={<ExitToAppIcon />} onClick={() => {}}>
+          <Button
+            startIcon={<ExitToAppIcon />}
+            onClick={() => router.push("/schema")}
+          >
             <Box display={buttonDisplay}>Quit</Box>
           </Button>
         </ButtonGroup>
       </Header>
-      <div className={classes.root}>
-        <Typography component="h1" variant="h5">
-          Create new schema
-        </Typography>
-        {schema.objects.map(
-          (object, index): JSX.Element => (
-            <ObjectForm
-              key={object.id}
-              objectSchema={object}
-              onChange={(object, message) => {
-                const objects = [...schema.objects];
-                objects[index] = object;
-                pushSchema({ ...schema, objects }, message);
-              }}
-              onCopy={(object) =>
-                pushSchema(
-                  { ...schema, objects: [...schema.objects, object] },
-                  "Object copied"
-                )
-              }
-              onRemove={() => {
-                const objects = [...schema.objects];
-                objects.splice(index, 1);
-                pushSchema({ ...schema, objects }, "Object removed");
-              }}
-              onMove={(diff) => {
-                const objects = [...schema.objects];
-                const newIndex = index - diff;
-                if (newIndex < 0 || newIndex >= objects.length) return;
-                [objects[index], objects[newIndex]] = [
-                  objects[newIndex],
-                  objects[index],
-                ];
-                pushSchema({ ...schema, objects }, "Object priority changed");
-              }}
-            />
-          )
-        )}
-      </div>
+      <SchemaForm schema={schema} push={pushSchema} />
       <form onSubmit={handleSubmit}>
         <p>
           <label htmlFor="spaceId">space ID: </label>

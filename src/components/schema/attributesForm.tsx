@@ -1,5 +1,4 @@
 import React from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { FieldType, LabelingFieldAttributes } from "../../utils/schema/fields";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
