@@ -7,10 +7,7 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import RemoveIcon from "@material-ui/icons/Remove";
-import {
-  FieldType,
-  labelingFieldAttributesDefaults,
-} from "../../utils/schema/fields";
+import { FieldType } from "../../utils/schema/fields";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -20,6 +17,7 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import AttributesForm from "./attributesForm";
 import Grid from "@material-ui/core/Grid";
+import { labelingFieldAttributesDefaults } from "../../utils/schema/defaults";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export interface FieldFormProps {
   fieldSchema: LabelingFieldSchema;
-  onChange: (fieldSchema: LabelingFieldSchema) => void;
+  onChange: (fieldSchema: LabelingFieldSchema, message: string) => void;
   onRemove: () => void;
   onCopy: () => void;
   onMove: (diff: number) => void;
@@ -58,7 +56,10 @@ export default function FieldForm(props: FieldFormProps): JSX.Element {
             value={name}
             margin="dense"
             onChange={(event) =>
-              onChange({ ...fieldSchema, name: event.target.value })
+              onChange(
+                { ...fieldSchema, name: event.target.value },
+                "Field name changed"
+              )
             }
           />
           <FormControl>
@@ -71,11 +72,14 @@ export default function FieldForm(props: FieldFormProps): JSX.Element {
               onChange={(event) => {
                 const newType = event.target.value as FieldType;
                 if (newType === type) return;
-                onChange({
-                  ...fieldSchema,
-                  type: newType,
-                  attributes: labelingFieldAttributesDefaults[newType],
-                });
+                onChange(
+                  {
+                    ...fieldSchema,
+                    type: newType,
+                    attributes: labelingFieldAttributesDefaults[newType],
+                  },
+                  "Field type changed"
+                );
               }}
             >
               {Object.entries(FieldType).map(
@@ -92,7 +96,10 @@ export default function FieldForm(props: FieldFormProps): JSX.Element {
               <Checkbox
                 checked={perFrame}
                 onChange={() =>
-                  onChange({ ...fieldSchema, perFrame: !perFrame })
+                  onChange(
+                    { ...fieldSchema, perFrame: !perFrame },
+                    "Per frame value changed"
+                  )
                 }
                 value={perFrame}
               />
@@ -107,10 +114,13 @@ export default function FieldForm(props: FieldFormProps): JSX.Element {
             type={type}
             attributes={attributes}
             onChange={(newAttributes) =>
-              onChange({
-                ...fieldSchema,
-                attributes: newAttributes,
-              })
+              onChange(
+                {
+                  ...fieldSchema,
+                  attributes: newAttributes,
+                },
+                "Attribute configuration changed"
+              )
             }
           />
         </Grid>

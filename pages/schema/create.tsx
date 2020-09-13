@@ -34,6 +34,8 @@ import { FieldType } from "../../src/utils/schema/fields";
 import IconButton from "@material-ui/core/IconButton";
 import Box from "@material-ui/core/Box";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import useSchemaHistory from "../../src/utils/schema/useSchemaHistory";
+import Tooltip from "@material-ui/core/Tooltip";
 
 initFirebase();
 
@@ -69,32 +71,15 @@ function SpacesCreate(): JSX.Element {
   const classes = useStyles();
   const { authUser } = useContext(AuthUserInfoContext);
 
-  const [schema, setSchema] = useState<LabelingSchema>({
-    name: "New Schema",
-    description: "My first schema.",
-    objects: [
-      {
-        id: uniqueId("object_"),
-        name: "Car",
-        description: "Tip: Only moving vehicles",
-        singleton: false,
-        fields: [
-          {
-            id: uniqueId("field_"),
-            name: "Direction",
-            perFrame: true,
-            type: FieldType.COMBOBOX,
-            attributes: {
-              default: "Oncoming",
-              options: ["Oncoming", "Preceding", "From Right", "From Left"],
-            },
-          },
-        ],
-      },
-    ],
-    created: new Date(),
-    version: "0.0.1",
-  });
+  const {
+    schema,
+    message,
+    undoMessage,
+    redoMessage,
+    push: pushSchema,
+    undo: undoSchema,
+    redo: redoSchema,
+  } = useSchemaHistory();
 
   var firstInput: HTMLInputElement | null = null;
 
@@ -149,8 +134,7 @@ function SpacesCreate(): JSX.Element {
   if (!authUser) return <></>;
 
   const buttonDisplay = { xs: "none", sm: "none", md: "block" };
-  const tooltipDisplay = { xs: "block", sm: "block", md: "none" };
-  // TODO: remove text on small screens
+
   return (
     <div>
       <Header>
@@ -158,29 +142,48 @@ function SpacesCreate(): JSX.Element {
           <Button
             startIcon={<AddIcon />}
             onClick={() =>
-              setSchema({
-                ...schema,
-                objects: [
-                  ...schema.objects,
-                  {
-                    id: uniqueId("object_"),
-                    name: `Object ${schema.objects.length + 1}`,
-                    description: "",
-                    fields: [],
-                    singleton: false,
-                  },
-                ],
-              })
+              pushSchema(
+                {
+                  ...schema,
+                  objects: [
+                    ...schema.objects,
+                    {
+                      id: uniqueId("object_"),
+                      name: `Object ${schema.objects.length + 1}`,
+                      description: "",
+                      fields: [],
+                      singleton: false,
+                    },
+                  ],
+                },
+                "New object added"
+              )
             }
           >
             <Box display={buttonDisplay}>Add object</Box>
           </Button>
-          <Button startIcon={<UndoIcon />} onClick={() => {}}>
-            <Box display={buttonDisplay}>Undo</Box>
-          </Button>
-          <Button startIcon={<RedoIcon />} onClick={() => {}}>
-            <Box display={buttonDisplay}>Redo</Box>
-          </Button>
+          {undoMessage ? (
+            <Tooltip title={message}>
+              <Button startIcon={<UndoIcon />} onClick={undoSchema}>
+                <Box display={buttonDisplay}>Undo</Box>
+              </Button>
+            </Tooltip>
+          ) : (
+            <Button startIcon={<UndoIcon />} disabled>
+              <Box display={buttonDisplay}>Undo</Box>
+            </Button>
+          )}
+          {redoMessage ? (
+            <Tooltip title={redoMessage}>
+              <Button startIcon={<RedoIcon />} onClick={redoSchema}>
+                <Box display={buttonDisplay}>Redo</Box>
+              </Button>
+            </Tooltip>
+          ) : (
+            <Button startIcon={<RedoIcon />} disabled>
+              <Box display={buttonDisplay}>Redo</Box>
+            </Button>
+          )}
           <Button startIcon={<SaveIcon />} onClick={() => {}}>
             <Box display={buttonDisplay}>Save</Box>
           </Button>
@@ -207,18 +210,21 @@ function SpacesCreate(): JSX.Element {
             <ObjectForm
               key={object.id}
               objectSchema={object}
-              onChange={(object) => {
+              onChange={(object, message) => {
                 const objects = [...schema.objects];
                 objects[index] = object;
-                setSchema({ ...schema, objects });
+                pushSchema({ ...schema, objects }, message);
               }}
               onCopy={(object) =>
-                setSchema({ ...schema, objects: [...schema.objects, object] })
+                pushSchema(
+                  { ...schema, objects: [...schema.objects, object] },
+                  "Object copied"
+                )
               }
               onRemove={() => {
                 const objects = [...schema.objects];
                 objects.splice(index, 1);
-                setSchema({ ...schema, objects });
+                pushSchema({ ...schema, objects }, "Object removed");
               }}
               onMove={(diff) => {
                 const objects = [...schema.objects];
@@ -228,7 +234,7 @@ function SpacesCreate(): JSX.Element {
                   objects[newIndex],
                   objects[index],
                 ];
-                setSchema({ ...schema, objects });
+                pushSchema({ ...schema, objects }, "Object priority changed");
               }}
             />
           )

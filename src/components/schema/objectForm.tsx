@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export interface ObjectFormProps {
   objectSchema: LabelingObjectSchema;
-  onChange: (objectSchema: LabelingObjectSchema) => void;
+  onChange: (objectSchema: LabelingObjectSchema, message: string) => void;
   onRemove: () => void;
   onCopy: (objectSchema: LabelingObjectSchema) => void;
   onMove: (diff: number) => void;
@@ -81,7 +81,10 @@ export default function ObjectForm(props: ObjectFormProps): JSX.Element {
             value={name}
             margin="dense"
             onChange={(event) =>
-              onChange({ ...objectSchema, name: event.target.value })
+              onChange(
+                { ...objectSchema, name: event.target.value },
+                "Field name changed"
+              )
             }
           />
           <TextField
@@ -91,7 +94,10 @@ export default function ObjectForm(props: ObjectFormProps): JSX.Element {
             value={description}
             margin="dense"
             onChange={(event) =>
-              onChange({ ...objectSchema, description: event.target.value })
+              onChange(
+                { ...objectSchema, description: event.target.value },
+                "Field description changed"
+              )
             }
           />
           <FormControlLabel
@@ -99,7 +105,10 @@ export default function ObjectForm(props: ObjectFormProps): JSX.Element {
               <Checkbox
                 checked={singleton}
                 onChange={() =>
-                  onChange({ ...objectSchema, singleton: !singleton })
+                  onChange(
+                    { ...objectSchema, singleton: !singleton },
+                    "Field is singleton state changed"
+                  )
                 }
                 value={singleton}
               />
@@ -112,27 +121,33 @@ export default function ObjectForm(props: ObjectFormProps): JSX.Element {
               <FieldForm
                 key={index}
                 fieldSchema={field}
-                onChange={(field) => {
+                onChange={(field, message) => {
                   const newFields = [...fields];
                   newFields[index] = field;
-                  onChange({ ...objectSchema, fields: newFields });
+                  onChange({ ...objectSchema, fields: newFields }, message);
                 }}
                 onCopy={() =>
-                  onChange({
-                    ...objectSchema,
-                    fields: [
-                      ...fields,
-                      {
-                        ...field,
-                        id: uniqueId("field_"),
-                      },
-                    ],
-                  })
+                  onChange(
+                    {
+                      ...objectSchema,
+                      fields: [
+                        ...fields,
+                        {
+                          ...field,
+                          id: uniqueId("field_"),
+                        },
+                      ],
+                    },
+                    "Field copied"
+                  )
                 }
                 onRemove={() => {
                   const newFields = [...fields];
                   newFields.splice(index, 1);
-                  onChange({ ...objectSchema, fields: newFields });
+                  onChange(
+                    { ...objectSchema, fields: newFields },
+                    "Field removed"
+                  );
                 }}
                 onMove={(diff) => {
                   const newFields = [...fields];
@@ -142,7 +157,10 @@ export default function ObjectForm(props: ObjectFormProps): JSX.Element {
                     newFields[newIndex],
                     newFields[index],
                   ];
-                  onChange({ ...objectSchema, fields: newFields });
+                  onChange(
+                    { ...objectSchema, fields: newFields },
+                    "Field priority changed"
+                  );
                 }}
               />
             )
@@ -156,19 +174,22 @@ export default function ObjectForm(props: ObjectFormProps): JSX.Element {
           color="primary"
           startIcon={<AddIcon />}
           onClick={() =>
-            onChange({
-              ...objectSchema,
-              fields: [
-                ...fields,
-                {
-                  id: uniqueId("field_"),
-                  name: "New field",
-                  perFrame: true,
-                  type: FieldType.CHECKBOX,
-                  attributes: { default: false },
-                },
-              ],
-            })
+            onChange(
+              {
+                ...objectSchema,
+                fields: [
+                  ...fields,
+                  {
+                    id: uniqueId("field_"),
+                    name: "New field",
+                    perFrame: true,
+                    type: FieldType.CHECKBOX,
+                    attributes: { default: false },
+                  },
+                ],
+              },
+              "New field added"
+            )
           }
         >
           New field
