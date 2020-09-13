@@ -31,6 +31,9 @@ import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
 import { LabelingSchema } from "../../src/utils/schema/types";
 import { FieldType } from "../../src/utils/schema/fields";
+import IconButton from "@material-ui/core/IconButton";
+import Box from "@material-ui/core/Box";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 
 initFirebase();
 
@@ -145,64 +148,55 @@ function SpacesCreate(): JSX.Element {
 
   if (!authUser) return <></>;
 
+  const buttonDisplay = { xs: "none", sm: "none", md: "block" };
+  const tooltipDisplay = { xs: "block", sm: "block", md: "none" };
   // TODO: remove text on small screens
   return (
     <div>
       <Header>
-        <Button
-          startIcon={<AddIcon />}
-          color="inherit"
-          onClick={() =>
-            setSchema({
-              ...schema,
-              objects: [
-                ...schema.objects,
-                {
-                  id: uniqueId("object_"),
-                  name: `Object ${schema.objects.length + 1}`,
-                  description: "",
-                  fields: [],
-                  singleton: false,
-                },
-              ],
-            })
-          }
-        >
-          Add object
-        </Button>
-        <Button color="inherit" startIcon={<UndoIcon />} onClick={() => {}}>
-          Undo
-        </Button>
-        <Button color="inherit" startIcon={<RedoIcon />} onClick={() => {}}>
-          Redo
-        </Button>
-        <Button color="inherit" startIcon={<SaveIcon />} onClick={() => {}}>
-          Save
-        </Button>
-        <Button
-          color="inherit"
-          startIcon={<CloudUploadIcon />}
-          onClick={() => {}}
-        >
-          Import
-        </Button>
-        <Button color="inherit" startIcon={<SaveAltIcon />} onClick={() => {}}>
-          Export
-        </Button>
-        <Button
-          color="inherit"
-          startIcon={<DeleteOutlineIcon />}
-          onClick={() => {}}
-        >
-          Remove
-        </Button>
-        <Button
-          color="inherit"
-          startIcon={<ExitToAppIcon />}
-          onClick={() => {}}
-        >
-          Quit
-        </Button>
+        <ButtonGroup size="small" color="inherit" variant="text">
+          <Button
+            startIcon={<AddIcon />}
+            onClick={() =>
+              setSchema({
+                ...schema,
+                objects: [
+                  ...schema.objects,
+                  {
+                    id: uniqueId("object_"),
+                    name: `Object ${schema.objects.length + 1}`,
+                    description: "",
+                    fields: [],
+                    singleton: false,
+                  },
+                ],
+              })
+            }
+          >
+            <Box display={buttonDisplay}>Add object</Box>
+          </Button>
+          <Button startIcon={<UndoIcon />} onClick={() => {}}>
+            <Box display={buttonDisplay}>Undo</Box>
+          </Button>
+          <Button startIcon={<RedoIcon />} onClick={() => {}}>
+            <Box display={buttonDisplay}>Redo</Box>
+          </Button>
+          <Button startIcon={<SaveIcon />} onClick={() => {}}>
+            <Box display={buttonDisplay}>Save</Box>
+          </Button>
+          <Button startIcon={<CloudUploadIcon />} onClick={() => {}}>
+            <Box display={buttonDisplay}>Import</Box>
+          </Button>
+          <Button startIcon={<SaveAltIcon />} onClick={() => {}}>
+            <Box display={buttonDisplay}>Export</Box>
+          </Button>
+          <Button startIcon={<DeleteOutlineIcon />} onClick={() => {}}>
+            <Box display={buttonDisplay}>Remove</Box>
+          </Button>
+          <Button startIcon={<ExitToAppIcon />} onClick={() => {}}>
+            <Box display={buttonDisplay}>Quit</Box>
+          </Button>
+        </ButtonGroup>
       </Header>
       <div className={classes.root}>
         <Typography component="h1" variant="h5">
