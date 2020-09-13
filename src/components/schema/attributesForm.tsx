@@ -86,8 +86,7 @@ export default function AttributesForm(
           control={
             <Checkbox
               checked={checkBoxAttributes.default}
-              onChange={(event) => onChange({ default: event.target.value })}
-              value={checkBoxAttributes.default}
+              onChange={(event) => onChange({ default: event.target.checked })}
             />
           }
           label="Default value"
@@ -99,6 +98,8 @@ export default function AttributesForm(
         <TextField
           label="Default"
           variant="outlined"
+          margin="dense"
+          fullWidth
           value={textAttributes.default}
           onChange={(event) => onChange({ default: event.target.value })}
         />
@@ -110,6 +111,8 @@ export default function AttributesForm(
           <TextField
             label="Default"
             type="number"
+            margin="dense"
+            fullWidth
             value={numberAttributes.default}
             onChange={(event) =>
               onChange({
@@ -124,6 +127,8 @@ export default function AttributesForm(
           <TextField
             label="Min"
             type="number"
+            margin="dense"
+            fullWidth
             value={numberAttributes.min}
             onChange={(event) =>
               onChange({ ...numberAttributes, min: Number(event.target.value) })
@@ -135,6 +140,8 @@ export default function AttributesForm(
           <TextField
             label="Max"
             type="number"
+            margin="dense"
+            fullWidth
             value={numberAttributes.max}
             onChange={(event) =>
               onChange({ ...numberAttributes, max: Number(event.target.value) })
@@ -146,6 +153,8 @@ export default function AttributesForm(
           <TextField
             label="Step"
             type="number"
+            margin="dense"
+            fullWidth
             value={numberAttributes.step}
             onChange={(event) =>
               onChange({

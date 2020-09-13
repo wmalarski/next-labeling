@@ -26,9 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
     paper: {
       display: "flex",
       flexDirection: "column",
-      alignItems: "center",
       width: "100%",
-      justifyContent: "space-between",
     },
     column: {
       flexBasis: "33.33%",

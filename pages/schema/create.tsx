@@ -1,7 +1,5 @@
 import React, { useState, useEffect, ChangeEvent, useContext } from "react";
 import firebase from "firebase/app";
-import PropTypes from "prop-types";
-import { get } from "lodash";
 import uniqueId from "lodash/uniqueId";
 import Link from "next/link";
 import Router from "next/router";

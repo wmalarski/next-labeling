@@ -8,23 +8,10 @@ import { Chip } from "@material-ui/core";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    paper: {
+    root: {
       display: "flex",
       flexDirection: "column",
-      alignItems: "center",
       width: "100%",
-      justifyContent: "space-between",
-    },
-    column: {
-      flexBasis: "33.33%",
-    },
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightRegular,
-    },
-    secondaryHeading: {
-      fontSize: theme.typography.pxToRem(15),
-      color: theme.palette.text.secondary,
     },
   })
 );
@@ -42,46 +29,52 @@ export default function ComboBoxForm(props: ComboBoxFormProps): JSX.Element {
   const [text, setText] = useState("");
 
   return (
-    <>
-      {options.map((option, index) => (
-        <Chip
-          key={option}
-          label={option}
+    <div className={classes.root}>
+      <div>
+        {options.map((option, index) => (
+          <Chip
+            key={option}
+            label={option}
+            variant="outlined"
+            disabled={options.length === 1}
+            color={defaultValue === option ? "primary" : "default"}
+            onDelete={() => {
+              const newOptions = [...options];
+              newOptions.splice(index, 1);
+              onChange({
+                options: newOptions,
+                default: defaultValue === option ? newOptions[0] : defaultValue,
+              });
+            }}
+            onClick={() => {
+              onChange({ ...attributes, default: option });
+            }}
+          />
+        ))}
+      </div>
+      <div>
+        <TextField
+          label="Option"
           variant="outlined"
-          disabled={options.length === 1}
-          color={defaultValue === option ? "primary" : "default"}
-          onDelete={() => {
-            const newOptions = [...options];
-            newOptions.splice(index, 1);
-            onChange({
-              options: newOptions,
-              default: defaultValue === option ? newOptions[0] : defaultValue,
-            });
-          }}
-          onClick={() => {
-            onChange({ ...attributes, default: option });
-          }}
+          fullWidth
+          margin="dense"
+          value={text}
+          onChange={(event) => setText(event.target.value)}
         />
-      ))}
-      <TextField
-        label="Option"
-        variant="outlined"
-        value={text}
-        onChange={(event) => setText(event.target.value)}
-      />
-      <Button
-        startIcon={<AddIcon />}
-        color="inherit"
-        disabled={options.includes(text)}
-        onClick={() =>
-          onChange({
-            ...attributes,
-            options: [...options, text],
-          })
-        }
-      >
-        Add option
-      </Button>
-    </>
+        <Button
+          startIcon={<AddIcon />}
+          color="inherit"
+          disabled={options.includes(text) || text.length === 0}
+          onClick={() =>
+            onChange({
+              ...attributes,
+              options: [...options, text],
+            })
+          }
+        >
+          Add
+        </Button>
+      </div>
+    </div>
   );
 }

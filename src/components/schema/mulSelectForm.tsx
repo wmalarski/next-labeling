@@ -11,26 +11,15 @@ import Grid, { GridSize } from "@material-ui/core/Grid/Grid";
 import Paper from "@material-ui/core/Paper/Paper";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import Checkbox from "@material-ui/core/Checkbox/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     paper: {
       display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
       width: "100%",
-      justifyContent: "space-between",
-    },
-    column: {
-      flexBasis: "33.33%",
-    },
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightRegular,
-    },
-    secondaryHeading: {
-      fontSize: theme.typography.pxToRem(15),
-      color: theme.palette.text.secondary,
+      flexWrap: "wrap",
+      padding: theme.spacing(1),
     },
   })
 );
@@ -59,23 +48,28 @@ export default function MulSelectForm(props: MulSelectFormProps): JSX.Element {
             xs={Math.min(Math.max(1, size), 12) as GridSize}
           >
             <Paper className={classes.paper}>
-              {text}
-              <Checkbox
-                checked={defaultValues.includes(text)}
-                onChange={() => {
-                  const textIndex = defaultValues.indexOf(text);
-                  if (textIndex === -1) {
-                    onChange({
-                      ...attributes,
-                      default: [...defaultValues, text],
-                    });
-                  } else {
-                    const newDefaults = [...defaultValues];
-                    newDefaults.splice(textIndex, 1);
-                    onChange({ ...attributes, default: newDefaults });
-                  }
-                }}
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={defaultValues.includes(text)}
+                    onChange={() => {
+                      const textIndex = defaultValues.indexOf(text);
+                      if (textIndex === -1) {
+                        onChange({
+                          ...attributes,
+                          default: [...defaultValues, text],
+                        });
+                      } else {
+                        const newDefaults = [...defaultValues];
+                        newDefaults.splice(textIndex, 1);
+                        onChange({ ...attributes, default: newDefaults });
+                      }
+                    }}
+                  />
+                }
+                label={text}
               />
+
               <IconButton
                 aria-label="move-up"
                 onClick={() => {
@@ -131,12 +125,15 @@ export default function MulSelectForm(props: MulSelectFormProps): JSX.Element {
       <TextField
         label="Option"
         variant="outlined"
+        margin="dense"
         value={inputText}
         onChange={(event) => setInputText(event.target.value)}
       />
       <TextField
         label="Size"
         type="number"
+        variant="outlined"
+        margin="dense"
         value={inputSize}
         onChange={(event) => setInputSize(Number(event.target.value))}
         inputProps={{
@@ -151,7 +148,7 @@ export default function MulSelectForm(props: MulSelectFormProps): JSX.Element {
       <Button
         startIcon={<AddIcon />}
         color="inherit"
-        disabled={optionTexts.includes(inputText)}
+        disabled={optionTexts.includes(inputText) || inputText.length === 0}
         onClick={() =>
           onChange({
             ...attributes,
@@ -159,7 +156,7 @@ export default function MulSelectForm(props: MulSelectFormProps): JSX.Element {
           })
         }
       >
-        Add option
+        Add
       </Button>
     </>
   );
