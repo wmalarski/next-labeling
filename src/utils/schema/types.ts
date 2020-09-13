@@ -1,7 +1,8 @@
+import { AuthUser } from "../auth/user";
 import { FieldType, LabelingFieldAttributes } from "./fields";
 
 export interface LabelingFieldSchema {
-  id?: string;
+  id: string;
   name: string;
   type: FieldType;
   perFrame: boolean;
@@ -9,7 +10,7 @@ export interface LabelingFieldSchema {
 }
 
 export interface LabelingObjectSchema {
-  id?: string;
+  id: string;
   name: string;
   description: string;
   singleton: boolean;
@@ -18,6 +19,7 @@ export interface LabelingObjectSchema {
 
 export interface LabelingSchema {
   id?: string;
+  user?: AuthUser;
   name: string;
   version: string;
   created: Date;

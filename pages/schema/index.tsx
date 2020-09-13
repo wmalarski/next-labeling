@@ -10,6 +10,9 @@ import usePagination from "firestore-pagination-hook";
 import Header from "../../src/components/common/header";
 import Footer from "../../src/components/common/footer";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
+import Grid from "@material-ui/core/Grid";
+import Paper from "@material-ui/core/Paper";
+import SchemaListItem from "../../src/components/schema/schemaListItem";
 
 initFirebase();
 
@@ -23,40 +26,36 @@ function Spaces(): JSX.Element {
   });
 
   const db = firebase.firestore();
+
   const { loading, loadingMore, hasMore, items, loadMore } = usePagination(
     db
       .collection("spaces")
-      .where("uid", "==", authUser?.id || "")
-      .orderBy("spaceId", "asc"),
+      // .where("uid", "==", authUser?.id || "")
+      .orderBy("created", "asc"),
     {
       limit: 10,
     }
   );
+  if (!authUser) return <></>;
 
   return (
     <>
-      {!authUser ? (
-        <></>
-      ) : (
-        <>
-          <Header />
-          <label>schema</label>{" "}
-          <Link href={"/schema/create"}>
-            <a>[ create ]</a>
-          </Link>
-          <div>
-            {loading && <div>...</div>}
-            {items.map((item) => (
-              <pre className="text-xs">
-                {JSON.stringify(item.data() || {}, null, 2)}
-              </pre>
-            ))}
-            {hasMore && !loadingMore && (
-              <button onClick={loadMore}>[ more ]</button>
-            )}
-          </div>
-        </>
-      )}
+      <Header />
+      <Link href={"/schema/create"}>
+        <a>[ create ]</a>
+      </Link>
+      <div>
+        {loading && <div>...</div>}
+        {items.map((schema) => (
+          <SchemaListItem
+            key={schema.id}
+            schema={{ ...schema.data(), id: schema.id }}
+          />
+        ))}
+        {hasMore && !loadingMore && (
+          <button onClick={loadMore}>[ more ]</button>
+        )}
+      </div>
       <Footer />
     </>
   );
