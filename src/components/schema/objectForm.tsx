@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import uniqueId from "lodash/uniqueId";
 import Typography from "@material-ui/core/Typography";
 import Accordion from "@material-ui/core/Accordion";
@@ -50,7 +50,7 @@ export interface ObjectFormProps {
   onMove: (diff: number) => void;
 }
 
-export default function ObjectForm(props: ObjectFormProps): JSX.Element {
+function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
   const { objectSchema, onChange, onRemove, onCopy, onMove } = props;
   const { name, description, fields, singleton } = objectSchema;
   const classes = useStyles();
@@ -238,3 +238,11 @@ export default function ObjectForm(props: ObjectFormProps): JSX.Element {
     </Accordion>
   );
 }
+
+const ObjectForm = memo(
+  ObjectFormPrivate,
+  ({ objectSchema: prevObjectSchema }, { objectSchema: nextObjectSchema }) =>
+    JSON.stringify(prevObjectSchema) === JSON.stringify(nextObjectSchema)
+);
+
+export default ObjectForm;

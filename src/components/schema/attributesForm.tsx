@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { FieldType, LabelingFieldAttributes } from "../../utils/schema/fields";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -14,9 +14,7 @@ export interface AttributesFormProps {
   onChange: (attributes: LabelingFieldAttributes[FieldType]) => void;
 }
 
-export default function AttributesForm(
-  props: AttributesFormProps
-): JSX.Element {
+function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
   const { type, attributes, onChange } = props;
 
   switch (type) {
@@ -137,3 +135,15 @@ export default function AttributesForm(
       return <></>;
   }
 }
+
+const AttributesForm = memo(
+  AttributesFormPrivate,
+  (
+    { attributes: prevAttributes, type: prevType },
+    { attributes: nextAttributes, type: nextType }
+  ) =>
+    prevType === nextType &&
+    JSON.stringify(prevAttributes) === JSON.stringify(nextAttributes)
+);
+
+export default AttributesForm;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { LabelingFieldSchema } from "../../utils/schema/types";
 import Divider from "@material-ui/core/Divider";
@@ -39,7 +39,7 @@ export interface FieldFormProps {
   onMove: (diff: number) => void;
 }
 
-export default function FieldForm(props: FieldFormProps): JSX.Element {
+function FieldFormPrivate(props: FieldFormProps): JSX.Element {
   const { fieldSchema, onChange, onRemove, onCopy, onMove } = props;
   const { name, perFrame, type, attributes } = fieldSchema;
   const classes = useStyles();
@@ -165,3 +165,11 @@ export default function FieldForm(props: FieldFormProps): JSX.Element {
     </>
   );
 }
+
+const FieldForm = memo(
+  FieldFormPrivate,
+  ({ fieldSchema: prevFieldSchema }, { fieldSchema: nextFieldSchema }) =>
+    JSON.stringify(prevFieldSchema) === JSON.stringify(nextFieldSchema)
+);
+
+export default FieldForm;
