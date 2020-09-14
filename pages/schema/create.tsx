@@ -7,14 +7,11 @@ import Header from "../../src/components/common/header";
 import Footer from "../../src/components/common/footer";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import SaveIcon from "@material-ui/icons/Save";
-import SaveAltIcon from "@material-ui/icons/SaveAlt";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import UndoIcon from "@material-ui/icons/Undo";
 import RedoIcon from "@material-ui/icons/Redo";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import Button from "@material-ui/core/Button";
-import Box from "@material-ui/core/Box";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import useSchemaHistory from "../../src/utils/schema/useSchemaHistory";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -79,11 +76,7 @@ function SpacesCreate(): JSX.Element {
           <Button
             startIcon={<SaveIcon />}
             onClick={async () => {
-              const { errors, schema: savedSchema } = await saveSchema(
-                schema,
-                authUser
-              );
-              console.log({ errors, savedSchema });
+              const { errors } = await saveSchema(schema, authUser);
               setIsOpenSaveSnackbar(true);
               if (errors.length !== 0) {
                 alert(errors);
@@ -91,12 +84,6 @@ function SpacesCreate(): JSX.Element {
             }}
           >
             Save
-          </Button>
-          <Button startIcon={<CloudUploadIcon />} onClick={() => {}}>
-            Import
-          </Button>
-          <Button startIcon={<SaveAltIcon />} onClick={() => {}}>
-            Export
           </Button>
           <Button
             startIcon={<DeleteOutlineIcon />}
@@ -122,7 +109,7 @@ function SpacesCreate(): JSX.Element {
         }}
         open={isOpenSaveSnackbar}
         autoHideDuration={6000}
-        onClose={(_event, reason) => setIsOpenSaveSnackbar(false)}
+        onClose={() => setIsOpenSaveSnackbar(false)}
         message="Schema saved"
         action={
           <IconButton

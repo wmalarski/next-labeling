@@ -67,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) =>
         width: "20ch",
       },
     },
-  })
+  }),
 );
 
 function Spaces(): JSX.Element {
@@ -90,7 +90,7 @@ function Spaces(): JSX.Element {
       .orderBy("created", "asc"),
     {
       limit: 10,
-    }
+    },
   );
   if (!authUser) return <></>;
 
@@ -109,7 +109,7 @@ function Spaces(): JSX.Element {
                 input: classes.inputInput,
               }}
               inputProps={{ "aria-label": "search" }}
-              onEnded={(event) => {
+              onEnded={event => {
                 console.log("event", event);
               }}
             />
@@ -134,10 +134,10 @@ function Spaces(): JSX.Element {
       </Header>
       <div>
         {loading && <div>...</div>}
-        {items.map((schema) => (
+        {items.map(document => (
           <SchemaListItem
-            key={schema.id}
-            schema={{ ...schema.data(), id: schema.id }}
+            key={document.id}
+            document={{ ...document.data(), id: document.id }}
           />
         ))}
         {hasMore && !loadingMore && (

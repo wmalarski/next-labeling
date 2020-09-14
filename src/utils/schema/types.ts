@@ -18,13 +18,17 @@ export interface LabelingObjectSchema {
 }
 
 export interface LabelingSchema {
-  id?: string;
-  user?: AuthUser;
-  stars: number;
   name: string;
   version: string;
-  created: Date;
   description: string;
   objects: LabelingObjectSchema[];
+}
+
+export interface SchemaDocument {
+  id?: string;
+  user: AuthUser;
+  schema: LabelingSchema;
+  stars: number;
+  created: Date;
   previousVersionId?: string;
 }

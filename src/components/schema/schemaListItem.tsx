@@ -1,12 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
-import Link from "next/link";
-import Router from "next/router";
+import React, { useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import {
   LabelingFieldSchema,
   LabelingObjectSchema,
-  LabelingSchema,
+  SchemaDocument,
 } from "../../utils/schema/types";
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
@@ -24,18 +22,20 @@ export interface SelectedState {
 }
 
 export interface SchemaListItemProps {
-  schema: LabelingSchema;
+  document: SchemaDocument;
 }
 
 export default function SchemaListItem(
-  props: SchemaListItemProps
+  props: SchemaListItemProps,
 ): JSX.Element {
-  const { schema } = props;
+  const {
+    document: { schema, user },
+  } = props;
 
   const [selected, setSelected] = useState<SelectedState>({
     object: schema.objects[0],
     fields: Object.fromEntries(
-      schema.objects.map((object) => [object.id, object.fields[0]])
+      schema.objects.map(object => [object.id, object.fields[0]]),
     ),
   });
   const selectedField = selected.object
@@ -47,7 +47,7 @@ export default function SchemaListItem(
       <Typography variant="h5">{schema.name}</Typography>
       <Typography variant="caption">{schema.version}</Typography>
       <Typography variant="subtitle1">{schema.description}</Typography>
-      <Typography variant="subtitle2">{`Version: ${schema.user?.displayName}`}</Typography>
+      <Typography variant="subtitle2">{`Version: ${user?.displayName}`}</Typography>
 
       <div>
         <Button
@@ -95,7 +95,7 @@ export default function SchemaListItem(
       <Grid container spacing={1}>
         <Grid item xs={4}>
           <List>
-            {schema.objects.map((object) => (
+            {schema.objects.map(object => (
               <ListItem
                 key={object.id}
                 selected={selected.object?.id === object.id}
@@ -109,7 +109,7 @@ export default function SchemaListItem(
           </List>
         </Grid>
         <Grid item xs={4}>
-          {(selected.object?.fields ?? []).map((field) => (
+          {(selected.object?.fields ?? []).map(field => (
             <ListItem
               key={field.id}
               selected={selectedField?.id === field.id}
