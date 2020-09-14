@@ -20,6 +20,7 @@ export interface LabelingObjectSchema {
 export interface LabelingSchema {
   id?: string;
   user?: AuthUser;
+  stars: number;
   name: string;
   version: string;
   created: Date;

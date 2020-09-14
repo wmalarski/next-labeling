@@ -52,11 +52,14 @@ export default function useSchemaHistory(
   const setSchema = useCallback(
     (setter: (schema: LabelingSchema) => NullableSchemaState): void =>
       setState((value) => {
-        const result = setter(value.history[value.index].schema);
+        const currentSchema = value.history[value.index].schema;
+        const result = setter(currentSchema);
         if (!result) return value;
+
         const { schema, message } = result;
         const newHistory = [...value.history];
         newHistory.splice(value.index + 1);
+
         if (newHistory.length < bufferSize.current) {
           return {
             history: [...newHistory, { schema, message }],

@@ -26,6 +26,26 @@ export interface SchemaFormProps {
 export default function SchemaForm(props: SchemaFormProps): JSX.Element {
   const { schema, setSchema } = props;
   const classes = useStyles();
+
+  const onFieldChange = useCallback(
+    (provider, id) => {
+      setSchema((sch) => {
+        const currentIndex = sch.objects.findIndex((n) => n.id === id);
+        if (currentIndex === -1) return;
+
+        const currentObject = sch.objects[currentIndex];
+        const result = provider(currentObject);
+        if (!result) return;
+
+        const { objectSchema, message } = result;
+        const objects = [...sch.objects];
+        objects[currentIndex] = objectSchema;
+        return { schema: { ...sch, objects }, message };
+      });
+    },
+    [setSchema]
+  );
+
   return (
     <div className={classes.root}>
       <Typography component="h1" variant="h5">
@@ -37,12 +57,13 @@ export default function SchemaForm(props: SchemaFormProps): JSX.Element {
         label="Name"
         value={schema.name}
         margin="dense"
-        onChange={(event) =>
+        onChange={(event) => {
+          const name = event.target.value;
           setSchema((sch) => ({
-            schema: { ...sch, name: event.target.value },
+            schema: { ...sch, name },
             message: "Schema name changed",
-          }))
-        }
+          }));
+        }}
       />
       <TextField
         variant="outlined"
@@ -50,12 +71,13 @@ export default function SchemaForm(props: SchemaFormProps): JSX.Element {
         label="Description"
         value={schema.description}
         margin="dense"
-        onChange={(event) =>
+        onChange={(event) => {
+          const description = event.target.value;
           setSchema((sch) => ({
-            schema: { ...sch, description: event.target.value },
+            schema: { ...sch, description },
             message: "Schema description changed",
-          }))
-        }
+          }));
+        }}
       />
       <TextField
         variant="outlined"
@@ -63,12 +85,13 @@ export default function SchemaForm(props: SchemaFormProps): JSX.Element {
         label="Version"
         value={schema.version}
         margin="dense"
-        onChange={(event) =>
+        onChange={(event) => {
+          const version = event.target.value;
           setSchema((sch) => ({
-            schema: { ...sch, version: event.target.value },
+            schema: { ...sch, version },
             message: "Schema version changed",
-          }))
-        }
+          }));
+        }}
       />
       <Button
         startIcon={<AddIcon />}
@@ -98,13 +121,7 @@ export default function SchemaForm(props: SchemaFormProps): JSX.Element {
           <ObjectForm
             key={object.id}
             objectSchema={object}
-            onChange={(object, message) =>
-              setSchema((sch) => {
-                const objects = [...sch.objects];
-                objects[index] = object;
-                return { schema: { ...sch, objects }, message };
-              })
-            }
+            onChange={onFieldChange}
             onCopy={(object) =>
               setSchema((sch) => ({
                 schema: { ...sch, objects: [...sch.objects, object] },

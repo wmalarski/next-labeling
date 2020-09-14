@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
-import { FieldType, LabelingFieldAttributes } from "../../utils/schema/fields";
+import { ComboBoxAttributes } from "../../utils/schema/fields";
 import TextField from "@material-ui/core/TextField";
 import { Chip } from "@material-ui/core";
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
   createStyles({
     root: {
       display: "flex",
@@ -17,13 +17,17 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export interface ComboBoxFormProps {
-  attributes: LabelingFieldAttributes[FieldType.COMBOBOX];
-  onChange: (attributes: LabelingFieldAttributes[FieldType.COMBOBOX]) => void;
+  attributes: ComboBoxAttributes;
+  onChange: (
+    provider: (attributes: ComboBoxAttributes) => ComboBoxAttributes
+  ) => void;
 }
 
 export default function ComboBoxForm(props: ComboBoxFormProps): JSX.Element {
-  const { attributes, onChange } = props;
-  const { options, default: defaultValue } = attributes;
+  const {
+    attributes: { options, default: defaultValue },
+    onChange,
+  } = props;
   const classes = useStyles();
 
   const [text, setText] = useState("");
@@ -38,17 +42,22 @@ export default function ComboBoxForm(props: ComboBoxFormProps): JSX.Element {
             variant="outlined"
             disabled={options.length === 1}
             color={defaultValue === option ? "primary" : "default"}
-            onDelete={() => {
-              const newOptions = [...options];
-              newOptions.splice(index, 1);
-              onChange({
-                options: newOptions,
-                default: defaultValue === option ? newOptions[0] : defaultValue,
-              });
-            }}
-            onClick={() => {
-              onChange({ ...attributes, default: option });
-            }}
+            onDelete={() =>
+              onChange((attributes) => {
+                const newOptions = [...attributes.options];
+                newOptions.splice(index, 1);
+                return {
+                  options: newOptions,
+                  default:
+                    attributes.default === option
+                      ? newOptions[0]
+                      : attributes.default,
+                };
+              })
+            }
+            onClick={() =>
+              onChange((attributes) => ({ ...attributes, default: option }))
+            }
           />
         ))}
       </div>
@@ -66,10 +75,10 @@ export default function ComboBoxForm(props: ComboBoxFormProps): JSX.Element {
           color="inherit"
           disabled={options.includes(text) || text.length === 0}
           onClick={() =>
-            onChange({
+            onChange((attributes) => ({
               ...attributes,
-              options: [...options, text],
-            })
+              options: [...attributes.options, text],
+            }))
           }
         >
           Add

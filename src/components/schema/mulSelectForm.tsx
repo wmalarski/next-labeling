@@ -5,7 +5,7 @@ import AddIcon from "@material-ui/icons/Add";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-import { FieldType, LabelingFieldAttributes } from "../../utils/schema/fields";
+import { MultiSelectAttributes } from "../../utils/schema/fields";
 import TextField from "@material-ui/core/TextField";
 import Grid, { GridSize } from "@material-ui/core/Grid/Grid";
 import Paper from "@material-ui/core/Paper/Paper";
@@ -25,13 +25,19 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export interface MulSelectFormProps {
-  attributes: LabelingFieldAttributes[FieldType.MULSELECT];
-  onChange: (attributes: LabelingFieldAttributes[FieldType.MULSELECT]) => void;
+  attributes: MultiSelectAttributes;
+  onChange: (
+    provider: (
+      attributes: MultiSelectAttributes
+    ) => MultiSelectAttributes | undefined
+  ) => void;
 }
 
 export default function MulSelectForm(props: MulSelectFormProps): JSX.Element {
-  const { attributes, onChange } = props;
-  const { options, default: defaultValues } = attributes;
+  const {
+    attributes: { options, default: defaultValues },
+    onChange,
+  } = props;
   const optionTexts = options.map((option) => option.text);
   const classes = useStyles();
 
@@ -52,19 +58,21 @@ export default function MulSelectForm(props: MulSelectFormProps): JSX.Element {
                 control={
                   <Checkbox
                     checked={defaultValues.includes(text)}
-                    onChange={() => {
-                      const textIndex = defaultValues.indexOf(text);
-                      if (textIndex === -1) {
-                        onChange({
-                          ...attributes,
-                          default: [...defaultValues, text],
-                        });
-                      } else {
-                        const newDefaults = [...defaultValues];
-                        newDefaults.splice(textIndex, 1);
-                        onChange({ ...attributes, default: newDefaults });
-                      }
-                    }}
+                    onChange={() =>
+                      onChange((attributes) => {
+                        const textIndex = attributes.default.indexOf(text);
+                        if (textIndex === -1) {
+                          return {
+                            ...attributes,
+                            default: [...attributes.default, text],
+                          };
+                        } else {
+                          const newDefaults = [...attributes.default];
+                          newDefaults.splice(textIndex, 1);
+                          return { ...attributes, default: newDefaults };
+                        }
+                      })
+                    }
                   />
                 }
                 label={text}
@@ -72,49 +80,55 @@ export default function MulSelectForm(props: MulSelectFormProps): JSX.Element {
 
               <IconButton
                 aria-label="move-up"
-                onClick={() => {
-                  const newOptions = [...options];
-                  const newIndex = index - 1;
-                  if (newIndex < 0) return;
-                  [newOptions[index], newOptions[newIndex]] = [
-                    newOptions[newIndex],
-                    newOptions[index],
-                  ];
-                  onChange({ ...attributes, options: newOptions });
-                }}
+                onClick={() =>
+                  onChange((attributes) => {
+                    const newOptions = [...attributes.options];
+                    const newIndex = index - 1;
+                    if (newIndex < 0) return;
+                    [newOptions[index], newOptions[newIndex]] = [
+                      newOptions[newIndex],
+                      newOptions[index],
+                    ];
+                    return { ...attributes, options: newOptions };
+                  })
+                }
               >
                 <ArrowBackIcon />
               </IconButton>
               <IconButton
                 aria-label="move-down"
-                onClick={() => {
-                  const newOptions = [...options];
-                  const newIndex = index + 1;
-                  if (newIndex >= newOptions.length) return;
-                  [newOptions[index], newOptions[newIndex]] = [
-                    newOptions[newIndex],
-                    newOptions[index],
-                  ];
-                  onChange({ ...attributes, options: newOptions });
-                }}
+                onClick={() =>
+                  onChange((attributes) => {
+                    const newOptions = [...attributes.options];
+                    const newIndex = index + 1;
+                    if (newIndex >= newOptions.length) return;
+                    [newOptions[index], newOptions[newIndex]] = [
+                      newOptions[newIndex],
+                      newOptions[index],
+                    ];
+                    return { ...attributes, options: newOptions };
+                  })
+                }
               >
                 <ArrowForwardIcon />
               </IconButton>
               <IconButton
                 aria-label="delete"
                 disabled={options.length === 1}
-                onClick={() => {
-                  const newOptions = [...options];
-                  newOptions.splice(index, 1);
-                  const textIndex = defaultValues.indexOf(text);
-                  if (textIndex === -1) {
-                    onChange({ ...attributes, options: newOptions });
-                  } else {
-                    const newDefaults = [...defaultValues];
-                    newDefaults.splice(textIndex, 1);
-                    onChange({ options: newOptions, default: newDefaults });
-                  }
-                }}
+                onClick={() =>
+                  onChange((attributes) => {
+                    const newOptions = [...attributes.options];
+                    newOptions.splice(index, 1);
+                    const textIndex = attributes.default.indexOf(text);
+                    if (textIndex === -1) {
+                      return { ...attributes, options: newOptions };
+                    } else {
+                      const newDefaults = [...attributes.default];
+                      newDefaults.splice(textIndex, 1);
+                      return { options: newOptions, default: newDefaults };
+                    }
+                  })
+                }
               >
                 <HighlightOffIcon />
               </IconButton>
@@ -150,10 +164,13 @@ export default function MulSelectForm(props: MulSelectFormProps): JSX.Element {
         color="inherit"
         disabled={optionTexts.includes(inputText) || inputText.length === 0}
         onClick={() =>
-          onChange({
+          onChange((attributes) => ({
             ...attributes,
-            options: [...options, { text: inputText, size: inputSize }],
-          })
+            options: [
+              ...attributes.options,
+              { text: inputText, size: inputSize },
+            ],
+          }))
         }
       >
         Add

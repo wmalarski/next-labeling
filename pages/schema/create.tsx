@@ -50,8 +50,6 @@ function SpacesCreate(): JSX.Element {
 
   if (!authUser) return <></>;
 
-  const buttonDisplay = { xs: "block" };
-
   return (
     <>
       <Header>
@@ -59,23 +57,23 @@ function SpacesCreate(): JSX.Element {
           {undoMessage ? (
             <Tooltip title={message}>
               <Button startIcon={<UndoIcon />} onClick={undoSchema}>
-                <Box display={buttonDisplay}>Undo</Box>
+                Undo
               </Button>
             </Tooltip>
           ) : (
             <Button startIcon={<UndoIcon />} disabled>
-              <Box display={buttonDisplay}>Undo</Box>
+              Undo
             </Button>
           )}
           {redoMessage ? (
             <Tooltip title={redoMessage}>
               <Button startIcon={<RedoIcon />} onClick={redoSchema}>
-                <Box display={buttonDisplay}>Redo</Box>
+                Redo
               </Button>
             </Tooltip>
           ) : (
             <Button startIcon={<RedoIcon />} disabled>
-              <Box display={buttonDisplay}>Redo</Box>
+              Redo
             </Button>
           )}
           <Button
@@ -92,13 +90,13 @@ function SpacesCreate(): JSX.Element {
               }
             }}
           >
-            <Box display={buttonDisplay}>Save</Box>
+            Save
           </Button>
           <Button startIcon={<CloudUploadIcon />} onClick={() => {}}>
-            <Box display={buttonDisplay}>Import</Box>
+            Import
           </Button>
           <Button startIcon={<SaveAltIcon />} onClick={() => {}}>
-            <Box display={buttonDisplay}>Export</Box>
+            Export
           </Button>
           <Button
             startIcon={<DeleteOutlineIcon />}
@@ -106,13 +104,13 @@ function SpacesCreate(): JSX.Element {
               router.push("/schema");
             }}
           >
-            <Box display={buttonDisplay}>Remove</Box>
+            Remove
           </Button>
           <Button
             startIcon={<ExitToAppIcon />}
             onClick={() => router.push("/schema")}
           >
-            <Box display={buttonDisplay}>Quit</Box>
+            Quit
           </Button>
         </ButtonGroup>
       </Header>

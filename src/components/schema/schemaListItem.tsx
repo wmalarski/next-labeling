@@ -11,6 +11,12 @@ import {
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
+import Button from "@material-ui/core/Button";
+import FileCopyIcon from "@material-ui/icons/FileCopy";
+import RemoveIcon from "@material-ui/icons/Remove";
+import SaveAltIcon from "@material-ui/icons/SaveAlt";
+import EditIcon from "@material-ui/icons/Edit";
+import ViewListIcon from "@material-ui/icons/ViewList";
 
 export interface SelectedState {
   object?: LabelingObjectSchema;
@@ -25,7 +31,6 @@ export default function SchemaListItem(
   props: SchemaListItemProps
 ): JSX.Element {
   const { schema } = props;
-  console.log({ schema });
 
   const [selected, setSelected] = useState<SelectedState>({
     object: schema.objects[0],
@@ -43,6 +48,49 @@ export default function SchemaListItem(
       <Typography variant="caption">{schema.version}</Typography>
       <Typography variant="subtitle1">{schema.description}</Typography>
       <Typography variant="subtitle2">{`Version: ${schema.user?.displayName}`}</Typography>
+
+      <div>
+        <Button
+          size="small"
+          color="primary"
+          startIcon={<ViewListIcon />}
+          onClick={() => {}}
+        >
+          Details
+        </Button>
+        <Button
+          size="small"
+          color="primary"
+          startIcon={<EditIcon />}
+          onClick={() => {}}
+        >
+          Edit
+        </Button>
+        <Button
+          size="small"
+          color="primary"
+          startIcon={<SaveAltIcon />}
+          onClick={() => {}}
+        >
+          Export
+        </Button>
+        <Button
+          size="small"
+          color="primary"
+          startIcon={<FileCopyIcon />}
+          onClick={() => {}}
+        >
+          Copy
+        </Button>
+        <Button
+          size="small"
+          color="primary"
+          startIcon={<RemoveIcon />}
+          onClick={() => {}}
+        >
+          Remove
+        </Button>
+      </div>
 
       <Grid container spacing={1}>
         <Grid item xs={4}>

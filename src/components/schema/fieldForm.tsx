@@ -7,7 +7,7 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import RemoveIcon from "@material-ui/icons/Remove";
-import { FieldType } from "../../utils/schema/fields";
+import { FieldType, LabelingFieldAttributes } from "../../utils/schema/fields";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -33,7 +33,12 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export interface FieldFormProps {
   fieldSchema: LabelingFieldSchema;
-  onChange: (fieldSchema: LabelingFieldSchema, message: string) => void;
+  onChange: (
+    provider: (
+      fieldSchema: LabelingFieldSchema
+    ) => { fieldSchema: LabelingFieldSchema; message: string } | undefined,
+    fieldId: string
+  ) => void;
   onRemove: () => void;
   onCopy: () => void;
   onMove: (diff: number) => void;
@@ -41,7 +46,7 @@ export interface FieldFormProps {
 
 function FieldFormPrivate(props: FieldFormProps): JSX.Element {
   const { fieldSchema, onChange, onRemove, onCopy, onMove } = props;
-  const { name, perFrame, type, attributes } = fieldSchema;
+  const { name, perFrame, type, attributes, id: fieldId } = fieldSchema;
   const classes = useStyles();
 
   return (
@@ -55,12 +60,16 @@ function FieldFormPrivate(props: FieldFormProps): JSX.Element {
             label="Name"
             value={name}
             margin="dense"
-            onChange={(event) =>
+            onChange={(event) => {
+              const value = event.target.value;
               onChange(
-                { ...fieldSchema, name: event.target.value },
-                "Field name changed"
-              )
-            }
+                (field) => ({
+                  fieldSchema: { ...field, name: value },
+                  message: "Field name changed",
+                }),
+                fieldId
+              );
+            }}
           />
           <FormControl>
             <InputLabel id="select-field-type-label">Field Type</InputLabel>
@@ -71,15 +80,17 @@ function FieldFormPrivate(props: FieldFormProps): JSX.Element {
               fullWidth
               onChange={(event) => {
                 const newType = event.target.value as FieldType;
-                if (newType === type) return;
-                onChange(
-                  {
-                    ...fieldSchema,
-                    type: newType,
-                    attributes: labelingFieldAttributesDefaults[newType],
-                  },
-                  "Field type changed"
-                );
+                onChange((field) => {
+                  if (newType === type) return;
+                  return {
+                    fieldSchema: {
+                      ...field,
+                      type: newType,
+                      attributes: labelingFieldAttributesDefaults[newType],
+                    },
+                    message: "Field type changed",
+                  };
+                }, fieldId);
               }}
             >
               {Object.entries(FieldType).map(
@@ -97,8 +108,11 @@ function FieldFormPrivate(props: FieldFormProps): JSX.Element {
                 checked={perFrame}
                 onChange={() =>
                   onChange(
-                    { ...fieldSchema, perFrame: !perFrame },
-                    "Per frame value changed"
+                    (field) => ({
+                      fieldSchema: { ...field, perFrame: !field.perFrame },
+                      message: "Per frame value changed",
+                    }),
+                    fieldId
                   )
                 }
                 value={perFrame}
@@ -108,24 +122,25 @@ function FieldFormPrivate(props: FieldFormProps): JSX.Element {
           />
         </Grid>
         <Grid item xs={7}>
-          {/* <Divider orientation="vertical" /> */}
-
           <AttributesForm
             type={type}
             attributes={attributes}
-            onChange={(newAttributes) =>
-              onChange(
-                {
-                  ...fieldSchema,
-                  attributes: newAttributes,
-                },
-                "Attribute configuration changed"
-              )
+            onChange={(provider) =>
+              onChange((field) => {
+                const result = provider(attributes);
+                if (!result) return;
+                return {
+                  fieldSchema: {
+                    ...field,
+                    attributes: result,
+                  },
+                  message: "Attribute configuration changed",
+                };
+              }, fieldId)
             }
           />
         </Grid>
         <Grid item xs={1} md={1}>
-          {/* <Divider orientation="vertical" /> */}
           <div className={classes.column}>
             <Button
               size="small"

@@ -5,6 +5,7 @@ import { LabelingSchema } from "./types";
 export const defaultLabelingSchema: LabelingSchema = {
   name: "New Schema",
   description: "My first schema.",
+  stars: 0,
   objects: [
     {
       id: uniqueId("object_"),

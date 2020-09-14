@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import uniqueId from "lodash/uniqueId";
 import Typography from "@material-ui/core/Typography";
 import Accordion from "@material-ui/core/Accordion";
@@ -20,6 +20,7 @@ import TextField from "@material-ui/core/TextField";
 import FieldForm from "./fieldForm";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import { labelingFieldAttributesDefaults } from "../../utils/schema/defaults";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,9 +43,19 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
+export interface OnChangeProviderResult {
+  objectSchema: LabelingObjectSchema;
+  message: string;
+}
+
 export interface ObjectFormProps {
   objectSchema: LabelingObjectSchema;
-  onChange: (objectSchema: LabelingObjectSchema, message: string) => void;
+  onChange: (
+    provider: (
+      objectSchema: LabelingObjectSchema
+    ) => OnChangeProviderResult | undefined,
+    objectId: string
+  ) => void;
   onRemove: () => void;
   onCopy: (objectSchema: LabelingObjectSchema) => void;
   onMove: (diff: number) => void;
@@ -52,8 +63,29 @@ export interface ObjectFormProps {
 
 function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
   const { objectSchema, onChange, onRemove, onCopy, onMove } = props;
-  const { name, description, fields, singleton } = objectSchema;
+  const { name, description, fields, singleton, id: objectId } = objectSchema;
   const classes = useStyles();
+
+  const onFieldChange = useCallback(
+    (provider, fieldId) =>
+      onChange((object) => {
+        const currentIndex = object.fields.findIndex((n) => n.id === fieldId);
+        if (currentIndex === -1) return;
+
+        const currentField = object.fields[currentIndex];
+        const result = provider(currentField);
+        if (!result) return;
+
+        const { fieldSchema, message } = result;
+        const newFields = [...object.fields];
+        newFields[currentIndex] = fieldSchema;
+        return {
+          objectSchema: { ...object, fields: newFields },
+          message,
+        };
+      }, objectId),
+    [onChange, objectId]
+  );
 
   return (
     <Accordion defaultExpanded>
@@ -80,12 +112,16 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
             label="Name"
             value={name}
             margin="dense"
-            onChange={(event) =>
+            onChange={(event) => {
+              const value = event.target.value;
               onChange(
-                { ...objectSchema, name: event.target.value },
-                "Field name changed"
-              )
-            }
+                (object) => ({
+                  objectSchema: { ...object, name: value },
+                  message: "Field name changed",
+                }),
+                objectId
+              );
+            }}
           />
           <TextField
             variant="outlined"
@@ -93,12 +129,16 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
             label="Description"
             value={description}
             margin="dense"
-            onChange={(event) =>
+            onChange={(event) => {
+              const value = event.target.value;
               onChange(
-                { ...objectSchema, description: event.target.value },
-                "Field description changed"
-              )
-            }
+                (object) => ({
+                  objectSchema: { ...object, description: value },
+                  message: "Field description changed",
+                }),
+                objectId
+              );
+            }}
           />
           <FormControlLabel
             control={
@@ -106,11 +146,13 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
                 checked={singleton}
                 onChange={() =>
                   onChange(
-                    { ...objectSchema, singleton: !singleton },
-                    "Field is singleton state changed"
+                    (object) => ({
+                      objectSchema: { ...object, singleton: !object.singleton },
+                      message: "Field is singleton state changed",
+                    }),
+                    objectId
                   )
                 }
-                value={singleton}
               />
             }
             label="Is singleton?"
@@ -121,46 +163,50 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
               <FieldForm
                 key={index}
                 fieldSchema={field}
-                onChange={(field, message) => {
-                  const newFields = [...fields];
-                  newFields[index] = field;
-                  onChange({ ...objectSchema, fields: newFields }, message);
-                }}
+                onChange={onFieldChange}
                 onCopy={() =>
                   onChange(
-                    {
-                      ...objectSchema,
-                      fields: [
-                        ...fields,
-                        {
-                          ...field,
-                          id: uniqueId("field_"),
-                        },
-                      ],
-                    },
-                    "Field copied"
+                    (object) => ({
+                      objectSchema: {
+                        ...object,
+                        fields: [
+                          ...object.fields,
+                          {
+                            ...field,
+                            id: uniqueId("field_"),
+                          },
+                        ],
+                      },
+                      message: "Field copied",
+                    }),
+                    objectId
                   )
                 }
                 onRemove={() => {
-                  const newFields = [...fields];
-                  newFields.splice(index, 1);
-                  onChange(
-                    { ...objectSchema, fields: newFields },
-                    "Field removed"
-                  );
+                  onChange((object) => {
+                    const newFields = [...object.fields];
+                    newFields.splice(index, 1);
+                    return {
+                      objectSchema: { ...object, fields: newFields },
+                      message: "Field removed",
+                    };
+                  }, objectId);
                 }}
                 onMove={(diff) => {
-                  const newFields = [...fields];
-                  const newIndex = index - diff;
-                  if (newIndex < 0 || newIndex >= newFields.length) return;
-                  [newFields[index], newFields[newIndex]] = [
-                    newFields[newIndex],
-                    newFields[index],
-                  ];
-                  onChange(
-                    { ...objectSchema, fields: newFields },
-                    "Field priority changed"
-                  );
+                  onChange((object) => {
+                    const newFields = [...object.fields];
+                    const newIndex = index - diff;
+                    if (newIndex < 0 || newIndex >= newFields.length)
+                      return undefined;
+                    [newFields[index], newFields[newIndex]] = [
+                      newFields[newIndex],
+                      newFields[index],
+                    ];
+                    return {
+                      objectSchema: { ...object, fields: newFields },
+                      message: "Field priority changed",
+                    };
+                  }, objectId);
                 }}
               />
             )
@@ -175,20 +221,24 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
           startIcon={<AddIcon />}
           onClick={() =>
             onChange(
-              {
-                ...objectSchema,
-                fields: [
-                  ...fields,
-                  {
-                    id: uniqueId("field_"),
-                    name: "New field",
-                    perFrame: true,
-                    type: FieldType.CHECKBOX,
-                    attributes: { default: false },
-                  },
-                ],
-              },
-              "New field added"
+              (object) => ({
+                objectSchema: {
+                  ...object,
+                  fields: [
+                    ...object.fields,
+                    {
+                      id: uniqueId("field_"),
+                      name: "New field",
+                      perFrame: true,
+                      type: FieldType.CHECKBOX,
+                      attributes:
+                        labelingFieldAttributesDefaults[FieldType.CHECKBOX],
+                    },
+                  ],
+                },
+                message: "New field added",
+              }),
+              objectId
             )
           }
         >

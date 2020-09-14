@@ -8,10 +8,16 @@ import ComboBoxForm from "./comboBoxForm";
 import SelectForm from "./selectForm";
 import MulSelectForm from "./mulSelectForm";
 
+export type OnChangeHandler<T extends keyof LabelingFieldAttributes> = (
+  provider: (
+    attributes: LabelingFieldAttributes[T]
+  ) => LabelingFieldAttributes[T] | undefined
+) => void;
+
 export interface AttributesFormProps {
   type: FieldType;
   attributes: LabelingFieldAttributes[FieldType];
-  onChange: (attributes: LabelingFieldAttributes[FieldType]) => void;
+  onChange: OnChangeHandler<FieldType>;
 }
 
 function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
@@ -23,20 +29,28 @@ function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
     case FieldType.POLYGON:
     case FieldType.RECTANGLE:
       const colorAttributes = attributes as LabelingFieldAttributes[typeof type];
+      const colorOnChange = onChange as OnChangeHandler<typeof type>;
       return (
         <CompactPicker
           color={colorAttributes.color}
-          onChangeComplete={(color) => onChange({ color: color.hex })}
+          onChangeComplete={(color) => {
+            const hex = color.hex;
+            colorOnChange(() => ({ color: hex }));
+          }}
         />
       );
     case FieldType.CHECKBOX:
       const checkBoxAttributes = attributes as LabelingFieldAttributes[typeof type];
+      const checkBoxOnChange = onChange as OnChangeHandler<typeof type>;
       return (
         <FormControlLabel
           control={
             <Checkbox
               checked={checkBoxAttributes.default}
-              onChange={(event) => onChange({ default: event.target.checked })}
+              onChange={(event) => {
+                const checked = event.target.checked;
+                checkBoxOnChange(() => ({ default: checked }));
+              }}
             />
           }
           label="Default value"
@@ -44,6 +58,7 @@ function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
       );
     case FieldType.TEXT:
       const textAttributes = attributes as LabelingFieldAttributes[typeof type];
+      const textOnChange = onChange as OnChangeHandler<typeof type>;
       return (
         <TextField
           label="Default"
@@ -51,11 +66,15 @@ function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
           margin="dense"
           fullWidth
           value={textAttributes.default}
-          onChange={(event) => onChange({ default: event.target.value })}
+          onChange={(event) => {
+            const text = event.target.value;
+            textOnChange(() => ({ default: text }));
+          }}
         />
       );
     case FieldType.NUMBER:
       const numberAttributes = attributes as LabelingFieldAttributes[typeof type];
+      const numberOnChange = onChange as OnChangeHandler<typeof type>;
       return (
         <>
           <TextField
@@ -64,12 +83,13 @@ function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
             margin="dense"
             fullWidth
             value={numberAttributes.default}
-            onChange={(event) =>
-              onChange({
-                ...numberAttributes,
-                default: Number(event.target.value),
-              })
-            }
+            onChange={(event) => {
+              const defaultNumber = event.target.value;
+              numberOnChange((attributes) => ({
+                ...attributes,
+                default: Number(defaultNumber),
+              }));
+            }}
             InputLabelProps={{
               shrink: true,
             }}
@@ -80,9 +100,13 @@ function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
             margin="dense"
             fullWidth
             value={numberAttributes.min}
-            onChange={(event) =>
-              onChange({ ...numberAttributes, min: Number(event.target.value) })
-            }
+            onChange={(event) => {
+              const min = event.target.value;
+              numberOnChange((attributes) => ({
+                ...attributes,
+                min: Number(min),
+              }));
+            }}
             InputLabelProps={{
               shrink: true,
             }}
@@ -93,9 +117,13 @@ function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
             margin="dense"
             fullWidth
             value={numberAttributes.max}
-            onChange={(event) =>
-              onChange({ ...numberAttributes, max: Number(event.target.value) })
-            }
+            onChange={(event) => {
+              const max = event.target.value;
+              numberOnChange((attributes) => ({
+                ...attributes,
+                max: Number(max),
+              }));
+            }}
             InputLabelProps={{
               shrink: true,
             }}
@@ -106,12 +134,13 @@ function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
             margin="dense"
             fullWidth
             value={numberAttributes.step}
-            onChange={(event) =>
-              onChange({
-                ...numberAttributes,
-                step: Number(event.target.value),
-              })
-            }
+            onChange={(event) => {
+              const step = event.target.value;
+              numberOnChange((attributes) => ({
+                ...attributes,
+                step: Number(step),
+              }));
+            }}
             InputLabelProps={{
               shrink: true,
             }}
@@ -120,16 +149,27 @@ function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
       );
     case FieldType.COMBOBOX:
       const comboBoxAttributes = attributes as LabelingFieldAttributes[typeof type];
+      const comboBoxOnChange = onChange as OnChangeHandler<typeof type>;
       return (
-        <ComboBoxForm attributes={comboBoxAttributes} onChange={onChange} />
+        <ComboBoxForm
+          attributes={comboBoxAttributes}
+          onChange={comboBoxOnChange}
+        />
       );
     case FieldType.SELECT:
       const selectAttributes = attributes as LabelingFieldAttributes[typeof type];
-      return <SelectForm attributes={selectAttributes} onChange={onChange} />;
+      const selectOnChange = onChange as OnChangeHandler<typeof type>;
+      return (
+        <SelectForm attributes={selectAttributes} onChange={selectOnChange} />
+      );
     case FieldType.MULSELECT:
       const multiselectAttributes = attributes as LabelingFieldAttributes[typeof type];
+      const multiselectOnChange = onChange as OnChangeHandler<typeof type>;
       return (
-        <MulSelectForm attributes={multiselectAttributes} onChange={onChange} />
+        <MulSelectForm
+          attributes={multiselectAttributes}
+          onChange={multiselectOnChange}
+        />
       );
     default:
       return <></>;

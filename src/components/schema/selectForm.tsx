@@ -5,7 +5,7 @@ import AddIcon from "@material-ui/icons/Add";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-import { FieldType, LabelingFieldAttributes } from "../../utils/schema/fields";
+import { SelectAttributes } from "../../utils/schema/fields";
 import TextField from "@material-ui/core/TextField";
 import Grid, { GridSize } from "@material-ui/core/Grid/Grid";
 import Paper from "@material-ui/core/Paper/Paper";
@@ -25,13 +25,17 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export interface SelectFormProps {
-  attributes: LabelingFieldAttributes[FieldType.SELECT];
-  onChange: (attributes: LabelingFieldAttributes[FieldType.SELECT]) => void;
+  attributes: SelectAttributes;
+  onChange: (
+    provider: (attributes: SelectAttributes) => SelectAttributes | undefined
+  ) => void;
 }
 
 export default function SelectForm(props: SelectFormProps): JSX.Element {
-  const { attributes, onChange } = props;
-  const { options, default: defaultValue } = attributes;
+  const {
+    attributes: { options, default: defaultValue },
+    onChange,
+  } = props;
   const optionTexts = options.map((option) => option.text);
   const classes = useStyles();
 
@@ -52,9 +56,12 @@ export default function SelectForm(props: SelectFormProps): JSX.Element {
                 control={
                   <Checkbox
                     checked={text === defaultValue}
-                    onChange={() => {
-                      onChange({ ...attributes, default: text });
-                    }}
+                    onChange={() =>
+                      onChange((attributes) => ({
+                        ...attributes,
+                        default: text,
+                      }))
+                    }
                   />
                 }
                 label={text}
@@ -62,46 +69,54 @@ export default function SelectForm(props: SelectFormProps): JSX.Element {
 
               <IconButton
                 aria-label="move-up"
-                onClick={() => {
-                  const newOptions = [...options];
-                  const newIndex = index - 1;
-                  if (newIndex < 0) return;
-                  [newOptions[index], newOptions[newIndex]] = [
-                    newOptions[newIndex],
-                    newOptions[index],
-                  ];
-                  onChange({ ...attributes, options: newOptions });
-                }}
+                onClick={() =>
+                  onChange((attributes) => {
+                    const newOptions = [...attributes.options];
+                    const newIndex = index - 1;
+                    if (newIndex < 0) return;
+                    [newOptions[index], newOptions[newIndex]] = [
+                      newOptions[newIndex],
+                      newOptions[index],
+                    ];
+                    return { ...attributes, options: newOptions };
+                  })
+                }
               >
                 <ArrowBackIcon />
               </IconButton>
               <IconButton
                 aria-label="move-down"
-                onClick={() => {
-                  const newOptions = [...options];
-                  const newIndex = index + 1;
-                  if (newIndex >= newOptions.length) return;
-                  [newOptions[index], newOptions[newIndex]] = [
-                    newOptions[newIndex],
-                    newOptions[index],
-                  ];
-                  onChange({ ...attributes, options: newOptions });
-                }}
+                onClick={() =>
+                  onChange((attributes) => {
+                    const newOptions = [...attributes.options];
+                    const newIndex = index + 1;
+                    if (newIndex >= newOptions.length) return;
+                    [newOptions[index], newOptions[newIndex]] = [
+                      newOptions[newIndex],
+                      newOptions[index],
+                    ];
+                    return { ...attributes, options: newOptions };
+                  })
+                }
               >
                 <ArrowForwardIcon />
               </IconButton>
               <IconButton
                 aria-label="delete"
                 disabled={options.length === 1}
-                onClick={() => {
-                  const newOptions = [...options];
-                  newOptions.splice(index, 1);
-                  onChange({
-                    options: newOptions,
-                    default:
-                      defaultValue === text ? newOptions[0].text : defaultValue,
-                  });
-                }}
+                onClick={() =>
+                  onChange((attributes) => {
+                    const newOptions = [...attributes.options];
+                    newOptions.splice(index, 1);
+                    return {
+                      options: newOptions,
+                      default:
+                        attributes.default === text
+                          ? newOptions[0].text
+                          : attributes.default,
+                    };
+                  })
+                }
               >
                 <HighlightOffIcon />
               </IconButton>
@@ -137,10 +152,13 @@ export default function SelectForm(props: SelectFormProps): JSX.Element {
         color="inherit"
         disabled={optionTexts.includes(inputText) || inputText.length === 0}
         onClick={() =>
-          onChange({
+          onChange((attributes) => ({
             ...attributes,
-            options: [...options, { text: inputText, size: inputSize }],
-          })
+            options: [
+              ...attributes.options,
+              { text: inputText, size: inputSize },
+            ],
+          }))
         }
       >
         Add
