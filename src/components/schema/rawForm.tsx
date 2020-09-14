@@ -34,7 +34,6 @@ export default function RawForm(props: RawFormProps) {
     text: schemaToJson(schema),
     errors: [],
   });
-  console.log({ errors: state.errors });
 
   useEffect(() => {
     setState({ text: schemaToJson(schema), errors: [] });

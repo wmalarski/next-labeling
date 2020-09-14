@@ -79,6 +79,7 @@ export enum FieldType {
   POLYGON = "Polygon",
 }
 
+// TODO: add check if exact one exist
 export const LabelingFieldAttributesType = t.partial({
   [FieldType.CHECKBOX]: CheckBoxAttributesType,
   [FieldType.COMBOBOX]: ComboBoxAttributesType,
@@ -97,7 +98,5 @@ export type LabelingFieldAttributes = t.TypeOf<
 >;
 
 export type OnAttributeChangeHandler = (
-  provider: (
-    attributes: LabelingFieldAttributes,
-  ) => LabelingFieldAttributes | undefined,
+  provider: (attributes: LabelingFieldAttributes) => LabelingFieldAttributes,
 ) => void;
