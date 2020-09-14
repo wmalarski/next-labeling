@@ -1,8 +1,76 @@
+import * as t from "io-ts";
+
+export const CheckBoxAttributesType = t.type({
+  default: t.boolean,
+});
+export type CheckBoxAttributes = t.TypeOf<typeof CheckBoxAttributesType>;
+
+export const ComboBoxAttributesType = t.type({
+  default: t.string,
+  options: t.array(t.string),
+});
+export type ComboBoxAttributes = t.TypeOf<typeof ComboBoxAttributesType>;
+
+export const TextAttributesType = t.type({
+  default: t.string,
+});
+export type TextAttributes = t.TypeOf<typeof TextAttributesType>;
+
+export const NumberAttributesType = t.type({
+  min: t.number,
+  max: t.number,
+  step: t.number,
+  default: t.number,
+});
+export type NumberAttributes = t.TypeOf<typeof NumberAttributesType>;
+
+export const SelectAttributesType = t.type({
+  default: t.string,
+  options: t.array(
+    t.type({
+      text: t.string,
+      size: t.number,
+    }),
+  ),
+});
+export type SelectAttributes = t.TypeOf<typeof SelectAttributesType>;
+
+export const MultiSelectAttributesType = t.type({
+  default: t.array(t.string),
+  options: t.array(
+    t.type({
+      text: t.string,
+      size: t.number,
+    }),
+  ),
+});
+export type MultiSelectAttributes = t.TypeOf<typeof MultiSelectAttributesType>;
+
+export const RectangleAttributesType = t.type({
+  color: t.string,
+});
+export type RectangleAttributes = t.TypeOf<typeof RectangleAttributesType>;
+
+export const LineAttributesType = t.type({
+  color: t.string,
+});
+export type LineAttributes = t.TypeOf<typeof LineAttributesType>;
+
+export const PointAttributesType = t.type({
+  color: t.string,
+});
+export type PointAttributes = t.TypeOf<typeof PointAttributesType>;
+
+export const PolygonAttributesType = t.type({
+  color: t.string,
+});
+export type PolygonAttributes = t.TypeOf<typeof PolygonAttributesType>;
+
 export enum FieldType {
   CHECKBOX = "CheckBox",
   COMBOBOX = "ComboBox",
   TEXT = "Text",
-  NUMBER = "Numeric",
+  NUMERIC = "Numeric",
   SELECT = "Select",
   MULSELECT = "MultiSelect",
   RECTANGLE = "Rectangle",
@@ -11,67 +79,25 @@ export enum FieldType {
   POLYGON = "Polygon",
 }
 
-export interface CheckBoxAttributes {
-  default: boolean;
-}
+export const LabelingFieldAttributesType = t.partial({
+  [FieldType.CHECKBOX]: CheckBoxAttributesType,
+  [FieldType.COMBOBOX]: ComboBoxAttributesType,
+  [FieldType.TEXT]: TextAttributesType,
+  [FieldType.NUMERIC]: NumberAttributesType,
+  [FieldType.SELECT]: SelectAttributesType,
+  [FieldType.MULSELECT]: MultiSelectAttributesType,
+  [FieldType.RECTANGLE]: RectangleAttributesType,
+  [FieldType.LINE]: LineAttributesType,
+  [FieldType.POINT]: PointAttributesType,
+  [FieldType.POLYGON]: PolygonAttributesType,
+});
 
-export interface ComboBoxAttributes {
-  default: string;
-  options: string[];
-}
+export type LabelingFieldAttributes = t.TypeOf<
+  typeof LabelingFieldAttributesType
+>;
 
-export interface TextAttributes {
-  default: string;
-}
-
-export interface NumberAttributes {
-  min: number;
-  max: number;
-  step: number;
-  default: number;
-}
-
-export interface SelectAttributes {
-  default: string;
-  options: {
-    text: string;
-    size: number;
-  }[];
-}
-
-export interface MultiSelectAttributes {
-  default: string[];
-  options: {
-    text: string;
-    size: number;
-  }[];
-}
-
-export interface RectangleAttributes {
-  color: string;
-}
-
-export interface LineAttributes {
-  color: string;
-}
-
-export interface PointAttributes {
-  color: string;
-}
-
-export interface PolygonAttributes {
-  color: string;
-}
-
-export interface LabelingFieldAttributes {
-  [FieldType.CHECKBOX]: CheckBoxAttributes;
-  [FieldType.COMBOBOX]: ComboBoxAttributes;
-  [FieldType.TEXT]: TextAttributes;
-  [FieldType.NUMBER]: NumberAttributes;
-  [FieldType.SELECT]: SelectAttributes;
-  [FieldType.MULSELECT]: MultiSelectAttributes;
-  [FieldType.RECTANGLE]: RectangleAttributes;
-  [FieldType.LINE]: LineAttributes;
-  [FieldType.POINT]: PointAttributes;
-  [FieldType.POLYGON]: PolygonAttributes;
-}
+export type OnAttributeChangeHandler = (
+  provider: (
+    attributes: LabelingFieldAttributes,
+  ) => LabelingFieldAttributes | undefined,
+) => void;

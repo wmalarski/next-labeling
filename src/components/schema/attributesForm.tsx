@@ -1,5 +1,9 @@
 import React, { memo } from "react";
-import { FieldType, LabelingFieldAttributes } from "../../utils/schema/fields";
+import {
+  FieldType,
+  LabelingFieldAttributes,
+  OnAttributeChangeHandler,
+} from "../../utils/schema/fields";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -7,169 +11,97 @@ import { CompactPicker } from "react-color";
 import ComboBoxForm from "./comboBoxForm";
 import SelectForm from "./selectForm";
 import MulSelectForm from "./mulSelectForm";
-
-export type OnChangeHandler<T extends keyof LabelingFieldAttributes> = (
-  provider: (
-    attributes: LabelingFieldAttributes[T]
-  ) => LabelingFieldAttributes[T] | undefined
-) => void;
+import NumericForm from "./numericForm";
 
 export interface AttributesFormProps {
-  type: FieldType;
-  attributes: LabelingFieldAttributes[FieldType];
-  onChange: OnChangeHandler<FieldType>;
+  attributes: LabelingFieldAttributes;
+  onChange: OnAttributeChangeHandler;
 }
 
 function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
-  const { type, attributes, onChange } = props;
+  const { attributes: attributesObject, onChange } = props;
+  const keys = Object.keys(attributesObject);
+  const type = keys[0];
 
   switch (type) {
     case FieldType.LINE:
     case FieldType.POINT:
     case FieldType.POLYGON:
     case FieldType.RECTANGLE:
-      const colorAttributes = attributes as LabelingFieldAttributes[typeof type];
-      const colorOnChange = onChange as OnChangeHandler<typeof type>;
-      return (
+      const colorAttributes = attributesObject[type];
+      return colorAttributes ? (
         <CompactPicker
           color={colorAttributes.color}
-          onChangeComplete={(color) => {
+          onChangeComplete={color => {
             const hex = color.hex;
-            colorOnChange(() => ({ color: hex }));
+            onChange(() => ({ [type]: { color: hex } }));
           }}
         />
+      ) : (
+        <></>
       );
     case FieldType.CHECKBOX:
-      const checkBoxAttributes = attributes as LabelingFieldAttributes[typeof type];
-      const checkBoxOnChange = onChange as OnChangeHandler<typeof type>;
-      return (
+      const checkBoxAttributes = attributesObject[type];
+      return checkBoxAttributes ? (
         <FormControlLabel
           control={
             <Checkbox
               checked={checkBoxAttributes.default}
-              onChange={(event) => {
+              onChange={event => {
                 const checked = event.target.checked;
-                checkBoxOnChange(() => ({ default: checked }));
+                onChange(() => ({ [type]: { default: checked } }));
               }}
             />
           }
           label="Default value"
         />
+      ) : (
+        <></>
       );
     case FieldType.TEXT:
-      const textAttributes = attributes as LabelingFieldAttributes[typeof type];
-      const textOnChange = onChange as OnChangeHandler<typeof type>;
-      return (
+      const textAttributes = attributesObject[type];
+      return textAttributes ? (
         <TextField
           label="Default"
           variant="outlined"
           margin="dense"
           fullWidth
           value={textAttributes.default}
-          onChange={(event) => {
+          onChange={event => {
             const text = event.target.value;
-            textOnChange(() => ({ default: text }));
+            onChange(() => ({ [type]: { default: text } }));
           }}
         />
+      ) : (
+        <></>
       );
-    case FieldType.NUMBER:
-      const numberAttributes = attributes as LabelingFieldAttributes[typeof type];
-      const numberOnChange = onChange as OnChangeHandler<typeof type>;
-      return (
-        <>
-          <TextField
-            label="Default"
-            type="number"
-            margin="dense"
-            fullWidth
-            value={numberAttributes.default}
-            onChange={(event) => {
-              const defaultNumber = event.target.value;
-              numberOnChange((attributes) => ({
-                ...attributes,
-                default: Number(defaultNumber),
-              }));
-            }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          <TextField
-            label="Min"
-            type="number"
-            margin="dense"
-            fullWidth
-            value={numberAttributes.min}
-            onChange={(event) => {
-              const min = event.target.value;
-              numberOnChange((attributes) => ({
-                ...attributes,
-                min: Number(min),
-              }));
-            }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          <TextField
-            label="Max"
-            type="number"
-            margin="dense"
-            fullWidth
-            value={numberAttributes.max}
-            onChange={(event) => {
-              const max = event.target.value;
-              numberOnChange((attributes) => ({
-                ...attributes,
-                max: Number(max),
-              }));
-            }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-          <TextField
-            label="Step"
-            type="number"
-            margin="dense"
-            fullWidth
-            value={numberAttributes.step}
-            onChange={(event) => {
-              const step = event.target.value;
-              numberOnChange((attributes) => ({
-                ...attributes,
-                step: Number(step),
-              }));
-            }}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
-        </>
+    case FieldType.NUMERIC:
+      const numberAttributes = attributesObject[type];
+      return numberAttributes ? (
+        <NumericForm attributes={numberAttributes} onChange={onChange} />
+      ) : (
+        <></>
       );
     case FieldType.COMBOBOX:
-      const comboBoxAttributes = attributes as LabelingFieldAttributes[typeof type];
-      const comboBoxOnChange = onChange as OnChangeHandler<typeof type>;
-      return (
-        <ComboBoxForm
-          attributes={comboBoxAttributes}
-          onChange={comboBoxOnChange}
-        />
+      const comboBoxAttributes = attributesObject[type];
+      return comboBoxAttributes ? (
+        <ComboBoxForm attributes={comboBoxAttributes} onChange={onChange} />
+      ) : (
+        <></>
       );
     case FieldType.SELECT:
-      const selectAttributes = attributes as LabelingFieldAttributes[typeof type];
-      const selectOnChange = onChange as OnChangeHandler<typeof type>;
-      return (
-        <SelectForm attributes={selectAttributes} onChange={selectOnChange} />
+      const selectAttributes = attributesObject[type];
+      return selectAttributes ? (
+        <SelectForm attributes={selectAttributes} onChange={onChange} />
+      ) : (
+        <></>
       );
     case FieldType.MULSELECT:
-      const multiselectAttributes = attributes as LabelingFieldAttributes[typeof type];
-      const multiselectOnChange = onChange as OnChangeHandler<typeof type>;
-      return (
-        <MulSelectForm
-          attributes={multiselectAttributes}
-          onChange={multiselectOnChange}
-        />
+      const multiselectAttributes = attributesObject[type];
+      return multiselectAttributes ? (
+        <MulSelectForm attributes={multiselectAttributes} onChange={onChange} />
+      ) : (
+        <></>
       );
     default:
       return <></>;
@@ -178,12 +110,8 @@ function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
 
 const AttributesForm = memo(
   AttributesFormPrivate,
-  (
-    { attributes: prevAttributes, type: prevType },
-    { attributes: nextAttributes, type: nextType }
-  ) =>
-    prevType === nextType &&
-    JSON.stringify(prevAttributes) === JSON.stringify(nextAttributes)
+  ({ attributes: prevAttributes }, { attributes: nextAttributes }) =>
+    JSON.stringify(prevAttributes) === JSON.stringify(nextAttributes),
 );
 
 export default AttributesForm;

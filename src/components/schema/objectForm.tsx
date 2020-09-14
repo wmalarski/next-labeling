@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: theme.typography.pxToRem(15),
       color: theme.palette.text.secondary,
     },
-  })
+  }),
 );
 
 export interface OnChangeProviderResult {
@@ -52,9 +52,9 @@ export interface ObjectFormProps {
   objectSchema: LabelingObjectSchema;
   onChange: (
     provider: (
-      objectSchema: LabelingObjectSchema
+      objectSchema: LabelingObjectSchema,
     ) => OnChangeProviderResult | undefined,
-    objectId: string
+    objectId: string,
   ) => void;
   onRemove: () => void;
   onCopy: (objectSchema: LabelingObjectSchema) => void;
@@ -68,8 +68,8 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
 
   const onFieldChange = useCallback(
     (provider, fieldId) =>
-      onChange((object) => {
-        const currentIndex = object.fields.findIndex((n) => n.id === fieldId);
+      onChange(object => {
+        const currentIndex = object.fields.findIndex(n => n.id === fieldId);
         if (currentIndex === -1) return;
 
         const currentField = object.fields[currentIndex];
@@ -84,7 +84,7 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
           message,
         };
       }, objectId),
-    [onChange, objectId]
+    [onChange, objectId],
   );
 
   return (
@@ -112,14 +112,14 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
             label="Name"
             value={name}
             margin="dense"
-            onChange={(event) => {
+            onChange={event => {
               const value = event.target.value;
               onChange(
-                (object) => ({
+                object => ({
                   objectSchema: { ...object, name: value },
                   message: "Field name changed",
                 }),
-                objectId
+                objectId,
               );
             }}
           />
@@ -129,14 +129,14 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
             label="Description"
             value={description}
             margin="dense"
-            onChange={(event) => {
+            onChange={event => {
               const value = event.target.value;
               onChange(
-                (object) => ({
+                object => ({
                   objectSchema: { ...object, description: value },
                   message: "Field description changed",
                 }),
-                objectId
+                objectId,
               );
             }}
           />
@@ -146,11 +146,11 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
                 checked={singleton}
                 onChange={() =>
                   onChange(
-                    (object) => ({
+                    object => ({
                       objectSchema: { ...object, singleton: !object.singleton },
                       message: "Field is singleton state changed",
                     }),
-                    objectId
+                    objectId,
                   )
                 }
               />
@@ -166,7 +166,7 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
                 onChange={onFieldChange}
                 onCopy={() =>
                   onChange(
-                    (object) => ({
+                    object => ({
                       objectSchema: {
                         ...object,
                         fields: [
@@ -179,11 +179,11 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
                       },
                       message: "Field copied",
                     }),
-                    objectId
+                    objectId,
                   )
                 }
                 onRemove={() => {
-                  onChange((object) => {
+                  onChange(object => {
                     const newFields = [...object.fields];
                     newFields.splice(index, 1);
                     return {
@@ -192,8 +192,8 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
                     };
                   }, objectId);
                 }}
-                onMove={(diff) => {
-                  onChange((object) => {
+                onMove={diff => {
+                  onChange(object => {
                     const newFields = [...object.fields];
                     const newIndex = index - diff;
                     if (newIndex < 0 || newIndex >= newFields.length)
@@ -209,7 +209,7 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
                   }, objectId);
                 }}
               />
-            )
+            ),
           )}
         </div>
       </AccordionDetails>
@@ -221,7 +221,7 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
           startIcon={<AddIcon />}
           onClick={() =>
             onChange(
-              (object) => ({
+              object => ({
                 objectSchema: {
                   ...object,
                   fields: [
@@ -230,15 +230,16 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
                       id: uniqueId("field_"),
                       name: "New field",
                       perFrame: true,
-                      type: FieldType.CHECKBOX,
-                      attributes:
-                        labelingFieldAttributesDefaults[FieldType.CHECKBOX],
+                      attributes: {
+                        [FieldType.CHECKBOX]:
+                          labelingFieldAttributesDefaults[FieldType.CHECKBOX],
+                      },
                     },
                   ],
                 },
                 message: "New field added",
               }),
-              objectId
+              objectId,
             )
           }
         >
@@ -292,7 +293,7 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
 const ObjectForm = memo(
   ObjectFormPrivate,
   ({ objectSchema: prevObjectSchema }, { objectSchema: nextObjectSchema }) =>
-    JSON.stringify(prevObjectSchema) === JSON.stringify(nextObjectSchema)
+    JSON.stringify(prevObjectSchema) === JSON.stringify(nextObjectSchema),
 );
 
 export default ObjectForm;

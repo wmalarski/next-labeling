@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import AddIcon from "@material-ui/icons/Add";
-import { ComboBoxAttributes } from "../../utils/schema/fields";
+import {
+  ComboBoxAttributes,
+  FieldType,
+  OnAttributeChangeHandler,
+} from "../../utils/schema/fields";
 import TextField from "@material-ui/core/TextField";
 import { Chip } from "@material-ui/core";
 
@@ -13,14 +17,12 @@ const useStyles = makeStyles(() =>
       flexDirection: "column",
       width: "100%",
     },
-  })
+  }),
 );
 
 export interface ComboBoxFormProps {
   attributes: ComboBoxAttributes;
-  onChange: (
-    provider: (attributes: ComboBoxAttributes) => ComboBoxAttributes
-  ) => void;
+  onChange: OnAttributeChangeHandler;
 }
 
 export default function ComboBoxForm(props: ComboBoxFormProps): JSX.Element {
@@ -43,20 +45,30 @@ export default function ComboBoxForm(props: ComboBoxFormProps): JSX.Element {
             disabled={options.length === 1}
             color={defaultValue === option ? "primary" : "default"}
             onDelete={() =>
-              onChange((attributes) => {
-                const newOptions = [...attributes.options];
+              onChange(attributes => {
+                const comboBox = attributes.ComboBox;
+                if (!comboBox) return;
+                const newOptions = [...comboBox.options];
                 newOptions.splice(index, 1);
                 return {
-                  options: newOptions,
-                  default:
-                    attributes.default === option
-                      ? newOptions[0]
-                      : attributes.default,
+                  [FieldType.COMBOBOX]: {
+                    options: newOptions,
+                    default:
+                      comboBox.default === option
+                        ? newOptions[0]
+                        : comboBox.default,
+                  },
                 };
               })
             }
             onClick={() =>
-              onChange((attributes) => ({ ...attributes, default: option }))
+              onChange(attributes => {
+                const comboBox = attributes.ComboBox;
+                if (!comboBox) return;
+                return {
+                  [FieldType.COMBOBOX]: { ...comboBox, default: option },
+                };
+              })
             }
           />
         ))}
@@ -68,17 +80,23 @@ export default function ComboBoxForm(props: ComboBoxFormProps): JSX.Element {
           fullWidth
           margin="dense"
           value={text}
-          onChange={(event) => setText(event.target.value)}
+          onChange={event => setText(event.target.value)}
         />
         <Button
           startIcon={<AddIcon />}
           color="inherit"
           disabled={options.includes(text) || text.length === 0}
           onClick={() =>
-            onChange((attributes) => ({
-              ...attributes,
-              options: [...attributes.options, text],
-            }))
+            onChange(attributes => {
+              const comboBox = attributes.ComboBox;
+              if (!comboBox) return;
+              return {
+                [FieldType.COMBOBOX]: {
+                  ...comboBox,
+                  options: [...comboBox.options, text],
+                },
+              };
+            })
           }
         >
           Add

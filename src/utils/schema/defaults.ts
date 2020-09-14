@@ -16,10 +16,11 @@ export const defaultLabelingSchema: LabelingSchema = {
           id: uniqueId("field_"),
           name: "Direction",
           perFrame: true,
-          type: FieldType.COMBOBOX,
           attributes: {
-            default: "Oncoming",
-            options: ["Oncoming", "Preceding", "From Right", "From Left"],
+            ComboBox: {
+              default: "Oncoming",
+              options: ["Oncoming", "Preceding", "From Right", "From Left"],
+            },
           },
         },
       ],
@@ -39,7 +40,7 @@ export const labelingFieldAttributesDefaults: LabelingFieldAttributes = {
   [FieldType.TEXT]: {
     default: "France",
   },
-  [FieldType.NUMBER]: {
+  [FieldType.NUMERIC]: {
     default: 50,
     min: 5,
     step: 5,
@@ -67,7 +68,7 @@ export const labelingFieldAttributesDefaults: LabelingFieldAttributes = {
     ],
   },
   [FieldType.MULSELECT]: {
-    default: ["Left", "Right"],
+    default: ["Left Lane", "Right Lane"],
     options: [
       {
         text: "Left Border",

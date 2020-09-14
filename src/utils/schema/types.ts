@@ -1,28 +1,31 @@
+import * as t from "io-ts";
 import { AuthUser } from "../auth/user";
-import { FieldType, LabelingFieldAttributes } from "./fields";
+import { LabelingFieldAttributesType } from "./fields";
 
-export interface LabelingFieldSchema {
-  id: string;
-  name: string;
-  type: FieldType;
-  perFrame: boolean;
-  attributes: LabelingFieldAttributes[FieldType];
-}
+export const LabelingFieldSchemaType = t.type({
+  id: t.string,
+  name: t.string,
+  perFrame: t.boolean,
+  attributes: LabelingFieldAttributesType,
+});
+export type LabelingFieldSchema = t.TypeOf<typeof LabelingFieldSchemaType>;
 
-export interface LabelingObjectSchema {
-  id: string;
-  name: string;
-  description: string;
-  singleton: boolean;
-  fields: LabelingFieldSchema[];
-}
+export const LabelingObjectSchemaType = t.type({
+  id: t.string,
+  name: t.string,
+  description: t.string,
+  singleton: t.boolean,
+  fields: t.array(LabelingFieldSchemaType),
+});
+export type LabelingObjectSchema = t.TypeOf<typeof LabelingObjectSchemaType>;
 
-export interface LabelingSchema {
-  name: string;
-  version: string;
-  description: string;
-  objects: LabelingObjectSchema[];
-}
+export const LabelingSchemaType = t.type({
+  name: t.string,
+  version: t.string,
+  description: t.string,
+  objects: t.array(LabelingObjectSchemaType),
+});
+export type LabelingSchema = t.TypeOf<typeof LabelingSchemaType>;
 
 export interface SchemaDocument {
   id?: string;

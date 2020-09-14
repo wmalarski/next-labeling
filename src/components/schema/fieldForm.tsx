@@ -28,16 +28,16 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexDirection: "column",
     },
-  })
+  }),
 );
 
 export interface FieldFormProps {
   fieldSchema: LabelingFieldSchema;
   onChange: (
     provider: (
-      fieldSchema: LabelingFieldSchema
+      fieldSchema: LabelingFieldSchema,
     ) => { fieldSchema: LabelingFieldSchema; message: string } | undefined,
-    fieldId: string
+    fieldId: string,
   ) => void;
   onRemove: () => void;
   onCopy: () => void;
@@ -46,7 +46,9 @@ export interface FieldFormProps {
 
 function FieldFormPrivate(props: FieldFormProps): JSX.Element {
   const { fieldSchema, onChange, onRemove, onCopy, onMove } = props;
-  const { name, perFrame, type, attributes, id: fieldId } = fieldSchema;
+  const { name, perFrame, attributes, id: fieldId } = fieldSchema;
+  const type = Object.keys(attributes)[0];
+
   const classes = useStyles();
 
   return (
@@ -60,14 +62,14 @@ function FieldFormPrivate(props: FieldFormProps): JSX.Element {
             label="Name"
             value={name}
             margin="dense"
-            onChange={(event) => {
+            onChange={event => {
               const value = event.target.value;
               onChange(
-                (field) => ({
+                field => ({
                   fieldSchema: { ...field, name: value },
                   message: "Field name changed",
                 }),
-                fieldId
+                fieldId,
               );
             }}
           />
@@ -78,15 +80,16 @@ function FieldFormPrivate(props: FieldFormProps): JSX.Element {
               id="select-field-type"
               value={type}
               fullWidth
-              onChange={(event) => {
+              onChange={event => {
                 const newType = event.target.value as FieldType;
-                onChange((field) => {
+                onChange(field => {
                   if (newType === type) return;
                   return {
                     fieldSchema: {
                       ...field,
-                      type: newType,
-                      attributes: labelingFieldAttributesDefaults[newType],
+                      attributes: {
+                        [newType]: labelingFieldAttributesDefaults[newType],
+                      },
                     },
                     message: "Field type changed",
                   };
@@ -98,7 +101,7 @@ function FieldFormPrivate(props: FieldFormProps): JSX.Element {
                   <MenuItem value={name} key={name}>
                     {name}
                   </MenuItem>
-                )
+                ),
               )}
             </Select>
           </FormControl>
@@ -108,11 +111,11 @@ function FieldFormPrivate(props: FieldFormProps): JSX.Element {
                 checked={perFrame}
                 onChange={() =>
                   onChange(
-                    (field) => ({
+                    field => ({
                       fieldSchema: { ...field, perFrame: !field.perFrame },
                       message: "Per frame value changed",
                     }),
-                    fieldId
+                    fieldId,
                   )
                 }
                 value={perFrame}
@@ -123,10 +126,9 @@ function FieldFormPrivate(props: FieldFormProps): JSX.Element {
         </Grid>
         <Grid item xs={7}>
           <AttributesForm
-            type={type}
             attributes={attributes}
-            onChange={(provider) =>
-              onChange((field) => {
+            onChange={provider =>
+              onChange(field => {
                 const result = provider(attributes);
                 if (!result) return;
                 return {
@@ -184,7 +186,7 @@ function FieldFormPrivate(props: FieldFormProps): JSX.Element {
 const FieldForm = memo(
   FieldFormPrivate,
   ({ fieldSchema: prevFieldSchema }, { fieldSchema: nextFieldSchema }) =>
-    JSON.stringify(prevFieldSchema) === JSON.stringify(nextFieldSchema)
+    JSON.stringify(prevFieldSchema) === JSON.stringify(nextFieldSchema),
 );
 
 export default FieldForm;

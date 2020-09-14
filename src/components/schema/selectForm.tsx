@@ -5,7 +5,11 @@ import AddIcon from "@material-ui/icons/Add";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-import { SelectAttributes } from "../../utils/schema/fields";
+import {
+  FieldType,
+  OnAttributeChangeHandler,
+  SelectAttributes,
+} from "../../utils/schema/fields";
 import TextField from "@material-ui/core/TextField";
 import Grid, { GridSize } from "@material-ui/core/Grid/Grid";
 import Paper from "@material-ui/core/Paper/Paper";
@@ -21,14 +25,12 @@ const useStyles = makeStyles((theme: Theme) =>
       flexWrap: "wrap",
       padding: theme.spacing(1),
     },
-  })
+  }),
 );
 
 export interface SelectFormProps {
   attributes: SelectAttributes;
-  onChange: (
-    provider: (attributes: SelectAttributes) => SelectAttributes | undefined
-  ) => void;
+  onChange: OnAttributeChangeHandler;
 }
 
 export default function SelectForm(props: SelectFormProps): JSX.Element {
@@ -36,7 +38,7 @@ export default function SelectForm(props: SelectFormProps): JSX.Element {
     attributes: { options, default: defaultValue },
     onChange,
   } = props;
-  const optionTexts = options.map((option) => option.text);
+  const optionTexts = options.map(option => option.text);
   const classes = useStyles();
 
   const [inputText, setInputText] = useState("");
@@ -57,10 +59,16 @@ export default function SelectForm(props: SelectFormProps): JSX.Element {
                   <Checkbox
                     checked={text === defaultValue}
                     onChange={() =>
-                      onChange((attributes) => ({
-                        ...attributes,
-                        default: text,
-                      }))
+                      onChange(attributes => {
+                        const select = attributes.Select;
+                        if (!select) return;
+                        return {
+                          [FieldType.SELECT]: {
+                            ...select,
+                            default: text,
+                          },
+                        };
+                      })
                     }
                   />
                 }
@@ -70,15 +78,19 @@ export default function SelectForm(props: SelectFormProps): JSX.Element {
               <IconButton
                 aria-label="move-up"
                 onClick={() =>
-                  onChange((attributes) => {
-                    const newOptions = [...attributes.options];
+                  onChange(attributes => {
+                    const select = attributes.Select;
+                    if (!select) return;
+                    const newOptions = [...select.options];
                     const newIndex = index - 1;
                     if (newIndex < 0) return;
                     [newOptions[index], newOptions[newIndex]] = [
                       newOptions[newIndex],
                       newOptions[index],
                     ];
-                    return { ...attributes, options: newOptions };
+                    return {
+                      [FieldType.SELECT]: { ...select, options: newOptions },
+                    };
                   })
                 }
               >
@@ -87,15 +99,19 @@ export default function SelectForm(props: SelectFormProps): JSX.Element {
               <IconButton
                 aria-label="move-down"
                 onClick={() =>
-                  onChange((attributes) => {
-                    const newOptions = [...attributes.options];
+                  onChange(attributes => {
+                    const select = attributes.Select;
+                    if (!select) return;
+                    const newOptions = [...select.options];
                     const newIndex = index + 1;
                     if (newIndex >= newOptions.length) return;
                     [newOptions[index], newOptions[newIndex]] = [
                       newOptions[newIndex],
                       newOptions[index],
                     ];
-                    return { ...attributes, options: newOptions };
+                    return {
+                      [FieldType.SELECT]: { ...select, options: newOptions },
+                    };
                   })
                 }
               >
@@ -105,15 +121,19 @@ export default function SelectForm(props: SelectFormProps): JSX.Element {
                 aria-label="delete"
                 disabled={options.length === 1}
                 onClick={() =>
-                  onChange((attributes) => {
-                    const newOptions = [...attributes.options];
+                  onChange(attributes => {
+                    const select = attributes.Select;
+                    if (!select) return;
+                    const newOptions = [...select.options];
                     newOptions.splice(index, 1);
                     return {
-                      options: newOptions,
-                      default:
-                        attributes.default === text
-                          ? newOptions[0].text
-                          : attributes.default,
+                      [FieldType.SELECT]: {
+                        options: newOptions,
+                        default:
+                          select.default === text
+                            ? newOptions[0].text
+                            : select.default,
+                      },
                     };
                   })
                 }
@@ -129,7 +149,7 @@ export default function SelectForm(props: SelectFormProps): JSX.Element {
         variant="outlined"
         margin="dense"
         value={inputText}
-        onChange={(event) => setInputText(event.target.value)}
+        onChange={event => setInputText(event.target.value)}
       />
       <TextField
         label="Size"
@@ -137,7 +157,7 @@ export default function SelectForm(props: SelectFormProps): JSX.Element {
         variant="outlined"
         margin="dense"
         value={inputSize}
-        onChange={(event) => setInputSize(Number(event.target.value))}
+        onChange={event => setInputSize(Number(event.target.value))}
         inputProps={{
           min: 1,
           max: 12,
@@ -152,13 +172,19 @@ export default function SelectForm(props: SelectFormProps): JSX.Element {
         color="inherit"
         disabled={optionTexts.includes(inputText) || inputText.length === 0}
         onClick={() =>
-          onChange((attributes) => ({
-            ...attributes,
-            options: [
-              ...attributes.options,
-              { text: inputText, size: inputSize },
-            ],
-          }))
+          onChange(attributes => {
+            const select = attributes.Select;
+            if (!select) return;
+            return {
+              [FieldType.SELECT]: {
+                ...select,
+                options: [
+                  ...select.options,
+                  { text: inputText, size: inputSize },
+                ],
+              },
+            };
+          })
         }
       >
         Add

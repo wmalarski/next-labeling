@@ -132,7 +132,9 @@ export default function SchemaListItem(
               <Typography variant="subtitle1">
                 {selectedField.perFrame}
               </Typography>
-              <Typography variant="subtitle2">{selectedField.type}</Typography>
+              <Typography variant="subtitle2">
+                {Object.keys(selectedField.attributes)[0]}
+              </Typography>
               <pre className="text-xs">
                 {JSON.stringify(selectedField.attributes || {}, null, 2)}
               </pre>

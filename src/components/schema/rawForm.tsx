@@ -1,15 +1,17 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import EditIcon from "@material-ui/icons/Edit";
 import { LabelingSchema } from "../../utils/schema/types";
 import { NullableSchemaState } from "../../utils/schema/useSchemaHistory";
 import TextField from "@material-ui/core/TextField";
 
+function schemaToJson(schema: LabelingSchema): string {
+  return JSON.stringify(schema || {}, null, 2);
+}
 export interface RawFormProps {
   schema: LabelingSchema;
   setSchema?: (setter: (schema: LabelingSchema) => NullableSchemaState) => void;
@@ -19,7 +21,11 @@ export default function RawForm(props: RawFormProps) {
   const { schema, setSchema } = props;
 
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(JSON.stringify(schema || {}, null, 2));
+  const [value, setValue] = useState(schemaToJson(schema));
+
+  useEffect(() => {
+    setValue(schemaToJson(schema));
+  }, [schema, setValue]);
 
   const handleClose = () => {
     setOpen(false);
@@ -58,8 +64,18 @@ export default function RawForm(props: RawFormProps) {
             Cancel
           </Button>
           <Button
+            disabled={!setSchema}
             onClick={() => {
-              handleClose();
+              try {
+                if (setSchema) {
+                  const result = JSON.parse(value);
+                  console.log({ result });
+                  setSchema(() => ({ schema: result, message: "Raw Edit" }));
+                  handleClose();
+                }
+              } catch (error) {
+                alert({ error });
+              }
             }}
             color="primary"
           >
