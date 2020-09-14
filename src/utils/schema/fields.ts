@@ -1,22 +1,22 @@
 import * as t from "io-ts";
 
-export const CheckBoxAttributesType = t.type({
+export const CheckBoxAttributesType = t.strict({
   default: t.boolean,
 });
 export type CheckBoxAttributes = t.TypeOf<typeof CheckBoxAttributesType>;
 
-export const ComboBoxAttributesType = t.type({
+export const ComboBoxAttributesType = t.strict({
   default: t.string,
   options: t.array(t.string),
 });
 export type ComboBoxAttributes = t.TypeOf<typeof ComboBoxAttributesType>;
 
-export const TextAttributesType = t.type({
+export const TextAttributesType = t.strict({
   default: t.string,
 });
 export type TextAttributes = t.TypeOf<typeof TextAttributesType>;
 
-export const NumberAttributesType = t.type({
+export const NumberAttributesType = t.strict({
   min: t.number,
   max: t.number,
   step: t.number,
@@ -24,10 +24,10 @@ export const NumberAttributesType = t.type({
 });
 export type NumberAttributes = t.TypeOf<typeof NumberAttributesType>;
 
-export const SelectAttributesType = t.type({
+export const SelectAttributesType = t.strict({
   default: t.string,
   options: t.array(
-    t.type({
+    t.strict({
       text: t.string,
       size: t.number,
     }),
@@ -35,10 +35,10 @@ export const SelectAttributesType = t.type({
 });
 export type SelectAttributes = t.TypeOf<typeof SelectAttributesType>;
 
-export const MultiSelectAttributesType = t.type({
+export const MultiSelectAttributesType = t.strict({
   default: t.array(t.string),
   options: t.array(
-    t.type({
+    t.strict({
       text: t.string,
       size: t.number,
     }),
@@ -46,22 +46,22 @@ export const MultiSelectAttributesType = t.type({
 });
 export type MultiSelectAttributes = t.TypeOf<typeof MultiSelectAttributesType>;
 
-export const RectangleAttributesType = t.type({
+export const RectangleAttributesType = t.strict({
   color: t.string,
 });
 export type RectangleAttributes = t.TypeOf<typeof RectangleAttributesType>;
 
-export const LineAttributesType = t.type({
+export const LineAttributesType = t.strict({
   color: t.string,
 });
 export type LineAttributes = t.TypeOf<typeof LineAttributesType>;
 
-export const PointAttributesType = t.type({
+export const PointAttributesType = t.strict({
   color: t.string,
 });
 export type PointAttributes = t.TypeOf<typeof PointAttributesType>;
 
-export const PolygonAttributesType = t.type({
+export const PolygonAttributesType = t.strict({
   color: t.string,
 });
 export type PolygonAttributes = t.TypeOf<typeof PolygonAttributesType>;

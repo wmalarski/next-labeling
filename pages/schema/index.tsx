@@ -122,14 +122,6 @@ function Spaces(): JSX.Element {
           >
             New Schema
           </Button>
-          <Button
-            size="small"
-            color="inherit"
-            startIcon={<CloudUploadIcon />}
-            onClick={() => {}}
-          >
-            Import Schema
-          </Button>
         </>
       </Header>
       <div>

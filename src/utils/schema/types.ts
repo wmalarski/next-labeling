@@ -2,7 +2,7 @@ import * as t from "io-ts";
 import { AuthUser } from "../auth/user";
 import { LabelingFieldAttributesType } from "./fields";
 
-export const LabelingFieldSchemaType = t.type({
+export const LabelingFieldSchemaType = t.strict({
   id: t.string,
   name: t.string,
   perFrame: t.boolean,
@@ -10,7 +10,7 @@ export const LabelingFieldSchemaType = t.type({
 });
 export type LabelingFieldSchema = t.TypeOf<typeof LabelingFieldSchemaType>;
 
-export const LabelingObjectSchemaType = t.type({
+export const LabelingObjectSchemaType = t.strict({
   id: t.string,
   name: t.string,
   description: t.string,
@@ -19,7 +19,7 @@ export const LabelingObjectSchemaType = t.type({
 });
 export type LabelingObjectSchema = t.TypeOf<typeof LabelingObjectSchemaType>;
 
-export const LabelingSchemaType = t.type({
+export const LabelingSchemaType = t.strict({
   name: t.string,
   version: t.string,
   description: t.string,
