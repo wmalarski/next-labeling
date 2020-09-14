@@ -15,6 +15,7 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import EditIcon from "@material-ui/icons/Edit";
 import ViewListIcon from "@material-ui/icons/ViewList";
+import RawForm from "./rawForm";
 
 export interface SelectedState {
   object?: LabelingObjectSchema;
@@ -52,7 +53,7 @@ export default function SchemaListItem(
       <div>
         <Button
           size="small"
-          color="primary"
+          color="inherit"
           startIcon={<ViewListIcon />}
           onClick={() => {}}
         >
@@ -60,23 +61,16 @@ export default function SchemaListItem(
         </Button>
         <Button
           size="small"
-          color="primary"
+          color="inherit"
           startIcon={<EditIcon />}
           onClick={() => {}}
         >
           Edit
         </Button>
+        <RawForm startIcon={<SaveAltIcon />} label="Export" schema={schema} />
         <Button
           size="small"
-          color="primary"
-          startIcon={<SaveAltIcon />}
-          onClick={() => {}}
-        >
-          Export
-        </Button>
-        <Button
-          size="small"
-          color="primary"
+          color="inherit"
           startIcon={<FileCopyIcon />}
           onClick={() => {}}
         >
@@ -84,7 +78,7 @@ export default function SchemaListItem(
         </Button>
         <Button
           size="small"
-          color="primary"
+          color="inherit"
           startIcon={<RemoveIcon />}
           onClick={() => {}}
         >

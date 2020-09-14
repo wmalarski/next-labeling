@@ -5,7 +5,6 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import EditIcon from "@material-ui/icons/Edit";
 import { LabelingSchema, LabelingSchemaType } from "../../utils/schema/types";
 import { NullableSchemaState } from "../../utils/schema/useSchemaHistory";
 import TextField from "@material-ui/core/TextField";
@@ -21,12 +20,14 @@ interface RawEditorState {
 }
 
 export interface RawFormProps {
+  label: string;
   schema: LabelingSchema;
+  startIcon: JSX.Element;
   setSchema?: (setter: (schema: LabelingSchema) => NullableSchemaState) => void;
 }
 
 export default function RawForm(props: RawFormProps) {
-  const { schema, setSchema } = props;
+  const { label, schema, startIcon, setSchema } = props;
 
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<RawEditorState>({
@@ -44,9 +45,14 @@ export default function RawForm(props: RawFormProps) {
   };
 
   return (
-    <div>
-      <Button startIcon={<EditIcon />} onClick={() => setOpen(true)}>
-        Edit Raw
+    <>
+      <Button
+        size="small"
+        color="inherit"
+        startIcon={startIcon}
+        onClick={() => setOpen(true)}
+      >
+        {label}
       </Button>
       <Dialog
         open={open}
@@ -56,7 +62,7 @@ export default function RawForm(props: RawFormProps) {
         aria-labelledby="scroll-dialog-title"
         aria-describedby="scroll-dialog-description"
       >
-        <DialogTitle id="scroll-dialog-title">Edit Raw Schema</DialogTitle>
+        <DialogTitle id="scroll-dialog-title">{label}</DialogTitle>
         <DialogContent dividers>
           {state.errors.map(error => (
             <Alert key={error} severity="error">
@@ -91,22 +97,26 @@ export default function RawForm(props: RawFormProps) {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button
-            disabled={!setSchema || state.errors.length > 0}
-            onClick={() => {
-              if (setSchema) {
-                const parsed = JSON.parse(state.text);
-                const encoded = LabelingSchemaType.encode(parsed);
-                setSchema(() => ({ schema: encoded, message: "Raw Edit" }));
-                handleClose();
-              }
-            }}
-            color="primary"
-          >
-            Save
-          </Button>
+          {setSchema ? (
+            <Button
+              disabled={state.errors.length > 0}
+              onClick={() => {
+                if (setSchema) {
+                  const parsed = JSON.parse(state.text);
+                  const encoded = LabelingSchemaType.encode(parsed);
+                  setSchema(() => ({ schema: encoded, message: "Raw Edit" }));
+                  handleClose();
+                }
+              }}
+              color="primary"
+            >
+              Save
+            </Button>
+          ) : (
+            <></>
+          )}
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }

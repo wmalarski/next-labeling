@@ -1,9 +1,10 @@
 import React, { useCallback } from "react";
 import uniqueId from "lodash/uniqueId";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
 import { LabelingSchema } from "../../utils/schema/types";
 import ObjectForm from "./objectForm";
 import Button from "@material-ui/core/Button";
@@ -118,7 +119,12 @@ export default function SchemaForm(props: SchemaFormProps): JSX.Element {
         >
           Add object
         </Button>
-        <RawForm schema={schema} setSchema={setSchema} />
+        <RawForm
+          label="Edit Raw Schema"
+          startIcon={<EditIcon />}
+          schema={schema}
+          setSchema={setSchema}
+        />
       </div>
       {schema.objects.map(
         (object, index): JSX.Element => (
