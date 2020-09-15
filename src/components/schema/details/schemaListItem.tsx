@@ -17,6 +17,20 @@ import EditIcon from "@material-ui/icons/Edit";
 import ViewListIcon from "@material-ui/icons/ViewList";
 import RawForm from "./../forms/rawForm";
 import FieldDetails from "./fieldDetails";
+import Divider from "@material-ui/core/Divider";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    paper: {
+      margin: theme.spacing(2),
+      padding: theme.spacing(2),
+    },
+    grid: {
+      marginTop: theme.spacing(1),
+    },
+  }),
+);
 
 export interface SelectedState {
   object?: LabelingObjectSchema;
@@ -33,6 +47,7 @@ export default function SchemaListItem(
   const {
     document: { schema, user },
   } = props;
+  const classes = useStyles();
 
   const [selected, setSelected] = useState<SelectedState>({
     object: schema.objects[0],
@@ -45,12 +60,12 @@ export default function SchemaListItem(
     : undefined;
 
   return (
-    <Paper>
+    <Paper className={classes.paper} elevation={3}>
       <Typography variant="h5">{schema.name}</Typography>
-      <Typography variant="caption">{schema.version}</Typography>
+      <Typography variant="subtitle2">{`Version: ${schema.version}`}</Typography>
       <Typography variant="subtitle1">{schema.description}</Typography>
-      <Typography variant="subtitle2">{`Version: ${user?.displayName}`}</Typography>
-
+      <Typography variant="subtitle2">{`Author: ${user?.displayName}`}</Typography>
+      <Divider />
       <div>
         <Button
           size="small"
@@ -86,44 +101,57 @@ export default function SchemaListItem(
           Remove
         </Button>
       </div>
-
-      <Grid container spacing={1}>
-        <Grid item xs={4}>
-          <List>
-            {schema.objects.map(object => (
-              <ListItem
-                key={object.id}
-                selected={selected.object?.id === object.id}
-                onClick={() => setSelected({ ...selected, object })}
-              >
-                <Typography variant="h6">{object.name}</Typography>
-                <Typography variant="body2">{object.description}</Typography>
-                <Typography variant="subtitle2">{`Singleton: ${object.singleton}`}</Typography>
-              </ListItem>
+      <Divider />
+      <div className={classes.grid}>
+        <Grid container spacing={1}>
+          <Grid item xs={4}>
+            <List>
+              {schema.objects.map(object => (
+                <div key={object.id}>
+                  <ListItem
+                    selected={selected.object?.id === object.id}
+                    onClick={() => setSelected({ ...selected, object })}
+                  >
+                    <div>
+                      <Typography variant="h6">{object.name}</Typography>
+                      <Typography variant="body2">
+                        {object.description}
+                      </Typography>
+                      <Typography variant="subtitle2">{`Singleton: ${object.singleton}`}</Typography>
+                    </div>
+                  </ListItem>
+                  <Divider />
+                </div>
+              ))}
+            </List>
+          </Grid>
+          <Grid item xs={4}>
+            {(selected.object?.fields ?? []).map(field => (
+              <div key={field.id}>
+                <ListItem
+                  selected={selectedField?.id === field.id}
+                  onClick={() => {
+                    if (!selected.object?.id) return;
+                    setSelected({
+                      ...selected,
+                      fields: {
+                        ...selected.fields,
+                        [selected.object.id]: field,
+                      },
+                    });
+                  }}
+                >
+                  <Typography variant="subtitle1">{field.name}</Typography>
+                </ListItem>
+                <Divider />
+              </div>
             ))}
-          </List>
+          </Grid>
+          <Grid item xs={4}>
+            {selectedField ? <FieldDetails field={selectedField} /> : <></>}
+          </Grid>
         </Grid>
-        <Grid item xs={4}>
-          {(selected.object?.fields ?? []).map(field => (
-            <ListItem
-              key={field.id}
-              selected={selectedField?.id === field.id}
-              onClick={() => {
-                if (!selected.object?.id) return;
-                setSelected({
-                  ...selected,
-                  fields: { ...selected.fields, [selected.object.id]: field },
-                });
-              }}
-            >
-              <Typography variant="subtitle1">{field.name}</Typography>
-            </ListItem>
-          ))}
-        </Grid>
-        <Grid item xs={4}>
-          {selectedField ? <FieldDetails field={selectedField} /> : <></>}
-        </Grid>
-      </Grid>
+      </div>
     </Paper>
   );
 }
