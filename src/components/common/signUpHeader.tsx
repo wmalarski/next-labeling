@@ -1,6 +1,6 @@
-import React from "react";
-import { useRouter } from "next/router";
 import Button from "@material-ui/core/Button";
+import { useRouter } from "next/router";
+import React from "react";
 
 export default function SignUpHeader(): JSX.Element {
   const router = useRouter();

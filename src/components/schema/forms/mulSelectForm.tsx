@@ -1,21 +1,22 @@
-import React, { useState } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Grid, { GridSize } from "@material-ui/core/Grid/Grid";
+import IconButton from "@material-ui/core/IconButton/IconButton";
+import Paper from "@material-ui/core/Paper/Paper";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import AddIcon from "@material-ui/icons/Add";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import React, { useState } from "react";
+
 import {
   FieldType,
   MultiSelectAttributes,
   OnAttributeChangeHandler,
 } from "../../../utils/editors/types";
-import TextField from "@material-ui/core/TextField";
-import Grid, { GridSize } from "@material-ui/core/Grid/Grid";
-import Paper from "@material-ui/core/Paper/Paper";
-import IconButton from "@material-ui/core/IconButton/IconButton";
-import Checkbox from "@material-ui/core/Checkbox/Checkbox";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

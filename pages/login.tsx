@@ -1,18 +1,20 @@
-import React, { ChangeEvent } from "react";
-import firebase from "firebase/app";
 import "firebase/auth";
+
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import firebase from "firebase/app";
 import Link from "next/link";
 import Router from "next/router";
-import initFirebase from "../src/utils/auth/initFirebase";
+import React, { ChangeEvent } from "react";
+
 import Footer from "../src/components/common/footer";
-import { googleAuthProvider } from "../src/utils/auth/authProviders";
-import Container from "@material-ui/core/Container";
-import Avatar from "@material-ui/core/Avatar";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 import { useUserFormStyles } from "../src/themes/styles";
+import { googleAuthProvider } from "../src/utils/auth/authProviders";
+import initFirebase from "../src/utils/auth/initFirebase";
 
 initFirebase();
 

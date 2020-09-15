@@ -1,17 +1,19 @@
-import React from "react";
-import firebase from "firebase/app";
 import "firebase/auth";
+
+import Avatar from "@material-ui/core/Avatar";
+import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import LockOpenIcon from "@material-ui/icons/LockOpen";
+import firebase from "firebase/app";
 import Link from "next/link";
 import Router from "next/router";
-import initFirebase from "../src/utils/auth/initFirebase";
+import React from "react";
+
 import Footer from "../src/components/common/footer";
 import { useUserFormStyles } from "../src/themes/styles";
-import Container from "@material-ui/core/Container";
-import LockOpenIcon from "@material-ui/icons/LockOpen";
-import Avatar from "@material-ui/core/Avatar";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import initFirebase from "../src/utils/auth/initFirebase";
 
 initFirebase();
 

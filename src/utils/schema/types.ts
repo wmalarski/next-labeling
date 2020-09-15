@@ -1,5 +1,6 @@
 import * as t from "io-ts";
-import { AuthUser } from "../auth/user";
+
+import { AuthUserType } from "../auth/user";
 import { LabelingFieldAttributesType } from "../editors/types";
 
 export const LabelingFieldSchemaType = t.strict({
@@ -27,11 +28,15 @@ export const LabelingSchemaType = t.strict({
 });
 export type LabelingSchema = t.TypeOf<typeof LabelingSchemaType>;
 
-export interface SchemaDocument {
-  id?: string;
-  user: AuthUser;
-  schema: LabelingSchema;
-  stars: number;
-  created: Date;
-  previousVersionId?: string;
-}
+export const SchemaDocumentType = t.strict({
+  id: t.union([t.string, t.undefined]),
+  user: AuthUserType,
+  schema: LabelingSchemaType,
+  stars: t.number,
+  created: t.strict({
+    seconds: t.number,
+    nanoseconds: t.number,
+  }),
+  previousVersionId: t.union([t.string, t.undefined]),
+});
+export type SchemaDocument = t.TypeOf<typeof SchemaDocumentType>;

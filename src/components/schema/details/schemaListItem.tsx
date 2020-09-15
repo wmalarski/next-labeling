@@ -1,24 +1,27 @@
-import React, { useState } from "react";
+import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
 import Paper from "@material-ui/core/Paper";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import EditIcon from "@material-ui/icons/Edit";
+import FileCopyIcon from "@material-ui/icons/FileCopy";
+import RemoveIcon from "@material-ui/icons/Remove";
+import SaveAltIcon from "@material-ui/icons/SaveAlt";
+import ViewListIcon from "@material-ui/icons/ViewList";
+import { useRouter } from "next/router";
+import React, { useContext, useState } from "react";
+
+import { AuthUserInfoContext } from "../../../utils/auth/hooks";
 import {
   LabelingFieldSchema,
   LabelingObjectSchema,
   SchemaDocument,
 } from "../../../utils/schema/types";
-import Typography from "@material-ui/core/Typography";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import Button from "@material-ui/core/Button";
-import FileCopyIcon from "@material-ui/icons/FileCopy";
-import RemoveIcon from "@material-ui/icons/Remove";
-import SaveAltIcon from "@material-ui/icons/SaveAlt";
-import EditIcon from "@material-ui/icons/Edit";
-import ViewListIcon from "@material-ui/icons/ViewList";
 import RawForm from "./../forms/rawForm";
 import FieldDetails from "./fieldDetails";
-import Divider from "@material-ui/core/Divider";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,9 +48,14 @@ export default function SchemaListItem(
   props: SchemaListItemProps,
 ): JSX.Element {
   const {
-    document: { schema, user },
+    document: { schema, user, id: documentId },
   } = props;
   const classes = useStyles();
+
+  const { authUser } = useContext(AuthUserInfoContext);
+  const isSameUser = user.id === authUser?.id;
+
+  const router = useRouter();
 
   const [selected, setSelected] = useState<SelectedState>({
     object: schema.objects[0],
@@ -71,18 +79,22 @@ export default function SchemaListItem(
           size="small"
           color="inherit"
           startIcon={<ViewListIcon />}
-          // onClick={() => {}}
+          onClick={() => router.push("/schema/[id]", `/schema/${documentId}`)}
         >
           Details
         </Button>
-        <Button
-          size="small"
-          color="inherit"
-          startIcon={<EditIcon />}
-          // onClick={() => {}}
-        >
-          Edit
-        </Button>
+        {isSameUser ? (
+          <Button
+            size="small"
+            color="inherit"
+            startIcon={<EditIcon />}
+            // onClick={() => {}}
+          >
+            Edit
+          </Button>
+        ) : (
+          <></>
+        )}
         <RawForm startIcon={<SaveAltIcon />} label="Export" schema={schema} />
         <Button
           size="small"
@@ -92,14 +104,18 @@ export default function SchemaListItem(
         >
           Copy
         </Button>
-        <Button
-          size="small"
-          color="inherit"
-          startIcon={<RemoveIcon />}
-          // onClick={() => {}}
-        >
-          Remove
-        </Button>
+        {isSameUser ? (
+          <Button
+            size="small"
+            color="inherit"
+            startIcon={<RemoveIcon />}
+            // onClick={() => {}}
+          >
+            Remove
+          </Button>
+        ) : (
+          <></>
+        )}
       </div>
       <Divider />
       <div className={classes.grid}>

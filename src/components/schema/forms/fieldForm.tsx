@@ -1,23 +1,24 @@
-import React, { memo } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { LabelingFieldSchema } from "../../../utils/schema/types";
-import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import Checkbox from "@material-ui/core/Checkbox";
+import Divider from "@material-ui/core/Divider";
+import FormControl from "@material-ui/core/FormControl";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Grid from "@material-ui/core/Grid";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import RemoveIcon from "@material-ui/icons/Remove";
+import React, { memo } from "react";
+
 import { FieldType } from "../../../utils/editors/types";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import AttributesForm from "./attributesForm";
-import Grid from "@material-ui/core/Grid";
 import { labelingFieldAttributesDefaults } from "../../../utils/schema/defaults";
+import { LabelingFieldSchema } from "../../../utils/schema/types";
+import AttributesForm from "./attributesForm";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

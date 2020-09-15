@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
 import "firebase/auth";
-import initFirebase from "./initFirebase";
+
+import firebase from "firebase/app";
+import React, { useEffect, useState } from "react";
+
 import { setSession } from "./firebaseSessionHandler";
-import { createAuthUserInfo, AuthUserInfo } from "./user";
+import initFirebase from "./initFirebase";
+import { AuthUserInfo, createAuthUserInfo } from "./user";
 
 initFirebase();
 

@@ -1,17 +1,18 @@
-import React, { memo } from "react";
-import TextField from "@material-ui/core/TextField";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import TextField from "@material-ui/core/TextField";
+import React, { memo } from "react";
 import { CompactPicker } from "react-color";
-import ComboBoxForm from "./comboBoxForm";
-import SelectForm from "./selectForm";
-import MulSelectForm from "./mulSelectForm";
-import NumericForm from "./numericForm";
+
 import {
   FieldType,
   LabelingFieldAttributes,
   OnAttributeChangeHandler,
 } from "../../../utils/editors/types";
+import ComboBoxForm from "./comboBoxForm";
+import MulSelectForm from "./mulSelectForm";
+import NumericForm from "./numericForm";
+import SelectForm from "./selectForm";
 
 export interface AttributesFormProps {
   attributes: LabelingFieldAttributes;

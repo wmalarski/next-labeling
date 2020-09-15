@@ -1,10 +1,11 @@
+import TextField from "@material-ui/core/TextField";
 import React from "react";
+
 import {
   FieldType,
   NumberAttributes,
   OnAttributeChangeHandler,
 } from "../../../utils/editors/types";
-import TextField from "@material-ui/core/TextField";
 
 export interface NumberFormProps {
   attributes: NumberAttributes;

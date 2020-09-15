@@ -1,15 +1,16 @@
-import React, { useContext, PropsWithChildren } from "react";
-import { makeStyles } from "@material-ui/styles";
 import { Theme } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import { AuthUserInfoContext } from "../../utils/auth/hooks";
-import UserHeader from "./userHeader";
-import Link from "next/link";
 import AppBar from "@material-ui/core/AppBar";
+import Button from "@material-ui/core/Button";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import SignUpHeader from "./signUpHeader";
 import CodeIcon from "@material-ui/icons/Code";
+import { makeStyles } from "@material-ui/styles";
+import Link from "next/link";
+import React, { PropsWithChildren, useContext } from "react";
+
+import { AuthUserInfoContext } from "../../utils/auth/hooks";
+import SignUpHeader from "./signUpHeader";
+import UserHeader from "./userHeader";
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {

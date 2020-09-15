@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { PathReporter } from "io-ts/PathReporter";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import TextField from "@material-ui/core/TextField";
+import Alert from "@material-ui/lab/Alert/Alert";
+import { PathReporter } from "io-ts/PathReporter";
+import React, { useEffect, useState } from "react";
+
 import {
   LabelingSchema,
   LabelingSchemaType,
 } from "../../../utils/schema/types";
 import { NullableSchemaState } from "../../../utils/schema/useSchemaHistory";
-import TextField from "@material-ui/core/TextField";
-import Alert from "@material-ui/lab/Alert/Alert";
 
 function schemaToJson(schema: LabelingSchema): string {
   return JSON.stringify(schema || {}, null, 2);

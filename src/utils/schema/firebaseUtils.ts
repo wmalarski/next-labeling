@@ -1,6 +1,7 @@
-import { AuthUser } from "../auth/user";
-import { SchemaDocument, LabelingSchema } from "./types";
 import firebase from "firebase/app";
+
+import { AuthUser } from "../auth/user";
+import { LabelingSchema, SchemaDocument } from "./types";
 
 export interface SaveSchemaResult {
   errors: string[];

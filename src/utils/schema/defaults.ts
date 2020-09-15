@@ -1,4 +1,5 @@
 import uniqueId from "lodash/uniqueId";
+
 import { FieldType, LabelingFieldAttributes } from "../editors/types";
 import { LabelingSchema } from "./types";
 

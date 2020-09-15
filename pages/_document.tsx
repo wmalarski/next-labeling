@@ -1,17 +1,18 @@
 /* eslint react/no-danger: 0 */
-import React from "react";
+import { ServerStyleSheets } from "@material-ui/core/styles";
 import { get } from "lodash";
 import Document, {
-  Html,
-  Head,
-  Main,
-  NextScript,
   DocumentContext,
   DocumentProps,
+  Head,
+  Html,
+  Main,
+  NextScript,
 } from "next/document";
-import { AuthUserInfo } from "../src/utils/auth/user";
-import { ServerStyleSheets } from "@material-ui/core/styles";
+import React from "react";
+
 import theme from "../src/themes/theme";
+import { AuthUserInfo } from "../src/utils/auth/user";
 
 export interface CustomDocumentProps extends DocumentProps {
   authUserInfo: AuthUserInfo;

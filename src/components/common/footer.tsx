@@ -1,7 +1,7 @@
-import React from "react";
-import Link from "next/link";
+import { Container, Theme, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
-import { Container, Typography, Theme } from "@material-ui/core";
+import Link from "next/link";
+import React from "react";
 
 const useStyles = makeStyles((theme: Theme) => ({
   footer: {

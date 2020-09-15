@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from "react";
+
 import { defaultLabelingSchema } from "./defaults";
 import { LabelingSchema } from "./types";
 

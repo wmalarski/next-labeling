@@ -1,26 +1,27 @@
-import React, { memo, useCallback } from "react";
-import uniqueId from "lodash/uniqueId";
-import Typography from "@material-ui/core/Typography";
 import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { LabelingObjectSchema } from "../../../utils/schema/types";
-import Divider from "@material-ui/core/Divider";
 import AccordionActions from "@material-ui/core/AccordionActions";
+import AccordionDetails from "@material-ui/core/AccordionDetails";
+import AccordionSummary from "@material-ui/core/AccordionSummary";
 import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
+import Divider from "@material-ui/core/Divider";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
+import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import RemoveIcon from "@material-ui/icons/Remove";
-import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
-import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
+import uniqueId from "lodash/uniqueId";
+import React, { memo, useCallback } from "react";
+
 import { FieldType } from "../../../utils/editors/types";
-import TextField from "@material-ui/core/TextField";
-import FieldForm from "./fieldForm";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import { labelingFieldAttributesDefaults } from "../../../utils/schema/defaults";
+import { LabelingObjectSchema } from "../../../utils/schema/types";
+import FieldForm from "./fieldForm";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

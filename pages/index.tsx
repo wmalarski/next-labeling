@@ -1,8 +1,9 @@
 import React from "react";
+
+import Footer from "../src/components/common/footer";
+import Header from "../src/components/common/header";
 import withAuthUser from "../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../src/utils/pageWrappers/withAuthUserInfo";
-import Header from "../src/components/common/header";
-import Footer from "../src/components/common/footer";
 
 function Index(): JSX.Element {
   return (

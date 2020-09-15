@@ -1,14 +1,15 @@
-import React, { useState } from "react";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
+import { Chip } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
+import TextField from "@material-ui/core/TextField";
 import AddIcon from "@material-ui/icons/Add";
+import React, { useState } from "react";
+
 import {
   ComboBoxAttributes,
   FieldType,
   OnAttributeChangeHandler,
 } from "../../../utils/editors/types";
-import TextField from "@material-ui/core/TextField";
-import { Chip } from "@material-ui/core";
 
 const useStyles = makeStyles(() =>
   createStyles({

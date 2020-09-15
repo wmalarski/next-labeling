@@ -1,9 +1,10 @@
 /* eslint react/jsx-props-no-spreading: 0 */
-import React from "react";
 import { get, set } from "lodash";
-import { AuthUserInfoContext, useFirebaseAuth } from "../auth/hooks";
-import { createAuthUser, createAuthUserInfo, AuthUserInfo } from "../auth/user";
 import { NextPageContext } from "next";
+import React from "react";
+
+import { AuthUserInfoContext, useFirebaseAuth } from "../auth/hooks";
+import { AuthUserInfo, createAuthUser, createAuthUserInfo } from "../auth/user";
 
 export interface WithAuthUserCompProps {
   authUserInfo: AuthUserInfo;

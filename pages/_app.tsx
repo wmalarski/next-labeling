@@ -1,10 +1,11 @@
-import React from "react";
-import Head from "next/head";
-import type { AppProps /*, AppContext */ } from "next/app";
-import theme from "../src/themes/theme";
-import { makeStyles, Theme, ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import { makeStyles, Theme, ThemeProvider } from "@material-ui/core/styles";
+import Head from "next/head";
+import React from "react";
 
+import theme from "../src/themes/theme";
+
+import type { AppProps /*, AppContext */ } from "next/app";
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: "flex",

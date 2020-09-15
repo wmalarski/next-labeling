@@ -1,25 +1,27 @@
-import React, { useContext, useEffect } from "react";
-import firebase from "firebase/app";
 import "firebase/firestore";
-import { useRouter } from "next/router";
+
+import Button from "@material-ui/core/Button";
+import InputBase from "@material-ui/core/InputBase";
 import {
   createStyles,
   fade,
   makeStyles,
   Theme,
 } from "@material-ui/core/styles";
+import AddIcon from "@material-ui/icons/Add";
+import SearchIcon from "@material-ui/icons/Search";
+import firebase from "firebase/app";
+import usePagination from "firestore-pagination-hook";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect } from "react";
+
+import Footer from "../../src/components/common/footer";
+import Header from "../../src/components/common/header";
+import SchemaListItem from "../../src/components/schema/details/schemaListItem";
+import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
+import initFirebase from "../../src/utils/auth/initFirebase";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
-import initFirebase from "../../src/utils/auth/initFirebase";
-import usePagination from "firestore-pagination-hook";
-import Header from "../../src/components/common/header";
-import Footer from "../../src/components/common/footer";
-import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
-import SearchIcon from "@material-ui/icons/Search";
-import SchemaListItem from "../../src/components/schema/details/schemaListItem";
-import InputBase from "@material-ui/core/InputBase";
-import AddIcon from "@material-ui/icons/Add";
-import Button from "@material-ui/core/Button";
 
 initFirebase();
 

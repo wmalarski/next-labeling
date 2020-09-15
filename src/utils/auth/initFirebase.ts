@@ -1,7 +1,7 @@
-import firebase from "firebase/app";
-// import "firebase/auth";
 import * as dotenv from "dotenv";
+import firebase from "firebase/app";
 
+// import "firebase/auth";
 dotenv.config();
 
 const config = {

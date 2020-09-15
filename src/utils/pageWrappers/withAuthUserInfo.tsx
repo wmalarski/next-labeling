@@ -1,8 +1,9 @@
 /* eslint react/jsx-props-no-spreading: 0 */
-import React from "react";
 import { get } from "lodash";
-import { AuthUserInfoContext } from "../auth/hooks";
 import { NextPageContext } from "next";
+import React from "react";
+
+import { AuthUserInfoContext } from "../auth/hooks";
 import { AuthUserInfo } from "../auth/user";
 
 export interface WithAuthUserInfoCompProps {

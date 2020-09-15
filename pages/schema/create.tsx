@@ -1,25 +1,26 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useRouter } from "next/router";
-import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
-import initFirebase from "../../src/utils/auth/initFirebase";
-import Header from "../../src/components/common/header";
-import Footer from "../../src/components/common/footer";
-import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
-import SaveIcon from "@material-ui/icons/Save";
-import UndoIcon from "@material-ui/icons/Undo";
-import RedoIcon from "@material-ui/icons/Redo";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-import useSchemaHistory from "../../src/utils/schema/useSchemaHistory";
-import Tooltip from "@material-ui/core/Tooltip";
-import SchemaForm from "../../src/components/schema/forms/schemaForm";
-import { saveSchema } from "../../src/utils/schema/firebaseUtils";
-import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";
+import Snackbar from "@material-ui/core/Snackbar";
+import Tooltip from "@material-ui/core/Tooltip";
 import CloseIcon from "@material-ui/icons/Close";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import RedoIcon from "@material-ui/icons/Redo";
+import SaveIcon from "@material-ui/icons/Save";
+import UndoIcon from "@material-ui/icons/Undo";
+import { useRouter } from "next/router";
+import React, { useContext, useEffect, useState } from "react";
+
+import Footer from "../../src/components/common/footer";
+import Header from "../../src/components/common/header";
+import SchemaForm from "../../src/components/schema/forms/schemaForm";
+import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
+import initFirebase from "../../src/utils/auth/initFirebase";
+import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
+import { saveSchema } from "../../src/utils/schema/firebaseUtils";
+import useSchemaHistory from "../../src/utils/schema/useSchemaHistory";
 
 initFirebase();
 
@@ -97,7 +98,7 @@ function SpacesCreate(): JSX.Element {
             startIcon={<ExitToAppIcon />}
             onClick={() => router.push("/schema")}
           >
-            Quit
+            Return
           </Button>
         </ButtonGroup>
       </Header>

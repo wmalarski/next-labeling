@@ -1,12 +1,13 @@
 import React from "react";
+
 import { FieldEditorProps, FieldType } from "../../utils/editors/types";
-import ShapeEditor from "./shapeEditor";
 import CheckBoxEditor from "./checkBoxEditor";
-import TextEditor from "./textEditor";
-import NumericEditor from "./numericEditor";
 import ComboBoxEditor from "./comboBoxEditor";
-import SelectEditor from "./selectEditor";
 import MultiSelectEditor from "./multiSelectEditor";
+import NumericEditor from "./numericEditor";
+import SelectEditor from "./selectEditor";
+import ShapeEditor from "./shapeEditor";
+import TextEditor from "./textEditor";
 
 function PrivateFieldEditor(props: FieldEditorProps<any>): JSX.Element {
   const { attributes } = props;

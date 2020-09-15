@@ -1,14 +1,15 @@
-import React, { useCallback } from "react";
-import uniqueId from "lodash/uniqueId";
+import Button from "@material-ui/core/Button";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
+import uniqueId from "lodash/uniqueId";
+import React, { useCallback } from "react";
+
 import { LabelingSchema } from "../../../utils/schema/types";
-import ObjectForm from "./objectForm";
-import Button from "@material-ui/core/Button";
 import { NullableSchemaState } from "../../../utils/schema/useSchemaHistory";
+import ObjectForm from "./objectForm";
 import RawForm from "./rawForm";
 
 const useStyles = makeStyles(() =>

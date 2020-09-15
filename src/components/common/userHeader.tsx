@@ -1,10 +1,11 @@
-import React, { useState } from "react";
 import IconButton from "@material-ui/core/IconButton";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import AppsIcon from "@material-ui/icons/Apps";
-import MenuItem from "@material-ui/core/MenuItem";
-import Menu from "@material-ui/core/Menu";
 import { useRouter } from "next/router";
+import React, { useState } from "react";
+
 import logout from "../../utils/auth/logout";
 
 export default function UserHeader(): JSX.Element {
