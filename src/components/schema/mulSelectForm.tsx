@@ -70,16 +70,15 @@ export default function MulSelectForm(props: MulSelectFormProps): JSX.Element {
                               default: [...select.default, text],
                             },
                           };
-                        } else {
-                          const newDefaults = [...select.default];
-                          newDefaults.splice(textIndex, 1);
-                          return {
-                            [FieldType.MULSELECT]: {
-                              ...select,
-                              default: newDefaults,
-                            },
-                          };
                         }
+                        const newDefaults = [...select.default];
+                        newDefaults.splice(textIndex, 1);
+                        return {
+                          [FieldType.MULSELECT]: {
+                            ...select,
+                            default: newDefaults,
+                          },
+                        };
                       })
                     }
                   />

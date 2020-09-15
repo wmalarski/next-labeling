@@ -34,7 +34,7 @@ function PrivateFieldEditor(props: FieldEditorProps<any>): JSX.Element {
       return <></>;
   }
 }
-
+// TODO: avoid reload when perFrame is true
 const FieldEditor = memo(
   PrivateFieldEditor,
   (prevProps, nextProps) =>

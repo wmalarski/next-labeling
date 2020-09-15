@@ -1,15 +1,12 @@
 import * as t from "io-ts";
 
 export const CheckBoxValueType = t.boolean;
-export const CheckBoxValuesType = t.partial({
-  frames: t.array(
-    t.strict({
-      frame: t.number,
-      value: CheckBoxValueType,
-    }),
-  ),
-  value: CheckBoxValueType,
-});
+export const CheckBoxValuesType = t.array(
+  t.strict({
+    frame: t.number,
+    value: CheckBoxValueType,
+  }),
+);
 export const CheckBoxAttributesType = t.strict({
   default: CheckBoxValueType,
 });
@@ -18,33 +15,27 @@ export type CheckBoxAttributes = t.TypeOf<typeof CheckBoxAttributesType>;
 
 // ------------------------------------
 export const ComboBoxValueType = t.string;
-export const ComboBoxValuesType = t.partial({
-  frames: t.array(
-    t.strict({
-      frame: t.number,
-      value: ComboBoxValueType,
-    }),
-  ),
-  value: ComboBoxValueType,
-});
+export const ComboBoxValuesType = t.array(
+  t.strict({
+    frame: t.number,
+    value: ComboBoxValueType,
+  }),
+);
 export const ComboBoxAttributesType = t.strict({
   default: ComboBoxValueType,
   options: t.array(t.string),
 });
-export type ComboBoxValue = t.TypeOf<typeof ComboBoxValuesType>;
+export type ComboBoxValues = t.TypeOf<typeof ComboBoxValuesType>;
 export type ComboBoxAttributes = t.TypeOf<typeof ComboBoxAttributesType>;
 
 // ------------------------------------
 export const TextValueType = t.string;
-export const TextValuesType = t.partial({
-  frames: t.array(
-    t.strict({
-      frame: t.number,
-      value: TextValueType,
-    }),
-  ),
-  value: TextValueType,
-});
+export const TextValuesType = t.array(
+  t.strict({
+    frame: t.number,
+    value: TextValueType,
+  }),
+);
 export const TextAttributesType = t.strict({
   default: TextValueType,
 });
@@ -53,15 +44,12 @@ export type TextAttributes = t.TypeOf<typeof TextAttributesType>;
 
 // ------------------------------------
 export const NumberValueType = t.number;
-export const NumberValuesType = t.partial({
-  frames: t.array(
-    t.strict({
-      frame: t.number,
-      value: NumberValueType,
-    }),
-  ),
-  value: NumberValueType,
-});
+export const NumberValuesType = t.array(
+  t.strict({
+    frame: t.number,
+    value: NumberValueType,
+  }),
+);
 export const NumberAttributesType = t.strict({
   min: t.number,
   max: t.number,
@@ -73,15 +61,12 @@ export type NumberAttributes = t.TypeOf<typeof NumberAttributesType>;
 
 // ------------------------------------
 export const SelectValueType = t.string;
-export const SelectValuesType = t.partial({
-  frames: t.array(
-    t.strict({
-      frame: t.number,
-      value: SelectValueType,
-    }),
-  ),
-  value: SelectValueType,
-});
+export const SelectValuesType = t.array(
+  t.strict({
+    frame: t.number,
+    value: SelectValueType,
+  }),
+);
 export const SelectAttributesType = t.strict({
   default: SelectValueType,
   options: t.array(
@@ -96,15 +81,12 @@ export type SelectAttributes = t.TypeOf<typeof SelectAttributesType>;
 
 // ------------------------------------
 export const MultiSelectValueType = t.array(t.string);
-export const MultiSelectValuesType = t.partial({
-  frames: t.array(
-    t.strict({
-      frame: t.number,
-      value: MultiSelectValueType,
-    }),
-  ),
-  value: MultiSelectValueType,
-});
+export const MultiSelectValuesType = t.array(
+  t.strict({
+    frame: t.number,
+    value: MultiSelectValueType,
+  }),
+);
 export const MultiSelectAttributesType = t.strict({
   default: MultiSelectValueType,
   options: t.array(
@@ -124,15 +106,12 @@ export const RectangleValueType = t.tuple([
   t.number,
   t.number,
 ]);
-export const RectangleValuesType = t.partial({
-  frames: t.array(
-    t.strict({
-      frame: t.number,
-      value: RectangleValueType,
-    }),
-  ),
-  value: RectangleValueType,
-});
+export const RectangleValuesType = t.array(
+  t.strict({
+    frame: t.number,
+    value: RectangleValueType,
+  }),
+);
 export const RectangleAttributesType = t.strict({
   default: RectangleValueType,
   color: t.string,
@@ -142,15 +121,12 @@ export type RectangleAttributes = t.TypeOf<typeof RectangleAttributesType>;
 
 // ------------------------------------
 export const LineValueType = t.array(t.tuple([t.number, t.number]));
-export const LineValuesType = t.partial({
-  frames: t.array(
-    t.strict({
-      frame: t.number,
-      value: LineValueType,
-    }),
-  ),
-  value: LineValueType,
-});
+export const LineValuesType = t.array(
+  t.strict({
+    frame: t.number,
+    value: LineValueType,
+  }),
+);
 export const LineAttributesType = t.strict({
   default: LineValueType,
   color: t.string,
@@ -160,15 +136,12 @@ export type LineAttributes = t.TypeOf<typeof LineAttributesType>;
 
 // ------------------------------------
 export const PointValueType = t.tuple([t.number, t.number]);
-export const PointValuesType = t.partial({
-  frames: t.array(
-    t.strict({
-      frame: t.number,
-      value: PointValueType,
-    }),
-  ),
-  value: PointValueType,
-});
+export const PointValuesType = t.array(
+  t.strict({
+    frame: t.number,
+    value: PointValueType,
+  }),
+);
 export const PointAttributesType = t.strict({
   default: PointValueType,
   color: t.string,
@@ -178,15 +151,12 @@ export type PointAttributes = t.TypeOf<typeof PointAttributesType>;
 
 // ------------------------------------
 export const PolygonValueType = t.array(t.tuple([t.number, t.number]));
-export const PolygonValuesType = t.partial({
-  frames: t.array(
-    t.strict({
-      frame: t.number,
-      value: PolygonValueType,
-    }),
-  ),
-  value: PolygonValueType,
-});
+export const PolygonValuesType = t.array(
+  t.strict({
+    frame: t.number,
+    value: PolygonValueType,
+  }),
+);
 export const PolygonAttributesType = t.strict({
   default: PolygonValueType,
   color: t.string,
@@ -209,6 +179,39 @@ export enum FieldType {
 }
 
 // TODO: add check if exact one exist
+export const LabelingFieldValueType = t.partial({
+  [FieldType.CHECKBOX]: CheckBoxValueType,
+  [FieldType.COMBOBOX]: ComboBoxValueType,
+  [FieldType.TEXT]: TextValueType,
+  [FieldType.NUMERIC]: NumberValueType,
+  [FieldType.SELECT]: SelectValueType,
+  [FieldType.MULSELECT]: MultiSelectValueType,
+  [FieldType.RECTANGLE]: RectangleValueType,
+  [FieldType.LINE]: LineValueType,
+  [FieldType.POINT]: PointValueType,
+  [FieldType.POLYGON]: PolygonValueType,
+});
+export type LabelingFieldValue = t.TypeOf<typeof LabelingFieldValueType>;
+
+// TODO: add check if exact one exist
+export const LabelingFieldValuesType = t.partial({
+  [FieldType.CHECKBOX]: CheckBoxValuesType,
+  [FieldType.COMBOBOX]: ComboBoxValuesType,
+  [FieldType.TEXT]: TextValuesType,
+  [FieldType.NUMERIC]: NumberValuesType,
+  [FieldType.SELECT]: SelectValuesType,
+  [FieldType.MULSELECT]: MultiSelectValuesType,
+  [FieldType.RECTANGLE]: RectangleValuesType,
+  [FieldType.LINE]: LineValuesType,
+  [FieldType.POINT]: PointValuesType,
+  [FieldType.POLYGON]: PolygonValuesType,
+});
+export type LabelingFieldValues = t.TypeOf<typeof LabelingFieldValuesType>;
+export type OnValueChangeHandler = (
+  provider: (value: LabelingFieldValues) => LabelingFieldValues,
+) => void;
+
+// TODO: add check if exact one exist
 export const LabelingFieldAttributesType = t.partial({
   [FieldType.CHECKBOX]: CheckBoxAttributesType,
   [FieldType.COMBOBOX]: ComboBoxAttributesType,
@@ -221,35 +224,13 @@ export const LabelingFieldAttributesType = t.partial({
   [FieldType.POINT]: PointAttributesType,
   [FieldType.POLYGON]: PolygonAttributesType,
 });
-
 export type LabelingFieldAttributes = t.TypeOf<
   typeof LabelingFieldAttributesType
 >;
-
 export type OnAttributeChangeHandler = (
   provider: (
     attributes: LabelingFieldAttributes,
   ) => LabelingFieldAttributes | undefined,
-) => void;
-
-// TODO: add check if exact one exist
-export const LabelingFieldValueType = t.partial({
-  [FieldType.CHECKBOX]: CheckBoxValuesType,
-  [FieldType.COMBOBOX]: ComboBoxValuesType,
-  [FieldType.TEXT]: TextValuesType,
-  [FieldType.NUMERIC]: NumberValuesType,
-  [FieldType.SELECT]: SelectValuesType,
-  [FieldType.MULSELECT]: MultiSelectValuesType,
-  [FieldType.RECTANGLE]: RectangleValuesType,
-  [FieldType.LINE]: LineValuesType,
-  [FieldType.POINT]: PointValuesType,
-  [FieldType.POLYGON]: PolygonValuesType,
-});
-
-export type LabelingFieldValues = t.TypeOf<typeof LabelingFieldValueType>;
-
-export type OnValueChangeHandler = (
-  provider: (value: LabelingFieldValues) => LabelingFieldValues,
 ) => void;
 
 export interface FieldEditorProps<T extends keyof LabelingFieldValues> {
