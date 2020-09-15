@@ -2,8 +2,6 @@ import React from "react";
 import Head from "next/head";
 import type { AppProps /*, AppContext */ } from "next/app";
 import theme from "../src/themes/theme";
-import Header from "../src/components/common/header";
-import Footer from "../src/components/common/footer";
 import { makeStyles, Theme, ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
@@ -19,7 +17,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function MyApp(props: AppProps) {
+export default function MyApp(props: AppProps): JSX.Element {
   const { Component, pageProps } = props;
   const classes = useStyles();
 

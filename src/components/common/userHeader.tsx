@@ -11,7 +11,7 @@ export default function UserHeader(): JSX.Element {
   const router = useRouter();
 
   const [anchorProfileEl, setAnchorProfileEl] = useState<null | HTMLElement>(
-    null
+    null,
   );
   const isProfileMenuOpen = Boolean(anchorProfileEl);
   const profileMenuId = "primary-search-account-menu";
@@ -67,7 +67,7 @@ export default function UserHeader(): JSX.Element {
         aria-label="account of current user"
         aria-controls={profileMenuId}
         aria-haspopup="true"
-        onClick={(event) => setAnchorAppsEl(event.currentTarget)}
+        onClick={event => setAnchorAppsEl(event.currentTarget)}
         color="inherit"
       >
         <AppsIcon />
@@ -77,7 +77,7 @@ export default function UserHeader(): JSX.Element {
         aria-label="account of current user"
         aria-controls={profileMenuId}
         aria-haspopup="true"
-        onClick={(event) => setAnchorProfileEl(event.currentTarget)}
+        onClick={event => setAnchorProfileEl(event.currentTarget)}
         color="inherit"
       >
         <AccountCircle />

@@ -1,91 +1,35 @@
-import React, { useEffect, useState } from "react";
-import firebase from "firebase/app";
+import React, { useContext, useEffect } from "react";
 import "firebase/auth";
-import { get } from "lodash";
 import Link from "next/link";
-import Router from "next/router";
+import { useRouter } from "next/router";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
 import initFirebase from "../../src/utils/auth/initFirebase";
 import Header from "../../src/components/common/header";
 import Footer from "../../src/components/common/footer";
-import { AuthUserInfo, AuthUser } from "../../src/utils/auth/user";
-import { auth } from "firebase-admin";
+import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 
 initFirebase();
 
-export interface AccountUpdateNameProps {
-  authUserInfo: AuthUserInfo;
-}
-
-const AccountUpdateName = (props: AccountUpdateNameProps) => {
-  const { authUserInfo } = props;
-  var authUser = authUserInfo.authUser;
-  var input: HTMLInputElement | null = null;
-
-  const [currentUser, setCurrentUser] = useState<AuthUser | null>(authUser);
-
-  const handleDisplayNameSubmit = async () => {
-    if (!authUser) return;
-    try {
-      var user = firebase.auth().currentUser;
-      if (user) {
-        await user.updateProfile({
-          displayName: input?.value || "",
-        });
-        setCurrentUser({
-          displayName: user.displayName ?? "",
-          email: user.email,
-          emailVerified: user.emailVerified,
-          id: authUser.id,
-        });
-      }
-      Router.push("/account");
-    } catch (error) {
-      alert(error);
-    }
-  };
+function AccountUpdateName(): JSX.Element {
+  const { authUser } = useContext(AuthUserInfoContext);
+  const router = useRouter();
 
   useEffect(() => {
     if (!authUser) {
-      Router.push("/");
-    }
-    if (input) {
-      input.value = authUser?.displayName || "";
-      input.focus();
+      router.push("/");
     }
   });
 
   return (
     <>
-      {!currentUser ? (
-        <></>
-      ) : (
-        <>
-          <Header />
-          <p>
-            <label htmlFor="displayName">display name: </label>
-            <input
-              type="text"
-              id="displayName"
-              name="displayName"
-              ref={(r) => (input = r)}
-              defaultValue=""
-            />
-          </p>
-          <p>
-            <button onClick={handleDisplayNameSubmit}>[ update ]</button>
-          </p>
-          <p>
-            <Link href="/account">
-              <a>[ back to account ]</a>
-            </Link>
-          </p>
-          <Footer />
-        </>
-      )}
+      <Header />
+      <Link href="/account">
+        <a>[ back to account ]</a>
+      </Link>
+      <Footer />
     </>
   );
-};
+}
 
 export default withAuthUser(withAuthUserInfo(AccountUpdateName));

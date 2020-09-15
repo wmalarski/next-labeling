@@ -16,6 +16,7 @@ export function getAuthUserInfo(ctx: NextPageContext): AuthUserInfo {
     // If server-side, get AuthUserInfo from the session in the request.
     // Don't include server middleware in the client JS bundle. See:
     // https://arunoda.me/blog/ssr-and-server-only-modules
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { addSession } = require("../middleware/cookieSession");
     addSession(req, res);
     console.log("server-side");
@@ -49,7 +50,7 @@ export function getAuthUserInfo(ctx: NextPageContext): AuthUserInfo {
 // or from the request object, when server-side. Add the authUserInfo to
 // context.
 export default function withAuthUser(
-  ComposedComponent: any
+  ComposedComponent: any,
 ): (props: WithAuthUserCompProps) => JSX.Element {
   const withAuthUserComp = (props: WithAuthUserCompProps) => {
     const { authUserInfo, ...otherProps } = props;

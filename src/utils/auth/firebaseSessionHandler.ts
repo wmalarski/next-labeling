@@ -3,7 +3,7 @@
 
 import fetch from "isomorphic-unfetch";
 
-export const setSession = (user: firebase.User | null) => {
+export const setSession = (user: firebase.User | null): Promise<Response> => {
   // Log in.
   if (user) {
     return user.getIdToken().then((token: string) => {

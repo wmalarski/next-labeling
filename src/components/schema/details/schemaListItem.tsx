@@ -56,7 +56,7 @@ export default function SchemaListItem(
           size="small"
           color="inherit"
           startIcon={<ViewListIcon />}
-          onClick={() => {}}
+          // onClick={() => {}}
         >
           Details
         </Button>
@@ -64,7 +64,7 @@ export default function SchemaListItem(
           size="small"
           color="inherit"
           startIcon={<EditIcon />}
-          onClick={() => {}}
+          // onClick={() => {}}
         >
           Edit
         </Button>
@@ -73,7 +73,7 @@ export default function SchemaListItem(
           size="small"
           color="inherit"
           startIcon={<FileCopyIcon />}
-          onClick={() => {}}
+          // onClick={() => {}}
         >
           Copy
         </Button>
@@ -81,7 +81,7 @@ export default function SchemaListItem(
           size="small"
           color="inherit"
           startIcon={<RemoveIcon />}
-          onClick={() => {}}
+          // onClick={() => {}}
         >
           Remove
         </Button>

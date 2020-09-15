@@ -29,7 +29,7 @@ export interface RawFormProps {
   setSchema?: (setter: (schema: LabelingSchema) => NullableSchemaState) => void;
 }
 
-export default function RawForm(props: RawFormProps) {
+export default function RawForm(props: RawFormProps): JSX.Element {
   const { label, schema, startIcon, setSchema } = props;
 
   const [open, setOpen] = useState(false);

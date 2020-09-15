@@ -17,8 +17,6 @@ export default function ComboBoxEditor(
   const fieldValue = getFieldValue(props);
   const type = FieldType.COMBOBOX;
 
-  console.log("ComboBoxEditor", fieldValue, props);
-
   return fieldValue && config ? (
     <FormControl fullWidth>
       <InputLabel id="select-field-type-label">{name}</InputLabel>

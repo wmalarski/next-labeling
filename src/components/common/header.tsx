@@ -29,7 +29,7 @@ export interface HeaderProps {
 }
 
 export default function Header(
-  props: PropsWithChildren<HeaderProps>
+  props: PropsWithChildren<HeaderProps>,
 ): JSX.Element {
   const { siteTitle = "Next Labeling", children } = props;
   const classes = useStyles();

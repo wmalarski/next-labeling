@@ -11,15 +11,18 @@ initFirebase();
 
 // Defaults to empty AuthUserInfo object.
 export const AuthUserInfoContext = React.createContext<AuthUserInfo>(
-  createAuthUserInfo()
+  createAuthUserInfo(),
 );
 
-export const useAuthUserInfo = () => {
+export const useAuthUserInfo = (): AuthUserInfo => {
   return React.useContext(AuthUserInfoContext);
 };
 
 // Returns a Firebase JS SDK user object.
-export const useFirebaseAuth = () => {
+export const useFirebaseAuth = (): {
+  initializing: boolean;
+  user: firebase.User | null;
+} => {
   const [state, setState] = useState(() => {
     const user = firebase.auth().currentUser;
     return {

@@ -27,7 +27,7 @@ function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
     case FieldType.LINE:
     case FieldType.POINT:
     case FieldType.POLYGON:
-    case FieldType.RECTANGLE:
+    case FieldType.RECTANGLE: {
       const colorAttributes = attributesObject[type];
       return colorAttributes ? (
         <CompactPicker
@@ -40,7 +40,8 @@ function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
       ) : (
         <></>
       );
-    case FieldType.CHECKBOX:
+    }
+    case FieldType.CHECKBOX: {
       const checkBoxAttributes = attributesObject[type];
       return checkBoxAttributes ? (
         <FormControlLabel
@@ -58,7 +59,8 @@ function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
       ) : (
         <></>
       );
-    case FieldType.TEXT:
+    }
+    case FieldType.TEXT: {
       const textAttributes = attributesObject[type];
       return textAttributes ? (
         <TextField
@@ -75,34 +77,39 @@ function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
       ) : (
         <></>
       );
-    case FieldType.NUMERIC:
+    }
+    case FieldType.NUMERIC: {
       const numberAttributes = attributesObject[type];
       return numberAttributes ? (
         <NumericForm attributes={numberAttributes} onChange={onChange} />
       ) : (
         <></>
       );
-    case FieldType.COMBOBOX:
+    }
+    case FieldType.COMBOBOX: {
       const comboBoxAttributes = attributesObject[type];
       return comboBoxAttributes ? (
         <ComboBoxForm attributes={comboBoxAttributes} onChange={onChange} />
       ) : (
         <></>
       );
-    case FieldType.SELECT:
+    }
+    case FieldType.SELECT: {
       const selectAttributes = attributesObject[type];
       return selectAttributes ? (
         <SelectForm attributes={selectAttributes} onChange={onChange} />
       ) : (
         <></>
       );
-    case FieldType.MULSELECT:
+    }
+    case FieldType.MULSELECT: {
       const multiselectAttributes = attributesObject[type];
       return multiselectAttributes ? (
         <MulSelectForm attributes={multiselectAttributes} onChange={onChange} />
       ) : (
         <></>
       );
+    }
     default:
       return <></>;
   }

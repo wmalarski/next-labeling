@@ -19,7 +19,7 @@ export interface AuthUser {
  * @return {Boolean} AuthUser.emailVerified - Whether the user has verified their email
  */
 export const createAuthUser = (
-  firebaseUser: firebase.User | null
+  firebaseUser: firebase.User | null,
 ): AuthUser | null => {
   if (!firebaseUser || !firebaseUser.uid) {
     return null;

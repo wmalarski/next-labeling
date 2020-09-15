@@ -26,7 +26,7 @@ export default function Signup(): JSX.Element {
         .auth()
         .createUserWithEmailAndPassword(
           e.target.email.value,
-          e.target.password1.value
+          e.target.password1.value,
         );
       const user = firebase.auth().currentUser;
       if (user) {

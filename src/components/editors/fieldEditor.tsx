@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React from "react";
 import { FieldEditorProps, FieldType } from "../../utils/editors/types";
 import ShapeEditor from "./shapeEditor";
 import CheckBoxEditor from "./checkBoxEditor";
@@ -34,25 +34,7 @@ function PrivateFieldEditor(props: FieldEditorProps<any>): JSX.Element {
       return <></>;
   }
 }
-// TODO: avoid reload when perFrame is true
-// const FieldEditor = memo(
-//   PrivateFieldEditor,
-//   (prevProps, nextProps) =>
-//     JSON.stringify({
-//       name: prevProps.name,
-//       disabled: prevProps.disabled,
-//       frame: prevProps.frame,
-//       values: prevProps.values,
-//       attributes: prevProps.attributes,
-//     }) ===
-//     JSON.stringify({
-//       name: prevProps.name,
-//       disabled: nextProps.disabled,
-//       frame: nextProps.frame,
-//       values: nextProps.values,
-//       attributes: prevProps.attributes,
-//     }),
-// );
+
 const FieldEditor = PrivateFieldEditor;
 
 export default FieldEditor;

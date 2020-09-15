@@ -26,7 +26,7 @@ export default function Login(): JSX.Element {
         .auth()
         .signInWithEmailAndPassword(
           e.target.email.value,
-          e.target.password.value
+          e.target.password.value,
         );
       Router.push("/");
     } catch (error) {

@@ -18,7 +18,7 @@ export interface AccountProps {
 function Account(props: AccountProps): JSX.Element {
   const { authUserInfo } = props;
   const router = useRouter();
-  var authUser = authUserInfo.authUser;
+  const authUser = authUserInfo.authUser;
 
   useEffect(() => {
     if (!authUser) {

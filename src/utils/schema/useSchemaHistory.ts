@@ -26,7 +26,7 @@ export interface UseSchemaHistoryResult {
 
 export default function useSchemaHistory(
   initial?: LabelingSchema,
-  maxSize?: number
+  maxSize?: number,
 ): UseSchemaHistoryResult {
   const bufferSize = useRef(maxSize ?? 20);
   const [state, setState] = useState<SchemaHistoryState>({
@@ -38,20 +38,20 @@ export default function useSchemaHistory(
 
   const undoSchema = useCallback(
     (): void =>
-      setState((value) => ({ ...value, index: Math.max(value.index - 1, 0) })),
-    [setState]
+      setState(value => ({ ...value, index: Math.max(value.index - 1, 0) })),
+    [setState],
   );
   const redoSchema = useCallback(
     (): void =>
-      setState((value) => ({
+      setState(value => ({
         ...value,
         index: Math.min(value.index + 1, value.history.length - 1),
       })),
-    [setState]
+    [setState],
   );
   const setSchema = useCallback(
     (setter: (schema: LabelingSchema) => NullableSchemaState): void =>
-      setState((value) => {
+      setState(value => {
         const currentSchema = value.history[value.index].schema;
         const result = setter(currentSchema);
         if (!result) return value;
@@ -72,7 +72,7 @@ export default function useSchemaHistory(
           index: value.index,
         };
       }),
-    [setState]
+    [setState],
   );
 
   return {

@@ -18,7 +18,7 @@ export interface CustomDocumentProps extends DocumentProps {
 }
 
 export default class CustomDocument extends Document<CustomDocumentProps> {
-  render() {
+  render(): JSX.Element {
     // Store initial props from request data that we need to use again on
     // the client. See:
     // https://github.com/zeit/next.js/issues/3043#issuecomment-334521241
@@ -57,7 +57,7 @@ export default class CustomDocument extends Document<CustomDocumentProps> {
 
     ctx.renderPage = () =>
       originalRenderPage({
-        enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
+        enhanceApp: App => props => sheets.collect(<App {...props} />),
       });
 
     // Get the AuthUserInfo object. This is set if the server-rendered page
