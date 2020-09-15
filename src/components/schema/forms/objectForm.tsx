@@ -6,7 +6,7 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { LabelingObjectSchema } from "../../utils/schema/types";
+import { LabelingObjectSchema } from "../../../utils/schema/types";
 import Divider from "@material-ui/core/Divider";
 import AccordionActions from "@material-ui/core/AccordionActions";
 import Button from "@material-ui/core/Button";
@@ -15,12 +15,12 @@ import FileCopyIcon from "@material-ui/icons/FileCopy";
 import RemoveIcon from "@material-ui/icons/Remove";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import { FieldType } from "../../utils/editors/types";
+import { FieldType } from "../../../utils/editors/types";
 import TextField from "@material-ui/core/TextField";
 import FieldForm from "./fieldForm";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import { labelingFieldAttributesDefaults } from "../../utils/schema/defaults";
+import { labelingFieldAttributesDefaults } from "../../../utils/schema/defaults";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

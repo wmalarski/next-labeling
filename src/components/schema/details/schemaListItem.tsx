@@ -5,7 +5,7 @@ import {
   LabelingFieldSchema,
   LabelingObjectSchema,
   SchemaDocument,
-} from "../../utils/schema/types";
+} from "../../../utils/schema/types";
 import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -15,8 +15,7 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import EditIcon from "@material-ui/icons/Edit";
 import ViewListIcon from "@material-ui/icons/ViewList";
-import RawForm from "./rawForm";
-import FieldEditor from "../editors/fieldEditor";
+import RawForm from "./../forms/rawForm";
 import FieldDetails from "./fieldDetails";
 
 export interface SelectedState {

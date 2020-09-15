@@ -1,13 +1,13 @@
 import React, { memo } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import { LabelingFieldSchema } from "../../utils/schema/types";
+import { LabelingFieldSchema } from "../../../utils/schema/types";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import RemoveIcon from "@material-ui/icons/Remove";
-import { FieldType } from "../../utils/editors/types";
+import { FieldType } from "../../../utils/editors/types";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -17,7 +17,7 @@ import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import AttributesForm from "./attributesForm";
 import Grid from "@material-ui/core/Grid";
-import { labelingFieldAttributesDefaults } from "../../utils/schema/defaults";
+import { labelingFieldAttributesDefaults } from "../../../utils/schema/defaults";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

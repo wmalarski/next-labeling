@@ -15,7 +15,7 @@ import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import useSchemaHistory from "../../src/utils/schema/useSchemaHistory";
 import Tooltip from "@material-ui/core/Tooltip";
-import SchemaForm from "../../src/components/schema/schemaForm";
+import SchemaForm from "../../src/components/schema/forms/schemaForm";
 import { saveSchema } from "../../src/utils/schema/firebaseUtils";
 import Snackbar from "@material-ui/core/Snackbar";
 import IconButton from "@material-ui/core/IconButton";

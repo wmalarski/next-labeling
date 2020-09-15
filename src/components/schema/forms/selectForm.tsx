@@ -9,7 +9,7 @@ import {
   FieldType,
   OnAttributeChangeHandler,
   SelectAttributes,
-} from "../../utils/editors/types";
+} from "../../../utils/editors/types";
 import TextField from "@material-ui/core/TextField";
 import Grid, { GridSize } from "@material-ui/core/Grid/Grid";
 import Paper from "@material-ui/core/Paper/Paper";

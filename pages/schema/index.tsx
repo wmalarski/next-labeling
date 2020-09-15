@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import {
   createStyles,
@@ -16,13 +15,9 @@ import usePagination from "firestore-pagination-hook";
 import Header from "../../src/components/common/header";
 import Footer from "../../src/components/common/footer";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
 import SearchIcon from "@material-ui/icons/Search";
-import SchemaListItem from "../../src/components/schema/schemaListItem";
+import SchemaListItem from "../../src/components/schema/details/schemaListItem";
 import InputBase from "@material-ui/core/InputBase";
-import IconButton from "@material-ui/core/IconButton";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import AddIcon from "@material-ui/icons/Add";
 import Button from "@material-ui/core/Button";
 

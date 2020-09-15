@@ -3,7 +3,7 @@ import {
   FieldType,
   NumberAttributes,
   OnAttributeChangeHandler,
-} from "../../utils/editors/types";
+} from "../../../utils/editors/types";
 import TextField from "@material-ui/core/TextField";
 
 export interface NumberFormProps {

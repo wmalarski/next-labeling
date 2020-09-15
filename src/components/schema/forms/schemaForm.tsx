@@ -5,10 +5,10 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
-import { LabelingSchema } from "../../utils/schema/types";
+import { LabelingSchema } from "../../../utils/schema/types";
 import ObjectForm from "./objectForm";
 import Button from "@material-ui/core/Button";
-import { NullableSchemaState } from "../../utils/schema/useSchemaHistory";
+import { NullableSchemaState } from "../../../utils/schema/useSchemaHistory";
 import RawForm from "./rawForm";
 
 const useStyles = makeStyles(() =>

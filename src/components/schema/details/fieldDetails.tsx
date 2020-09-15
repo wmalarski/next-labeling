@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { LabelingFieldSchema } from "../../utils/schema/types";
+import { LabelingFieldSchema } from "../../../utils/schema/types";
 import Typography from "@material-ui/core/Typography";
-import FieldEditor from "../editors/fieldEditor";
-import { FieldType, LabelingFieldValues } from "../../utils/editors/types";
+import FieldEditor from "../../editors/fieldEditor";
+import { FieldType, LabelingFieldValues } from "../../../utils/editors/types";
 
 function getDefaultValues(type: FieldType, attributes: any) {
   return {

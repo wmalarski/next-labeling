@@ -5,8 +5,11 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import { LabelingSchema, LabelingSchemaType } from "../../utils/schema/types";
-import { NullableSchemaState } from "../../utils/schema/useSchemaHistory";
+import {
+  LabelingSchema,
+  LabelingSchemaType,
+} from "../../../utils/schema/types";
+import { NullableSchemaState } from "../../../utils/schema/useSchemaHistory";
 import TextField from "@material-ui/core/TextField";
 import Alert from "@material-ui/lab/Alert/Alert";
 
