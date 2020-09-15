@@ -13,16 +13,20 @@ export default function ComboBoxEditor(
   props: FieldEditorProps<FieldType.COMBOBOX>,
 ): JSX.Element {
   const { disabled, name, perFrame, frame, attributes, onChange } = props;
+  const config = attributes.ComboBox;
   const fieldValue = getFieldValue(props);
-  const type = FieldType.CHECKBOX;
-  return fieldValue && attributes ? (
-    <FormControl>
+  const type = FieldType.COMBOBOX;
+
+  console.log("ComboBoxEditor", fieldValue, props);
+
+  return fieldValue && config ? (
+    <FormControl fullWidth>
       <InputLabel id="select-field-type-label">{name}</InputLabel>
       <Select
         disabled={disabled}
         labelId="select-field-type-label"
         id="select-field-type"
-        value={type}
+        value={fieldValue.value}
         fullWidth
         onChange={event => {
           const newText = event.target.value;
@@ -34,7 +38,7 @@ export default function ComboBoxEditor(
           }));
         }}
       >
-        {attributes.options.map(
+        {config.options.map(
           (name): JSX.Element => (
             <MenuItem value={name} key={name}>
               {name}

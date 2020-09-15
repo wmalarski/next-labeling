@@ -9,8 +9,8 @@ import SelectEditor from "./selectEditor";
 import MultiSelectEditor from "./multiSelectEditor";
 
 function PrivateFieldEditor(props: FieldEditorProps<any>): JSX.Element {
-  const { values: valuesObject } = props;
-  const type = Object.keys(valuesObject)[0];
+  const { attributes } = props;
+  const type = Object.keys(attributes)[0];
 
   switch (type) {
     case FieldType.LINE:
@@ -35,19 +35,24 @@ function PrivateFieldEditor(props: FieldEditorProps<any>): JSX.Element {
   }
 }
 // TODO: avoid reload when perFrame is true
-const FieldEditor = memo(
-  PrivateFieldEditor,
-  (prevProps, nextProps) =>
-    JSON.stringify({
-      disabled: prevProps.disabled,
-      frame: prevProps.frame,
-      values: prevProps.values,
-    }) ===
-    JSON.stringify({
-      disabled: nextProps.disabled,
-      frame: nextProps.frame,
-      values: nextProps.values,
-    }),
-);
+// const FieldEditor = memo(
+//   PrivateFieldEditor,
+//   (prevProps, nextProps) =>
+//     JSON.stringify({
+//       name: prevProps.name,
+//       disabled: prevProps.disabled,
+//       frame: prevProps.frame,
+//       values: prevProps.values,
+//       attributes: prevProps.attributes,
+//     }) ===
+//     JSON.stringify({
+//       name: prevProps.name,
+//       disabled: nextProps.disabled,
+//       frame: nextProps.frame,
+//       values: nextProps.values,
+//       attributes: prevProps.attributes,
+//     }),
+// );
+const FieldEditor = PrivateFieldEditor;
 
 export default FieldEditor;

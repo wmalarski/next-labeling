@@ -14,15 +14,16 @@ export default function SelectEditor(
   props: FieldEditorProps<FieldType.SELECT>,
 ): JSX.Element {
   const { disabled, frame, perFrame, attributes, onChange } = props;
+  const config = attributes.Select;
   const fieldValue = getFieldValue(props);
   const selected = fieldValue?.value;
   const type = FieldType.SELECT;
 
-  return fieldValue && attributes ? (
+  return fieldValue && config ? (
     <FormControl>
       <InputLabel id="select-field-type-label">{name}</InputLabel>
       <Grid container spacing={1}>
-        {attributes.options.map(option => (
+        {config.options.map(option => (
           <Grid
             item
             key={option.text}
@@ -30,6 +31,7 @@ export default function SelectEditor(
           >
             <ToggleButton
               disabled={disabled}
+              value={option.text}
               selected={selected === option.text}
               size="small"
               color="inherit"

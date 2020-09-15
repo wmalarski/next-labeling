@@ -233,12 +233,17 @@ export type OnAttributeChangeHandler = (
   ) => LabelingFieldAttributes | undefined,
 ) => void;
 
+export interface FieldValue<T extends keyof LabelingFieldValues> {
+  value: LabelingFieldValue[T];
+  frame: number;
+}
+
 export interface FieldEditorProps<T extends keyof LabelingFieldValues> {
   name: string;
   perFrame: boolean;
   disabled: boolean;
   frame: number;
   values: LabelingFieldValues[T];
-  attributes: LabelingFieldAttributes[T];
+  attributes: LabelingFieldAttributes;
   onChange: OnValueChangeHandler;
 }

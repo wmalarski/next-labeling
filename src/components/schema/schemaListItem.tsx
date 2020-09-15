@@ -16,6 +16,8 @@ import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import EditIcon from "@material-ui/icons/Edit";
 import ViewListIcon from "@material-ui/icons/ViewList";
 import RawForm from "./rawForm";
+import FieldEditor from "../editors/fieldEditor";
+import FieldDetails from "./fieldDetails";
 
 export interface SelectedState {
   object?: LabelingObjectSchema;
@@ -120,22 +122,7 @@ export default function SchemaListItem(
           ))}
         </Grid>
         <Grid item xs={4}>
-          {selectedField ? (
-            <>
-              <Typography variant="h5">{selectedField.name}</Typography>
-              <Typography variant="subtitle1">
-                {selectedField.perFrame}
-              </Typography>
-              <Typography variant="subtitle2">
-                {Object.keys(selectedField.attributes)[0]}
-              </Typography>
-              <pre className="text-xs">
-                {JSON.stringify(selectedField.attributes || {}, null, 2)}
-              </pre>
-            </>
-          ) : (
-            <></>
-          )}
+          {selectedField ? <FieldDetails field={selectedField} /> : <></>}
         </Grid>
       </Grid>
     </Paper>

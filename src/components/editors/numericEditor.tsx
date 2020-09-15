@@ -9,10 +9,11 @@ import { FieldEditorProps, FieldType } from "../../utils/editors/types";
 export default function NumericEditor(
   props: FieldEditorProps<FieldType.NUMERIC>,
 ): JSX.Element {
-  const { disabled, name, perFrame, frame, onChange } = props;
+  const { disabled, name, perFrame, frame, attributes, onChange } = props;
+  const config = attributes.Numeric;
   const fieldValue = getFieldValue(props);
   const type = FieldType.NUMERIC;
-  return fieldValue ? (
+  return fieldValue && config ? (
     <TextField
       label={name}
       disabled={disabled}
@@ -20,6 +21,11 @@ export default function NumericEditor(
       type="number"
       variant="outlined"
       value={fieldValue.value}
+      inputProps={{
+        max: config.max,
+        min: config.min,
+        step: config.step,
+      }}
       onChange={event => {
         const value = Number(event.target.value);
         onChange(values => ({

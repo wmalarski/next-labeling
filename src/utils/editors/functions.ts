@@ -1,13 +1,4 @@
-import {
-  FieldEditorProps,
-  LabelingFieldValue,
-  LabelingFieldValues,
-} from "./types";
-
-export interface FieldValue<T extends keyof LabelingFieldValues> {
-  value: LabelingFieldValue[T];
-  frame: number;
-}
+import { FieldEditorProps, FieldValue, LabelingFieldValues } from "./types";
 
 export function getFieldValue<T extends keyof LabelingFieldValues>(
   props: FieldEditorProps<T>,

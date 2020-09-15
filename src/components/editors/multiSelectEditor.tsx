@@ -14,15 +14,16 @@ export default function MultiSelectEditor(
   props: FieldEditorProps<FieldType.MULSELECT>,
 ): JSX.Element {
   const { disabled, frame, perFrame, attributes, onChange } = props;
+  const config = attributes.MultiSelect;
   const fieldValue = getFieldValue(props);
   const selected = fieldValue?.value ?? [];
   const type = FieldType.MULSELECT;
 
-  return fieldValue && attributes ? (
+  return fieldValue && config ? (
     <FormControl>
       <InputLabel id="select-field-type-label">{name}</InputLabel>
       <Grid container spacing={1}>
-        {attributes.options.map(option => (
+        {config.options.map(option => (
           <Grid
             item
             key={option.text}
@@ -31,6 +32,7 @@ export default function MultiSelectEditor(
             <ToggleButton
               disabled={disabled}
               selected={selected.includes(option.text)}
+              value={option.text}
               size="small"
               color="inherit"
               onChange={() =>
