@@ -1,6 +1,5 @@
 import React, { memo } from "react";
-import { FieldType } from "../../utils/schema/fields";
-import { FieldEditorProps } from "../../utils/editors/types";
+import { FieldEditorProps, FieldType } from "../../utils/editors/types";
 import ShapeEditor from "./shapeEditor";
 import CheckBoxEditor from "./checkBoxEditor";
 import TextEditor from "./textEditor";

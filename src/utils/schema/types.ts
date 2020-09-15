@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 import { AuthUser } from "../auth/user";
-import { LabelingFieldAttributesType } from "./fields";
+import { LabelingFieldAttributesType } from "../editors/types";
 
 export const LabelingFieldSchemaType = t.strict({
   id: t.string,

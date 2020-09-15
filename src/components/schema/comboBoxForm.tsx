@@ -6,7 +6,7 @@ import {
   ComboBoxAttributes,
   FieldType,
   OnAttributeChangeHandler,
-} from "../../utils/schema/fields";
+} from "../../utils/editors/types";
 import TextField from "@material-ui/core/TextField";
 import { Chip } from "@material-ui/core";
 

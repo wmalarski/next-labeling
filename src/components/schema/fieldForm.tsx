@@ -7,7 +7,7 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import RemoveIcon from "@material-ui/icons/Remove";
-import { FieldType, LabelingFieldAttributes } from "../../utils/schema/fields";
+import { FieldType } from "../../utils/editors/types";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";

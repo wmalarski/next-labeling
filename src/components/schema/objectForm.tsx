@@ -15,7 +15,7 @@ import FileCopyIcon from "@material-ui/icons/FileCopy";
 import RemoveIcon from "@material-ui/icons/Remove";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
-import { FieldType } from "../../utils/schema/fields";
+import { FieldType } from "../../utils/editors/types";
 import TextField from "@material-ui/core/TextField";
 import FieldForm from "./fieldForm";
 import FormControlLabel from "@material-ui/core/FormControlLabel";

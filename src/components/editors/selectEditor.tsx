@@ -1,6 +1,5 @@
 import React from "react";
-import { FieldEditorProps } from "../../utils/editors/types";
-import { FieldType } from "../../utils/schema/fields";
+import { FieldEditorProps, FieldType } from "../../utils/editors/types";
 
 export default function SelectEditor(
   props: FieldEditorProps<FieldType.SELECT>,

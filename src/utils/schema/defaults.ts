@@ -1,5 +1,5 @@
 import uniqueId from "lodash/uniqueId";
-import { FieldType, LabelingFieldAttributes } from "./fields";
+import { FieldType, LabelingFieldAttributes } from "../editors/types";
 import { LabelingSchema } from "./types";
 
 export const defaultLabelingSchema: LabelingSchema = {
@@ -89,15 +89,19 @@ export const labelingFieldAttributesDefaults: LabelingFieldAttributes = {
     ],
   },
   [FieldType.RECTANGLE]: {
+    default: [0, 0, 0, 0],
     color: "#ff0000",
   },
   [FieldType.LINE]: {
+    default: [],
     color: "#ff0000",
   },
   [FieldType.POINT]: {
+    default: [0, 0],
     color: "#ff0000",
   },
   [FieldType.POLYGON]: {
+    default: [],
     color: "#ff0000",
   },
 };

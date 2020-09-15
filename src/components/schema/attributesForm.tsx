@@ -1,9 +1,4 @@
 import React, { memo } from "react";
-import {
-  FieldType,
-  LabelingFieldAttributes,
-  OnAttributeChangeHandler,
-} from "../../utils/schema/fields";
 import TextField from "@material-ui/core/TextField";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -12,6 +7,11 @@ import ComboBoxForm from "./comboBoxForm";
 import SelectForm from "./selectForm";
 import MulSelectForm from "./mulSelectForm";
 import NumericForm from "./numericForm";
+import {
+  FieldType,
+  LabelingFieldAttributes,
+  OnAttributeChangeHandler,
+} from "../../utils/editors/types";
 
 export interface AttributesFormProps {
   attributes: LabelingFieldAttributes;
