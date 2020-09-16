@@ -5,6 +5,7 @@ import { useCallback, useState } from "react";
 
 export interface UseRemoveSchemaState {
   success?: boolean;
+  isLoading: boolean;
   errors?: string[];
 }
 
@@ -14,9 +15,12 @@ export interface UseRemoveSchemaResult {
 }
 
 export default function useRemoveSchema(): UseRemoveSchemaResult {
-  const [state, setState] = useState<UseRemoveSchemaState>({});
+  const [state, setState] = useState<UseRemoveSchemaState>({
+    isLoading: false,
+  });
 
   const remove = useCallback((documentId: string): void => {
+    setState({ isLoading: true });
     const db = firebase.firestore();
     db.collection("spaces")
       .doc(documentId)
@@ -24,12 +28,14 @@ export default function useRemoveSchema(): UseRemoveSchemaResult {
       .then(() =>
         setState({
           success: true,
+          isLoading: false,
         }),
       )
       .catch(reason =>
         setState({
           success: false,
           errors: [`${reason.toString()}`],
+          isLoading: false,
         }),
       );
   }, []);

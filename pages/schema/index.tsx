@@ -28,6 +28,7 @@ import ResultSnackbar, {
 } from "../../src/components/common/resultSnackbar";
 import useRemoveSchema from "../../src/utils/schema/useRemoveSchema";
 import useCreateSchema from "../../src/utils/schema/useCreateSchema";
+import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
 
 initFirebase();
 
@@ -154,7 +155,6 @@ function SchemaList(): JSX.Element {
         </>
       </Header>
       <Container>
-        {loading && <div>...</div>}
         {items.map(doc => {
           const document = doc.data();
           return (
@@ -178,6 +178,7 @@ function SchemaList(): JSX.Element {
         )}
       </Container>
       <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
+      <LoadingBackdrop isLoading={loading} />
       <Footer />
     </>
   );

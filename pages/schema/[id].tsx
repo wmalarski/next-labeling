@@ -23,6 +23,7 @@ import ResultSnackbar, {
 } from "../../src/components/common/resultSnackbar";
 import useRemoveSchema from "../../src/utils/schema/useRemoveSchema";
 import useCreateSchema from "../../src/utils/schema/useCreateSchema";
+import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
 
 initFirebase();
 
@@ -79,21 +80,12 @@ function SchemaDetailsPage(): JSX.Element {
   }, [removeSchemaState.errors, removeSchemaState.success, router]);
 
   if (!authUser) return <></>;
-  if (isLoading) {
-    return (
-      <>
-        <Header />
-        <div>Loading</div>
-        <Footer />
-      </>
-    );
-  }
   const isSameUser = authUser.id === document?.user.id;
 
   return (
     <>
       <Header>
-        {document ? (
+        {!isLoading && document ? (
           <>
             {isSameUser ? (
               <Button
@@ -158,6 +150,13 @@ function SchemaDetailsPage(): JSX.Element {
       </Header>
       {document ? <SchemaDetails schemaDocument={document} /> : <></>}
       <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
+      <LoadingBackdrop
+        isLoading={
+          isLoading ||
+          removeSchemaState.isLoading ||
+          createSchemaState.isLoading
+        }
+      />
       <Footer />
     </>
   );

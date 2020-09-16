@@ -12,6 +12,7 @@ import React, { useContext, useEffect, useState } from "react";
 
 import Footer from "../../../src/components/common/footer";
 import Header from "../../../src/components/common/header";
+import LoadingBackdrop from "../../../src/components/common/loadingBackdrop";
 import ResultSnackbar, {
   ResultSnackbarState,
 } from "../../../src/components/common/resultSnackbar";
@@ -96,16 +97,6 @@ function SchemaEdit(): JSX.Element {
   }, [removeSchemaState.errors, removeSchemaState.success, router]);
 
   if (!authUser) return <></>;
-  if (isLoading) {
-    return (
-      <>
-        <Header />
-        <div>Loading</div>
-        <Footer />
-      </>
-    );
-  }
-
   const isSameUser = authUser?.id === document?.user.id;
 
   return (
@@ -159,10 +150,19 @@ function SchemaEdit(): JSX.Element {
           </Button>
         </ButtonGroup>
       </Header>
-      <Container>
-        <SchemaForm schema={schema} setSchema={setSchema} />
-      </Container>
+      {!isLoading && (
+        <Container>
+          <SchemaForm schema={schema} setSchema={setSchema} />
+        </Container>
+      )}
       <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
+      <LoadingBackdrop
+        isLoading={
+          isLoading ||
+          removeSchemaState.isLoading ||
+          updateSchemaState.isLoading
+        }
+      />
       <Footer />
     </>
   );

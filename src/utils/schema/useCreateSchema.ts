@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import { SchemaDocument } from "./types";
 
 export interface UseCreateSchemaState {
+  isLoading: boolean;
   document?: SchemaDocument;
   errors?: string[];
 }
@@ -16,14 +17,23 @@ export interface UseCreateSchemaResult {
 }
 
 export default function useCreateSchema(): UseCreateSchemaResult {
-  const [state, setState] = useState<UseCreateSchemaState>({});
+  const [state, setState] = useState<UseCreateSchemaState>({
+    isLoading: false,
+  });
 
   const create = useCallback(document => {
+    setState({
+      isLoading: true,
+    });
     const db = firebase.firestore();
     db.collection("spaces")
       .add(document)
-      .then(snap => setState({ document: { ...document, id: snap.id } }))
-      .catch(reason => setState({ errors: [`${reason.toString()}`] }));
+      .then(snap =>
+        setState({ document: { ...document, id: snap.id }, isLoading: false }),
+      )
+      .catch(reason =>
+        setState({ errors: [`${reason.toString()}`], isLoading: false }),
+      );
   }, []);
 
   return { create, state };

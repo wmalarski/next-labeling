@@ -6,6 +6,7 @@ import { useCallback, useState } from "react";
 import { SchemaDocument } from "./types";
 
 export interface UseUpdateSchemaState {
+  isLoading: boolean;
   document?: SchemaDocument;
   errors?: string[];
 }
@@ -16,16 +17,21 @@ export interface UseUpdateSchemaResult {
 }
 
 export default function useUpdateSchema(): UseUpdateSchemaResult {
-  const [state, setState] = useState<UseUpdateSchemaState>({});
+  const [state, setState] = useState<UseUpdateSchemaState>({
+    isLoading: false,
+  });
 
   const update = useCallback(
     (documentId: string, document: SchemaDocument): void => {
       const db = firebase.firestore();
+      setState({ isLoading: true });
       db.collection("spaces")
         .doc(documentId)
         .set({ ...document, created: new Date().toJSON() })
-        .then(() => setState({ document }))
-        .catch(reason => setState({ errors: [`${reason.toString()}`] }));
+        .then(() => setState({ document, isLoading: false }))
+        .catch(reason =>
+          setState({ errors: [`${reason.toString()}`], isLoading: false }),
+        );
     },
     [],
   );

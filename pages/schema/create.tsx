@@ -12,6 +12,7 @@ import React, { useContext, useEffect, useState } from "react";
 
 import Footer from "../../src/components/common/footer";
 import Header from "../../src/components/common/header";
+import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
 import ResultSnackbar, {
   ResultSnackbarState,
 } from "../../src/components/common/resultSnackbar";
@@ -137,6 +138,9 @@ function SchemaCreate(): JSX.Element {
         <SchemaForm schema={schema} setSchema={setSchema} />
       </Container>
       <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
+      <LoadingBackdrop
+        isLoading={removeSchemaState.isLoading || createSchemaState.isLoading}
+      />
       <Footer />
     </>
   );
