@@ -1,5 +1,6 @@
 import Button from "@material-ui/core/Button";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
+import Paper from "@material-ui/core/Paper";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
@@ -12,11 +13,12 @@ import { NullableSchemaState } from "../../../utils/schema/useSchemaHistory";
 import ObjectForm from "./objectForm";
 import RawForm from "./rawForm";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      margin: 10,
+      margin: theme.spacing(2),
+      padding: theme.spacing(2),
     },
   }),
 );
@@ -50,7 +52,7 @@ export default function SchemaForm(props: SchemaFormProps): JSX.Element {
   );
 
   return (
-    <div className={classes.root}>
+    <Paper className={classes.root} elevation={3}>
       <Typography component="h1" variant="h5">
         Schema Editor
       </Typography>
@@ -167,6 +169,6 @@ export default function SchemaForm(props: SchemaFormProps): JSX.Element {
           />
         ),
       )}
-    </div>
+    </Paper>
   );
 }

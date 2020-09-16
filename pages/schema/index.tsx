@@ -1,6 +1,7 @@
 import "firebase/firestore";
 
 import Button from "@material-ui/core/Button";
+import Container from "@material-ui/core/Container";
 import InputBase from "@material-ui/core/InputBase";
 import {
   createStyles,
@@ -67,7 +68,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-function Spaces(): JSX.Element {
+function SchemaList(): JSX.Element {
   const classes = useStyles();
   const { authUser } = useContext(AuthUserInfoContext);
   const router = useRouter();
@@ -121,7 +122,7 @@ function Spaces(): JSX.Element {
           </Button>
         </>
       </Header>
-      <div>
+      <Container>
         {loading && <div>...</div>}
         {items.map(document => (
           <SchemaListItem
@@ -132,10 +133,10 @@ function Spaces(): JSX.Element {
         {hasMore && !loadingMore && (
           <button onClick={loadMore}>[ more ]</button>
         )}
-      </div>
+      </Container>
       <Footer />
     </>
   );
 }
 
-export default withAuthUser(withAuthUserInfo(Spaces));
+export default withAuthUser(withAuthUserInfo(SchemaList));

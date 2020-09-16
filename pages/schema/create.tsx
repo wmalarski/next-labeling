@@ -1,5 +1,6 @@
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
+import Container from "@material-ui/core/Container";
 import IconButton from "@material-ui/core/IconButton";
 import Snackbar from "@material-ui/core/Snackbar";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -102,7 +103,9 @@ function SpacesCreate(): JSX.Element {
           </Button>
         </ButtonGroup>
       </Header>
-      <SchemaForm schema={schema} setSchema={setSchema} />
+      <Container>
+        <SchemaForm schema={schema} setSchema={setSchema} />
+      </Container>
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",

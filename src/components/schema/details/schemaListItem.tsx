@@ -6,9 +6,9 @@ import ListItem from "@material-ui/core/ListItem";
 import Paper from "@material-ui/core/Paper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
-import RemoveIcon from "@material-ui/icons/Remove";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import ViewListIcon from "@material-ui/icons/ViewList";
 import { useRouter } from "next/router";
@@ -108,7 +108,7 @@ export default function SchemaListItem(
           <Button
             size="small"
             color="inherit"
-            startIcon={<RemoveIcon />}
+            startIcon={<DeleteOutlineIcon />}
             // onClick={() => {}}
           >
             Remove
