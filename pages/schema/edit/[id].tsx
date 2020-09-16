@@ -1,10 +1,7 @@
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Container from "@material-ui/core/Container";
-import IconButton from "@material-ui/core/IconButton";
-import Snackbar from "@material-ui/core/Snackbar";
 import Tooltip from "@material-ui/core/Tooltip";
-import CloseIcon from "@material-ui/icons/Close";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import RedoIcon from "@material-ui/icons/Redo";
@@ -15,16 +12,18 @@ import React, { useContext, useEffect, useState } from "react";
 
 import Footer from "../../../src/components/common/footer";
 import Header from "../../../src/components/common/header";
+import ResultSnackbar, {
+  ResultSnackbarState,
+} from "../../../src/components/common/resultSnackbar";
 import SchemaForm from "../../../src/components/schema/forms/schemaForm";
 import { AuthUserInfoContext } from "../../../src/utils/auth/hooks";
 import initFirebase from "../../../src/utils/auth/initFirebase";
 import withAuthUser from "../../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../../src/utils/pageWrappers/withAuthUserInfo";
-import {
-  saveSchema,
-  useFirebaseSchema,
-} from "../../../src/utils/schema/firebaseUtils";
+import useFetchSchema from "../../../src/utils/schema/useFetchSchema";
+import useRemoveSchema from "../../../src/utils/schema/useRemoveSchema";
 import useSchemaHistory from "../../../src/utils/schema/useSchemaHistory";
+import useUpdateSchema from "../../../src/utils/schema/useUpdateSchema";
 
 initFirebase();
 
@@ -37,7 +36,6 @@ function SchemaEdit(): JSX.Element {
     ? queryDocumentId
     : queryDocumentId[0];
 
-  const [isOpenSaveSnackbar, setIsOpenSaveSnackbar] = useState(false);
   const {
     schema,
     message,
@@ -55,7 +53,8 @@ function SchemaEdit(): JSX.Element {
     }
   }, [authUser, router]);
 
-  const { isLoading, document, exist } = useFirebaseSchema(documentId);
+  const { isLoading, document, exist } = useFetchSchema(documentId);
+  const { update: updateSchema, state: updateSchemaState } = useUpdateSchema();
 
   useEffect(() => {
     if (!isLoading && !exist) {
@@ -67,6 +66,34 @@ function SchemaEdit(): JSX.Element {
     if (!document) return;
     resetHistory(document?.schema);
   }, [document, resetHistory]);
+
+  const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
+    isOpen: false,
+  });
+
+  useEffect(() => {
+    if (updateSchemaState.document) {
+      setSnackbarState({ isOpen: true, message: "Schema saved" });
+    } else if (updateSchemaState.errors) {
+      setSnackbarState({
+        isOpen: true,
+        message: `${updateSchemaState.errors}`,
+      });
+    }
+  }, [updateSchemaState.document, updateSchemaState.errors]);
+
+  const { remove: removeSchema, state: removeSchemaState } = useRemoveSchema();
+  useEffect(() => {
+    if (removeSchemaState.success) {
+      setSnackbarState({ isOpen: true, message: "Schema removed" });
+      router.back();
+    } else if (removeSchemaState.errors) {
+      setSnackbarState({
+        isOpen: true,
+        message: `${removeSchemaState.errors}`,
+      });
+    }
+  }, [removeSchemaState.errors, removeSchemaState.success, router]);
 
   if (!authUser) return <></>;
   if (isLoading) {
@@ -110,11 +137,9 @@ function SchemaEdit(): JSX.Element {
           <Button
             disabled={!isSameUser}
             startIcon={<SaveIcon />}
-            onClick={async () => {
-              const { errors } = await saveSchema(schema, authUser);
-              setIsOpenSaveSnackbar(true);
-              if (errors.length !== 0) {
-                alert(errors);
+            onClick={() => {
+              if (document) {
+                updateSchema(documentId, { ...document, schema });
               }
             }}
           >
@@ -122,7 +147,10 @@ function SchemaEdit(): JSX.Element {
           </Button>
           <Button
             startIcon={<DeleteOutlineIcon />}
-            onClick={() => router.back()}
+            onClick={() => {
+              removeSchema(documentId);
+              router.back();
+            }}
           >
             Remove
           </Button>
@@ -134,26 +162,7 @@ function SchemaEdit(): JSX.Element {
       <Container>
         <SchemaForm schema={schema} setSchema={setSchema} />
       </Container>
-      <Snackbar
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
-        open={isOpenSaveSnackbar}
-        autoHideDuration={6000}
-        onClose={() => setIsOpenSaveSnackbar(false)}
-        message="Schema saved"
-        action={
-          <IconButton
-            size="small"
-            aria-label="close"
-            color="inherit"
-            onClick={() => setIsOpenSaveSnackbar(false)}
-          >
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        }
-      />
+      <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
       <Footer />
     </>
   );

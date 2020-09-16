@@ -26,7 +26,7 @@ export function calculateNewValues<T extends keyof LabelingFieldValues>(
 ): LabelingFieldValues[T] {
   if (!fieldValue) return previousValues;
   if (perFrame) {
-    // TODO add forward labeling
+    // TODO: add forward labeling
     return previousValues;
   } else {
     return [

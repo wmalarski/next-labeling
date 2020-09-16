@@ -42,6 +42,8 @@ export interface SelectedState {
 
 export interface SchemaListItemProps {
   document: SchemaDocument;
+  onRemoveClicked: () => void;
+  onCopyClicked: () => void;
 }
 
 export default function SchemaListItem(
@@ -49,6 +51,8 @@ export default function SchemaListItem(
 ): JSX.Element {
   const {
     document: { schema, user, id: documentId },
+    onRemoveClicked,
+    onCopyClicked,
   } = props;
   const classes = useStyles();
 
@@ -102,7 +106,7 @@ export default function SchemaListItem(
           size="small"
           color="inherit"
           startIcon={<FileCopyIcon />}
-          // onClick={() => {}}
+          onClick={() => onCopyClicked()}
         >
           Copy
         </Button>
@@ -111,7 +115,7 @@ export default function SchemaListItem(
             size="small"
             color="inherit"
             startIcon={<DeleteOutlineIcon />}
-            // onClick={() => {}}
+            onClick={() => onRemoveClicked()}
           >
             Remove
           </Button>

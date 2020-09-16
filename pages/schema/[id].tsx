@@ -7,7 +7,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import Footer from "../../src/components/common/footer";
 import Header from "../../src/components/common/header";
@@ -17,7 +17,11 @@ import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import initFirebase from "../../src/utils/auth/initFirebase";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
-import { useFirebaseSchema } from "../../src/utils/schema/firebaseUtils";
+import useFetchSchema from "../../src/utils/schema/useFetchSchema";
+import ResultSnackbar, {
+  ResultSnackbarState,
+} from "../../src/components/common/resultSnackbar";
+import useRemoveSchema from "../../src/utils/schema/useRemoveSchema";
 
 initFirebase();
 
@@ -36,13 +40,29 @@ function SchemaDetailsPage(): JSX.Element {
     }
   }, [authUser, router]);
 
-  const { isLoading, document, exist } = useFirebaseSchema(documentId);
+  const { isLoading, document, exist } = useFetchSchema(documentId);
 
   useEffect(() => {
     if (!isLoading && !exist) {
       router.push("/404");
     }
   }, [exist, isLoading, router]);
+
+  const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
+    isOpen: false,
+  });
+
+  const { remove: removeSchema, state: removeSchemaState } = useRemoveSchema();
+  useEffect(() => {
+    if (removeSchemaState.success) {
+      router.back();
+    } else if (removeSchemaState.errors) {
+      setSnackbarState({
+        isOpen: true,
+        message: `${removeSchemaState.errors}`,
+      });
+    }
+  }, [removeSchemaState.errors, removeSchemaState.success, router]);
 
   if (!authUser) return <></>;
   if (isLoading) {
@@ -84,7 +104,9 @@ function SchemaDetailsPage(): JSX.Element {
               size="small"
               color="inherit"
               startIcon={<FileCopyIcon />}
-              // onClick={() => {}}
+              onClick={() => {
+                // TODO: add copy handler
+              }}
             >
               Copy
             </Button>
@@ -93,7 +115,9 @@ function SchemaDetailsPage(): JSX.Element {
                 size="small"
                 color="inherit"
                 startIcon={<DeleteOutlineIcon />}
-                // onClick={() => {}}
+                onClick={() => {
+                  removeSchema(documentId);
+                }}
               >
                 Remove
               </Button>
@@ -114,6 +138,7 @@ function SchemaDetailsPage(): JSX.Element {
         )}
       </Header>
       {document ? <SchemaDetails schemaDocument={document} /> : <></>}
+      <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
       <Footer />
     </>
   );

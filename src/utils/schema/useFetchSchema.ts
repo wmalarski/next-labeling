@@ -1,50 +1,22 @@
+import "firebase/firestore";
+
 import firebase from "firebase/app";
 import { PathReporter } from "io-ts/lib/PathReporter";
 import { useEffect, useState } from "react";
 
-import { AuthUser } from "../auth/user";
-import { LabelingSchema, SchemaDocument, SchemaDocumentType } from "./types";
+import { SchemaDocument, SchemaDocumentType } from "./types";
 
-export interface SaveSchemaResult {
-  errors: string[];
-  document?: SchemaDocument;
-}
-
-export async function saveSchema(
-  schema: LabelingSchema,
-  user: AuthUser,
-): Promise<SaveSchemaResult> {
-  if (!user) return { errors: ["Not authorized"] };
-  const errors: string[] = [];
-  try {
-    const db = firebase.firestore();
-    const collection = db.collection("spaces");
-
-    const document: SchemaDocument = {
-      schema: schema,
-      stars: 0,
-      user: user,
-      created: new Date(),
-    };
-    const snap = await collection.add(document);
-    return { errors, document: { ...document, id: snap.id } };
-  } catch (error) {
-    errors.push(`${error}`);
-  }
-  return { errors };
-}
-
-export interface UseFirebaseSchemaResult {
+export interface UseFetchSchemaResult {
   isLoading: boolean;
   document?: SchemaDocument;
   exist?: boolean;
   errors?: string[];
 }
 
-export function useFirebaseSchema(
+export default function useFetchSchema(
   documentId?: string,
-): UseFirebaseSchemaResult {
-  const [state, setState] = useState<UseFirebaseSchemaResult>({
+): UseFetchSchemaResult {
+  const [state, setState] = useState<UseFetchSchemaResult>({
     isLoading: true,
   });
 

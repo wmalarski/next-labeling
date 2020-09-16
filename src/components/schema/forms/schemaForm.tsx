@@ -5,8 +5,8 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
-import uniqueId from "lodash/uniqueId";
 import React, { useCallback } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import { LabelingSchema } from "../../../utils/schema/types";
 import { NullableSchemaState } from "../../../utils/schema/useSchemaHistory";
@@ -108,7 +108,7 @@ export default function SchemaForm(props: SchemaFormProps): JSX.Element {
                 objects: [
                   ...sch.objects,
                   {
-                    id: uniqueId("object_"),
+                    id: uuidv4(),
                     name: `Object ${sch.objects.length + 1}`,
                     description: "",
                     fields: [],

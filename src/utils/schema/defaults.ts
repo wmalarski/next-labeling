@@ -1,4 +1,4 @@
-import uniqueId from "lodash/uniqueId";
+import { v4 as uuidv4 } from "uuid";
 
 import { FieldType, LabelingFieldAttributes } from "../editors/types";
 import { LabelingSchema } from "./types";
@@ -8,13 +8,13 @@ export const defaultLabelingSchema: LabelingSchema = {
   description: "My first schema.",
   objects: [
     {
-      id: uniqueId("object_"),
+      id: uuidv4(),
       name: "Car",
       description: "Tip: Only moving vehicles",
       singleton: false,
       fields: [
         {
-          id: uniqueId("field_"),
+          id: uuidv4(),
           name: "Direction",
           perFrame: true,
           attributes: {

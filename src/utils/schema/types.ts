@@ -33,10 +33,6 @@ export const SchemaDocumentType = t.strict({
   user: AuthUserType,
   schema: LabelingSchemaType,
   stars: t.number,
-  created: t.strict({
-    seconds: t.number,
-    nanoseconds: t.number,
-  }),
-  previousVersionId: t.union([t.string, t.undefined]),
+  created: t.string,
 });
 export type SchemaDocument = t.TypeOf<typeof SchemaDocumentType>;

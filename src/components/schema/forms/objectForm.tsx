@@ -15,8 +15,8 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import RemoveIcon from "@material-ui/icons/Remove";
-import uniqueId from "lodash/uniqueId";
 import React, { memo, useCallback } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 import { FieldType } from "../../../utils/editors/types";
 import { labelingFieldAttributesDefaults } from "../../../utils/schema/defaults";
@@ -174,7 +174,7 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
                           ...object.fields,
                           {
                             ...field,
-                            id: uniqueId("field_"),
+                            id: uuidv4(),
                           },
                         ],
                       },
@@ -228,7 +228,7 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
                   fields: [
                     ...object.fields,
                     {
-                      id: uniqueId("field_"),
+                      id: uuidv4(),
                       name: "New field",
                       perFrame: true,
                       attributes: {
@@ -268,7 +268,7 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
           startIcon={<FileCopyIcon />}
           onClick={() =>
             onCopy({
-              id: uniqueId("field_"),
+              id: uuidv4(),
               name: `${name} - Copy`,
               description,
               fields,
