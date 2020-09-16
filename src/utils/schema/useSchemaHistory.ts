@@ -18,9 +18,12 @@ export interface SchemaHistoryState {
 export interface UseSchemaHistoryResult {
   schema: LabelingSchema;
   message: string;
-  setSchema: (setter: (schema: LabelingSchema) => NullableSchemaState) => void;
+  setSchema: (
+    provider: (schema: LabelingSchema) => NullableSchemaState,
+  ) => void;
   undoSchema: () => void;
   redoSchema: () => void;
+  resetHistory: (schema: LabelingSchema) => void;
   undoMessage?: string;
   redoMessage?: string;
 }
@@ -51,10 +54,10 @@ export default function useSchemaHistory(
     [setState],
   );
   const setSchema = useCallback(
-    (setter: (schema: LabelingSchema) => NullableSchemaState): void =>
+    (provider: (schema: LabelingSchema) => NullableSchemaState): void =>
       setState(value => {
         const currentSchema = value.history[value.index].schema;
-        const result = setter(currentSchema);
+        const result = provider(currentSchema);
         if (!result) return value;
 
         const { schema, message } = result;
@@ -76,11 +79,21 @@ export default function useSchemaHistory(
     [setState],
   );
 
+  const resetHistory = useCallback(
+    (schema: LabelingSchema): void =>
+      setState({
+        history: [{ schema, message: "Initial schema" }],
+        index: 0,
+      }),
+    [setState],
+  );
+
   return {
     ...state.history[state.index],
     undoSchema,
     redoSchema,
     setSchema,
+    resetHistory,
     undoMessage: state.history[state.index - 1]?.message,
     redoMessage: state.history[state.index + 1]?.message,
   };

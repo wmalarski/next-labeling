@@ -13,22 +13,31 @@ import UndoIcon from "@material-ui/icons/Undo";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 
-import Footer from "../../src/components/common/footer";
-import Header from "../../src/components/common/header";
-import SchemaForm from "../../src/components/schema/forms/schemaForm";
-import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
-import initFirebase from "../../src/utils/auth/initFirebase";
-import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
-import { saveSchema } from "../../src/utils/schema/firebaseUtils";
-import useSchemaHistory from "../../src/utils/schema/useSchemaHistory";
+import Footer from "../../../src/components/common/footer";
+import Header from "../../../src/components/common/header";
+import SchemaForm from "../../../src/components/schema/forms/schemaForm";
+import { AuthUserInfoContext } from "../../../src/utils/auth/hooks";
+import initFirebase from "../../../src/utils/auth/initFirebase";
+import withAuthUser from "../../../src/utils/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../../src/utils/pageWrappers/withAuthUserInfo";
+import {
+  saveSchema,
+  useFirebaseSchema,
+} from "../../../src/utils/schema/firebaseUtils";
+import useSchemaHistory from "../../../src/utils/schema/useSchemaHistory";
 
 initFirebase();
 
-function SchemaCreate(): JSX.Element {
+function SchemaEdit(): JSX.Element {
   const { authUser } = useContext(AuthUserInfoContext);
-  const router = useRouter();
 
+  const router = useRouter();
+  const { id: queryDocumentId } = router.query;
+  const documentId = !Array.isArray(queryDocumentId)
+    ? queryDocumentId
+    : queryDocumentId[0];
+
+  const [isOpenSaveSnackbar, setIsOpenSaveSnackbar] = useState(false);
   const {
     schema,
     message,
@@ -37,17 +46,40 @@ function SchemaCreate(): JSX.Element {
     setSchema,
     undoSchema,
     redoSchema,
+    resetHistory,
   } = useSchemaHistory();
 
   useEffect(() => {
     if (!authUser) {
       router.push("/");
     }
-  }, []); // [] = run once
+  }, [authUser, router]);
 
-  const [isOpenSaveSnackbar, setIsOpenSaveSnackbar] = useState(false);
+  const { isLoading, document, exist } = useFirebaseSchema(documentId);
+
+  useEffect(() => {
+    if (!isLoading && !exist) {
+      router.push("/404");
+    }
+  }, [exist, isLoading, router]);
+
+  useEffect(() => {
+    if (!document) return;
+    resetHistory(document?.schema);
+  }, [document, resetHistory]);
 
   if (!authUser) return <></>;
+  if (isLoading) {
+    return (
+      <>
+        <Header />
+        <div>Loading</div>
+        <Footer />
+      </>
+    );
+  }
+
+  const isSameUser = authUser?.id === document?.user.id;
 
   return (
     <>
@@ -76,6 +108,7 @@ function SchemaCreate(): JSX.Element {
             </Button>
           )}
           <Button
+            disabled={!isSameUser}
             startIcon={<SaveIcon />}
             onClick={async () => {
               const { errors } = await saveSchema(schema, authUser);
@@ -130,4 +163,4 @@ function SchemaCreate(): JSX.Element {
 // disables static rendering.
 // Use `withAuthUserInfo` to include the authed user as a prop
 // to your component.
-export default withAuthUser(withAuthUserInfo(SchemaCreate));
+export default withAuthUser(withAuthUserInfo(SchemaEdit));

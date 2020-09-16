@@ -6,10 +6,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
-import firebase from "firebase/app";
-import { PathReporter } from "io-ts/PathReporter";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 
 import Footer from "../../src/components/common/footer";
 import Header from "../../src/components/common/header";
@@ -19,70 +17,58 @@ import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import initFirebase from "../../src/utils/auth/initFirebase";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
-import {
-  SchemaDocument,
-  SchemaDocumentType,
-} from "../../src/utils/schema/types";
+import { useFirebaseSchema } from "../../src/utils/schema/firebaseUtils";
 
 initFirebase();
-
-interface SchemaDetailsState {
-  schemaDocument?: SchemaDocument;
-  errors?: string[];
-}
 
 function SchemaDetailsPage(): JSX.Element {
   const { authUser } = useContext(AuthUserInfoContext);
 
   const router = useRouter();
-  const { id: documentId } = router.query;
-
-  const [state, setState] = useState<SchemaDetailsState>({});
+  const { id: queryDocumentId } = router.query;
+  const documentId = !Array.isArray(queryDocumentId)
+    ? queryDocumentId
+    : queryDocumentId[0];
 
   useEffect(() => {
     if (!authUser) {
       router.push("/");
     }
-  });
+  }, [authUser, router]);
+
+  const { isLoading, document, exist } = useFirebaseSchema(documentId);
 
   useEffect(() => {
-    if (!Array.isArray(documentId)) {
-      const db = firebase.firestore();
-      db.collection("spaces")
-        .doc(documentId)
-        .get()
-        .then(doc => {
-          const data = doc.data();
-          if (!doc.exists || !data) {
-            router.push("/404");
-            return;
-          }
-          console.log("data", data);
-          const decoded = SchemaDocumentType.decode(data);
-          const errors =
-            decoded._tag === "Left" ? PathReporter.report(decoded) : [];
-          setState({
-            errors,
-            schemaDocument: SchemaDocumentType.encode(data as SchemaDocument),
-          });
-        });
+    if (!isLoading && !exist) {
+      router.push("/404");
     }
-  }, []);
+  }, [exist, isLoading, router]);
 
   if (!authUser) return <></>;
-  const isSameUser = authUser.id === state.schemaDocument?.user.id;
+  if (isLoading) {
+    return (
+      <>
+        <Header />
+        <div>Loading</div>
+        <Footer />
+      </>
+    );
+  }
+  const isSameUser = authUser.id === document?.user.id;
 
   return (
     <>
       <Header>
-        {state.schemaDocument ? (
+        {document ? (
           <>
             {isSameUser ? (
               <Button
                 size="small"
                 color="inherit"
                 startIcon={<EditIcon />}
-                // onClick={() => {}}
+                onClick={() =>
+                  router.push("/schema/edit/[id]", `/schema/edit/${documentId}`)
+                }
               >
                 Edit
               </Button>
@@ -92,7 +78,7 @@ function SchemaDetailsPage(): JSX.Element {
             <RawForm
               startIcon={<SaveAltIcon />}
               label="Export"
-              schema={state.schemaDocument.schema}
+              schema={document.schema}
             />
             <Button
               size="small"
@@ -118,7 +104,7 @@ function SchemaDetailsPage(): JSX.Element {
               size="small"
               color="inherit"
               startIcon={<ExitToAppIcon />}
-              onClick={() => router.push("/schema")}
+              onClick={() => router.back()}
             >
               Return
             </Button>
@@ -127,11 +113,7 @@ function SchemaDetailsPage(): JSX.Element {
           <></>
         )}
       </Header>
-      {state.schemaDocument ? (
-        <SchemaDetails schemaDocument={state.schemaDocument} />
-      ) : (
-        <></>
-      )}
+      {document ? <SchemaDetails schemaDocument={document} /> : <></>}
       <Footer />
     </>
   );

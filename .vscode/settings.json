@@ -8,6 +8,7 @@
     "public/**": true,
     "node_modules/**": true
   },
+  "eslint.nodePath": "/usr/local/bin/node",
   "eslint.validate": [
     "javascript",
     "javascriptreact",

@@ -88,7 +88,9 @@ export default function SchemaListItem(
             size="small"
             color="inherit"
             startIcon={<EditIcon />}
-            // onClick={() => {}}
+            onClick={() =>
+              router.push("/schema/edit/[id]", `/schema/edit/${documentId}`)
+            }
           >
             Edit
           </Button>
