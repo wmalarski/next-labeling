@@ -22,6 +22,7 @@ import ResultSnackbar, {
   ResultSnackbarState,
 } from "../../src/components/common/resultSnackbar";
 import useRemoveSchema from "../../src/utils/schema/useRemoveSchema";
+import useCreateSchema from "../../src/utils/schema/useCreateSchema";
 
 initFirebase();
 
@@ -51,6 +52,19 @@ function SchemaDetailsPage(): JSX.Element {
   const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
     isOpen: false,
   });
+
+  const { create: createSchema, state: createSchemaState } = useCreateSchema();
+  useEffect(() => {
+    if (createSchemaState.document) {
+      router.push("/schema/[id]", `/schema/${createSchemaState.document.id}`);
+      // TODO: debug this thing
+    } else if (createSchemaState.errors) {
+      setSnackbarState({
+        isOpen: true,
+        message: `${createSchemaState.errors}`,
+      });
+    }
+  }, [createSchemaState.document, createSchemaState.errors, router]);
 
   const { remove: removeSchema, state: removeSchemaState } = useRemoveSchema();
   useEffect(() => {
@@ -104,9 +118,14 @@ function SchemaDetailsPage(): JSX.Element {
               size="small"
               color="inherit"
               startIcon={<FileCopyIcon />}
-              onClick={() => {
-                // TODO: add copy handler
-              }}
+              onClick={() =>
+                createSchema({
+                  user: authUser,
+                  schema: document.schema,
+                  stars: 0,
+                  created: new Date().toJSON(),
+                })
+              }
             >
               Copy
             </Button>

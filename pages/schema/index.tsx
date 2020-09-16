@@ -27,6 +27,7 @@ import ResultSnackbar, {
   ResultSnackbarState,
 } from "../../src/components/common/resultSnackbar";
 import useRemoveSchema from "../../src/utils/schema/useRemoveSchema";
+import useCreateSchema from "../../src/utils/schema/useCreateSchema";
 
 initFirebase();
 
@@ -96,6 +97,18 @@ function SchemaList(): JSX.Element {
     isOpen: false,
   });
 
+  const { create: createSchema, state: createSchemaState } = useCreateSchema();
+  useEffect(() => {
+    if (createSchemaState.document) {
+      router.push("/schema/[id]", `/schema/${createSchemaState.document.id}`);
+    } else if (createSchemaState.errors) {
+      setSnackbarState({
+        isOpen: true,
+        message: `${createSchemaState.errors}`,
+      });
+    }
+  }, [createSchemaState.document, createSchemaState.errors, router]);
+
   const { remove: removeSchema, state: removeSchemaState } = useRemoveSchema();
   useEffect(() => {
     if (removeSchemaState.success) {
@@ -142,16 +155,24 @@ function SchemaList(): JSX.Element {
       </Header>
       <Container>
         {loading && <div>...</div>}
-        {items.map(document => (
-          <SchemaListItem
-            key={document.id}
-            document={{ ...document.data(), id: document.id }}
-            onCopyClicked={() => {
-              // TODO: add copy handler
-            }}
-            onRemoveClicked={() => removeSchema(document.id)}
-          />
-        ))}
+        {items.map(doc => {
+          const document = doc.data();
+          return (
+            <SchemaListItem
+              key={doc.id}
+              document={{ ...document, id: doc.id }}
+              onCopyClicked={() =>
+                createSchema({
+                  ...document,
+                  user: authUser,
+                  stars: 0,
+                  created: new Date().toJSON(),
+                })
+              }
+              onRemoveClicked={() => removeSchema(doc.id)}
+            />
+          );
+        })}
         {hasMore && !loadingMore && (
           <button onClick={loadMore}>[ more ]</button>
         )}
