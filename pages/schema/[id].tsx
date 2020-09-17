@@ -11,19 +11,21 @@ import React, { useContext, useEffect, useState } from "react";
 
 import Footer from "../../src/components/common/footer";
 import Header from "../../src/components/common/header";
+import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
+import ResultSnackbar, {
+  ResultSnackbarState,
+} from "../../src/components/common/resultSnackbar";
 import SchemaDetails from "../../src/components/schema/details/schemaDetails";
 import RawForm from "../../src/components/schema/forms/rawForm";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import initFirebase from "../../src/utils/auth/initFirebase";
+import { SchemaCollection } from "../../src/utils/firestore/collections";
+import useCreateDocument from "../../src/utils/firestore/useCreateDocument";
+import useRemoveDocument from "../../src/utils/firestore/useRemoveDocument";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
+import { SchemaDocument } from "../../src/utils/schema/types";
 import useFetchSchema from "../../src/utils/schema/useFetchSchema";
-import ResultSnackbar, {
-  ResultSnackbarState,
-} from "../../src/components/common/resultSnackbar";
-import useRemoveSchema from "../../src/utils/schema/useRemoveSchema";
-import useCreateSchema from "../../src/utils/schema/useCreateSchema";
-import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
 
 initFirebase();
 
@@ -54,7 +56,9 @@ function SchemaDetailsPage(): JSX.Element {
     isOpen: false,
   });
 
-  const { create: createSchema, state: createSchemaState } = useCreateSchema();
+  const { create: createSchema, state: createSchemaState } = useCreateDocument<
+    SchemaDocument
+  >(SchemaCollection);
   useEffect(() => {
     if (createSchemaState.document) {
       router.push("/schema/[id]", `/schema/${createSchemaState.document.id}`);
@@ -67,7 +71,9 @@ function SchemaDetailsPage(): JSX.Element {
     }
   }, [createSchemaState.document, createSchemaState.errors, router]);
 
-  const { remove: removeSchema, state: removeSchemaState } = useRemoveSchema();
+  const { remove: removeSchema, state: removeSchemaState } = useRemoveDocument(
+    SchemaCollection,
+  );
   useEffect(() => {
     if (removeSchemaState.success) {
       router.back();

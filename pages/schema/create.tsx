@@ -19,10 +19,12 @@ import ResultSnackbar, {
 import SchemaForm from "../../src/components/schema/forms/schemaForm";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import initFirebase from "../../src/utils/auth/initFirebase";
+import { SchemaCollection } from "../../src/utils/firestore/collections";
+import useCreateDocument from "../../src/utils/firestore/useCreateDocument";
+import useRemoveDocument from "../../src/utils/firestore/useRemoveDocument";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
-import useCreateSchema from "../../src/utils/schema/useCreateSchema";
-import useRemoveSchema from "../../src/utils/schema/useRemoveSchema";
+import { SchemaDocument } from "../../src/utils/schema/types";
 import useSchemaHistory from "../../src/utils/schema/useSchemaHistory";
 
 initFirebase();
@@ -51,7 +53,9 @@ function SchemaCreate(): JSX.Element {
     isOpen: false,
   });
 
-  const { create: createSchema, state: createSchemaState } = useCreateSchema();
+  const { create: createSchema, state: createSchemaState } = useCreateDocument<
+    SchemaDocument
+  >(SchemaCollection);
   const documentId = createSchemaState?.document?.id;
   useEffect(() => {
     if (createSchemaState.document) {
@@ -64,7 +68,9 @@ function SchemaCreate(): JSX.Element {
     }
   }, [createSchemaState.document, createSchemaState.errors]);
 
-  const { remove: removeSchema, state: removeSchemaState } = useRemoveSchema();
+  const { remove: removeSchema, state: removeSchemaState } = useRemoveDocument(
+    SchemaCollection,
+  );
   useEffect(() => {
     if (removeSchemaState.success) {
       setSnackbarState({ isOpen: true, message: "Schema removed" });

@@ -19,12 +19,14 @@ import ResultSnackbar, {
 import SchemaForm from "../../../src/components/schema/forms/schemaForm";
 import { AuthUserInfoContext } from "../../../src/utils/auth/hooks";
 import initFirebase from "../../../src/utils/auth/initFirebase";
+import { SchemaCollection } from "../../../src/utils/firestore/collections";
+import useRemoveDocument from "../../../src/utils/firestore/useRemoveDocument";
+import useUpdateDocument from "../../../src/utils/firestore/useUpdateLabeling";
 import withAuthUser from "../../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../../src/utils/pageWrappers/withAuthUserInfo";
+import { SchemaDocument } from "../../../src/utils/schema/types";
 import useFetchSchema from "../../../src/utils/schema/useFetchSchema";
-import useRemoveSchema from "../../../src/utils/schema/useRemoveSchema";
 import useSchemaHistory from "../../../src/utils/schema/useSchemaHistory";
-import useUpdateSchema from "../../../src/utils/schema/useUpdateSchema";
 
 initFirebase();
 
@@ -55,7 +57,9 @@ function SchemaEdit(): JSX.Element {
   }, [authUser, router]);
 
   const { isLoading, document, exist } = useFetchSchema(documentId);
-  const { update: updateSchema, state: updateSchemaState } = useUpdateSchema();
+  const { update: updateSchema, state: updateSchemaState } = useUpdateDocument<
+    SchemaDocument
+  >(SchemaCollection);
 
   useEffect(() => {
     if (!isLoading && !exist) {
@@ -83,7 +87,9 @@ function SchemaEdit(): JSX.Element {
     }
   }, [updateSchemaState.document, updateSchemaState.errors]);
 
-  const { remove: removeSchema, state: removeSchemaState } = useRemoveSchema();
+  const { remove: removeSchema, state: removeSchemaState } = useRemoveDocument(
+    SchemaCollection,
+  );
   useEffect(() => {
     if (removeSchemaState.success) {
       setSnackbarState({ isOpen: true, message: "Schema removed" });

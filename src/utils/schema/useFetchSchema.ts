@@ -5,6 +5,7 @@ import { PathReporter } from "io-ts/lib/PathReporter";
 import { useEffect, useState } from "react";
 
 import { SchemaDocument, SchemaDocumentType } from "./types";
+import { SchemaCollection } from "../firestore/collections";
 
 export interface UseFetchSchemaResult {
   isLoading: boolean;
@@ -29,7 +30,7 @@ export default function useFetchSchema(
       return;
     }
     const db = firebase.firestore();
-    db.collection("spaces")
+    db.collection(SchemaCollection)
       .doc(documentId)
       .get()
       .then(doc => {

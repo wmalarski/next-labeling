@@ -1,12 +1,6 @@
 import "firebase/firestore";
 
-import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
-import InputBase from "@material-ui/core/InputBase";
-import AddIcon from "@material-ui/icons/Add";
-import SearchIcon from "@material-ui/icons/Search";
-import firebase from "firebase/app";
-import usePagination from "firestore-pagination-hook";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 
@@ -16,16 +10,11 @@ import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
 import ResultSnackbar, {
   ResultSnackbarState,
 } from "../../src/components/common/resultSnackbar";
-import SchemaListItem from "../../src/components/schema/details/schemaListItem";
 import { useSearchBarStyle } from "../../src/themes/styles";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import initFirebase from "../../src/utils/auth/initFirebase";
-import { SchemaCollection } from "../../src/utils/firestore/collections";
-import useCreateDocument from "../../src/utils/firestore/useCreateDocument";
-import useRemoveDocument from "../../src/utils/firestore/useRemoveDocument";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
-import { SchemaDocument } from "../../src/utils/schema/types";
 
 initFirebase();
 
@@ -40,53 +29,51 @@ function SchemaList(): JSX.Element {
     }
   });
 
-  const db = firebase.firestore();
+  // const db = firebase.firestore();
 
-  const { loading, loadingMore, hasMore, items, loadMore } = usePagination(
-    db.collection(SchemaCollection).orderBy("created", "asc"),
-    {
-      limit: 10,
-    },
-  );
+  // const { loading, loadingMore, hasMore, items, loadMore } = usePagination(
+  //   db.collection("files").orderBy("created", "asc"),
+  //   {
+  //     limit: 10,
+  //   },
+  // );
 
   const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
     isOpen: false,
   });
 
-  const { create: createSchema, state: createSchemaState } = useCreateDocument<
-    SchemaDocument
-  >(SchemaCollection);
-  useEffect(() => {
-    if (createSchemaState.document) {
-      router.push("/schema/[id]", `/schema/${createSchemaState.document.id}`);
-    } else if (createSchemaState.errors) {
-      setSnackbarState({
-        isOpen: true,
-        message: `${createSchemaState.errors}`,
-      });
-    }
-  }, [createSchemaState.document, createSchemaState.errors, router]);
+  // const { create: createSchema, state: createSchemaState } = useCreateSchema();
+  // useEffect(() => {
+  //   if (createSchemaState.document) {
+  //     router.push("/schema/[id]", `/schema/${createSchemaState.document.id}`);
+  //   } else if (createSchemaState.errors) {
+  //     setSnackbarState({
+  //       isOpen: true,
+  //       message: `${createSchemaState.errors}`,
+  //     });
+  //   }
+  // }, [createSchemaState.document, createSchemaState.errors, router]);
 
-  const { remove: removeSchema, state: removeSchemaState } = useRemoveDocument(
-    SchemaCollection,
-  );
-  useEffect(() => {
-    if (removeSchemaState.success) {
-      setSnackbarState({ isOpen: true, message: "Schema removed" });
-    } else if (removeSchemaState.errors) {
-      setSnackbarState({
-        isOpen: true,
-        message: `${removeSchemaState.errors}`,
-      });
-    }
-  }, [removeSchemaState.errors, removeSchemaState.success, router]);
+  // const { remove: removeSchema, state: removeSchemaState } = useRemoveSchema();
+  // useEffect(() => {
+  //   if (removeSchemaState.success) {
+  //     setSnackbarState({ isOpen: true, message: "Schema removed" });
+  //   } else if (removeSchemaState.errors) {
+  //     setSnackbarState({
+  //       isOpen: true,
+  //       message: `${removeSchemaState.errors}`,
+  //     });
+  //   }
+  // }, [removeSchemaState.errors, removeSchemaState.success, router]);
 
   if (!authUser) return <></>;
+
+  const loading = false;
 
   return (
     <>
       <Header>
-        <>
+        {/* <>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
               <SearchIcon />
@@ -111,10 +98,10 @@ function SchemaList(): JSX.Element {
           >
             New Schema
           </Button>
-        </>
+        </> */}
       </Header>
       <Container>
-        {items.map(doc => {
+        {/* {items.map(doc => {
           const document = doc.data();
           return (
             <SchemaListItem
@@ -134,7 +121,7 @@ function SchemaList(): JSX.Element {
         })}
         {hasMore && !loadingMore && (
           <button onClick={loadMore}>[ more ]</button>
-        )}
+        )} */}
       </Container>
       <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
       <LoadingBackdrop isLoading={loading} />
