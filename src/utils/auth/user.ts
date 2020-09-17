@@ -3,14 +3,14 @@ import { get, has } from "lodash";
 
 // having trouble getting types from lodash/object
 
-export const AuthUserType = t.type({
+export const AuthUser = t.type({
   id: t.string,
   email: t.union([t.string, t.null]),
   emailVerified: t.boolean,
   displayName: t.string,
 });
 
-export type AuthUser = t.TypeOf<typeof AuthUserType>;
+export type AuthUser = t.TypeOf<typeof AuthUser>;
 
 /**
  * Take the user object from Firebase (from either the Firebase admin SDK or

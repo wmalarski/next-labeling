@@ -8,10 +8,7 @@ import Alert from "@material-ui/lab/Alert/Alert";
 import { PathReporter } from "io-ts/PathReporter";
 import React, { useEffect, useState } from "react";
 
-import {
-  LabelingSchema,
-  LabelingSchemaType,
-} from "../../../utils/schema/types";
+import { LabelingSchema } from "../../../utils/schema/types";
 import { NullableSchemaState } from "../../../utils/schema/useSchemaHistory";
 
 function schemaToJson(schema: LabelingSchema): string {
@@ -82,7 +79,7 @@ export default function RawForm(props: RawFormProps): JSX.Element {
               const text = event.target.value;
               try {
                 const parsed = JSON.parse(text);
-                const decoded = LabelingSchemaType.decode(parsed);
+                const decoded = LabelingSchema.decode(parsed);
                 const errors =
                   decoded._tag === "Left" ? PathReporter.report(decoded) : [];
                 setState({ text, errors });
@@ -106,7 +103,7 @@ export default function RawForm(props: RawFormProps): JSX.Element {
               onClick={() => {
                 if (setSchema) {
                   const parsed = JSON.parse(state.text);
-                  const encoded = LabelingSchemaType.encode(parsed);
+                  const encoded = LabelingSchema.encode(parsed);
                   setSchema(() => ({ schema: encoded, message: "Raw Edit" }));
                   handleClose();
                 }

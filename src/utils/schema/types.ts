@@ -1,38 +1,38 @@
 import * as t from "io-ts";
 
-import { AuthUserType } from "../auth/user";
-import { LabelingFieldAttributesType } from "../editors/types";
+import { AuthUser } from "../auth/user";
+import { LabelingFieldAttributes } from "../editors/types";
 
-export const LabelingFieldSchemaType = t.strict({
+export const LabelingFieldSchema = t.strict({
   id: t.string,
   name: t.string,
   perFrame: t.boolean,
-  attributes: LabelingFieldAttributesType,
+  attributes: LabelingFieldAttributes,
 });
-export type LabelingFieldSchema = t.TypeOf<typeof LabelingFieldSchemaType>;
+export type LabelingFieldSchema = t.TypeOf<typeof LabelingFieldSchema>;
 
-export const LabelingObjectSchemaType = t.strict({
+export const LabelingObjectSchema = t.strict({
   id: t.string,
   name: t.string,
   description: t.string,
   singleton: t.boolean,
-  fields: t.array(LabelingFieldSchemaType),
+  fields: t.array(LabelingFieldSchema),
 });
-export type LabelingObjectSchema = t.TypeOf<typeof LabelingObjectSchemaType>;
+export type LabelingObjectSchema = t.TypeOf<typeof LabelingObjectSchema>;
 
-export const LabelingSchemaType = t.strict({
+export const LabelingSchema = t.strict({
   name: t.string,
   version: t.string,
   description: t.string,
-  objects: t.array(LabelingObjectSchemaType),
+  objects: t.array(LabelingObjectSchema),
 });
-export type LabelingSchema = t.TypeOf<typeof LabelingSchemaType>;
+export type LabelingSchema = t.TypeOf<typeof LabelingSchema>;
 
-export const SchemaDocumentType = t.strict({
+export const SchemaDocument = t.strict({
   id: t.union([t.string, t.undefined]),
-  user: AuthUserType,
-  schema: LabelingSchemaType,
+  user: AuthUser,
+  schema: LabelingSchema,
   stars: t.number,
   created: t.string,
 });
-export type SchemaDocument = t.TypeOf<typeof SchemaDocumentType>;
+export type SchemaDocument = t.TypeOf<typeof SchemaDocument>;

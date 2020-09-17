@@ -1,74 +1,74 @@
 import * as t from "io-ts";
 
-export const CheckBoxValueType = t.boolean;
-export const CheckBoxValuesType = t.array(
+export const CheckBoxValue = t.boolean;
+export const CheckBoxValues = t.array(
   t.strict({
     frame: t.number,
-    value: CheckBoxValueType,
+    value: CheckBoxValue,
   }),
 );
-export const CheckBoxAttributesType = t.strict({
-  default: CheckBoxValueType,
+export const CheckBoxAttributes = t.strict({
+  default: CheckBoxValue,
 });
-export type CheckBoxValues = t.TypeOf<typeof CheckBoxValuesType>;
-export type CheckBoxAttributes = t.TypeOf<typeof CheckBoxAttributesType>;
+export type CheckBoxValues = t.TypeOf<typeof CheckBoxValues>;
+export type CheckBoxAttributes = t.TypeOf<typeof CheckBoxAttributes>;
 
 // ------------------------------------
-export const ComboBoxValueType = t.string;
-export const ComboBoxValuesType = t.array(
+export const ComboBoxValue = t.string;
+export const ComboBoxValues = t.array(
   t.strict({
     frame: t.number,
-    value: ComboBoxValueType,
+    value: ComboBoxValue,
   }),
 );
-export const ComboBoxAttributesType = t.strict({
-  default: ComboBoxValueType,
+export const ComboBoxAttributes = t.strict({
+  default: ComboBoxValue,
   options: t.array(t.string),
 });
-export type ComboBoxValues = t.TypeOf<typeof ComboBoxValuesType>;
-export type ComboBoxAttributes = t.TypeOf<typeof ComboBoxAttributesType>;
+export type ComboBoxValues = t.TypeOf<typeof ComboBoxValues>;
+export type ComboBoxAttributes = t.TypeOf<typeof ComboBoxAttributes>;
 
 // ------------------------------------
-export const TextValueType = t.string;
-export const TextValuesType = t.array(
+export const TextValue = t.string;
+export const TextValues = t.array(
   t.strict({
     frame: t.number,
-    value: TextValueType,
+    value: TextValue,
   }),
 );
-export const TextAttributesType = t.strict({
-  default: TextValueType,
+export const TextAttributes = t.strict({
+  default: TextValue,
 });
-export type TextValues = t.TypeOf<typeof TextValuesType>;
-export type TextAttributes = t.TypeOf<typeof TextAttributesType>;
+export type TextValues = t.TypeOf<typeof TextValues>;
+export type TextAttributes = t.TypeOf<typeof TextAttributes>;
 
 // ------------------------------------
-export const NumberValueType = t.number;
-export const NumberValuesType = t.array(
+export const NumberValue = t.number;
+export const NumberValues = t.array(
   t.strict({
     frame: t.number,
-    value: NumberValueType,
+    value: NumberValue,
   }),
 );
-export const NumberAttributesType = t.strict({
+export const NumberAttributes = t.strict({
   min: t.number,
   max: t.number,
   step: t.number,
-  default: NumberValueType,
+  default: NumberValue,
 });
-export type NumberValues = t.TypeOf<typeof NumberValuesType>;
-export type NumberAttributes = t.TypeOf<typeof NumberAttributesType>;
+export type NumberValues = t.TypeOf<typeof NumberValues>;
+export type NumberAttributes = t.TypeOf<typeof NumberAttributes>;
 
 // ------------------------------------
-export const SelectValueType = t.string;
-export const SelectValuesType = t.array(
+export const SelectValue = t.string;
+export const SelectValues = t.array(
   t.strict({
     frame: t.number,
-    value: SelectValueType,
+    value: SelectValue,
   }),
 );
-export const SelectAttributesType = t.strict({
-  default: SelectValueType,
+export const SelectAttributes = t.strict({
+  default: SelectValue,
   options: t.array(
     t.strict({
       text: t.string,
@@ -76,19 +76,19 @@ export const SelectAttributesType = t.strict({
     }),
   ),
 });
-export type SelectValues = t.TypeOf<typeof SelectValuesType>;
-export type SelectAttributes = t.TypeOf<typeof SelectAttributesType>;
+export type SelectValues = t.TypeOf<typeof SelectValues>;
+export type SelectAttributes = t.TypeOf<typeof SelectAttributes>;
 
 // ------------------------------------
-export const MultiSelectValueType = t.array(t.string);
-export const MultiSelectValuesType = t.array(
+export const MultiSelectValue = t.array(t.string);
+export const MultiSelectValues = t.array(
   t.strict({
     frame: t.number,
-    value: MultiSelectValueType,
+    value: MultiSelectValue,
   }),
 );
-export const MultiSelectAttributesType = t.strict({
-  default: MultiSelectValueType,
+export const MultiSelectAttributes = t.strict({
+  default: MultiSelectValue,
   options: t.array(
     t.strict({
       text: t.string,
@@ -96,73 +96,68 @@ export const MultiSelectAttributesType = t.strict({
     }),
   ),
 });
-export type MultiSelectValues = t.TypeOf<typeof MultiSelectValuesType>;
-export type MultiSelectAttributes = t.TypeOf<typeof MultiSelectAttributesType>;
+export type MultiSelectValues = t.TypeOf<typeof MultiSelectValues>;
+export type MultiSelectAttributes = t.TypeOf<typeof MultiSelectAttributes>;
 
 // ------------------------------------
-export const RectangleValueType = t.tuple([
-  t.number,
-  t.number,
-  t.number,
-  t.number,
-]);
-export const RectangleValuesType = t.array(
+export const RectangleValue = t.tuple([t.number, t.number, t.number, t.number]);
+export const RectangleValues = t.array(
   t.strict({
     frame: t.number,
-    value: RectangleValueType,
+    value: RectangleValue,
   }),
 );
-export const RectangleAttributesType = t.strict({
-  default: RectangleValueType,
+export const RectangleAttributes = t.strict({
+  default: RectangleValue,
   color: t.string,
 });
-export type RectangleValues = t.TypeOf<typeof RectangleValuesType>;
-export type RectangleAttributes = t.TypeOf<typeof RectangleAttributesType>;
+export type RectangleValues = t.TypeOf<typeof RectangleValues>;
+export type RectangleAttributes = t.TypeOf<typeof RectangleAttributes>;
 
 // ------------------------------------
-export const LineValueType = t.array(t.tuple([t.number, t.number]));
-export const LineValuesType = t.array(
+export const LineValue = t.array(t.tuple([t.number, t.number]));
+export const LineValues = t.array(
   t.strict({
     frame: t.number,
-    value: LineValueType,
+    value: LineValue,
   }),
 );
-export const LineAttributesType = t.strict({
-  default: LineValueType,
+export const LineAttributes = t.strict({
+  default: LineValue,
   color: t.string,
 });
-export type LineValues = t.TypeOf<typeof LineValuesType>;
-export type LineAttributes = t.TypeOf<typeof LineAttributesType>;
+export type LineValues = t.TypeOf<typeof LineValues>;
+export type LineAttributes = t.TypeOf<typeof LineAttributes>;
 
 // ------------------------------------
-export const PointValueType = t.tuple([t.number, t.number]);
-export const PointValuesType = t.array(
+export const PointValue = t.tuple([t.number, t.number]);
+export const PointValues = t.array(
   t.strict({
     frame: t.number,
-    value: PointValueType,
+    value: PointValue,
   }),
 );
-export const PointAttributesType = t.strict({
-  default: PointValueType,
+export const PointAttributes = t.strict({
+  default: PointValue,
   color: t.string,
 });
-export type PointValues = t.TypeOf<typeof PointValuesType>;
-export type PointAttributes = t.TypeOf<typeof PointAttributesType>;
+export type PointValues = t.TypeOf<typeof PointValues>;
+export type PointAttributes = t.TypeOf<typeof PointAttributes>;
 
 // ------------------------------------
-export const PolygonValueType = t.array(t.tuple([t.number, t.number]));
-export const PolygonValuesType = t.array(
+export const PolygonValue = t.array(t.tuple([t.number, t.number]));
+export const PolygonValues = t.array(
   t.strict({
     frame: t.number,
-    value: PolygonValueType,
+    value: PolygonValue,
   }),
 );
-export const PolygonAttributesType = t.strict({
-  default: PolygonValueType,
+export const PolygonAttributes = t.strict({
+  default: PolygonValue,
   color: t.string,
 });
-export type PolygonValues = t.TypeOf<typeof PolygonValuesType>;
-export type PolygonAttributes = t.TypeOf<typeof PolygonAttributesType>;
+export type PolygonValues = t.TypeOf<typeof PolygonValues>;
+export type PolygonAttributes = t.TypeOf<typeof PolygonAttributes>;
 
 // ------------------------------------
 export enum FieldType {
@@ -179,54 +174,52 @@ export enum FieldType {
 }
 
 // TODO: add check if exact one exist
-export const LabelingFieldValueType = t.partial({
-  [FieldType.CHECKBOX]: CheckBoxValueType,
-  [FieldType.COMBOBOX]: ComboBoxValueType,
-  [FieldType.TEXT]: TextValueType,
-  [FieldType.NUMERIC]: NumberValueType,
-  [FieldType.SELECT]: SelectValueType,
-  [FieldType.MULSELECT]: MultiSelectValueType,
-  [FieldType.RECTANGLE]: RectangleValueType,
-  [FieldType.LINE]: LineValueType,
-  [FieldType.POINT]: PointValueType,
-  [FieldType.POLYGON]: PolygonValueType,
+export const LabelingFieldValue = t.partial({
+  [FieldType.CHECKBOX]: CheckBoxValue,
+  [FieldType.COMBOBOX]: ComboBoxValue,
+  [FieldType.TEXT]: TextValue,
+  [FieldType.NUMERIC]: NumberValue,
+  [FieldType.SELECT]: SelectValue,
+  [FieldType.MULSELECT]: MultiSelectValue,
+  [FieldType.RECTANGLE]: RectangleValue,
+  [FieldType.LINE]: LineValue,
+  [FieldType.POINT]: PointValue,
+  [FieldType.POLYGON]: PolygonValue,
 });
-export type LabelingFieldValue = t.TypeOf<typeof LabelingFieldValueType>;
+export type LabelingFieldValue = t.TypeOf<typeof LabelingFieldValue>;
 
 // TODO: add check if exact one exist
-export const LabelingFieldValuesType = t.partial({
-  [FieldType.CHECKBOX]: CheckBoxValuesType,
-  [FieldType.COMBOBOX]: ComboBoxValuesType,
-  [FieldType.TEXT]: TextValuesType,
-  [FieldType.NUMERIC]: NumberValuesType,
-  [FieldType.SELECT]: SelectValuesType,
-  [FieldType.MULSELECT]: MultiSelectValuesType,
-  [FieldType.RECTANGLE]: RectangleValuesType,
-  [FieldType.LINE]: LineValuesType,
-  [FieldType.POINT]: PointValuesType,
-  [FieldType.POLYGON]: PolygonValuesType,
+export const LabelingFieldValues = t.partial({
+  [FieldType.CHECKBOX]: CheckBoxValues,
+  [FieldType.COMBOBOX]: ComboBoxValues,
+  [FieldType.TEXT]: TextValues,
+  [FieldType.NUMERIC]: NumberValues,
+  [FieldType.SELECT]: SelectValues,
+  [FieldType.MULSELECT]: MultiSelectValues,
+  [FieldType.RECTANGLE]: RectangleValues,
+  [FieldType.LINE]: LineValues,
+  [FieldType.POINT]: PointValues,
+  [FieldType.POLYGON]: PolygonValues,
 });
-export type LabelingFieldValues = t.TypeOf<typeof LabelingFieldValuesType>;
+export type LabelingFieldValues = t.TypeOf<typeof LabelingFieldValues>;
 export type OnValueChangeHandler = (
   provider: (value: LabelingFieldValues) => LabelingFieldValues,
 ) => void;
 
 // TODO: add check if exact one exist
-export const LabelingFieldAttributesType = t.partial({
-  [FieldType.CHECKBOX]: CheckBoxAttributesType,
-  [FieldType.COMBOBOX]: ComboBoxAttributesType,
-  [FieldType.TEXT]: TextAttributesType,
-  [FieldType.NUMERIC]: NumberAttributesType,
-  [FieldType.SELECT]: SelectAttributesType,
-  [FieldType.MULSELECT]: MultiSelectAttributesType,
-  [FieldType.RECTANGLE]: RectangleAttributesType,
-  [FieldType.LINE]: LineAttributesType,
-  [FieldType.POINT]: PointAttributesType,
-  [FieldType.POLYGON]: PolygonAttributesType,
+export const LabelingFieldAttributes = t.partial({
+  [FieldType.CHECKBOX]: CheckBoxAttributes,
+  [FieldType.COMBOBOX]: ComboBoxAttributes,
+  [FieldType.TEXT]: TextAttributes,
+  [FieldType.NUMERIC]: NumberAttributes,
+  [FieldType.SELECT]: SelectAttributes,
+  [FieldType.MULSELECT]: MultiSelectAttributes,
+  [FieldType.RECTANGLE]: RectangleAttributes,
+  [FieldType.LINE]: LineAttributes,
+  [FieldType.POINT]: PointAttributes,
+  [FieldType.POLYGON]: PolygonAttributes,
 });
-export type LabelingFieldAttributes = t.TypeOf<
-  typeof LabelingFieldAttributesType
->;
+export type LabelingFieldAttributes = t.TypeOf<typeof LabelingFieldAttributes>;
 export type OnAttributeChangeHandler = (
   provider: (
     attributes: LabelingFieldAttributes,

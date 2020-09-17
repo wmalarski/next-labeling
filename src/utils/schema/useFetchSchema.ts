@@ -4,7 +4,7 @@ import firebase from "firebase/app";
 import { PathReporter } from "io-ts/lib/PathReporter";
 import { useEffect, useState } from "react";
 
-import { SchemaDocument, SchemaDocumentType } from "./types";
+import { SchemaDocument } from "./types";
 import { SchemaCollection } from "../firestore/collections";
 
 export interface UseFetchSchemaResult {
@@ -42,14 +42,14 @@ export default function useFetchSchema(
           });
           return;
         }
-        const decoded = SchemaDocumentType.decode(data);
+        const decoded = SchemaDocument.decode(data);
         const errors =
           decoded._tag === "Left" ? PathReporter.report(decoded) : [];
         setState({
           isLoading: false,
           exist: true,
           errors,
-          document: SchemaDocumentType.encode(data as SchemaDocument),
+          document: SchemaDocument.encode(data as SchemaDocument),
         });
       });
   }, [documentId]);
