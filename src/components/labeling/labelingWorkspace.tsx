@@ -1,6 +1,6 @@
 import Typography from "@material-ui/core/Typography";
 import React, { useContext } from "react";
-import LabelingContext from "../../utils/labeling/labelingContext";
+import LabelingContext from "../../contexts/labeling/labelingContext";
 
 export default function LabelingWorkspace(): JSX.Element {
   const { document } = useContext(LabelingContext);

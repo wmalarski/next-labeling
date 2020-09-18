@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { LabelingDocument } from "./types";
+import { LabelingDocument } from "../../utils/labeling/types";
 
 export interface LabelingContextValue {
   document: LabelingDocument;

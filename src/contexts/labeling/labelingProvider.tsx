@@ -1,5 +1,5 @@
 import React from "react";
-import LabelingContext from "../../utils/labeling/labelingContext";
+import LabelingContext from "./labelingContext";
 import { LabelingDocument } from "../../utils/labeling/types";
 
 export interface LabelingProviderProps {
@@ -7,7 +7,9 @@ export interface LabelingProviderProps {
   children: React.ReactNode | React.ReactNode[] | null;
 }
 
-export function LabelingProvider(props: LabelingProviderProps): JSX.Element {
+export default function LabelingProvider(
+  props: LabelingProviderProps,
+): JSX.Element {
   const { document, children } = props;
   return (
     <LabelingContext.Provider
