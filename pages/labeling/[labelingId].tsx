@@ -6,8 +6,9 @@ import Footer from "../../src/components/common/footer";
 import Header from "../../src/components/common/header";
 import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
 import ResultSnackbar from "../../src/components/common/resultSnackbar";
+import EditorHeader from "../../src/components/labeling/editorHeader";
 import LabelingWorkspace from "../../src/components/labeling/labelingWorkspace";
-import EditorSidebar from "../../src/components/labeling/sidebar/editorSidebar";
+import EditorSidebar from "../../src/components/labeling/editorSidebar";
 import FramesProvider from "../../src/contexts/frames/framesProvider";
 import LabelingProvider from "../../src/contexts/labeling/labelingProvider";
 import SelectionProvider from "../../src/contexts/selection/selectionProvider";
@@ -74,7 +75,9 @@ function LabelingEditor(): JSX.Element {
           >
             <SelectionProvider>
               <div className={classes.root}>
-                <Header />
+                <Header>
+                  <EditorHeader />
+                </Header>
                 <EditorSidebar />
                 {!isLoading && (
                   <div className={classes.content}>

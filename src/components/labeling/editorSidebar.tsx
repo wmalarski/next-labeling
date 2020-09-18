@@ -35,8 +35,8 @@ import clsx from "clsx";
 import { useRouter } from "next/router";
 import React, { useContext, useState } from "react";
 
-import LabelingContext from "../../../contexts/labeling/labelingContext";
-import { addObjectUpdate } from "../../../utils/labeling/updates";
+import LabelingContext from "../../contexts/labeling/labelingContext";
+import { addObjectUpdate } from "../../utils/labeling/updates";
 
 const drawerWidth = 240;
 
@@ -84,7 +84,7 @@ export default function EditorSidebar(): JSX.Element {
   const { document, updateDoc, removeDoc, pushDoc } = useContext(
     LabelingContext,
   );
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
 
   const filterIcons = [
     <FilterIcon key={0} />,
@@ -174,19 +174,6 @@ export default function EditorSidebar(): JSX.Element {
         <List>
           <ListItem button onClick={() => updateDoc(document)}>
             <ListItemIcon>
-              <UndoIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Undo"} />
-          </ListItem>
-          <ListItem button onClick={() => removeDoc(document)}>
-            <ListItemIcon>
-              <RedoIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Redo"} />
-          </ListItem>
-          <Divider />
-          <ListItem button onClick={() => updateDoc(document)}>
-            <ListItemIcon>
               <AccountTreeIcon />
             </ListItemIcon>
             <ListItemText primary={"Timeline"} />
@@ -197,30 +184,11 @@ export default function EditorSidebar(): JSX.Element {
             </ListItemIcon>
             <ListItemText primary={"Properties"} />
           </ListItem>
-          <Divider />
-          <ListItem button onClick={() => updateDoc(document)}>
-            <ListItemIcon>
-              <SaveIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Save"} />
-          </ListItem>
-          <ListItem button onClick={() => removeDoc(document)}>
-            <ListItemIcon>
-              <DeleteOutlineIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Remove"} />
-          </ListItem>
           <ListItem button onClick={() => router.back()}>
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>
             <ListItemText primary={"Settings"} />
-          </ListItem>
-          <ListItem button onClick={() => router.back()}>
-            <ListItemIcon>
-              <ExitToAppIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Exit"} />
           </ListItem>
           <Divider />
           <ListItem button onClick={() => setOpen(!open)}>
