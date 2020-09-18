@@ -6,9 +6,11 @@ export default function LabelingWorkspace(): JSX.Element {
   const { document } = useContext(LabelingContext);
   return (
     <>
-      <Typography variant="h5">{document.name}</Typography>
-      <Typography variant="subtitle2">{document.filename}</Typography>
-      <pre>{JSON.stringify(document, null, 2)}</pre>
+      <div>
+        <Typography variant="h5">{document.name}</Typography>
+        <Typography variant="subtitle2">{document.filename}</Typography>
+        <pre>{JSON.stringify(document, null, 2)}</pre>
+      </div>
     </>
   );
 }

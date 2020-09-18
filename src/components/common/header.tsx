@@ -23,6 +23,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   grow: {
     flexGrow: 1,
   },
+  offset: theme.mixins.toolbar,
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
 }));
 
 export interface HeaderProps {
@@ -37,19 +41,22 @@ export default function Header(
   const { authUser } = useContext(AuthUserInfoContext);
 
   return (
-    <AppBar component="header" position="static">
-      <Toolbar>
-        <Typography variant="h6" className={classes.title}>
-          <Link href="/" passHref>
-            <Button color="inherit" startIcon={<CodeIcon />} component="a">
-              {siteTitle}
-            </Button>
-          </Link>
-        </Typography>
-        {children}
-        <div className={classes.grow} />
-        {authUser ? <UserHeader /> : <SignUpHeader />}
-      </Toolbar>
-    </AppBar>
+    <>
+      <AppBar className={classes.appBar} component="header" position="fixed">
+        <Toolbar>
+          <Typography variant="h6" className={classes.title}>
+            <Link href="/" passHref>
+              <Button color="inherit" startIcon={<CodeIcon />} component="a">
+                {siteTitle}
+              </Button>
+            </Link>
+          </Typography>
+          {children}
+          <div className={classes.grow} />
+          {authUser ? <UserHeader /> : <SignUpHeader />}
+        </Toolbar>
+      </AppBar>
+      <div className={classes.offset} />
+    </>
   );
 }
