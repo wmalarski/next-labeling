@@ -3,7 +3,8 @@ import React, { useContext } from "react";
 import LabelingContext from "../../contexts/labeling/labelingContext";
 
 export default function LabelingWorkspace(): JSX.Element {
-  const { document } = useContext(LabelingContext);
+  const { history } = useContext(LabelingContext);
+  const { document } = history;
   return (
     <>
       <div>

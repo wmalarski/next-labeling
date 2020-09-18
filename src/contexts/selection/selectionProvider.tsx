@@ -1,4 +1,3 @@
-import isNaN from "lodash/isNil";
 import React, { useCallback, useContext, useMemo, useState } from "react";
 
 import { LabelingObject } from "../../utils/labeling/types";
@@ -14,7 +13,7 @@ export default function SelectionProvider(
 ): JSX.Element {
   const { children } = props;
 
-  const labeling = useContext(LabelingContext);
+  const { history } = useContext(LabelingContext);
 
   const [selectedIds, setSelected] = useState<string[]>([]);
 
@@ -34,11 +33,11 @@ export default function SelectionProvider(
   );
 
   const selected = useMemo(() => {
-    const objects: LabelingObject[] = labeling.document.objects;
+    const objects: LabelingObject[] = history.document.objects;
     return selectedIds
       .map(object => objects.find(inner => inner.id === object))
       .filter(object => object !== undefined) as LabelingObject[]; // TODO: find why casting is wrong
-  }, [labeling.document.objects, selectedIds]);
+  }, [history.document.objects, selectedIds]);
 
   const clear = useCallback((): void => setSelected([]), []);
 

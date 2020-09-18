@@ -1,44 +1,47 @@
 import { createContext } from "react";
 import { LabelingDocument } from "../../utils/labeling/types";
+import { UseLabelingHistoryResult } from "../../utils/labeling/useLabelingHistory";
 
 export interface LabelingContextValue {
-  document: LabelingDocument;
-  updateDoc: (doc: LabelingDocument) => void;
-  removeDoc: (doc: LabelingDocument) => void;
-  pushDoc: (
-    provider: (doc: LabelingDocument) => LabelingDocument | undefined,
-  ) => void;
+  pushLabeling: (doc: LabelingDocument) => void;
+  removeLabeling: (doc: LabelingDocument) => void;
+  history: UseLabelingHistoryResult;
 }
 
 const LabelingContext = createContext<LabelingContextValue>({
-  document: {
-    comments: [],
-    contributors: [],
-    created: "",
-    editedDate: "",
-    filename: "",
-    id: "",
-    name: "",
-    objects: [],
-    public: false,
-    schemaId: "",
-    schema: {
-      description: "",
+  pushLabeling: () => void 0,
+  removeLabeling: () => void 0,
+  history: {
+    message: "",
+    redoLabeling: () => void 0,
+    undoLabeling: () => void 0,
+    setLabeling: () => void 0,
+    document: {
+      comments: [],
+      contributors: [],
+      created: "",
+      editedDate: "",
+      filename: "",
+      id: "",
       name: "",
       objects: [],
-      version: "",
-    },
-    stars: 0,
-    user: {
-      displayName: "",
-      email: "",
-      emailVerified: false,
-      id: "",
+      public: false,
+      schemaId: "",
+      schema: {
+        description: "",
+        name: "",
+        objects: [],
+        version: "",
+      },
+      stars: 0,
+      user: {
+        displayName: "",
+        email: "",
+        emailVerified: false,
+        id: "",
+      },
     },
   },
-  pushDoc: () => void 0,
-  updateDoc: () => void 0,
-  removeDoc: () => void 0,
 });
 
 export default LabelingContext;

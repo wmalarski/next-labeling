@@ -81,9 +81,7 @@ export default function EditorSidebar(): JSX.Element {
 
   const router = useRouter();
 
-  const { document, updateDoc, removeDoc, pushDoc } = useContext(
-    LabelingContext,
-  );
+  const { history } = useContext(LabelingContext);
   const [open, setOpen] = useState(true);
 
   const filterIcons = [
@@ -116,11 +114,16 @@ export default function EditorSidebar(): JSX.Element {
       <div className={classes.toolbar} />
       <div className={classes.lists}>
         <List>
-          {document.schema.objects.map((object, index) => (
+          {history.document.schema.objects.map((object, index) => (
             <ListItem
               key={object.id}
               button
-              onClick={() => pushDoc(doc => addObjectUpdate(doc, object))}
+              onClick={() =>
+                history.setLabeling(doc => ({
+                  message: `New ${object.name} added`,
+                  document: addObjectUpdate(doc, object),
+                }))
+              }
             >
               <ListItemIcon>
                 {filterIcons[index % filterIcons.length]}
@@ -132,38 +135,38 @@ export default function EditorSidebar(): JSX.Element {
             </ListItem>
           ))}
           <Divider />
-          <ListItem button onClick={() => updateDoc(document)}>
+          <ListItem button onClick={() => void 0}>
             <ListItemIcon>
               <FileCopyIcon />
             </ListItemIcon>
             <ListItemText primary={"Copy"} />
           </ListItem>
-          <ListItem button onClick={() => updateDoc(document)}>
+          <ListItem button onClick={() => void 0}>
             <ListItemIcon>
               <HighlightOffIcon />
             </ListItemIcon>
             <ListItemText primary={"Delete"} />
           </ListItem>
-          <ListItem button onClick={() => updateDoc(document)}>
+          <ListItem button onClick={() => void 0}>
             <ListItemIcon>
               <ArrowBackIcon />
             </ListItemIcon>
             <ListItemText primary={"Delete Backward"} />
           </ListItem>
-          <ListItem button onClick={() => updateDoc(document)}>
+          <ListItem button onClick={() => void 0}>
             <ListItemIcon>
               <ArrowForwardIcon />
             </ListItemIcon>
             <ListItemText primary={"Delete Forward"} />
           </ListItem>
           <Divider />
-          <ListItem button onClick={() => updateDoc(document)}>
+          <ListItem button onClick={() => void 0}>
             <ListItemIcon>
               <FirstPageIcon />
             </ListItemIcon>
             <ListItemText primary={"First Frame"} />
           </ListItem>
-          <ListItem button onClick={() => updateDoc(document)}>
+          <ListItem button onClick={() => void 0}>
             <ListItemIcon>
               <LastPageIcon />
             </ListItemIcon>
@@ -172,19 +175,19 @@ export default function EditorSidebar(): JSX.Element {
         </List>
         <div className={classes.spacer} />
         <List>
-          <ListItem button onClick={() => updateDoc(document)}>
+          <ListItem button onClick={() => void 0}>
             <ListItemIcon>
               <AccountTreeIcon />
             </ListItemIcon>
             <ListItemText primary={"Timeline"} />
           </ListItem>
-          <ListItem button onClick={() => removeDoc(document)}>
+          <ListItem button onClick={() => void 0}>
             <ListItemIcon>
               <ViewListIcon />
             </ListItemIcon>
             <ListItemText primary={"Properties"} />
           </ListItem>
-          <ListItem button onClick={() => router.back()}>
+          <ListItem button onClick={() => void 0}>
             <ListItemIcon>
               <SettingsIcon />
             </ListItemIcon>

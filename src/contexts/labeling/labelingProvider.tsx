@@ -8,6 +8,7 @@ import {
 } from "../../utils/firestore/types";
 import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
 import { useRouter } from "next/router";
+import useLabelingHistory from "../../utils/labeling/useLabelingHistory";
 
 export interface LabelingProviderProps {
   document: LabelingDocument;
@@ -18,8 +19,10 @@ export interface LabelingProviderProps {
 export default function LabelingProvider(
   props: LabelingProviderProps,
 ): JSX.Element {
-  const { document, children, setSnackbarState } = props;
+  const { document: initialDocument, children, setSnackbarState } = props;
   const router = useRouter();
+
+  const history = useLabelingHistory(initialDocument);
 
   const { update: updateLabeling, state: updateState } = useUpdateDocument<
     LabelingDocument
@@ -53,10 +56,9 @@ export default function LabelingProvider(
   return (
     <LabelingContext.Provider
       value={{
-        document,
-        pushDoc: () => void 0,
-        updateDoc: () => void 0,
-        removeDoc: () => void 0,
+        history,
+        pushLabeling: () => void 0,
+        removeLabeling: () => void 0,
       }}
     >
       {children}
