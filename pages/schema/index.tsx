@@ -13,15 +13,16 @@ import React, { useContext, useEffect, useState } from "react";
 import Footer from "../../src/components/common/footer";
 import Header from "../../src/components/common/header";
 import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
-import ResultSnackbar, {
-  ResultSnackbarState,
-} from "../../src/components/common/resultSnackbar";
+import ResultSnackbar from "../../src/components/common/resultSnackbar";
 import SchemaListItem from "../../src/components/schema/details/schemaListItem";
 import { useSearchBarStyle } from "../../src/themes/styles";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import initFirebase from "../../src/utils/auth/initFirebase";
-import { SchemaCollection } from "../../src/utils/firestore/collections";
-import useCreateDocument from "../../src/utils/firestore/useCreateDocument";
+import {
+  ResultSnackbarState,
+  SchemaCollection,
+} from "../../src/utils/firestore/types";
+import useCreate from "../../src/utils/firestore/useCreate";
 import useRemoveDocument from "../../src/utils/firestore/useRemoveDocument";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
@@ -53,19 +54,14 @@ function SchemaList(): JSX.Element {
     isOpen: false,
   });
 
-  const { create: createSchema, state: createSchemaState } = useCreateDocument<
-    SchemaDocument
-  >(SchemaCollection);
-  useEffect(() => {
-    if (createSchemaState.document) {
-      router.push("/schema/[id]", `/schema/${createSchemaState.document.id}`);
-    } else if (createSchemaState.errors) {
-      setSnackbarState({
-        isOpen: true,
-        message: `${createSchemaState.errors}`,
-      });
-    }
-  }, [createSchemaState.document, createSchemaState.errors, router]);
+  const createSchema = useCreate<SchemaDocument>({
+    collection: SchemaCollection,
+    setSnackbarState,
+    routerOptions: document => ({
+      url: "/schema/schemaId",
+      as: `/schema/${document.id}`,
+    }),
+  });
 
   const { remove: removeSchema, state: removeSchemaState } = useRemoveDocument(
     SchemaCollection,
@@ -121,7 +117,7 @@ function SchemaList(): JSX.Element {
               key={doc.id}
               document={{ ...document, id: doc.id }}
               onCopyClicked={() =>
-                createSchema({
+                createSchema.create({
                   ...document,
                   user: authUser,
                   stars: 0,
@@ -137,7 +133,7 @@ function SchemaList(): JSX.Element {
         )}
       </Container>
       <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
-      <LoadingBackdrop isLoading={loading} />
+      <LoadingBackdrop isLoading={loading || createSchema.isLoading} />
       <Footer />
     </>
   );

@@ -13,13 +13,14 @@ import React, { useContext, useEffect, useState } from "react";
 import Footer from "../../src/components/common/footer";
 import Header from "../../src/components/common/header";
 import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
-import ResultSnackbar, {
-  ResultSnackbarState,
-} from "../../src/components/common/resultSnackbar";
+import ResultSnackbar from "../../src/components/common/resultSnackbar";
 import SchemaForm from "../../src/components/schema/forms/schemaForm";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import initFirebase from "../../src/utils/auth/initFirebase";
-import { SchemaCollection } from "../../src/utils/firestore/collections";
+import {
+  ResultSnackbarState,
+  SchemaCollection,
+} from "../../src/utils/firestore/types";
 import useCreateDocument from "../../src/utils/firestore/useCreateDocument";
 import useRemoveDocument from "../../src/utils/firestore/useRemoveDocument";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";

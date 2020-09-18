@@ -3,10 +3,7 @@ import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
 import React from "react";
 
-export interface ResultSnackbarState {
-  isOpen: boolean;
-  message?: string;
-}
+import { ResultSnackbarState } from "../../utils/firestore/types";
 
 export interface ResultSnackbarProps {
   state: ResultSnackbarState;

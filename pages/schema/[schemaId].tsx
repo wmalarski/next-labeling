@@ -12,20 +12,22 @@ import React, { useContext, useEffect, useState } from "react";
 import Footer from "../../src/components/common/footer";
 import Header from "../../src/components/common/header";
 import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
-import ResultSnackbar, {
-  ResultSnackbarState,
-} from "../../src/components/common/resultSnackbar";
+import ResultSnackbar from "../../src/components/common/resultSnackbar";
 import SchemaDetails from "../../src/components/schema/details/schemaDetails";
 import RawForm from "../../src/components/schema/forms/rawForm";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import initFirebase from "../../src/utils/auth/initFirebase";
-import { SchemaCollection } from "../../src/utils/firestore/collections";
-import useCreateDocument from "../../src/utils/firestore/useCreateDocument";
+import {
+  ResultSnackbarState,
+  SchemaCollection,
+} from "../../src/utils/firestore/types";
+import useCreate from "../../src/utils/firestore/useCreate";
 import useRemoveDocument from "../../src/utils/firestore/useRemoveDocument";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
 import { SchemaDocument } from "../../src/utils/schema/types";
 import useFetchSchema from "../../src/utils/schema/useFetchSchema";
+import CreateLabelingDialog from "../../src/components/labeling/createLabelingDialog";
 
 initFirebase();
 
@@ -33,7 +35,7 @@ function SchemaDetailsPage(): JSX.Element {
   const { authUser } = useContext(AuthUserInfoContext);
 
   const router = useRouter();
-  const { id: queryDocumentId } = router.query;
+  const { schemaId: queryDocumentId } = router.query;
   const documentId = !Array.isArray(queryDocumentId)
     ? queryDocumentId
     : queryDocumentId[0];
@@ -56,20 +58,14 @@ function SchemaDetailsPage(): JSX.Element {
     isOpen: false,
   });
 
-  const { create: createSchema, state: createSchemaState } = useCreateDocument<
-    SchemaDocument
-  >(SchemaCollection);
-  useEffect(() => {
-    if (createSchemaState.document) {
-      router.push("/schema/[id]", `/schema/${createSchemaState.document.id}`);
-      // TODO: debug this thing
-    } else if (createSchemaState.errors) {
-      setSnackbarState({
-        isOpen: true,
-        message: `${createSchemaState.errors}`,
-      });
-    }
-  }, [createSchemaState.document, createSchemaState.errors, router]);
+  const createSchema = useCreate<SchemaDocument>({
+    collection: SchemaCollection,
+    setSnackbarState: setSnackbarState,
+    routerOptions: doc => ({
+      url: "/schema/[schemaId]",
+      as: `/schema/${doc.id}`,
+    }),
+  });
 
   const { remove: removeSchema, state: removeSchemaState } = useRemoveDocument(
     SchemaCollection,
@@ -93,13 +89,17 @@ function SchemaDetailsPage(): JSX.Element {
       <Header>
         {!isLoading && document ? (
           <>
+            <CreateLabelingDialog schema={document} />
             {isSameUser ? (
               <Button
                 size="small"
                 color="inherit"
                 startIcon={<EditIcon />}
                 onClick={() =>
-                  router.push("/schema/edit/[id]", `/schema/edit/${documentId}`)
+                  router.push(
+                    "/schema/edit/[schemaId]",
+                    `/schema/edit/${documentId}`,
+                  )
                 }
               >
                 Edit
@@ -117,7 +117,7 @@ function SchemaDetailsPage(): JSX.Element {
               color="inherit"
               startIcon={<FileCopyIcon />}
               onClick={() =>
-                createSchema({
+                createSchema.create({
                   user: authUser,
                   schema: document.schema,
                   stars: 0,
@@ -158,9 +158,7 @@ function SchemaDetailsPage(): JSX.Element {
       <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
       <LoadingBackdrop
         isLoading={
-          isLoading ||
-          removeSchemaState.isLoading ||
-          createSchemaState.isLoading
+          isLoading || removeSchemaState.isLoading || createSchema.isLoading
         }
       />
       <Footer />

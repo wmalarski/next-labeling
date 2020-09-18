@@ -20,6 +20,7 @@ import {
   LabelingObjectSchema,
   SchemaDocument,
 } from "../../../utils/schema/types";
+import CreateLabelingDialog from "../../labeling/createLabelingDialog";
 import RawForm from "./../forms/rawForm";
 import FieldDetails from "./fieldDetails";
 
@@ -83,17 +84,23 @@ export default function SchemaListItem(
           size="small"
           color="inherit"
           startIcon={<ViewListIcon />}
-          onClick={() => router.push("/schema/[id]", `/schema/${documentId}`)}
+          onClick={() =>
+            router.push("/schema/[schemaId]", `/schema/${documentId}`)
+          }
         >
           Details
         </Button>
+        <CreateLabelingDialog schema={props.document} />
         {isSameUser ? (
           <Button
             size="small"
             color="inherit"
             startIcon={<EditIcon />}
             onClick={() =>
-              router.push("/schema/edit/[id]", `/schema/edit/${documentId}`)
+              router.push(
+                "/schema/edit/[schemaId]",
+                `/schema/edit/${documentId}`,
+              )
             }
           >
             Edit

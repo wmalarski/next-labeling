@@ -5,7 +5,7 @@ import { PathReporter } from "io-ts/lib/PathReporter";
 import { useEffect, useState } from "react";
 
 import { SchemaDocument } from "./types";
-import { SchemaCollection } from "../firestore/collections";
+import { SchemaCollection } from "../firestore/types";
 
 export interface UseFetchSchemaResult {
   isLoading: boolean;

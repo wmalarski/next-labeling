@@ -1,55 +1,57 @@
 import "firebase/firestore";
 
-// import firebase from "firebase/app";
-// import { PathReporter } from "io-ts/lib/PathReporter";
-// import { useEffect, useState } from "react";
+import firebase from "firebase/app";
+import { PathReporter } from "io-ts/lib/PathReporter";
+import { useEffect, useState } from "react";
+import { LabelingDocument } from "./types";
+import { LabelingCollection } from "../firestore/types";
 
-// export interface UseFetchSchemaResult {
-//   isLoading: boolean;
-//   document?: SchemaDocument;
-//   exist?: boolean;
-//   errors?: string[];
-// }
+export interface UseFetchLabelingResult {
+  isLoading: boolean;
+  document?: LabelingDocument;
+  exist?: boolean;
+  errors?: string[];
+}
 
-// export default function useFetchSchema(
-//   documentId?: string,
-// ): UseFetchSchemaResult {
-//   const [state, setState] = useState<UseFetchSchemaResult>({
-//     isLoading: true,
-//   });
+export default function useFetchLabeling(
+  documentId?: string,
+): UseFetchLabelingResult {
+  const [state, setState] = useState<UseFetchLabelingResult>({
+    isLoading: true,
+  });
 
-//   useEffect(() => {
-//     if (!documentId) {
-//       setState({
-//         isLoading: false,
-//         exist: false,
-//       });
-//       return;
-//     }
-//     const db = firebase.firestore();
-//     db.collection("spaces")
-//       .doc(documentId)
-//       .get()
-//       .then(doc => {
-//         const data = doc.data();
-//         if (!doc.exists || !data) {
-//           setState({
-//             isLoading: false,
-//             exist: false,
-//           });
-//           return;
-//         }
-//         const decoded = SchemaDocumentType.decode(data);
-//         const errors =
-//           decoded._tag === "Left" ? PathReporter.report(decoded) : [];
-//         setState({
-//           isLoading: false,
-//           exist: true,
-//           errors,
-//           document: SchemaDocumentType.encode(data as SchemaDocument),
-//         });
-//       });
-//   }, [documentId]);
+  useEffect(() => {
+    if (!documentId) {
+      setState({
+        isLoading: false,
+        exist: false,
+      });
+      return;
+    }
+    const db = firebase.firestore();
+    db.collection(LabelingCollection)
+      .doc(documentId)
+      .get()
+      .then(doc => {
+        const data = doc.data();
+        if (!doc.exists || !data) {
+          setState({
+            isLoading: false,
+            exist: false,
+          });
+          return;
+        }
+        const decoded = LabelingDocument.decode(data);
+        const errors =
+          decoded._tag === "Left" ? PathReporter.report(decoded) : [];
+        setState({
+          isLoading: false,
+          exist: true,
+          errors,
+          document: LabelingDocument.encode(data as LabelingDocument),
+        });
+      });
+  }, [documentId]);
 
-//   return state;
-// }
+  return state;
+}
