@@ -11,6 +11,8 @@ import Footer from "../../src/components/common/footer";
 import Header from "../../src/components/common/header";
 import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
 import ResultSnackbar from "../../src/components/common/resultSnackbar";
+import { LabelingProvider } from "../../src/components/labeling/labelingProvider";
+import LabelingWorkspace from "../../src/components/labeling/labelingWorkspace";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import initFirebase from "../../src/utils/auth/initFirebase";
 import {
@@ -87,44 +89,52 @@ function LabelingEditor(): JSX.Element {
 
   return (
     <>
-      <Header>
-        <ButtonGroup size="small" color="inherit" variant="text">
-          <Button
-            disabled={!isSameUser}
-            startIcon={<SaveIcon />}
-            onClick={() => {
-              if (document) {
-                // updateLabeling(documentId, { ...document, schema });
-              }
-            }}
-          >
-            Save
-          </Button>
-          <Button
-            startIcon={<DeleteOutlineIcon />}
-            onClick={() => {
-              removeSchema(documentId);
-              router.back();
-            }}
-          >
-            Remove
-          </Button>
-          <Button startIcon={<ExitToAppIcon />} onClick={() => router.back()}>
-            Return
-          </Button>
-        </ButtonGroup>
-      </Header>
-      {!isLoading && (
-        <Container>
-          {/* <SchemaForm schema={schema} setSchema={setSchema} /> */}
-          <pre>{JSON.stringify(document, null, 2)}</pre>
-        </Container>
+      {document && (
+        <LabelingProvider document={document}>
+          <Header>
+            <ButtonGroup size="small" color="inherit" variant="text">
+              <Button
+                disabled={!isSameUser}
+                startIcon={<SaveIcon />}
+                onClick={() => {
+                  if (document) {
+                    // updateLabeling(documentId, { ...document, schema });
+                  }
+                }}
+              >
+                Save
+              </Button>
+              <Button
+                startIcon={<DeleteOutlineIcon />}
+                onClick={() => {
+                  removeSchema(documentId);
+                  router.back();
+                }}
+              >
+                Remove
+              </Button>
+              <Button
+                startIcon={<ExitToAppIcon />}
+                onClick={() => router.back()}
+              >
+                Return
+              </Button>
+            </ButtonGroup>
+          </Header>
+          {!isLoading && (
+            <Container>
+              <LabelingWorkspace />
+            </Container>
+          )}
+          <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
+          <LoadingBackdrop
+            isLoading={
+              isLoading || removeState.isLoading || updateState.isLoading
+            }
+          />
+          <Footer />
+        </LabelingProvider>
       )}
-      <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
-      <LoadingBackdrop
-        isLoading={isLoading || removeState.isLoading || updateState.isLoading}
-      />
-      <Footer />
     </>
   );
 }
