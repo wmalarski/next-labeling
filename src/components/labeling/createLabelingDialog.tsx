@@ -11,6 +11,7 @@ import React, { useContext, useState } from "react";
 import { AuthUserInfoContext } from "../../utils/auth/hooks";
 import { LabelingCollection } from "../../utils/firestore/types";
 import useCreate from "../../utils/firestore/useCreate";
+import { createObject } from "../../utils/labeling/functions";
 import { LabelingDocument } from "../../utils/labeling/types";
 import { SchemaDocument } from "../../utils/schema/types";
 
@@ -35,9 +36,14 @@ export default function CreateLabelingDialog(
   const { schema, buttonProps } = props;
 
   const { authUser } = useContext(AuthUserInfoContext);
-  const [document, setDocument] = useState<Partial<LabelingDocument>>(
-    defaultDocument,
-  );
+  const [document, setDocument] = useState<Partial<LabelingDocument>>({
+    ...defaultDocument,
+    schema: schema.schema,
+    schemaId: schema.id,
+    objects: schema.schema.objects
+      .filter(object => object.singleton)
+      .map(object => createObject(object)),
+  });
 
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);
@@ -108,7 +114,6 @@ export default function CreateLabelingDialog(
             onClick={() => {
               createLabeling.create({
                 ...document,
-                schemaId: schema.id,
                 created: new Date().toJSON(),
                 editedDate: new Date().toJSON(),
                 user: authUser,

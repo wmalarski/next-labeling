@@ -4,11 +4,13 @@ import firebase from "firebase/app";
 import { PathReporter } from "io-ts/lib/PathReporter";
 import { useEffect, useState } from "react";
 import { LabelingDocument } from "./types";
-import { LabelingCollection } from "../firestore/types";
+import { LabelingCollection, SchemaCollection } from "../firestore/types";
+import { SchemaDocument } from "../schema/types";
 
 export interface UseFetchLabelingResult {
   isLoading: boolean;
   document?: LabelingDocument;
+  schema?: SchemaDocument;
   exist?: boolean;
   errors?: string[];
 }

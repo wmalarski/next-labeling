@@ -22,6 +22,12 @@ const LabelingContext = createContext<LabelingContextValue>({
     objects: [],
     public: false,
     schemaId: "",
+    schema: {
+      description: "",
+      name: "",
+      objects: [],
+      version: "",
+    },
     stars: 0,
     user: {
       displayName: "",

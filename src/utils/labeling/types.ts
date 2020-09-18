@@ -1,6 +1,7 @@
 import * as t from "io-ts";
 import { AuthUser } from "../auth/user";
 import { LabelingFieldValues } from "../editors/types";
+import { LabelingSchema, SchemaDocument } from "../schema/types";
 
 export const LabelingComment = t.strict({
   user: AuthUser,
@@ -33,6 +34,7 @@ export const LabelingDocument = t.strict({
   name: t.string,
   filename: t.string,
   schemaId: t.string,
+  schema: LabelingSchema,
   user: AuthUser,
   objects: t.array(LabelingObject),
   created: t.string,

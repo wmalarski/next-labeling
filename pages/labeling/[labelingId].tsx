@@ -68,11 +68,11 @@ function LabelingEditor(): JSX.Element {
     <>
       {document && (
         <FramesProvider>
-          <SelectionProvider>
-            <LabelingProvider
-              document={document}
-              setSnackbarState={setSnackbarState}
-            >
+          <LabelingProvider
+            document={document}
+            setSnackbarState={setSnackbarState}
+          >
+            <SelectionProvider>
               <div className={classes.root}>
                 <Header />
                 <EditorSidebar />
@@ -90,8 +90,8 @@ function LabelingEditor(): JSX.Element {
               <LoadingBackdrop isLoading={isLoading} />
 
               <Footer />
-            </LabelingProvider>
-          </SelectionProvider>
+            </SelectionProvider>
+          </LabelingProvider>
         </FramesProvider>
       )}
     </>
