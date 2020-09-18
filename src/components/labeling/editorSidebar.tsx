@@ -37,6 +37,7 @@ import React, { useContext, useState } from "react";
 
 import LabelingContext from "../../contexts/labeling/labelingContext";
 import { addObjectUpdate } from "../../utils/labeling/updates";
+import FramesContext from "../../contexts/frames/framesContext";
 
 const drawerWidth = 240;
 
@@ -79,9 +80,9 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function EditorSidebar(): JSX.Element {
   const classes = useStyles();
 
-  const router = useRouter();
-
   const { history } = useContext(LabelingContext);
+  const { currentFrame } = useContext(FramesContext);
+
   const [open, setOpen] = useState(true);
 
   const filterIcons = [
@@ -114,26 +115,28 @@ export default function EditorSidebar(): JSX.Element {
       <div className={classes.toolbar} />
       <div className={classes.lists}>
         <List>
-          {history.document.schema.objects.map((object, index) => (
-            <ListItem
-              key={object.id}
-              button
-              onClick={() =>
-                history.setLabeling(doc => ({
-                  message: `New ${object.name} added`,
-                  document: addObjectUpdate(doc, object),
-                }))
-              }
-            >
-              <ListItemIcon>
-                {filterIcons[index % filterIcons.length]}
-              </ListItemIcon>
-              <ListItemText
-                primary={object.name}
-                secondary={`Add new ${object.name}`}
-              />
-            </ListItem>
-          ))}
+          {history.document.schema.objects
+            .filter(object => !object.singleton)
+            .map((object, index) => (
+              <ListItem
+                key={object.id}
+                button
+                onClick={() =>
+                  history.setLabeling(doc => ({
+                    message: `New ${object.name} added`,
+                    document: addObjectUpdate(doc, object, currentFrame),
+                  }))
+                }
+              >
+                <ListItemIcon>
+                  {filterIcons[index % filterIcons.length]}
+                </ListItemIcon>
+                <ListItemText
+                  primary={object.name}
+                  secondary={`Add new ${object.name}`}
+                />
+              </ListItem>
+            ))}
           <Divider />
           <ListItem button onClick={() => void 0}>
             <ListItemIcon>

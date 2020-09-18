@@ -29,7 +29,7 @@ export default function LabelingProvider(
   >(LabelingCollection);
   useEffect(() => {
     if (updateState.document) {
-      setSnackbarState({ isOpen: true, message: "Schema saved" });
+      setSnackbarState({ isOpen: true, message: "Labeling saved" });
     } else if (updateState.errors) {
       setSnackbarState({
         isOpen: true,
@@ -38,12 +38,11 @@ export default function LabelingProvider(
     }
   }, [setSnackbarState, updateState.document, updateState.errors]);
 
-  const { remove: removeSchema, state: removeState } = useRemoveDocument(
+  const { remove: removeLabeling, state: removeState } = useRemoveDocument(
     LabelingCollection,
   );
   useEffect(() => {
     if (removeState.success) {
-      setSnackbarState({ isOpen: true, message: "Schema removed" });
       router.back();
     } else if (removeState.errors) {
       setSnackbarState({
@@ -57,8 +56,16 @@ export default function LabelingProvider(
     <LabelingContext.Provider
       value={{
         history,
-        pushLabeling: () => void 0,
-        removeLabeling: () => void 0,
+        pushLabeling: document => {
+          if (document.id) {
+            updateLabeling(document.id, document);
+          }
+        },
+        removeLabeling: document => {
+          if (document.id) {
+            removeLabeling(document.id);
+          }
+        },
       }}
     >
       {children}

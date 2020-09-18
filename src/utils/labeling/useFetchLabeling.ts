@@ -3,9 +3,10 @@ import "firebase/firestore";
 import firebase from "firebase/app";
 import { PathReporter } from "io-ts/lib/PathReporter";
 import { useEffect, useState } from "react";
-import { LabelingDocument } from "./types";
-import { LabelingCollection, SchemaCollection } from "../firestore/types";
+
+import { LabelingCollection } from "../firestore/types";
 import { SchemaDocument } from "../schema/types";
+import { LabelingDocument } from "./types";
 
 export interface UseFetchLabelingResult {
   isLoading: boolean;
@@ -50,7 +51,7 @@ export default function useFetchLabeling(
           isLoading: false,
           exist: true,
           errors,
-          document: LabelingDocument.encode(data as LabelingDocument),
+          document: { id: documentId, ...(data as LabelingDocument) }, // TODO: fix validation
         });
       });
   }, [documentId]);

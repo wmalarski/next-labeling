@@ -4,10 +4,11 @@ import { LabelingObject } from "./types";
 
 export function createObject(
   objectSchema: LabelingObjectSchema,
+  currentFrame: number,
 ): LabelingObject {
   return {
     comments: [],
-    frames: [],
+    frames: [currentFrame],
     id: uuidv4(),
     isTracked: false,
     name: objectSchema.name,
