@@ -13,6 +13,7 @@ export function createObject(
     isTracked: false,
     name: objectSchema.name,
     isDone: false,
+    singleton: objectSchema.singleton,
     schemaObjectId: objectSchema.id,
     fields: objectSchema.fields.map(fieldSchema => {
       const [key, value] = Object.entries(fieldSchema.attributes)[0];

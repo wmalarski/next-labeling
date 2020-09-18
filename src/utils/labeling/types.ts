@@ -1,7 +1,8 @@
 import * as t from "io-ts";
+
 import { AuthUser } from "../auth/user";
 import { LabelingFieldValues } from "../editors/types";
-import { LabelingSchema, SchemaDocument } from "../schema/types";
+import { LabelingSchema } from "../schema/types";
 
 export const LabelingComment = t.strict({
   user: AuthUser,
@@ -26,6 +27,7 @@ export const LabelingObject = t.strict({
   isTracked: t.boolean,
   frames: t.array(t.number),
   comments: t.array(LabelingComment),
+  singleton: t.boolean,
 });
 export type LabelingObject = t.TypeOf<typeof LabelingObject>;
 

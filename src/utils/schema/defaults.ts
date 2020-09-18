@@ -90,7 +90,7 @@ export const labelingFieldAttributesDefaults: LabelingFieldAttributes = {
     ],
   },
   [FieldType.RECTANGLE]: {
-    default: [0, 0, 0, 0],
+    default: [0, 0, 0, 0], // TODO: Fix defaults for shapes
     color: "#ff0000",
   },
   [FieldType.LINE]: {

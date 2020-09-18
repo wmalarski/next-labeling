@@ -18,6 +18,8 @@ import { ResultSnackbarState } from "../../src/utils/firestore/types";
 import useFetchLabeling from "../../src/utils/labeling/useFetchLabeling";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
+import { LabelingViewsState } from "../../src/utils/labeling/views";
+import TimelineView from "../../src/components/timeline/timelineView";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -63,6 +65,11 @@ function LabelingEditor(): JSX.Element {
     isOpen: false,
   });
 
+  const [viewsState, setViewsState] = useState<LabelingViewsState>({
+    properties: true,
+    timeline: true,
+  });
+
   if (!authUser) return <></>;
 
   return (
@@ -78,10 +85,14 @@ function LabelingEditor(): JSX.Element {
                 <Header>
                   <EditorHeader />
                 </Header>
-                <EditorSidebar />
+                <EditorSidebar
+                  viewsState={viewsState}
+                  setViewsState={setViewsState}
+                />
                 {!isLoading && (
                   <div className={classes.content}>
                     <div className={classes.toolbar} />
+                    {viewsState.timeline && <TimelineView />}
                     <LabelingWorkspace />
                   </div>
                 )}
