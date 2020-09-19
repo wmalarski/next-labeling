@@ -19,7 +19,7 @@ export default function FramesProvider(
 ): JSX.Element {
   const { children } = props;
 
-  const [{ currentFrame }, setState] = useState<FramesProviderState>({
+  const [{ currentFrame, duration }, setState] = useState<FramesProviderState>({
     currentFrame: 0,
     duration: 1,
   });
@@ -55,6 +55,7 @@ export default function FramesProvider(
     <FramesContext.Provider
       value={{
         currentFrame,
+        duration,
         setDuration,
         moveBy,
         moveTo,

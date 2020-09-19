@@ -76,8 +76,10 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
   const { currentFrame } = useContext(FramesContext);
   const { selected } = useContext(SelectionContext);
 
-  const isSingletonSelected = !!selected.find(object => object.singleton);
-  const isSelected = selected.length !== 0 && !isSingletonSelected;
+  const selectedObjects = selected.filter(
+    object => !object.singleton && object.objectSelected,
+  );
+  const isSelected = selectedObjects.length !== 0;
   const [open, setOpen] = useState(true);
 
   return (
