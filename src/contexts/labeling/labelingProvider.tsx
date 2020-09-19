@@ -1,15 +1,15 @@
-import React, { useEffect, useMemo } from "react";
-import LabelingContext from "./labelingContext";
-import { LabelingDocument } from "../../utils/labeling/types";
-import useUpdateDocument from "../../utils/firestore/useUpdateLabeling";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+
 import {
   LabelingCollection,
   ResultSnackbarState,
 } from "../../utils/firestore/types";
 import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
-import { useRouter } from "next/router";
+import useUpdateDocument from "../../utils/firestore/useUpdateLabeling";
+import { LabelingDocument } from "../../utils/labeling/types";
 import useLabelingHistory from "../../utils/labeling/useLabelingHistory";
-import { ObjectSchema } from "../../utils/schema/types";
+import LabelingContext from "./labelingContext";
 
 export interface LabelingProviderProps {
   document: LabelingDocument;
@@ -23,7 +23,7 @@ export default function LabelingProvider(
   const { document: initialDocument, children, setSnackbarState } = props;
   const router = useRouter();
 
-  const history = useLabelingHistory(initialDocument.data);
+  const history = useLabelingHistory(initialDocument);
 
   const { update: updateLabeling, state: updateState } = useUpdateDocument<
     LabelingDocument
@@ -56,7 +56,7 @@ export default function LabelingProvider(
   return (
     <LabelingContext.Provider
       value={{
-        document: { ...initialDocument, data: history.data },
+        document: initialDocument,
         history,
         pushLabeling: document => {
           if (document.id) {

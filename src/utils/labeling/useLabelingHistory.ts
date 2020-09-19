@@ -1,8 +1,9 @@
 import { useCallback, useRef, useState } from "react";
-import { LabelingData } from "./types";
+import { createExtendedLabeling } from "./functions";
+import { ExtendedLabeling, LabelingDocument } from "./types";
 
 export interface LabelingState {
-  data: LabelingData;
+  data: ExtendedLabeling;
   message: string;
 }
 
@@ -12,10 +13,10 @@ export interface UseLabelingHistoryState {
 }
 
 export interface UseLabelingHistoryResult {
-  data: LabelingData;
+  data: ExtendedLabeling;
   message: string;
   setLabeling: (
-    provider: (data: LabelingData) => LabelingState | undefined,
+    provider: (data: ExtendedLabeling) => LabelingState | undefined,
   ) => void;
   undoLabeling: () => void;
   redoLabeling: () => void;
@@ -24,12 +25,17 @@ export interface UseLabelingHistoryResult {
 }
 
 export default function useLabelingHistory(
-  initial: LabelingData,
+  document: LabelingDocument,
   maxSize?: number,
 ): UseLabelingHistoryResult {
   const bufferSize = useRef(maxSize ?? 20);
   const [state, setState] = useState<UseLabelingHistoryState>({
-    history: [{ data: initial, message: "Labeling loaded" }],
+    history: [
+      {
+        data: createExtendedLabeling(document),
+        message: "Labeling loaded",
+      },
+    ],
     index: 0,
   });
 
@@ -47,7 +53,7 @@ export default function useLabelingHistory(
     [setState],
   );
   const setLabeling = useCallback(
-    (provider: (data: LabelingData) => LabelingState | undefined): void =>
+    (provider: (data: ExtendedLabeling) => LabelingState | undefined): void =>
       setState(value => {
         const currentLabeling = value.history[value.index].data;
         const result = provider(currentLabeling);

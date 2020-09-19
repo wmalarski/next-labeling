@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import React, { useContext } from "react";
 
 import LabelingContext from "../../contexts/labeling/labelingContext";
+import { LabelingDocument } from "../../utils/labeling/types";
 
 export default function EditorHeader(): JSX.Element {
   const router = useRouter();
@@ -42,7 +43,17 @@ export default function EditorHeader(): JSX.Element {
           Redo
         </Button>
       )}
-      <Button startIcon={<SaveIcon />} onClick={() => pushLabeling(document)}>
+      <Button
+        startIcon={<SaveIcon />}
+        onClick={() => {
+          pushLabeling(
+            LabelingDocument.encode({
+              ...document,
+              objects: history.data.objects,
+            }),
+          );
+        }}
+      >
         Save
       </Button>
       <Button

@@ -15,26 +15,19 @@ export interface TableObject {
 }
 
 export default function EditorTable(): JSX.Element {
-  const { history, document } = useContext(LabelingContext);
+  const { history } = useContext(LabelingContext);
   const { selected } = useContext(SelectionContext);
 
-  const { objects: schemaObjects } = document.schema;
   const { objects } = history.data;
 
-  selected.flatMap(selectedObject => {
-    const object = objects.find(
-      object => object.id === selectedObject.objectId,
-    );
+  selected.flatMap(selection => {
+    const object = objects.find(object => object.id === selection.objectId);
     if (!object) return [];
-    const objectSchema = schemaObjects.find(
-      schema => schema.id === object.schemaObjectId,
-    );
-    if (!objectSchema) return [];
   });
 
   return (
     <div>
-      <pre>{JSON.stringify(document.data, null, 2)}</pre>
+      <pre>{JSON.stringify(history.data, null, 2)}</pre>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 import "firebase/firestore";
 
+import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import firebase from "firebase/app";
 import usePagination from "firestore-pagination-hook";
@@ -10,7 +11,6 @@ import Footer from "../../src/components/common/footer";
 import Header from "../../src/components/common/header";
 import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
 import ResultSnackbar from "../../src/components/common/resultSnackbar";
-import { useSearchBarStyle } from "../../src/themes/styles";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import initFirebase from "../../src/utils/auth/initFirebase";
 import {
@@ -19,12 +19,10 @@ import {
 } from "../../src/utils/firestore/types";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
-import Button from "@material-ui/core/Button";
 
 initFirebase();
 
 function LabelingList(): JSX.Element {
-  const classes = useSearchBarStyle();
   const { authUser } = useContext(AuthUserInfoContext);
   const router = useRouter();
 

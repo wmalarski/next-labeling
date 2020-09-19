@@ -1,25 +1,31 @@
 import { v4 as uuidv4 } from "uuid";
 import { FieldSchema, ObjectSchema, Schema } from "../schema/types";
-import { LabelingField, LabelingObject } from "./types";
+import {
+  ExtendedLabeling,
+  ExtendedObject,
+  LabelingDocument,
+  LabelingField,
+  LabelingObject,
+} from "./types";
 
 export function createObject(
   objectSchema: ObjectSchema,
   currentFrame: number,
-): LabelingObject {
+): ExtendedObject {
   return {
-    comments: [],
     frames: [currentFrame],
     id: uuidv4(),
     isTracked: false,
     name: objectSchema.name,
     isDone: false,
-    singleton: objectSchema.singleton,
-    schemaObjectId: objectSchema.id,
+    objectSchemaId: objectSchema.id,
+    objectSchema: objectSchema,
     fields: objectSchema.fields.map(fieldSchema => {
       const [key, value] = Object.entries(fieldSchema.attributes)[0];
       return {
         id: uuidv4(),
-        schemaFieldId: fieldSchema.id,
+        fieldSchemaId: fieldSchema.id,
+        fieldSchema: fieldSchema,
         values: { [key]: [{ frame: currentFrame, value: value?.default }] },
       };
     }),
@@ -32,7 +38,7 @@ export function groupObjectsBySchema(
   return objects.reduce<{ [definition: string]: LabelingObject[] }>(
     (prev, curr) => ({
       ...prev,
-      [curr.schemaObjectId]: [...(prev[curr.schemaObjectId] ?? []), curr],
+      [curr.objectSchemaId]: [...(prev[curr.objectSchemaId] ?? []), curr],
     }),
     {},
   );
@@ -53,16 +59,38 @@ export function pairObjectsToSchema(
   );
 }
 
+export function createExtendedLabeling(
+  document: LabelingDocument,
+): ExtendedLabeling {
+  return {
+    objects: pairObjectsToSchema(document.objects, document.schema).map(
+      ({ object, objectSchema }) => {
+        const fields = object.fields.flatMap(field => {
+          const fieldSchema = objectSchema.fields.find(
+            f => f.id === field.fieldSchemaId,
+          );
+          return !fieldSchema ? [] : [{ ...field, fieldSchema }];
+        });
+        return {
+          ...object,
+          fields,
+          objectSchema,
+        };
+      },
+    ),
+  };
+}
+
 export interface ObjectBlock {
   firstFrame: number;
   lastFrame: number;
 }
 
 export function calculateObjectBlocks(
-  object: LabelingObject,
+  object: ExtendedObject,
   duration: number,
 ): ObjectBlock[] {
-  if (object.singleton) {
+  if (object.objectSchema.singleton) {
     return [{ firstFrame: 0, lastFrame: duration }];
   }
   const [first, ...frames] = object.frames;

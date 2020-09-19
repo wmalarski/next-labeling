@@ -22,9 +22,7 @@ const defaultDocument: Partial<LabelingDocument> = {
   contributors: [],
   comments: [],
   name: "",
-  data: {
-    objects: [],
-  },
+  objects: [],
 };
 
 export interface CreateLabelingDialogProps {
@@ -42,11 +40,9 @@ export default function CreateLabelingDialog(
     ...defaultDocument,
     schema: schema.schema,
     schemaId: schema.id,
-    data: {
-      objects: schema.schema.objects
-        .filter(object => object.singleton)
-        .map(object => createObject(object, 0)),
-    },
+    objects: schema.schema.objects
+      .filter(object => object.singleton)
+      .map(object => createObject(object, 0)),
   });
 
   const [open, setOpen] = useState(false);

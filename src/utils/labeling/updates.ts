@@ -1,12 +1,12 @@
 import { createObject } from "./functions";
-import { LabelingData } from "./types";
+import { ExtendedLabeling } from "./types";
 import { ObjectSchema } from "../schema/types";
 
 export function addObjectUpdate(
-  data: LabelingData,
+  data: ExtendedLabeling,
   objectSchema: ObjectSchema,
   currentFrame: number,
-): LabelingData {
+): ExtendedLabeling {
   return {
     ...data,
     objects: [...data.objects, createObject(objectSchema, currentFrame)],

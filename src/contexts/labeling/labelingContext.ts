@@ -1,7 +1,7 @@
 import { createContext } from "react";
+
 import { LabelingDocument } from "../../utils/labeling/types";
 import { UseLabelingHistoryResult } from "../../utils/labeling/useLabelingHistory";
-import { FieldSchema, ObjectSchema } from "../../utils/schema/types";
 
 export interface LabelingContextValue {
   pushLabeling: (doc: LabelingDocument) => void;
@@ -26,9 +26,7 @@ const LabelingContext = createContext<LabelingContextValue>({
     comments: [],
     contributors: [],
     created: "",
-    data: {
-      objects: [],
-    },
+    objects: [],
     filename: "",
     id: "",
     name: "",

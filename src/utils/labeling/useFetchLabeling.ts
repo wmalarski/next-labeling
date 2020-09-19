@@ -42,6 +42,7 @@ export default function useFetchLabeling(
           });
           return;
         }
+        // TODO: add extend
         const decoded = LabelingDocument.decode(data);
         const errors =
           decoded._tag === "Left" ? PathReporter.report(decoded) : [];

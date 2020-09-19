@@ -1,14 +1,11 @@
-import Typography from "@material-ui/core/Typography";
 import TreeItem, { TreeItemProps } from "@material-ui/lab/TreeItem/TreeItem";
 import Konva from "konva";
 import React, { useContext } from "react";
-import { Layer, Rect, Stage, Text } from "react-konva";
-import ReactResizeDetector from "react-resize-detector";
+import { Rect } from "react-konva";
+
 import FramesContext from "../../contexts/frames/framesContext";
 import { calculateFieldBlocks } from "../../utils/labeling/functions";
-
-import { LabelingField } from "../../utils/labeling/types";
-import { FieldSchema } from "../../utils/schema/types";
+import { ExtendedField, ExtendedObject } from "../../utils/labeling/types";
 
 class ColoredRect extends React.Component {
   state = {
@@ -34,14 +31,14 @@ class ColoredRect extends React.Component {
 }
 
 export interface TimelineFieldItemProps extends TreeItemProps {
-  field: LabelingField;
-  fieldSchema: FieldSchema;
-  isSingleton: boolean;
-  frames: number[];
+  field: ExtendedField;
+  object: ExtendedObject;
 }
 
 export function TimelineFieldItem(props: TimelineFieldItemProps): JSX.Element {
-  const { fieldSchema, field, isSingleton, frames, ...other } = props;
+  const { field, object, ...other } = props;
+  const { fieldSchema } = field;
+  const { frames, objectSchema } = object;
   const { duration } = useContext(FramesContext);
 
   const blocks = calculateFieldBlocks(
@@ -49,7 +46,7 @@ export function TimelineFieldItem(props: TimelineFieldItemProps): JSX.Element {
     fieldSchema,
     duration,
     frames,
-    isSingleton,
+    objectSchema.singleton,
   );
 
   return (

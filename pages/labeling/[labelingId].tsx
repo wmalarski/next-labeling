@@ -1,14 +1,17 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
+import { RemoveScrollBar } from "react-remove-scroll-bar";
 
-import Footer from "../../src/components/common/footer";
 import Header from "../../src/components/common/header";
 import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
 import ResultSnackbar from "../../src/components/common/resultSnackbar";
+import EditorTable from "../../src/components/editors/editorTable";
 import EditorHeader from "../../src/components/labeling/editorHeader";
-import LabelingWorkspace from "../../src/components/labeling/labelingWorkspace";
 import EditorSidebar from "../../src/components/labeling/editorSidebar";
+import FrameSlider from "../../src/components/labeling/frameSlider";
+import LabelingWorkspace from "../../src/components/labeling/labelingWorkspace";
+import TimelineView from "../../src/components/timeline/timelineView";
 import FramesProvider from "../../src/contexts/frames/framesProvider";
 import LabelingProvider from "../../src/contexts/labeling/labelingProvider";
 import SelectionProvider from "../../src/contexts/selection/selectionProvider";
@@ -16,13 +19,9 @@ import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import initFirebase from "../../src/utils/auth/initFirebase";
 import { ResultSnackbarState } from "../../src/utils/firestore/types";
 import useFetchLabeling from "../../src/utils/labeling/useFetchLabeling";
+import { LabelingViewsState } from "../../src/utils/labeling/views";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
-import { LabelingViewsState } from "../../src/utils/labeling/views";
-import TimelineView from "../../src/components/timeline/timelineView";
-import FrameSlider from "../../src/components/labeling/frameSlider";
-import EditorTable from "../../src/components/editors/editorTable";
-import { RemoveScrollBar } from "react-remove-scroll-bar";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

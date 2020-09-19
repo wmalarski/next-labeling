@@ -8,23 +8,18 @@ import LabelingContext from "../../contexts/labeling/labelingContext";
 import SelectionContext, {
   ObjectSelection,
 } from "../../contexts/selection/selectionContext";
-import {
-  calculateObjectBlocks,
-  pairObjectsToSchema,
-} from "../../utils/labeling/functions";
+import { calculateObjectBlocks } from "../../utils/labeling/functions";
 import { TimelineFieldItem } from "./timelineFieldItem";
 import { TimelineItem } from "./timelineItem";
 
 export default function TimelineView(): JSX.Element {
-  const { history, document } = useContext(LabelingContext);
+  const { history } = useContext(LabelingContext);
   const { duration } = useContext(FramesContext);
   const { selected: selectedObjects, select, toggle, toggled } = useContext(
     SelectionContext,
   );
 
   const { objects } = history.data;
-  const pairs = pairObjectsToSchema(objects, document.schema);
-
   const selected = selectedObjects.flatMap(object => [
     ...(object.objectSelected ? [object.objectId] : []),
     ...object.fieldIds.map(field => `${object.objectId}|${field}`),
@@ -34,7 +29,7 @@ export default function TimelineView(): JSX.Element {
     toggle(nodeIds);
   };
 
-  const handleSelect = (event: any, nodeIds: string[]) => {
+  const handleSelect = (_event: any, nodeIds: string[]) => {
     const result = Object.values(
       nodeIds.reduce<{ [objectId: string]: ObjectSelection }>((prev, curr) => {
         const [objectId, fieldId] = curr.split("|");
@@ -43,7 +38,7 @@ export default function TimelineView(): JSX.Element {
           fieldIds: [],
           objectSelected: !fieldId,
           singleton:
-            pairs.find(pair => pair.object.id === objectId)?.objectSchema
+            objects.find(object => object.id === objectId)?.objectSchema
               .singleton ?? true,
         };
         return {
@@ -72,33 +67,25 @@ export default function TimelineView(): JSX.Element {
       onNodeSelect={handleSelect}
       multiSelect
     >
-      {pairs.map(pair => {
-        const { object, objectSchema } = pair;
+      {objects.map(object => {
         const changes = calculateObjectBlocks(object, duration);
-        // console.log({ changes });
+        const { id, name, fields } = object;
         return (
           <TimelineItem
-            key={object.id}
-            nodeId={object.id}
-            labelText={`${object.name} + ${changes}`}
+            key={id}
+            nodeId={id}
+            labelText={`${name} + ${changes}`}
             onLabelClick={event => event.preventDefault()}
             onChange={event => console.log("event", event)}
           >
-            {object.fields.map(field => {
-              const fieldSchema = objectSchema.fields.find(
-                schema => schema.id === field.schemaFieldId,
-              );
-              return fieldSchema ? (
+            {fields.map(field => {
+              return (
                 <TimelineFieldItem
                   key={field.id}
                   nodeId={`${object.id}|${field.id}`}
                   field={field}
-                  isSingleton={objectSchema.singleton}
-                  fieldSchema={fieldSchema}
-                  frames={object.frames}
+                  object={object}
                 />
-              ) : (
-                <></>
               );
             })}
           </TimelineItem>
