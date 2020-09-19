@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import LabelingContext from "./labelingContext";
 import { LabelingDocument } from "../../utils/labeling/types";
 import useUpdateDocument from "../../utils/firestore/useUpdateLabeling";
@@ -9,6 +9,7 @@ import {
 import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
 import { useRouter } from "next/router";
 import useLabelingHistory from "../../utils/labeling/useLabelingHistory";
+import { ObjectSchema } from "../../utils/schema/types";
 
 export interface LabelingProviderProps {
   document: LabelingDocument;

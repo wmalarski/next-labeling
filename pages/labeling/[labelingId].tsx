@@ -22,6 +22,7 @@ import { LabelingViewsState } from "../../src/utils/labeling/views";
 import TimelineView from "../../src/components/timeline/timelineView";
 import FrameSlider from "../../src/components/labeling/frameSlider";
 import EditorTable from "../../src/components/editors/editorTable";
+import { RemoveScrollBar } from "react-remove-scroll-bar";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -78,6 +79,7 @@ function LabelingEditor(): JSX.Element {
     <>
       {document && (
         <FramesProvider>
+          <RemoveScrollBar />
           <LabelingProvider
             document={document}
             setSnackbarState={setSnackbarState}
@@ -94,12 +96,35 @@ function LabelingEditor(): JSX.Element {
                 {!isLoading && (
                   <div className={classes.content}>
                     <div className={classes.toolbar} />
-                    <LabelingWorkspace />
-                    {viewsState.timeline && <TimelineView />}
-                    {viewsState.properties && <EditorTable />}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexFlow: "column",
+                      }}
+                    >
+                      <div
+                        style={{
+                          display: "flex", // TODO: fix sizes
+                          flexFlow: "row",
+                          flexGrow: 1,
+                        }}
+                      >
+                        <div style={{ flexGrow: 1 }}>
+                          <LabelingWorkspace />
+                        </div>
+                        <div style={{ overflow: "auto", height: 700 }}>
+                          {viewsState.properties && <EditorTable />}
+                        </div>
+                      </div>
+                      <div
+                        style={{ overflow: "auto", height: 300, flexGrow: 1 }}
+                      >
+                        {viewsState.timeline && <TimelineView />}
+                      </div>
+                      <FrameSlider />
+                    </div>
                   </div>
                 )}
-                <FrameSlider />
               </div>
 
               <ResultSnackbar

@@ -14,10 +14,10 @@ import IconButton from "@material-ui/core/IconButton";
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     frameSlider: {
-      position: "fixed",
-      bottom: 0,
-      right: 0,
-      left: 0,
+      // position: "fixed",
+      // bottom: 0,
+      // right: 0,
+      // left: 0,
       zIndex: theme.zIndex.drawer + 1,
       backgroundColor: theme.palette.background.default,
     },

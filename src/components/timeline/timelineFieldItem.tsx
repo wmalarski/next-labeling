@@ -55,20 +55,21 @@ export function TimelineFieldItem(props: TimelineFieldItemProps): JSX.Element {
   return (
     <TreeItem
       label={
-        <ReactResizeDetector handleWidth>
-          {({ width }: { width: number }) => (
-            <div>
-              <Typography variant="body2">{fieldSchema.name}</Typography>
-              {/* <pre>{JSON.stringify({ ...props, blocks: blocks }, null, 2)}</pre> */}
-              <Stage width={width} height={100}>
-                <Layer>
-                  <Text text="Try click on rect" />
-                  <ColoredRect />
-                </Layer>
-              </Stage>
-            </div>
-          )}
-        </ReactResizeDetector>
+        // <ReactResizeDetector handleWidth>
+        //   {({ width }: { width: number }) => (
+        //     <div>
+        //       <Typography variant="body2">{fieldSchema.name}</Typography>
+        //       {/* <pre>{JSON.stringify({ ...props, blocks: blocks }, null, 2)}</pre> */}
+        //       <Stage width={width} height={100}>
+        //         <Layer>
+        //           <Text text="Try click on rect" />
+        //           <ColoredRect />
+        //         </Layer>
+        //       </Stage>
+        //     </div>
+        //   )}
+        // </ReactResizeDetector>
+        <p>{fieldSchema.name}</p>
       }
       {...other}
     />
