@@ -9,7 +9,6 @@ export default function LabelingWorkspace(): JSX.Element {
       <div>
         <Typography variant="h5">{document.name}</Typography>
         <Typography variant="subtitle2">{document.filename}</Typography>
-        <pre>{JSON.stringify(document.data, null, 2)}</pre>
       </div>
     </>
   );

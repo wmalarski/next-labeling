@@ -20,6 +20,7 @@ import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
 import { LabelingViewsState } from "../../src/utils/labeling/views";
 import TimelineView from "../../src/components/timeline/timelineView";
+import FrameSlider from "../../src/components/labeling/frameSlider";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -93,6 +94,7 @@ function LabelingEditor(): JSX.Element {
                   <div className={classes.content}>
                     <div className={classes.toolbar} />
                     {viewsState.timeline && <TimelineView />}
+                    <FrameSlider />
                     <LabelingWorkspace />
                   </div>
                 )}

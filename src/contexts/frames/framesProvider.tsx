@@ -21,7 +21,7 @@ export default function FramesProvider(
 
   const [{ currentFrame, duration }, setState] = useState<FramesProviderState>({
     currentFrame: 0,
-    duration: 1,
+    duration: 100,
   });
 
   const setDuration = useCallback(
