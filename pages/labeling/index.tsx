@@ -42,10 +42,7 @@ function LabelingList(): JSX.Element {
     hasMore,
     items,
     loadMore,
-  } = usePagination(
-    db.collection(LabelingCollection).orderBy("editedDate", "asc"),
-    { limit: 10 },
-  );
+  } = usePagination(db.collection(LabelingCollection), { limit: 10 });
 
   const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
     isOpen: false,

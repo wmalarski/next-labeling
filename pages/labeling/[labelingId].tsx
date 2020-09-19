@@ -21,6 +21,7 @@ import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
 import { LabelingViewsState } from "../../src/utils/labeling/views";
 import TimelineView from "../../src/components/timeline/timelineView";
 import FrameSlider from "../../src/components/labeling/frameSlider";
+import EditorTable from "../../src/components/editors/editorTable";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -93,19 +94,21 @@ function LabelingEditor(): JSX.Element {
                 {!isLoading && (
                   <div className={classes.content}>
                     <div className={classes.toolbar} />
-                    {viewsState.timeline && <TimelineView />}
-                    <FrameSlider />
                     <LabelingWorkspace />
+                    {viewsState.timeline && <TimelineView />}
+                    {viewsState.properties && <EditorTable />}
                   </div>
                 )}
+                <FrameSlider />
               </div>
+
               <ResultSnackbar
                 state={snackbarState}
                 setState={setSnackbarState}
               />
               <LoadingBackdrop isLoading={isLoading} />
 
-              <Footer />
+              {/* <Footer /> */}
             </SelectionProvider>
           </LabelingProvider>
         </FramesProvider>
