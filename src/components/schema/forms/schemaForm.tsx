@@ -8,8 +8,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import React, { useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { LabelingSchema } from "../../../utils/schema/types";
-import { NullableSchemaState } from "../../../utils/schema/useSchemaHistory";
+import { Schema } from "../../../utils/schema/types";
+import { SchemaState } from "../../../utils/schema/useSchemaHistory";
 import ObjectForm from "./objectForm";
 import RawForm from "./rawForm";
 
@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export interface SchemaFormProps {
-  schema: LabelingSchema;
-  setSchema: (setter: (schema: LabelingSchema) => NullableSchemaState) => void;
+  schema: Schema;
+  setSchema: (setter: (schema: Schema) => SchemaState | undefined) => void;
 }
 
 export default function SchemaForm(props: SchemaFormProps): JSX.Element {

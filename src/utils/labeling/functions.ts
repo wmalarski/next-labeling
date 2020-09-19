@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
-import { LabelingObjectSchema } from "../schema/types";
+import { ObjectSchema } from "../schema/types";
 import { LabelingObject } from "./types";
 
 export function createObject(
-  objectSchema: LabelingObjectSchema,
+  objectSchema: ObjectSchema,
   currentFrame: number,
 ): LabelingObject {
   return {

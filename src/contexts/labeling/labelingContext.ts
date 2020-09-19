@@ -5,6 +5,7 @@ import { UseLabelingHistoryResult } from "../../utils/labeling/useLabelingHistor
 export interface LabelingContextValue {
   pushLabeling: (doc: LabelingDocument) => void;
   removeLabeling: (doc: LabelingDocument) => void;
+  document: LabelingDocument;
   history: UseLabelingHistoryResult;
 }
 
@@ -16,31 +17,37 @@ const LabelingContext = createContext<LabelingContextValue>({
     redoLabeling: () => void 0,
     undoLabeling: () => void 0,
     setLabeling: () => void 0,
-    document: {
-      comments: [],
-      contributors: [],
-      created: "",
-      editedDate: "",
-      filename: "",
-      id: "",
+    data: {
+      objects: [],
+    },
+  },
+  document: {
+    comments: [],
+    contributors: [],
+    created: "",
+    data: {
+      objects: [],
+    },
+    filename: "",
+    id: "",
+    name: "",
+    public: false,
+    schemaId: "",
+    schema: {
+      description: "",
       name: "",
       objects: [],
-      public: false,
-      schemaId: "",
-      schema: {
-        description: "",
-        name: "",
-        objects: [],
-        version: "",
-      },
-      stars: 0,
-      user: {
-        displayName: "",
-        email: "",
-        emailVerified: false,
-        id: "",
-      },
+      version: "",
     },
+    stars: 0,
+    user: {
+      displayName: "",
+      email: "",
+      emailVerified: false,
+      id: "",
+    },
+    projects: [],
+    edited: [],
   },
 });
 

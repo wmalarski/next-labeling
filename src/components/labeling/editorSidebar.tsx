@@ -72,7 +72,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
   const { viewsState, setViewsState } = props;
   const classes = useStyles();
 
-  const { history } = useContext(LabelingContext);
+  const { history, document } = useContext(LabelingContext);
   const { currentFrame } = useContext(FramesContext);
   const { selected } = useContext(SelectionContext);
 
@@ -97,7 +97,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
       <div className={classes.toolbar} />
       <div className={classes.lists}>
         <List>
-          {history.document.schema.objects
+          {document.schema.objects
             .filter(object => !object.singleton)
             .map((object, index) => {
               const ToolIcon = filterIcons[index % filterIcons.length];
@@ -108,7 +108,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
                   onClick={() =>
                     history.setLabeling(doc => ({
                       message: `New ${object.name} added`,
-                      document: addObjectUpdate(doc, object, currentFrame),
+                      data: addObjectUpdate(doc, object, currentFrame),
                     }))
                   }
                 >

@@ -16,8 +16,8 @@ import React, { useContext, useState } from "react";
 
 import { AuthUserInfoContext } from "../../../utils/auth/hooks";
 import {
-  LabelingFieldSchema,
-  LabelingObjectSchema,
+  FieldSchema,
+  ObjectSchema,
   SchemaDocument,
 } from "../../../utils/schema/types";
 import CreateLabelingDialog from "../../labeling/createLabelingDialog";
@@ -37,8 +37,8 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export interface SelectedState {
-  object?: LabelingObjectSchema;
-  fields: { [objectId: string]: LabelingFieldSchema };
+  object?: ObjectSchema;
+  fields: { [objectId: string]: FieldSchema };
 }
 
 export interface SchemaListItemProps {

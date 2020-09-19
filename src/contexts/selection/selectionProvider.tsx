@@ -33,11 +33,11 @@ export default function SelectionProvider(
   );
 
   const selected = useMemo(() => {
-    const objects: LabelingObject[] = history.document.objects;
+    const objects: LabelingObject[] = history.data.objects;
     return selectedIds
       .map(object => objects.find(inner => inner.id === object))
       .filter(object => object !== undefined) as LabelingObject[]; // TODO: find why casting is wrong
-  }, [history.document.objects, selectedIds]);
+  }, [history.data.objects, selectedIds]);
 
   const clear = useCallback((): void => setSelected([]), []);
 

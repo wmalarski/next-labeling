@@ -1,9 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { FieldType, LabelingFieldAttributes } from "../editors/types";
-import { LabelingSchema } from "./types";
+import { Schema } from "./types";
 
-export const defaultLabelingSchema: LabelingSchema = {
+export const defaultLabelingSchema: Schema = {
   name: "New Schema",
   description: "My first schema.",
   objects: [

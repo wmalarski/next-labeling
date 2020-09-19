@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import React, { useEffect, useState } from "react";
 
 import { FieldType, LabelingFieldValues } from "../../../utils/editors/types";
-import { LabelingFieldSchema } from "../../../utils/schema/types";
+import { FieldSchema } from "../../../utils/schema/types";
 import FieldEditor from "../../editors/fieldEditor";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -28,7 +28,7 @@ function getDefaultValues(type: FieldType, attributes: any) {
 }
 
 export interface FieldDetailsProps {
-  field: LabelingFieldSchema;
+  field: FieldSchema;
 }
 
 export default function FieldDetails(props: FieldDetailsProps): JSX.Element {

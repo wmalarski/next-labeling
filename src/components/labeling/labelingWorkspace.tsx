@@ -3,14 +3,13 @@ import React, { useContext } from "react";
 import LabelingContext from "../../contexts/labeling/labelingContext";
 
 export default function LabelingWorkspace(): JSX.Element {
-  const { history } = useContext(LabelingContext);
-  const { document } = history;
+  const { document } = useContext(LabelingContext);
   return (
     <>
       <div>
         <Typography variant="h5">{document.name}</Typography>
         <Typography variant="subtitle2">{document.filename}</Typography>
-        <pre>{JSON.stringify(document, null, 2)}</pre>
+        <pre>{JSON.stringify(document.data, null, 2)}</pre>
       </div>
     </>
   );

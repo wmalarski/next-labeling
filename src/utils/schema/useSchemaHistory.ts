@@ -1,14 +1,12 @@
 import { useCallback, useRef, useState } from "react";
 
 import { defaultLabelingSchema } from "./defaults";
-import { LabelingSchema } from "./types";
+import { Schema } from "./types";
 
 export interface SchemaState {
-  schema: LabelingSchema;
+  schema: Schema;
   message: string;
 }
-
-export type NullableSchemaState = SchemaState | undefined;
 
 export interface SchemaHistoryState {
   history: SchemaState[];
@@ -16,20 +14,18 @@ export interface SchemaHistoryState {
 }
 
 export interface UseSchemaHistoryResult {
-  schema: LabelingSchema;
+  schema: Schema;
   message: string;
-  setSchema: (
-    provider: (schema: LabelingSchema) => NullableSchemaState,
-  ) => void;
+  setSchema: (provider: (schema: Schema) => SchemaState | undefined) => void;
   undoSchema: () => void;
   redoSchema: () => void;
-  resetHistory: (schema: LabelingSchema) => void;
+  resetHistory: (schema: Schema) => void;
   undoMessage?: string;
   redoMessage?: string;
 }
 
 export default function useSchemaHistory(
-  initial?: LabelingSchema,
+  initial?: Schema,
   maxSize?: number,
 ): UseSchemaHistoryResult {
   const bufferSize = useRef(maxSize ?? 20);
@@ -54,7 +50,7 @@ export default function useSchemaHistory(
     [setState],
   );
   const setSchema = useCallback(
-    (provider: (schema: LabelingSchema) => NullableSchemaState): void =>
+    (provider: (schema: Schema) => SchemaState | undefined): void =>
       setState(value => {
         const currentSchema = value.history[value.index].schema;
         const result = provider(currentSchema);
@@ -80,7 +76,7 @@ export default function useSchemaHistory(
   );
 
   const resetHistory = useCallback(
-    (schema: LabelingSchema): void =>
+    (schema: Schema): void =>
       setState({
         history: [{ schema, message: "Initial schema" }],
         index: 0,

@@ -22,7 +22,7 @@ export default function LabelingProvider(
   const { document: initialDocument, children, setSnackbarState } = props;
   const router = useRouter();
 
-  const history = useLabelingHistory(initialDocument);
+  const history = useLabelingHistory(initialDocument.data);
 
   const { update: updateLabeling, state: updateState } = useUpdateDocument<
     LabelingDocument
@@ -55,6 +55,7 @@ export default function LabelingProvider(
   return (
     <LabelingContext.Provider
       value={{
+        document: { ...initialDocument, data: history.data },
         history,
         pushLabeling: document => {
           if (document.id) {

@@ -1,14 +1,14 @@
 import { createObject } from "./functions";
-import { LabelingDocument } from "./types";
-import { LabelingObjectSchema } from "../schema/types";
+import { LabelingData } from "./types";
+import { ObjectSchema } from "../schema/types";
 
 export function addObjectUpdate(
-  document: LabelingDocument,
-  objectSchema: LabelingObjectSchema,
+  data: LabelingData,
+  objectSchema: ObjectSchema,
   currentFrame: number,
-): LabelingDocument {
+): LabelingData {
   return {
-    ...document,
-    objects: [...document.objects, createObject(objectSchema, currentFrame)],
+    ...data,
+    objects: [...data.objects, createObject(objectSchema, currentFrame)],
   };
 }

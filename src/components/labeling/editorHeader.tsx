@@ -14,7 +14,9 @@ import LabelingContext from "../../contexts/labeling/labelingContext";
 export default function EditorHeader(): JSX.Element {
   const router = useRouter();
 
-  const { history, pushLabeling, removeLabeling } = useContext(LabelingContext);
+  const { document, pushLabeling, removeLabeling, history } = useContext(
+    LabelingContext,
+  );
 
   return (
     <ButtonGroup size="small" color="inherit" variant="text">
@@ -40,15 +42,12 @@ export default function EditorHeader(): JSX.Element {
           Redo
         </Button>
       )}
-      <Button
-        startIcon={<SaveIcon />}
-        onClick={() => pushLabeling(history.document)}
-      >
+      <Button startIcon={<SaveIcon />} onClick={() => pushLabeling(document)}>
         Save
       </Button>
       <Button
         startIcon={<DeleteOutlineIcon />}
-        onClick={() => removeLabeling(history.document)}
+        onClick={() => removeLabeling(document)}
       >
         Remove
       </Button>

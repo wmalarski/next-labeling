@@ -20,7 +20,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import { FieldType } from "../../../utils/editors/types";
 import { labelingFieldAttributesDefaults } from "../../../utils/schema/defaults";
-import { LabelingObjectSchema } from "../../../utils/schema/types";
+import { ObjectSchema } from "../../../utils/schema/types";
 import FieldForm from "./fieldForm";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -45,20 +45,20 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export interface OnChangeProviderResult {
-  objectSchema: LabelingObjectSchema;
+  objectSchema: ObjectSchema;
   message: string;
 }
 
 export interface ObjectFormProps {
-  objectSchema: LabelingObjectSchema;
+  objectSchema: ObjectSchema;
   onChange: (
     provider: (
-      objectSchema: LabelingObjectSchema,
+      objectSchema: ObjectSchema,
     ) => OnChangeProviderResult | undefined,
     objectId: string,
   ) => void;
   onRemove: () => void;
-  onCopy: (objectSchema: LabelingObjectSchema) => void;
+  onCopy: (objectSchema: ObjectSchema) => void;
   onMove: (diff: number) => void;
 }
 

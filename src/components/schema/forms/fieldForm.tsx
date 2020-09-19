@@ -17,7 +17,7 @@ import React, { memo } from "react";
 
 import { FieldType } from "../../../utils/editors/types";
 import { labelingFieldAttributesDefaults } from "../../../utils/schema/defaults";
-import { LabelingFieldSchema } from "../../../utils/schema/types";
+import { FieldSchema } from "../../../utils/schema/types";
 import AttributesForm from "./attributesForm";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -33,11 +33,11 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export interface FieldFormProps {
-  fieldSchema: LabelingFieldSchema;
+  fieldSchema: FieldSchema;
   onChange: (
     provider: (
-      fieldSchema: LabelingFieldSchema,
-    ) => { fieldSchema: LabelingFieldSchema; message: string } | undefined,
+      fieldSchema: FieldSchema,
+    ) => { fieldSchema: FieldSchema; message: string } | undefined,
     fieldId: string,
   ) => void;
   onRemove: () => void;

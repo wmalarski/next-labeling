@@ -3,35 +3,35 @@ import * as t from "io-ts";
 import { AuthUser } from "../auth/user";
 import { LabelingFieldAttributes } from "../editors/types";
 
-export const LabelingFieldSchema = t.strict({
+export const FieldSchema = t.strict({
   id: t.string,
   name: t.string,
   perFrame: t.boolean,
   attributes: LabelingFieldAttributes,
 });
-export type LabelingFieldSchema = t.TypeOf<typeof LabelingFieldSchema>;
+export type FieldSchema = t.TypeOf<typeof FieldSchema>;
 
-export const LabelingObjectSchema = t.strict({
+export const ObjectSchema = t.strict({
   id: t.string,
   name: t.string,
   description: t.string,
   singleton: t.boolean,
-  fields: t.array(LabelingFieldSchema),
+  fields: t.array(FieldSchema),
 });
-export type LabelingObjectSchema = t.TypeOf<typeof LabelingObjectSchema>;
+export type ObjectSchema = t.TypeOf<typeof ObjectSchema>;
 
-export const LabelingSchema = t.strict({
+export const Schema = t.strict({
   name: t.string,
   version: t.string,
   description: t.string,
-  objects: t.array(LabelingObjectSchema),
+  objects: t.array(ObjectSchema),
 });
-export type LabelingSchema = t.TypeOf<typeof LabelingSchema>;
+export type Schema = t.TypeOf<typeof Schema>;
 
 export const SchemaDocument = t.strict({
   id: t.union([t.string, t.undefined]),
   user: AuthUser,
-  schema: LabelingSchema,
+  schema: Schema,
   stars: t.number,
   created: t.string,
 });

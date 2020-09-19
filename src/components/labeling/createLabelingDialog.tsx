@@ -17,12 +17,14 @@ import { SchemaDocument } from "../../utils/schema/types";
 
 const defaultDocument: Partial<LabelingDocument> = {
   filename: "",
-  name: "",
   stars: 0,
   public: true,
   contributors: [],
   comments: [],
-  objects: [],
+  name: "",
+  data: {
+    objects: [],
+  },
 };
 
 export interface CreateLabelingDialogProps {
@@ -40,9 +42,11 @@ export default function CreateLabelingDialog(
     ...defaultDocument,
     schema: schema.schema,
     schemaId: schema.id,
-    objects: schema.schema.objects
-      .filter(object => object.singleton)
-      .map(object => createObject(object, 0)),
+    data: {
+      objects: schema.schema.objects
+        .filter(object => object.singleton)
+        .map(object => createObject(object, 0)),
+    },
   });
 
   const [open, setOpen] = useState(false);
@@ -115,7 +119,12 @@ export default function CreateLabelingDialog(
               createLabeling.create({
                 ...document,
                 created: new Date().toJSON(),
-                editedDate: new Date().toJSON(),
+                edited: [
+                  {
+                    user: authUser,
+                    date: new Date().toJSON(),
+                  },
+                ],
                 user: authUser,
               });
               handleClose();
