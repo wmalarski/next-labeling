@@ -20,14 +20,17 @@ export function getFieldValue<T extends keyof LabelingFieldValues>(
 }
 
 export function calculateNewValues<T extends keyof LabelingFieldValues>(
-  previousValues: LabelingFieldValues[T],
+  values: LabelingFieldValues[T],
   perFrame: boolean,
   fieldValue: FieldValue<any>,
 ): LabelingFieldValues[T] {
-  if (!fieldValue) return previousValues;
+  if (!fieldValue || !values) return values;
   if (perFrame) {
     // TODO: add forward labeling
-    return previousValues;
+    // const insertIndex = previousValues.findIndex(pair)
+
+    console.log({ previousValues: values, perFrame, fieldValue });
+    return values;
   } else {
     return [
       {

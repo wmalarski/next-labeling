@@ -13,13 +13,13 @@ export function createObject(
   currentFrame: number,
 ): ExtendedObject {
   return {
-    frames: [currentFrame],
     id: uuidv4(),
-    isTracked: false,
+    isTracked: true,
     name: objectSchema.name,
     isDone: false,
     objectSchemaId: objectSchema.id,
     objectSchema: objectSchema,
+    frames: objectSchema.singleton ? null : [currentFrame],
     fields: objectSchema.fields.map(fieldSchema => {
       const [key, value] = Object.entries(fieldSchema.attributes)[0];
       return {
@@ -90,7 +90,7 @@ export function calculateObjectBlocks(
   object: ExtendedObject,
   duration: number,
 ): ObjectBlock[] {
-  if (object.objectSchema.singleton) {
+  if (object.objectSchema.singleton || !object.frames) {
     return [{ firstFrame: 0, lastFrame: duration }];
   }
   const [first, ...frames] = object.frames;
@@ -120,7 +120,7 @@ export function calculateFieldBlocks(
   field: LabelingField,
   fieldSchema: FieldSchema,
   duration: number,
-  frames: number[],
+  frames: number[] | undefined,
   isSingleton: boolean,
 ): ValueBlock[] {
   const entry = Object.entries(field.values)[0];

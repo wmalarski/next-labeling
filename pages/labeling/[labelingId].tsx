@@ -77,12 +77,12 @@ function LabelingEditor(): JSX.Element {
   return (
     <>
       {document && (
-        <FramesProvider>
+        <LabelingProvider
+          document={document}
+          setSnackbarState={setSnackbarState}
+        >
           <RemoveScrollBar />
-          <LabelingProvider
-            document={document}
-            setSnackbarState={setSnackbarState}
-          >
+          <FramesProvider>
             <SelectionProvider>
               <div className={classes.root}>
                 <Header>
@@ -111,12 +111,12 @@ function LabelingEditor(): JSX.Element {
                         <div style={{ flexGrow: 1 }}>
                           <LabelingWorkspace />
                         </div>
-                        <div style={{ overflow: "auto", height: 700 }}>
+                        <div style={{ overflow: "auto", height: 500 }}>
                           {viewsState.properties && <EditorTable />}
                         </div>
                       </div>
                       <div
-                        style={{ overflow: "auto", height: 300, flexGrow: 1 }}
+                        style={{ overflow: "auto", height: 100, flexGrow: 1 }}
                       >
                         {viewsState.timeline && <TimelineView />}
                       </div>
@@ -134,8 +134,8 @@ function LabelingEditor(): JSX.Element {
 
               {/* <Footer /> */}
             </SelectionProvider>
-          </LabelingProvider>
-        </FramesProvider>
+          </FramesProvider>
+        </LabelingProvider>
       )}
     </>
   );

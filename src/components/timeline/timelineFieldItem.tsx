@@ -41,13 +41,13 @@ export function TimelineFieldItem(props: TimelineFieldItemProps): JSX.Element {
   const { frames, objectSchema } = object;
   const { duration } = useContext(FramesContext);
 
-  const blocks = calculateFieldBlocks(
-    field,
-    fieldSchema,
-    duration,
-    frames,
-    objectSchema.singleton,
-  );
+  // const blocks = calculateFieldBlocks(
+  //   field,
+  //   fieldSchema,
+  //   duration,
+  //   frames ??,
+  //   objectSchema.singleton,
+  // );
 
   return (
     <TreeItem

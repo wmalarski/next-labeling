@@ -21,7 +21,7 @@ const LabelingObjectFields = {
   fields: t.array(LabelingField),
   isDone: t.boolean,
   isTracked: t.boolean,
-  frames: t.array(t.number),
+  frames: t.union([t.array(t.number), t.null]),
 };
 export const LabelingObject = t.strict(LabelingObjectFields);
 export type LabelingObject = t.TypeOf<typeof LabelingObject>;

@@ -1,4 +1,6 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useContext, useState } from "react";
+import { trackObjectsUpdate } from "../../utils/labeling/updates";
+import LabelingContext from "../labeling/labelingContext";
 import FramesContext from "./framesContext";
 
 export interface FramesProviderProps {
@@ -19,6 +21,8 @@ export default function FramesProvider(
 ): JSX.Element {
   const { children } = props;
 
+  const { history } = useContext(LabelingContext);
+
   const [{ currentFrame, duration }, setState] = useState<FramesProviderState>({
     currentFrame: 0,
     duration: 100,
@@ -35,11 +39,17 @@ export default function FramesProvider(
 
   const moveBy = useCallback(
     (value: number): void =>
-      setState(state => ({
-        ...state,
-        currentFrame: frameToRange(state.currentFrame + value, state),
-      })),
-    [],
+      setState(state => {
+        const nextFrame = frameToRange(state.currentFrame + value, state);
+        if (state.currentFrame !== nextFrame && (value === 1 || value === -1)) {
+          history.setLabeling(data => ({
+            message: "Objects tracked",
+            data: trackObjectsUpdate(data, state.currentFrame, value),
+          }));
+        }
+        return { ...state, currentFrame: nextFrame };
+      }),
+    [history],
   );
 
   const moveTo = useCallback(
