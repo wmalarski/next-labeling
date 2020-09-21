@@ -22,7 +22,13 @@ import React, { useContext, useState } from "react";
 import FramesContext from "../../contexts/frames/framesContext";
 import LabelingContext from "../../contexts/labeling/labelingContext";
 import SelectionContext from "../../contexts/selection/selectionContext";
-import { addObjectUpdate } from "../../utils/labeling/updates";
+import {
+  addObjectUpdate,
+  copyObjectsUpdate,
+  deleteBackwardUpdate,
+  deleteForwardUpdate,
+  removeObjectsUpdate,
+} from "../../utils/labeling/updates";
 import { filterIcons, LabelingViewsState } from "../../utils/labeling/views";
 
 const drawerWidth = 240;
@@ -125,25 +131,75 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
               );
             })}
           <Divider />
-          <ListItem disabled={!isSelected} button onClick={() => void 0}>
+          <ListItem
+            disabled={!isSelected}
+            button
+            onClick={() =>
+              history.setLabeling(data => ({
+                message: "Objects copied",
+                data: copyObjectsUpdate(
+                  data,
+                  selectedObjects.map(object => object.objectId),
+                ),
+              }))
+            }
+          >
             <ListItemIcon>
               <FileCopyIcon />
             </ListItemIcon>
             <ListItemText primary={"Copy"} />
           </ListItem>
-          <ListItem disabled={!isSelected} button onClick={() => void 0}>
+          <ListItem
+            disabled={!isSelected}
+            button
+            onClick={() =>
+              history.setLabeling(data => ({
+                message: "Objects removed",
+                data: removeObjectsUpdate(
+                  data,
+                  selectedObjects.map(object => object.objectId),
+                ),
+              }))
+            }
+          >
             <ListItemIcon>
               <HighlightOffIcon />
             </ListItemIcon>
             <ListItemText primary={"Delete"} />
           </ListItem>
-          <ListItem disabled={!isSelected} button onClick={() => void 0}>
+          <ListItem
+            disabled={!isSelected}
+            button
+            onClick={() =>
+              history.setLabeling(data => ({
+                message: "Objects removed backward",
+                data: deleteBackwardUpdate(
+                  data,
+                  selectedObjects.map(object => object.objectId),
+                  currentFrame,
+                ),
+              }))
+            }
+          >
             <ListItemIcon>
               <ArrowBackIcon />
             </ListItemIcon>
             <ListItemText primary={"Delete Backward"} />
           </ListItem>
-          <ListItem disabled={!isSelected} button onClick={() => void 0}>
+          <ListItem
+            disabled={!isSelected}
+            button
+            onClick={() =>
+              history.setLabeling(data => ({
+                message: "Objects removed forward",
+                data: deleteForwardUpdate(
+                  data,
+                  selectedObjects.map(object => object.objectId),
+                  currentFrame,
+                ),
+              }))
+            }
+          >
             <ListItemIcon>
               <ArrowForwardIcon />
             </ListItemIcon>
