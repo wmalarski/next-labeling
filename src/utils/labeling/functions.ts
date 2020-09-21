@@ -1,10 +1,13 @@
 import { v4 as uuidv4 } from "uuid";
-import { FieldSchema, ObjectSchema, Schema } from "../schema/types";
+import getValueIndex from "../editors/indexes";
+
+import { FieldType, FieldValue } from "../editors/types";
+import { ObjectSchema, Schema } from "../schema/types";
 import {
+  ExtendedField,
   ExtendedLabeling,
   ExtendedObject,
   LabelingDocument,
-  LabelingField,
   LabelingObject,
 } from "./types";
 
@@ -146,25 +149,82 @@ export function calculateObjectBlocks(
     }, []);
 }
 
-export interface ValueBlock {
-  frame: number;
-  value?: string;
+export interface FieldBlock {
+  firstFrame: number;
+  lastFrame: number;
+  value: string;
   index: number;
 }
 
-export function calculateFieldBlocks(
-  field: LabelingField,
-  fieldSchema: FieldSchema,
-  duration: number,
-  frames: number[] | undefined,
-  isSingleton: boolean,
-): ValueBlock[] {
-  const entry = Object.entries(field.values)[0];
-  if (!entry) return [];
-  const [type, values] = entry;
+interface ReduceFieldBlocksState {
+  fieldBlocks: FieldBlock[];
+  objectBlocks: ObjectBlock[];
+}
 
-  // if (isSingleton) {
-  //   (values ?? []).map(pair => )
-  // }
-  return [];
+export function calculateFieldBlocks(
+  field: ExtendedField,
+  objectBlocks: ObjectBlock[],
+  duration: number,
+): FieldBlock[] {
+  const [type, values]: [
+    string,
+    FieldValue<any>[] | undefined,
+  ] = Object.entries(field.values)[0];
+  const attributes = field.fieldSchema.attributes;
+  if (!values)
+    return [{ firstFrame: 0, lastFrame: duration, index: 0, value: "" }];
+
+  const res = values.reduce<FieldValue<any>[][]>(
+    (prev, curr, index, array) => [...prev, [curr, array[index + 1]]],
+    [],
+  );
+  const result = res.reduce<ReduceFieldBlocksState>(
+    (prev, curr) => {
+      const [left, right] = curr;
+      const [currentBlock, ...otherBlocks] = prev.objectBlocks;
+      const rightFrame = right ? right.frame : currentBlock.lastFrame;
+      const index = getValueIndex(type as FieldType, left, attributes);
+      if (rightFrame <= currentBlock.lastFrame) {
+        return {
+          objectBlocks: prev.objectBlocks,
+          fieldBlocks: [
+            ...prev.fieldBlocks,
+            {
+              firstFrame: left.frame,
+              lastFrame: rightFrame,
+              value: `${left.value}`,
+              index,
+            },
+          ],
+        };
+      }
+      // TODO: test this part - multiple blocks
+      const [nextBlock] = otherBlocks;
+      return {
+        objectBlocks: otherBlocks,
+        fieldBlocks: [
+          ...prev.fieldBlocks,
+          {
+            firstFrame: left.frame,
+            lastFrame: currentBlock.lastFrame,
+            value: `${left.value}`,
+
+            index,
+          },
+          {
+            firstFrame: nextBlock.firstFrame,
+            lastFrame: right.frame,
+            value: `${left.value}`,
+            index,
+          },
+        ],
+      };
+    },
+    {
+      fieldBlocks: [],
+      objectBlocks,
+    },
+  );
+
+  return [...result.fieldBlocks];
 }

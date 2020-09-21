@@ -102,7 +102,7 @@ export default function EditorTable(): JSX.Element {
               }
             />
           ))}
-          <pre>{JSON.stringify(object, null, 2)}</pre>
+          {/* <pre>{JSON.stringify(object, null, 2)}</pre> */}
         </Paper>
       ))}
     </>

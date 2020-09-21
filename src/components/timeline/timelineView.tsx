@@ -68,6 +68,7 @@ export default function TimelineView(): JSX.Element {
           nodeId={object.id}
           key={object.id}
           object={object}
+          selected={selected}
         />
       ))}
     </TreeView>

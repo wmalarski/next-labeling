@@ -3,39 +3,34 @@ import React, { useContext } from "react";
 import { Layer, Line, Rect, Stage, Text } from "react-konva";
 
 import FramesContext from "../../contexts/frames/framesContext";
-import SelectionContext from "../../contexts/selection/selectionContext";
-import { calculateObjectBlocks } from "../../utils/labeling/functions";
+import { ObjectBlock } from "../../utils/labeling/functions";
 import { ExtendedObject } from "../../utils/labeling/types";
 
 export interface ObjectCanvasProps {
   object: ExtendedObject;
+  blocks: ObjectBlock[];
+  isSelected: boolean;
   width: number;
   height: number;
   shiftX: number;
+  fontSize: number;
 }
 
 export function ObjectCanvas(props: ObjectCanvasProps): JSX.Element {
-  const { object, width, height, shiftX } = props;
+  const { object, blocks, isSelected, width, height, shiftX, fontSize } = props;
 
   const theme = useTheme();
-  console.log({ theme });
   const selectionColor = theme.palette.primary.light;
   const deselectionColor = theme.palette.primary.dark;
   const errorColor = theme.palette.error.light;
 
   const { duration, currentFrame } = useContext(FramesContext);
-  const changes = calculateObjectBlocks(object, duration);
-
-  const { selected } = useContext(SelectionContext);
-  const isSelected = !!selected.find(
-    selection => selection.objectId === object.id,
-  );
-
   const scale = width / duration;
+
   return (
     <Stage width={shiftX + width} height={height}>
       <Layer>
-        {changes.map(block => (
+        {blocks.map(block => (
           <Rect
             key={block.firstFrame}
             x={shiftX + block.firstFrame * scale}
@@ -55,7 +50,11 @@ export function ObjectCanvas(props: ObjectCanvasProps): JSX.Element {
           stroke={errorColor}
           strokeWidth={1 * scale}
         />
-        <Text text={object.name} />
+        <Text
+          text={object.name}
+          fontSize={fontSize + 2}
+          y={(height - fontSize + 2) / 2}
+        />
       </Layer>
     </Stage>
   );

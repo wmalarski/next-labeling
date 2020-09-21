@@ -1,24 +1,32 @@
-import Typography from "@material-ui/core/Typography";
 import TreeItem, { TreeItemProps } from "@material-ui/lab/TreeItem/TreeItem";
-import React from "react";
+import React, { useContext } from "react";
+import FramesContext from "../../contexts/frames/framesContext";
+import { calculateObjectBlocks } from "../../utils/labeling/functions";
 
 import { ExtendedObject } from "../../utils/labeling/types";
+import { FieldCanvas } from "./fieldCanvas";
 import { ObjectCanvas } from "./objectCanvas";
-import { TimelineFieldItem } from "./timelineFieldItem";
 
 export interface TimelineObjectItemProps extends TreeItemProps {
   object: ExtendedObject;
+  selected: string[];
 }
 
 export function TimelineObjectItem(
   props: TimelineObjectItemProps,
 ): JSX.Element {
-  const { object, ...other } = props;
+  const { object, selected, ...other } = props;
   const { fields } = object;
+  const isObjectSelected = selected.includes(object.id);
 
   const width = 600;
   const height = 50;
   const shiftX = 100;
+  const fieldOffset = 18;
+  const fontSize = 14;
+
+  const { duration } = useContext(FramesContext);
+  const blocks = calculateObjectBlocks(object, duration);
 
   return (
     <TreeItem
@@ -26,20 +34,34 @@ export function TimelineObjectItem(
       label={
         <ObjectCanvas
           object={object}
+          blocks={blocks}
           width={width}
           height={height}
           shiftX={shiftX}
+          fontSize={fontSize}
+          isSelected={isObjectSelected}
         />
       }
       {...other}
     >
       {fields.map(field => {
+        const nodeId = `${object.id}|${field.id}`;
+        const isFieldSelected = selected.includes(nodeId);
         return (
-          <TimelineFieldItem
-            nodeId={`${object.id}|${field.id}`}
+          <TreeItem
+            nodeId={nodeId}
             key={field.id}
-            field={field}
-            object={object}
+            label={
+              <FieldCanvas
+                field={field}
+                blocks={blocks}
+                width={width}
+                height={height}
+                shiftX={shiftX - fieldOffset}
+                isSelected={isFieldSelected}
+                fontSize={fontSize}
+              />
+            }
           />
         );
       })}
