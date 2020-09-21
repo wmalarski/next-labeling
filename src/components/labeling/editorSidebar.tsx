@@ -22,6 +22,7 @@ import React, { useContext, useState } from "react";
 import FramesContext from "../../contexts/frames/framesContext";
 import LabelingContext from "../../contexts/labeling/labelingContext";
 import SelectionContext from "../../contexts/selection/selectionContext";
+import { getFirstFrame, getLastFrame } from "../../utils/labeling/functions";
 import {
   addObjectUpdate,
   copyObjectsUpdate,
@@ -79,12 +80,13 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
   const classes = useStyles();
 
   const { history, document } = useContext(LabelingContext);
-  const { currentFrame } = useContext(FramesContext);
+  const { currentFrame, moveTo: moveToFrame } = useContext(FramesContext);
   const { selected } = useContext(SelectionContext);
 
   const selectedObjects = selected.filter(
     object => !object.singleton && object.objectSelected,
   );
+  const selectedObjectsIds = selectedObjects.map(object => object.objectId);
   const isSelected = selectedObjects.length !== 0;
   const [open, setOpen] = useState(true);
 
@@ -137,10 +139,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             onClick={() =>
               history.setLabeling(data => ({
                 message: "Objects copied",
-                data: copyObjectsUpdate(
-                  data,
-                  selectedObjects.map(object => object.objectId),
-                ),
+                data: copyObjectsUpdate(data, selectedObjectsIds),
               }))
             }
           >
@@ -155,10 +154,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             onClick={() =>
               history.setLabeling(data => ({
                 message: "Objects removed",
-                data: removeObjectsUpdate(
-                  data,
-                  selectedObjects.map(object => object.objectId),
-                ),
+                data: removeObjectsUpdate(data, selectedObjectsIds),
               }))
             }
           >
@@ -175,7 +171,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
                 message: "Objects removed backward",
                 data: deleteBackwardUpdate(
                   data,
-                  selectedObjects.map(object => object.objectId),
+                  selectedObjectsIds,
                   currentFrame,
                 ),
               }))
@@ -194,7 +190,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
                 message: "Objects removed forward",
                 data: deleteForwardUpdate(
                   data,
-                  selectedObjects.map(object => object.objectId),
+                  selectedObjectsIds,
                   currentFrame,
                 ),
               }))
@@ -206,13 +202,32 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             <ListItemText primary={"Delete Forward"} />
           </ListItem>
           <Divider />
-          <ListItem disabled={!isSelected} button onClick={() => void 0}>
+          <ListItem
+            disabled={!isSelected}
+            button
+            onClick={() => {
+              const firstFrame = getFirstFrame(
+                history.data,
+                selectedObjectsIds,
+              );
+              if (!firstFrame) return;
+              moveToFrame(firstFrame);
+            }}
+          >
             <ListItemIcon>
               <FirstPageIcon />
             </ListItemIcon>
             <ListItemText primary={"First Frame"} />
           </ListItem>
-          <ListItem disabled={!isSelected} button onClick={() => void 0}>
+          <ListItem
+            disabled={!isSelected}
+            button
+            onClick={() => {
+              const lastFrame = getLastFrame(history.data, selectedObjectsIds);
+              if (!lastFrame) return;
+              moveToFrame(lastFrame);
+            }}
+          >
             <ListItemIcon>
               <LastPageIcon />
             </ListItemIcon>

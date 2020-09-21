@@ -140,24 +140,33 @@ export function deleteForwardUpdate(
   currentFrame: number,
 ): ExtendedLabeling {
   return {
-    objects: data.objects.map(object => {
-      if (!ids.includes(object.id)) return object;
+    objects: data.objects.flatMap(object => {
+      if (!ids.includes(object.id)) return [object];
 
-      return {
-        ...object,
-        frames: object.frames?.filter(frame => frame <= currentFrame) ?? null,
-        fields: object.fields.map(field => {
-          const entry = Object.entries(field.values)[0];
-          const [key, values]: [string, FieldValue<any>[] | undefined] = entry;
-          if (!values) return field;
-          return {
-            ...field,
-            values: {
-              [key]: values.filter(value => value.frame <= currentFrame),
-            },
-          };
-        }),
-      };
+      const frames =
+        object.frames?.filter(frame => frame <= currentFrame) ?? null;
+      if (frames?.length === 0) return [];
+
+      return [
+        {
+          ...object,
+          frames,
+          fields: object.fields.map(field => {
+            const entry = Object.entries(field.values)[0];
+            const [key, values]: [
+              string,
+              FieldValue<any>[] | undefined,
+            ] = entry;
+            if (!values) return field;
+            return {
+              ...field,
+              values: {
+                [key]: values.filter(value => value.frame <= currentFrame),
+              },
+            };
+          }),
+        },
+      ];
     }),
   };
 }
@@ -168,37 +177,43 @@ export function deleteBackwardUpdate(
   currentFrame: number,
 ): ExtendedLabeling {
   return {
-    objects: data.objects.map(object => {
-      if (!ids.includes(object.id)) return object;
+    objects: data.objects.flatMap(object => {
+      if (!ids.includes(object.id)) return [object];
 
-      return {
-        ...object,
-        frames: object.frames?.filter(frame => frame >= currentFrame) ?? null,
-        fields: object.fields.map(field => {
-          const entry = Object.entries(field.values)[0];
-          const [key, values] = entry;
-          if (!values) return field;
+      const frames =
+        object.frames?.filter(frame => frame >= currentFrame) ?? null;
+      if (frames?.length === 0) return [];
 
-          const newValues: FieldValue<any>[] = [...values];
-          const lower = newValues.filter(value => value.frame < currentFrame);
-          newValues.splice(0, lower.length);
+      return [
+        {
+          ...object,
+          frames,
+          fields: object.fields.map(field => {
+            const entry = Object.entries(field.values)[0];
+            const [key, values] = entry;
+            if (!values) return field;
 
-          const firstGreater = newValues[0];
-          if (
-            (firstGreater && firstGreater.frame !== currentFrame) ||
-            !firstGreater
-          ) {
-            newValues.splice(0, 0, {
-              frame: currentFrame,
-              value: lower[lower.length - 1].value,
-            });
-          }
-          return {
-            ...field,
-            values: { [key]: newValues },
-          };
-        }),
-      };
+            const newValues: FieldValue<any>[] = [...values];
+            const lower = newValues.filter(value => value.frame < currentFrame);
+            newValues.splice(0, lower.length);
+
+            const firstGreater = newValues[0];
+            if (
+              (firstGreater && firstGreater.frame !== currentFrame) ||
+              !firstGreater
+            ) {
+              newValues.splice(0, 0, {
+                frame: currentFrame,
+                value: lower[lower.length - 1].value,
+              });
+            }
+            return {
+              ...field,
+              values: { [key]: newValues },
+            };
+          }),
+        },
+      ];
     }),
   };
 }

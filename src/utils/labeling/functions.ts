@@ -81,6 +81,38 @@ export function createExtendedLabeling(
   };
 }
 
+export function pairObjectsToIds(
+  data: ExtendedLabeling,
+  ids: string[],
+): ExtendedObject[] {
+  return ids.flatMap(objectId => {
+    const object = data.objects.find(object => object.id === objectId);
+    return object ? [object] : [];
+  });
+}
+
+export function getFrames(data: ExtendedLabeling, ids: string[]): number[] {
+  return pairObjectsToIds(data, ids).flatMap(object => object.frames ?? []);
+}
+
+export function getFirstFrame(
+  data: ExtendedLabeling,
+  ids: string[],
+): number | undefined {
+  const frames = getFrames(data, ids);
+  if (frames.length === 0) return undefined;
+  return Math.min(...frames);
+}
+
+export function getLastFrame(
+  data: ExtendedLabeling,
+  ids: string[],
+): number | undefined {
+  const frames = getFrames(data, ids);
+  if (frames.length === 0) return undefined;
+  return Math.max(...frames);
+}
+
 export interface ObjectBlock {
   firstFrame: number;
   lastFrame: number;
