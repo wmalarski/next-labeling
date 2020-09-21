@@ -125,7 +125,8 @@ export function calculateObjectBlocks(
   if (object.objectSchema.singleton || !object.frames) {
     return [{ firstFrame: 0, lastFrame: duration }];
   }
-  const [first, ...frames] = object.frames;
+
+  const [first, ...frames] = object.frames.sort((a, b) => a - b);
   return frames
     .reduce(
       (prev, curr, index, array) => {
@@ -137,7 +138,10 @@ export function calculateObjectBlocks(
     )
     .reduce<ObjectBlock[]>((prev, current, index, array) => {
       return index % 2 === 0
-        ? [...prev, { firstFrame: current, lastFrame: array[index + 1] }]
+        ? [
+            ...prev,
+            { firstFrame: current, lastFrame: array[index + 1] ?? current },
+          ]
         : prev;
     }, []);
 }

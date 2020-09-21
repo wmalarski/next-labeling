@@ -3,18 +3,14 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import TreeView from "@material-ui/lab/TreeView/TreeView";
 import React, { useContext } from "react";
 
-import FramesContext from "../../contexts/frames/framesContext";
 import LabelingContext from "../../contexts/labeling/labelingContext";
 import SelectionContext, {
   ObjectSelection,
 } from "../../contexts/selection/selectionContext";
-import { calculateObjectBlocks } from "../../utils/labeling/functions";
-import { TimelineFieldItem } from "./timelineFieldItem";
-import { TimelineItem } from "./timelineItem";
+import { TimelineObjectItem } from "./timelineObjectItem";
 
 export default function TimelineView(): JSX.Element {
   const { history } = useContext(LabelingContext);
-  const { duration } = useContext(FramesContext);
   const { selected: selectedObjects, select, toggle, toggled } = useContext(
     SelectionContext,
   );
@@ -67,30 +63,13 @@ export default function TimelineView(): JSX.Element {
       onNodeSelect={handleSelect}
       multiSelect
     >
-      {objects.map(object => {
-        const changes = calculateObjectBlocks(object, duration);
-        const { id, name, fields } = object;
-        return (
-          <TimelineItem
-            key={id}
-            nodeId={id}
-            labelText={`${name} + ${changes}`}
-            onLabelClick={event => event.preventDefault()}
-            onChange={event => console.log("event", event)}
-          >
-            {fields.map(field => {
-              return (
-                <TimelineFieldItem
-                  key={field.id}
-                  nodeId={`${object.id}|${field.id}`}
-                  field={field}
-                  object={object}
-                />
-              );
-            })}
-          </TimelineItem>
-        );
-      })}{" "}
+      {objects.map(object => (
+        <TimelineObjectItem
+          nodeId={object.id}
+          key={object.id}
+          object={object}
+        />
+      ))}
     </TreeView>
   );
 }

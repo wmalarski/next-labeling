@@ -111,12 +111,12 @@ function LabelingEditor(): JSX.Element {
                         <div style={{ flexGrow: 1 }}>
                           <LabelingWorkspace />
                         </div>
-                        <div style={{ overflow: "auto", height: 500 }}>
+                        <div style={{ overflow: "auto", height: 400 }}>
                           {viewsState.properties && <EditorTable />}
                         </div>
                       </div>
                       <div
-                        style={{ overflow: "auto", height: 100, flexGrow: 1 }}
+                        style={{ overflow: "auto", height: 400, flexGrow: 1 }}
                       >
                         {viewsState.timeline && <TimelineView />}
                       </div>
