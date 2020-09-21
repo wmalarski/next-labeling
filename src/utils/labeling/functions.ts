@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import uniqueId from "lodash/uniqueId";
 import getValueIndex from "../editors/indexes";
 
 import { FieldType, FieldValue } from "../editors/types";
@@ -18,7 +19,7 @@ export function createObject(
   return {
     id: uuidv4(),
     isTracked: true,
-    name: objectSchema.name,
+    name: uniqueId(`${objectSchema.name} `),
     isDone: false,
     objectSchemaId: objectSchema.id,
     objectSchema: objectSchema,

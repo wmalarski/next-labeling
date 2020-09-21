@@ -43,7 +43,7 @@ export function changeIsDoneUpdate(
   return { objects };
 }
 
-export function changeisTrackedUpdate(
+export function changeIsTrackedUpdate(
   data: ExtendedLabeling,
   object: ExtendedObject,
   checked: boolean,
@@ -51,6 +51,17 @@ export function changeisTrackedUpdate(
   const objectIndex = data.objects.findIndex(obj => obj.id === object.id);
   const objects = [...data.objects];
   objects[objectIndex] = { ...object, isTracked: checked };
+  return { objects };
+}
+
+export function changeNameUpdate(
+  data: ExtendedLabeling,
+  object: ExtendedObject,
+  name: string,
+): ExtendedLabeling {
+  const objectIndex = data.objects.findIndex(obj => obj.id === object.id);
+  const objects = [...data.objects];
+  objects[objectIndex] = { ...object, name };
   return { objects };
 }
 

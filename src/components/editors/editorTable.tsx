@@ -1,6 +1,7 @@
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Paper from "@material-ui/core/Paper";
+import TextField from "@material-ui/core/TextField";
 import React, { useContext } from "react";
 
 import FramesContext from "../../contexts/frames/framesContext";
@@ -10,7 +11,8 @@ import { ExtendedField, ExtendedObject } from "../../utils/labeling/types";
 import {
   changeAttributeUpdate,
   changeIsDoneUpdate,
-  changeisTrackedUpdate,
+  changeIsTrackedUpdate,
+  changeNameUpdate,
 } from "../../utils/labeling/updates";
 import FieldEditor from "./fieldEditor";
 
@@ -49,6 +51,20 @@ export default function EditorTable(): JSX.Element {
       {tableObjects.map(({ object, fields }) => (
         <Paper key={object.id}>
           <div>
+            <TextField
+              variant="outlined"
+              fullWidth
+              label="Name"
+              value={object.name}
+              margin="dense"
+              onChange={event => {
+                const value = event.target.value;
+                history.setLabeling(data => ({
+                  message: "Name changed",
+                  data: changeNameUpdate(data, object, value),
+                }));
+              }}
+            />
             <FormControlLabel
               control={
                 <Checkbox
@@ -72,7 +88,7 @@ export default function EditorTable(): JSX.Element {
                     const checked = event.target.checked;
                     history.setLabeling(data => ({
                       message: "Is tracked changed",
-                      data: changeisTrackedUpdate(data, object, checked),
+                      data: changeIsTrackedUpdate(data, object, checked),
                     }));
                   }}
                 />
