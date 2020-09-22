@@ -77,13 +77,13 @@ function LabelingEditor(): JSX.Element {
   return (
     <>
       {document && (
-        <LabelingProvider
-          document={document}
-          setSnackbarState={setSnackbarState}
-        >
-          <RemoveScrollBar />
-          <FramesProvider>
-            <SelectionProvider>
+        <SelectionProvider>
+          <LabelingProvider
+            document={document}
+            setSnackbarState={setSnackbarState}
+          >
+            <RemoveScrollBar />
+            <FramesProvider>
               <div className={classes.root}>
                 <Header>
                   <EditorHeader />
@@ -103,7 +103,7 @@ function LabelingEditor(): JSX.Element {
                     >
                       <div
                         style={{
-                          display: "flex", // TODO: fix sizes
+                          display: "flex", // TODO: fix sizes #3
                           flexFlow: "row",
                           flexGrow: 1,
                         }}
@@ -133,9 +133,9 @@ function LabelingEditor(): JSX.Element {
               <LoadingBackdrop isLoading={isLoading} />
 
               {/* <Footer /> */}
-            </SelectionProvider>
-          </FramesProvider>
-        </LabelingProvider>
+            </FramesProvider>
+          </LabelingProvider>
+        </SelectionProvider>
       )}
     </>
   );

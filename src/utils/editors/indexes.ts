@@ -28,12 +28,15 @@ export default function getValueIndex<T extends FieldType>(
     case FieldType.COMBOBOX:
       return attributes.ComboBox?.options.indexOf(value) ?? 0;
     case FieldType.SELECT:
-      return attributes.Select?.options.indexOf(value) ?? 0;
+      return (
+        attributes.Select?.options.map(option => option.text).indexOf(value) ??
+        0
+      );
     case FieldType.MULSELECT:
       return (
         attributes.MultiSelect?.options
           .flatMap((option, index) => {
-            if (!value.includes(option)) return [];
+            if (!value.includes(option.text)) return [];
             return [Math.pow(2, index)];
           })
           .reduce((a, b) => a + b) ?? 0

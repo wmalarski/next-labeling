@@ -173,7 +173,7 @@ export enum FieldType {
   POLYGON = "Polygon",
 }
 
-// TODO: add check if exact one exist
+// TODO: add check if exact one exist #10
 export const LabelingFieldValue = t.partial({
   [FieldType.CHECKBOX]: CheckBoxValue,
   [FieldType.COMBOBOX]: ComboBoxValue,
@@ -188,7 +188,7 @@ export const LabelingFieldValue = t.partial({
 });
 export type LabelingFieldValue = t.TypeOf<typeof LabelingFieldValue>;
 
-// TODO: add check if exact one exist
+// TODO: add check if exact one exist #10
 export const LabelingFieldValues = t.partial({
   [FieldType.CHECKBOX]: CheckBoxValues,
   [FieldType.COMBOBOX]: ComboBoxValues,
@@ -206,7 +206,7 @@ export type OnValueChangeHandler = (
   provider: (value: LabelingFieldValues) => LabelingFieldValues,
 ) => void;
 
-// TODO: add check if exact one exist
+// TODO: add check if exact one exist #10
 export const LabelingFieldAttributes = t.partial({
   [FieldType.CHECKBOX]: CheckBoxAttributes,
   [FieldType.COMBOBOX]: ComboBoxAttributes,

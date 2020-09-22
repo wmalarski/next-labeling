@@ -199,7 +199,7 @@ export function calculateFieldBlocks(
           ],
         };
       }
-      // TODO: test this part - multiple blocks
+      // TODO: test this part - multiple blocks #11
       const [nextBlock] = otherBlocks;
       return {
         objectBlocks: otherBlocks,

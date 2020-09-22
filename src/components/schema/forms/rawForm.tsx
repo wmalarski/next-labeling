@@ -1,4 +1,4 @@
-import Button from "@material-ui/core/Button";
+import Button, { ButtonProps } from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -20,15 +20,14 @@ interface RawEditorState {
   errors: string[];
 }
 
-export interface RawFormProps {
+export interface RawFormProps extends ButtonProps {
   label: string;
   schema: Schema;
-  startIcon: JSX.Element;
   setSchema?: (setter: (schema: Schema) => SchemaState | undefined) => void;
 }
 
 export default function RawForm(props: RawFormProps): JSX.Element {
-  const { label, schema, startIcon, setSchema } = props;
+  const { label, schema, setSchema, ...others } = props;
 
   const [open, setOpen] = useState(false);
   const [state, setState] = useState<RawEditorState>({
@@ -49,7 +48,7 @@ export default function RawForm(props: RawFormProps): JSX.Element {
       <Button
         size="small"
         color="inherit"
-        startIcon={startIcon}
+        {...others}
         onClick={() => setOpen(true)}
       >
         {label}
