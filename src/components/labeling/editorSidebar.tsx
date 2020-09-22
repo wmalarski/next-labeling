@@ -14,7 +14,6 @@ import FileCopyIcon from "@material-ui/icons/FileCopy";
 import FirstPageIcon from "@material-ui/icons/FirstPage";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import LastPageIcon from "@material-ui/icons/LastPage";
-import SettingsIcon from "@material-ui/icons/Settings";
 import ViewListIcon from "@material-ui/icons/ViewList";
 import clsx from "clsx";
 import React, { useContext, useState } from "react";
@@ -31,6 +30,7 @@ import {
   removeObjectsUpdate,
 } from "../../utils/labeling/updates";
 import { filterIcons, LabelingViewsState } from "../../utils/labeling/views";
+import EditorSettingsDialog from "./editorSettingsDialog";
 
 const drawerWidth = 240;
 
@@ -118,7 +118,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
                   onClick={() =>
                     history.setLabeling(doc => ({
                       message: `New ${object.name} added`,
-                      data: addObjectUpdate(doc, object, currentFrame),
+                      data: addObjectUpdate(doc, object, currentFrame), // TODO: add selection after creation # 7
                     }))
                   }
                 >
@@ -263,12 +263,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             </ListItemIcon>
             <ListItemText primary={"Properties"} />
           </ListItem>
-          <ListItem button onClick={() => void 0}>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary={"Settings"} />
-          </ListItem>
+          <EditorSettingsDialog />
           <Divider />
           <ListItem button onClick={() => setOpen(!open)}>
             <ListItemIcon>

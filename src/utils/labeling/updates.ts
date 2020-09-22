@@ -71,6 +71,7 @@ export function trackObjectsUpdate(
   changeValue: number,
 ): ExtendedLabeling {
   const nextFrame = currentFrame + changeValue;
+  // TODO: return idexes of items that was tracked #1
   const objects = data.objects.map(object => {
     if (
       !object.isTracked ||
@@ -86,7 +87,7 @@ export function trackObjectsUpdate(
       frames: [...object.frames, nextFrame],
       fields: object.fields.map(field => {
         if (!field.fieldSchema.perFrame) return field;
-        // TODO: vision tracking
+        // TODO: vision tracking #12
         if (changeValue === 1) return field;
 
         // move first frame

@@ -25,15 +25,14 @@ const defaultDocument: Partial<LabelingDocument> = {
   objects: [],
 };
 
-export interface CreateLabelingDialogProps {
+export interface CreateLabelingDialogProps extends ButtonProps {
   schema: SchemaDocument;
-  buttonProps?: ButtonProps;
 }
 
 export default function CreateLabelingDialog(
   props: CreateLabelingDialogProps,
 ): JSX.Element {
-  const { schema, buttonProps } = props;
+  const { schema, ...other } = props;
 
   const { authUser } = useContext(AuthUserInfoContext);
   const [document, setDocument] = useState<Partial<LabelingDocument>>({
@@ -65,7 +64,7 @@ export default function CreateLabelingDialog(
       <Button
         startIcon={<PictureInPictureIcon />}
         color="inherit"
-        {...(buttonProps ?? {})}
+        {...other}
         onClick={handleClickOpen}
       >
         Use

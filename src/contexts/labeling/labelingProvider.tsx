@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   LabelingCollection,
@@ -23,6 +23,7 @@ export default function LabelingProvider(
   const { document: initialDocument, children, setSnackbarState } = props;
   const router = useRouter();
 
+  const [document, setDocument] = useState(initialDocument);
   const history = useLabelingHistory(initialDocument);
 
   const { update: updateLabeling, state: updateState } = useUpdateDocument<
@@ -30,6 +31,7 @@ export default function LabelingProvider(
   >(LabelingCollection);
   useEffect(() => {
     if (updateState.document) {
+      setDocument(updateState.document);
       setSnackbarState({ isOpen: true, message: "Labeling saved" });
     } else if (updateState.errors) {
       setSnackbarState({
@@ -56,7 +58,7 @@ export default function LabelingProvider(
   return (
     <LabelingContext.Provider
       value={{
-        document: initialDocument,
+        document,
         history,
         pushLabeling: document => {
           if (document.id) {

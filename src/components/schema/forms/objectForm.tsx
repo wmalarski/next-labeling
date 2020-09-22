@@ -156,7 +156,7 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
                 }
               />
             }
-            label="Is singleton?" // TODO: Add svg icon input
+            label="Is singleton?" // TODO: Add svg icon input #8
           />
           <Divider />
           {fields.map(
