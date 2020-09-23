@@ -15,6 +15,7 @@ import TimelineView from "../../src/components/timeline/timelineView";
 import FramesProvider from "../../src/contexts/frames/framesProvider";
 import LabelingProvider from "../../src/contexts/labeling/labelingProvider";
 import SelectionProvider from "../../src/contexts/selection/selectionProvider";
+import ToolProvider from "../../src/contexts/tool/toolProvider";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import initFirebase from "../../src/utils/auth/initFirebase";
 import { ResultSnackbarState } from "../../src/utils/firestore/types";
@@ -78,63 +79,65 @@ function LabelingEditor(): JSX.Element {
     <>
       {document && (
         <SelectionProvider>
-          <LabelingProvider
-            document={document}
-            setSnackbarState={setSnackbarState}
-          >
-            <RemoveScrollBar />
-            <FramesProvider>
-              <div className={classes.root}>
-                <Header>
-                  <EditorHeader />
-                </Header>
-                <EditorSidebar
-                  viewsState={viewsState}
-                  setViewsState={setViewsState}
-                />
-                {!isLoading && (
-                  <div className={classes.content}>
-                    <div className={classes.toolbar} />
-                    <div
-                      style={{
-                        display: "flex",
-                        flexFlow: "column",
-                      }}
-                    >
+          <ToolProvider>
+            <LabelingProvider
+              document={document}
+              setSnackbarState={setSnackbarState}
+            >
+              <RemoveScrollBar />
+              <FramesProvider>
+                <div className={classes.root}>
+                  <Header>
+                    <EditorHeader />
+                  </Header>
+                  <EditorSidebar
+                    viewsState={viewsState}
+                    setViewsState={setViewsState}
+                  />
+                  {!isLoading && (
+                    <div className={classes.content}>
+                      <div className={classes.toolbar} />
                       <div
                         style={{
-                          display: "flex", // TODO: fix sizes #3
-                          flexFlow: "row",
-                          flexGrow: 1,
+                          display: "flex",
+                          flexFlow: "column",
                         }}
                       >
-                        <div style={{ flexGrow: 1 }}>
-                          <LabelingWorkspace />
+                        <div
+                          style={{
+                            display: "flex", // TODO: fix sizes #3
+                            flexFlow: "row",
+                            flexGrow: 1,
+                          }}
+                        >
+                          <div style={{ flexGrow: 1 }}>
+                            <LabelingWorkspace />
+                          </div>
+                          <div style={{ overflow: "auto", height: 400 }}>
+                            {viewsState.properties && <EditorTable />}
+                          </div>
                         </div>
-                        <div style={{ overflow: "auto", height: 400 }}>
-                          {viewsState.properties && <EditorTable />}
+                        <div
+                          style={{ overflow: "auto", height: 100, flexGrow: 1 }}
+                        >
+                          {viewsState.timeline && <TimelineView />}
                         </div>
+                        <FrameSlider />
                       </div>
-                      <div
-                        style={{ overflow: "auto", height: 400, flexGrow: 1 }}
-                      >
-                        {viewsState.timeline && <TimelineView />}
-                      </div>
-                      <FrameSlider />
                     </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
 
-              <ResultSnackbar
-                state={snackbarState}
-                setState={setSnackbarState}
-              />
-              <LoadingBackdrop isLoading={isLoading} />
+                <ResultSnackbar
+                  state={snackbarState}
+                  setState={setSnackbarState}
+                />
+                <LoadingBackdrop isLoading={isLoading} />
 
-              {/* <Footer /> */}
-            </FramesProvider>
-          </LabelingProvider>
+                {/* <Footer /> */}
+              </FramesProvider>
+            </LabelingProvider>
+          </ToolProvider>
         </SelectionProvider>
       )}
     </>

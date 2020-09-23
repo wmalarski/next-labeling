@@ -20,6 +20,7 @@ const defaultDocument: Partial<LabelingDocument> = {
   stars: 0,
   public: true,
   contributors: [],
+  fps: 24,
   comments: [],
   name: "",
   objects: [],

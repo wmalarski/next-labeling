@@ -39,6 +39,7 @@ export const LabelingDocument = t.strict({
   id: t.union([t.string, t.undefined]),
   name: t.string,
   filename: t.string,
+  fps: t.number,
   objects: t.array(LabelingObject),
   schemaId: t.string,
   schema: Schema,

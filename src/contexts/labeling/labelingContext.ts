@@ -28,6 +28,7 @@ const LabelingContext = createContext<LabelingContextValue>({
     created: "",
     objects: [],
     filename: "",
+    fps: 24,
     id: "",
     name: "",
     public: false,

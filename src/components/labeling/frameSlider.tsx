@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function FrameSlider(): JSX.Element {
   const classes = useStyles();
-  const { currentFrame, moveTo, moveBy } = useContext(FramesContext);
+  const { currentFrame, duration, moveTo, moveBy } = useContext(FramesContext);
 
   return (
     <div className={classes.frameSlider}>
@@ -37,6 +37,8 @@ export default function FrameSlider(): JSX.Element {
       <div className={classes.padding}>
         <Slider
           value={currentFrame}
+          min={0}
+          max={duration}
           onChange={(_event, value) => moveTo(Number(value))}
           aria-labelledby="continuous-slider"
         />
@@ -66,7 +68,9 @@ export default function FrameSlider(): JSX.Element {
 
           <Grid item xs />
           <Grid item>
-            <Typography variant="subtitle2">{`Frame: ${currentFrame}`}</Typography>
+            <Typography variant="subtitle2">{`Frame: ${
+              currentFrame + 1
+            }`}</Typography>
           </Grid>
         </Grid>
       </div>
