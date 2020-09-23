@@ -14,9 +14,9 @@ export default function LabelingWorkspace(): JSX.Element {
 
   return (
     <div>
+      <MainStageNoSSR />
       <Typography variant="h5">{document.name}</Typography>
       <Typography variant="subtitle2">{document.filename}</Typography>
-      <MainStageNoSSR />
     </div>
   );
 }
