@@ -1,3 +1,4 @@
+import NoSsr from "@material-ui/core/NoSsr";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
