@@ -10,7 +10,6 @@ const MainStageNoSSR = dynamic(() => import("../visualization/mainStage"), {
 
 export default function LabelingWorkspace(): JSX.Element {
   const { document } = useContext(LabelingContext);
-  // if (typeof window !== "undefined") return <></>;
 
   return (
     <div>
