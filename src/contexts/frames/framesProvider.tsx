@@ -42,10 +42,18 @@ export default function FramesProvider(
       setState(state => {
         const nextFrame = frameToRange(state.currentFrame + value, state);
         if (state.currentFrame !== nextFrame && (value === 1 || value === -1)) {
-          history.setLabeling(data => ({
-            message: "Objects tracked",
-            data: trackObjectsUpdate(data, state.currentFrame, value),
-          }));
+          history.setLabeling(data => {
+            const { result, tracked } = trackObjectsUpdate(
+              data,
+              state.currentFrame,
+              value,
+            );
+            if (!tracked) return;
+            return {
+              message: "Objects tracked",
+              data: result,
+            };
+          });
         }
         return { ...state, currentFrame: nextFrame };
       }),

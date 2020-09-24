@@ -73,10 +73,10 @@ export function trackObjectsUpdate(
   data: ExtendedLabeling,
   currentFrame: number,
   changeValue: number,
-): ExtendedLabeling {
+): { result: ExtendedLabeling; tracked: boolean } {
   const nextFrame = currentFrame + changeValue;
   // TODO: return idexes of items that was tracked #1
-  const objects = data.objects.map(object => {
+  const pairs = data.objects.map(object => {
     if (
       !object.isTracked ||
       object.isDone ||
@@ -84,39 +84,45 @@ export function trackObjectsUpdate(
       !object.frames.includes(currentFrame) ||
       object.frames.includes(nextFrame)
     )
-      return object;
+      return { object, tracked: false };
 
     return {
-      ...object,
-      frames: [...object.frames, nextFrame],
-      fields: object.fields.map(field => {
-        if (!field.fieldSchema.perFrame) return field;
-        // TODO: vision tracking #12
-        if (changeValue === 1) return field;
+      object: {
+        ...object,
+        frames: [...object.frames, nextFrame],
+        fields: object.fields.map(field => {
+          if (!field.fieldSchema.perFrame) return field;
+          // TODO: vision tracking #12
+          if (changeValue === 1) return field;
 
-        // move first frame
-        const entry = Object.entries(field.values)[0];
-        const [key, values] = entry;
-        if (!values) return field;
-        const [firstValue, ...other] = values;
+          // move first frame
+          const entry = Object.entries(field.values)[0];
+          const [key, values] = entry;
+          if (!values) return field;
+          const [firstValue, ...other] = values;
 
-        return {
-          ...field,
-          values: {
-            [key]: [
-              {
-                ...firstValue,
-                frame: nextFrame,
-              },
-              ...other,
-            ],
-          },
-        };
-      }),
+          return {
+            ...field,
+            values: {
+              [key]: [
+                {
+                  ...firstValue,
+                  frame: nextFrame,
+                },
+                ...other,
+              ],
+            },
+          };
+        }),
+      },
+      tracked: true,
     };
   });
 
-  return { objects };
+  return {
+    result: { objects: pairs.map(pair => pair.object) },
+    tracked: pairs.filter(pair => pair.tracked).length > 0,
+  };
 }
 
 export function removeObjectsUpdate(
