@@ -9,11 +9,15 @@ export function addObjectUpdate(
   data: ExtendedLabeling,
   objectSchema: ObjectSchema,
   currentFrame: number,
-): ExtendedLabeling {
-  return {
-    ...data,
-    objects: [...data.objects, createObject(objectSchema, currentFrame)],
-  };
+): [ExtendedObject, ExtendedLabeling] {
+  const object = createObject(objectSchema, currentFrame);
+  return [
+    object,
+    {
+      ...data,
+      objects: [...data.objects, object],
+    },
+  ];
 }
 
 export function changeAttributeUpdate(

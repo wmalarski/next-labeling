@@ -81,7 +81,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
 
   const { history, document } = useContext(LabelingContext);
   const { currentFrame, moveTo: moveToFrame } = useContext(FramesContext);
-  const { selected } = useContext(SelectionContext);
+  const { selected, select } = useContext(SelectionContext);
 
   const selectedObjects = selected.filter(
     object => !object.singleton && object.objectSelected,
@@ -116,10 +116,25 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
                   key={object.id}
                   button
                   onClick={() =>
-                    history.setLabeling(doc => ({
-                      message: `New ${object.name} added`,
-                      data: addObjectUpdate(doc, object, currentFrame), // TODO: add selection after creation # 7
-                    }))
+                    history.setLabeling(doc => {
+                      const [newObject, data] = addObjectUpdate(
+                        doc,
+                        object,
+                        currentFrame,
+                      );
+                      select([
+                        {
+                          fieldIds: [],
+                          objectId: newObject.id,
+                          objectSelected: true,
+                          singleton: object.singleton,
+                        },
+                      ]);
+                      return {
+                        message: `New ${object.name} added`,
+                        data,
+                      };
+                    })
                   }
                 >
                   <ListItemIcon>
