@@ -5,16 +5,24 @@ import React, { useContext } from "react";
 import FramesContext from "../../contexts/frames/framesContext";
 import LabelingContext from "../../contexts/labeling/labelingContext";
 import ToolContext, { ToolType } from "../../contexts/tool/toolContext";
+import useObjectBuilder from "../../utils/vizualization/useObjectBuilder";
 import useZoomAndPane from "../../utils/vizualization/useZoomAndPane";
 import ToolsHeader from "./toolsHeader";
 
 export default function MainStage(): JSX.Element {
-  const { document } = useContext(LabelingContext);
+  const { document, history } = useContext(LabelingContext);
   const { currentFrame, duration, setDuration } = useContext(FramesContext);
   const fps = document.fps ?? 24;
 
-  const { toolType } = useContext(ToolContext);
-  const enabled = toolType === ToolType.ZOOM_AND_PANE;
+  const { toolType, objectId } = useContext(ToolContext);
+
+  const objectBuilderSelected = !!objectId;
+  const object = objectBuilderSelected
+    ? history.data.objects.find(object => object.id === objectId)
+    : undefined;
+  const objectBuilder = useObjectBuilder(object);
+
+  const zoomAndPaneSelected = toolType === ToolType.ZOOM_AND_PANE;
   const {
     scale,
     position,
@@ -22,7 +30,7 @@ export default function MainStage(): JSX.Element {
     onReset,
     onZoomIn,
     onZoomOut,
-  } = useZoomAndPane(enabled);
+  } = useZoomAndPane(zoomAndPaneSelected);
 
   return (
     <div>
@@ -32,7 +40,27 @@ export default function MainStage(): JSX.Element {
         onZoomOutlicked={onZoomOut}
       />
       <Stage {...callbacks}>
-        <Container scale={scale} x={position.x} y={position.y}>
+        <Container
+          scale={scale}
+          x={position.x}
+          y={position.y}
+          interactive={true}
+          pointermove={event => {
+            if (!objectBuilderSelected) return;
+            const local = event.data.getLocalPosition(
+              event.currentTarget,
+              event.data.global,
+            );
+            if (!objectBuilder.isFinished) {
+              objectBuilder.pushPoint(local);
+            }
+          }}
+          pointerdown={() => {
+            if (!objectBuilder.isFinished) {
+              objectBuilder.acceptPoint(objectBuilder.canBeFinished);
+            }
+          }}
+        >
           <Sprite
             texture={PIXI.Texture.from(document.filename)}
             ref={element => {
