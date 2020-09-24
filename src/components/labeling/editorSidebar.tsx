@@ -21,6 +21,7 @@ import React, { useContext, useState } from "react";
 import FramesContext from "../../contexts/frames/framesContext";
 import LabelingContext from "../../contexts/labeling/labelingContext";
 import SelectionContext from "../../contexts/selection/selectionContext";
+import ToolContext, { ToolType } from "../../contexts/tool/toolContext";
 import { getFirstFrame, getLastFrame } from "../../utils/labeling/functions";
 import {
   addObjectUpdate,
@@ -81,7 +82,8 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
 
   const { history, document } = useContext(LabelingContext);
   const { currentFrame, moveTo: moveToFrame } = useContext(FramesContext);
-  const { selected } = useContext(SelectionContext);
+  const { selected, select } = useContext(SelectionContext);
+  const { setTool } = useContext(ToolContext);
 
   const selectedObjects = selected.filter(
     object => !object.singleton && object.objectSelected,
@@ -116,10 +118,29 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
                   key={object.id}
                   button
                   onClick={() =>
-                    history.setLabeling(doc => ({
-                      message: `New ${object.name} added`,
-                      data: addObjectUpdate(doc, object, currentFrame), // TODO: add selection after creation # 7
-                    }))
+                    history.setLabeling(doc => {
+                      const [newObject, data] = addObjectUpdate(
+                        doc,
+                        object,
+                        currentFrame,
+                      );
+                      select([
+                        {
+                          fieldIds: [],
+                          objectId: newObject.id,
+                          objectSelected: true,
+                          singleton: object.singleton,
+                        },
+                      ]);
+                      setTool({
+                        toolType: ToolType.DRAWING_TOOL,
+                        objectId: newObject.id,
+                      });
+                      return {
+                        message: `New ${object.name} added`,
+                        data,
+                      };
+                    })
                   }
                 >
                   <ListItemIcon>
