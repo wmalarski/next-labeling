@@ -43,7 +43,7 @@
     "@types/react-resize-detector": "^5.0.0",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.3.0",
-    "@typescript-eslint/parser": "^4.2.0",
+    "@typescript-eslint/parser": "^4.3.0",
     "autoprefixer": "^9.8.6",
     "eslint": "^7.10.0",
     "eslint-config-prettier": "^6.12.0",
