@@ -31,7 +31,7 @@
     "react-konva": "^16.13.0-6",
     "react-remove-scroll-bar": "^2.1.0",
     "react-resize-detector": "^5.2.0",
-    "uuid": "^8.3.0"
+    "uuid": "^8.3.1"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",
