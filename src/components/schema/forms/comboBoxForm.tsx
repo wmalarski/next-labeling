@@ -6,10 +6,10 @@ import AddIcon from "@material-ui/icons/Add";
 import React, { useState } from "react";
 
 import {
-  ComboBoxAttributes,
   FieldType,
   OnAttributeChangeHandler,
 } from "../../../utils/editors/types";
+import { ComboBoxAttributes } from "../../../utils/editors/types/comboBox";
 
 const useStyles = makeStyles(() =>
   createStyles({

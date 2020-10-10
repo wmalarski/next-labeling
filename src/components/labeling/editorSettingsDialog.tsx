@@ -4,17 +4,24 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Grid from "@material-ui/core/Grid";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import TextField from "@material-ui/core/TextField";
 import SettingsIcon from "@material-ui/icons/Settings";
-import React, { useContext, useState } from "react";
+import ToggleButton from "@material-ui/lab/ToggleButton";
+import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup/ToggleButtonGroup";
+import React, { useState } from "react";
+import { LabelingDirection } from "../../utils/labeling/contexts/preferencesContext";
 
-import LabelingContext from "../../contexts/labeling/labelingContext";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
+import NumberInput from "../common/numberInput";
 
 export default function EditorSettingsDialog(): JSX.Element {
-  const { document, pushLabeling } = useContext(LabelingContext);
+  const { document, saveLabeling } = useLabelingContext();
+  const { preferences, setPreferences } = usePreferences();
 
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);
@@ -39,7 +46,7 @@ export default function EditorSettingsDialog(): JSX.Element {
       >
         <DialogTitle id="form-dialog-title">Settings</DialogTitle>
         <DialogContent>
-          <DialogContentText>Labeling settings</DialogContentText>
+          <DialogContentText>General</DialogContentText>
           <TextField
             variant="outlined"
             fullWidth
@@ -56,6 +63,48 @@ export default function EditorSettingsDialog(): JSX.Element {
             margin="dense"
             onChange={event => setFilename(event.target.value)}
           />
+          <DialogContentText>Labeling</DialogContentText>
+          <Grid container>
+            <Grid item xs={4}>
+              Labeling Direction
+            </Grid>
+            <Grid item xs={6}>
+              <ToggleButtonGroup
+                value={preferences.labelingDirection}
+                exclusive
+                onChange={(_event, value) =>
+                  setPreferences({ ...preferences, labelingDirection: value })
+                }
+                aria-label="text alignment"
+              >
+                <ToggleButton
+                  value={LabelingDirection.BACKWARD}
+                  aria-label="backward"
+                >
+                  Backward
+                </ToggleButton>
+                <ToggleButton
+                  value={LabelingDirection.FORWARD}
+                  aria-label="forward"
+                >
+                  Forward
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </Grid>
+            <Grid item xs={4}>
+              Frame step
+            </Grid>
+            <Grid item xs={6}>
+              <NumberInput
+                max={16}
+                min={1}
+                value={preferences.frameChangeStep}
+                onChange={value =>
+                  setPreferences({ ...preferences, frameChangeStep: value })
+                }
+              />
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="inherit">
@@ -67,7 +116,7 @@ export default function EditorSettingsDialog(): JSX.Element {
             }
             onClick={() => {
               if (name !== document.name || filename !== document.filename) {
-                pushLabeling({ ...document, name, filename });
+                saveLabeling({ ...document, name, filename });
               }
               handleClose();
             }}

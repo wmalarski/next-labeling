@@ -1,29 +1,26 @@
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import TreeView from "@material-ui/lab/TreeView/TreeView";
-import React, { useContext } from "react";
+import React from "react";
 
-import LabelingContext from "../../contexts/labeling/labelingContext";
-import SelectionContext, {
-  ObjectSelection,
-} from "../../contexts/selection/selectionContext";
+import { ObjectSelection } from "../../utils/labeling/types";
+import setSelectedUpdate from "../../utils/labeling/updates/setSelectedUpdate";
+import setToggledUpdate from "../../utils/labeling/updates/setToggledUpdate";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import { TimelineObjectItem } from "./timelineObjectItem";
 
 export default function TimelineView(): JSX.Element {
-  const { history } = useContext(LabelingContext);
-  const { selected: selectedObjects, select, toggle, toggled } = useContext(
-    SelectionContext,
-  );
+  const { history } = useLabelingContext();
+  const { pushLabeling } = history;
 
-  const { objects } = history.data;
+  const { objects, selected: selectedObjects, toggled } = history.data;
   const selected = selectedObjects.flatMap(object => [
     ...(object.objectSelected ? [object.objectId] : []),
     ...object.fieldIds.map(field => `${object.objectId}|${field}`),
   ]);
 
-  const handleToggle = (_event: any, nodeIds: string[]) => {
-    toggle(nodeIds);
-  };
+  const handleToggle = (_event: any, nodeIds: string[]) =>
+    pushLabeling(data => setToggledUpdate(data, nodeIds));
 
   const handleSelect = (_event: any, nodeIds: string[]) => {
     const result = Object.values(
@@ -49,7 +46,7 @@ export default function TimelineView(): JSX.Element {
         };
       }, {}),
     );
-    select(result);
+    pushLabeling(data => setSelectedUpdate(data, result));
   };
 
   return (

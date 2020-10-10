@@ -9,7 +9,7 @@ import SelectEditor from "./selectEditor";
 import ShapeEditor from "./shapeEditor";
 import TextEditor from "./textEditor";
 
-function PrivateFieldEditor(props: FieldEditorProps<any>): JSX.Element {
+function PrivateFieldEditor(props: FieldEditorProps): JSX.Element {
   const { attributes } = props;
   const type = Object.keys(attributes)[0];
 

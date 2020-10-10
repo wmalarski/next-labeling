@@ -1,26 +1,42 @@
-import { Sprite, Stage, Text, Container } from "@inlet/react-pixi";
+import { Container, Sprite, Stage, Text } from "@inlet/react-pixi";
 import * as PIXI from "pixi.js";
 import React, { useContext } from "react";
 
-import FramesContext from "../../contexts/frames/framesContext";
-import LabelingContext from "../../contexts/labeling/labelingContext";
-import ToolContext, { ToolType } from "../../contexts/tool/toolContext";
-import useObjectBuilder from "../../utils/vizualization/useObjectBuilder";
-import useZoomAndPane from "../../utils/vizualization/useZoomAndPane";
+import LabelingContext from "../../utils/labeling/contexts/labelingContext";
+import useDrawingTool from "../../utils/visualization/hooks/useDrawingTool";
+import useToolContext from "../../utils/visualization/hooks/useToolContext";
+import useZoomAndPane from "../../utils/visualization/hooks/useZoomAndPane";
+import { MouseButton, ToolType } from "../../utils/visualization/types";
+import { PixiFinishedObject, PixiInProgressObject } from "./pixiObject";
 import ToolsHeader from "./toolsHeader";
 
 export default function MainStage(): JSX.Element {
-  const { document, history } = useContext(LabelingContext);
-  const { currentFrame, duration, setDuration } = useContext(FramesContext);
+  const { document, history, duration, setDuration } = useContext(
+    LabelingContext,
+  );
+  const { currentFrame, objects, selected } = history.data;
   const fps = document.fps ?? 24;
 
-  const { toolType, objectId } = useContext(ToolContext);
+  const { toolType } = useToolContext();
 
-  const objectBuilderSelected = !!objectId;
-  const object = objectBuilderSelected
-    ? history.data.objects.find(object => object.id === objectId)
-    : undefined;
-  const objectBuilder = useObjectBuilder(object);
+  const drawingTool = useDrawingTool();
+  const { acceptPoint, pushPoint, builderState } = drawingTool.builderResult;
+  const drawingSchema = drawingTool.field?.fieldSchema;
+  const drawingStage = builderState.currentValue?.stage;
+  const drawingValue = builderState.currentValue?.value;
+
+  const finishedObjects = objects.flatMap(object => {
+    const isSelected = selected.some(sel => sel.objectId === object.id);
+    return object.fields.map(field => (
+      <PixiFinishedObject
+        key={field.id}
+        isSelected={isSelected}
+        object={object}
+        field={field}
+        frame={currentFrame}
+      />
+    ));
+  });
 
   const zoomAndPaneSelected = toolType === ToolType.ZOOM_AND_PANE;
   const {
@@ -45,21 +61,25 @@ export default function MainStage(): JSX.Element {
           x={position.x}
           y={position.y}
           interactive={true}
-          pointermove={event => {
-            if (!objectBuilderSelected) return;
-            const local = event.data.getLocalPosition(
-              event.currentTarget,
-              event.data.global,
-            );
-            if (!objectBuilder.isFinished) {
-              objectBuilder.pushPoint(local);
-            }
-          }}
-          pointerdown={() => {
-            if (!objectBuilder.isFinished) {
-              objectBuilder.acceptPoint(objectBuilder.canBeFinished);
-            }
-          }}
+          pointermove={event =>
+            pushPoint(
+              event.data.getLocalPosition(
+                event.currentTarget,
+                event.data.global,
+              ),
+              currentFrame,
+            )
+          }
+          pointerdown={event =>
+            acceptPoint(
+              event.data.getLocalPosition(
+                event.currentTarget,
+                event.data.global,
+              ),
+              event.data.button === MouseButton.MIDDLE,
+              currentFrame,
+            )
+          }
         >
           <Sprite
             texture={PIXI.Texture.from(document.filename)}
@@ -87,6 +107,18 @@ export default function MainStage(): JSX.Element {
               fill: "white",
             }}
           />
+          {finishedObjects}
+          {drawingSchema &&
+            drawingTool.object &&
+            drawingStage &&
+            drawingValue && (
+              <PixiInProgressObject
+                fieldSchema={drawingSchema}
+                object={drawingTool.object}
+                stage={drawingStage}
+                value={drawingValue}
+              />
+            )}
         </Container>
       </Stage>
     </div>

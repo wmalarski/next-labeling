@@ -7,27 +7,39 @@ import {
   getFieldValue,
 } from "../../utils/editors/functions";
 import { FieldEditorProps, FieldType } from "../../utils/editors/types";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 
-export default function CheckBoxEditor(
-  props: FieldEditorProps<FieldType.CHECKBOX>,
-): JSX.Element {
+export default function CheckBoxEditor(props: FieldEditorProps): JSX.Element {
   const { disabled, name, perFrame, frame, onChange } = props;
-  const fieldValue = getFieldValue(props);
-  const type = FieldType.CHECKBOX;
-  return fieldValue ? (
+  const { preferences } = usePreferences();
+
+  const frameValues = getFieldValue(props)?.CheckBox;
+  if (!frameValues) return <></>;
+  const frameValue = frameValues[0];
+
+  return frameValue ? (
     <FormControlLabel
       control={
         <Checkbox
           disabled={disabled}
-          checked={fieldValue.value}
+          checked={frameValue.value}
           onChange={event => {
             const checked = event.target.checked;
-            onChange(values => ({
-              [type]: calculateNewValues<typeof type>(values[type], perFrame, {
-                frame,
-                value: checked,
-              }),
-            }));
+            onChange(values =>
+              calculateNewValues(
+                values,
+                perFrame,
+                {
+                  [FieldType.CHECKBOX]: [
+                    {
+                      frame,
+                      value: checked,
+                    },
+                  ],
+                },
+                preferences.labelingDirection,
+              ),
+            );
           }}
         />
       }

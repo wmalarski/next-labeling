@@ -1,10 +1,10 @@
 import { useTheme } from "@material-ui/core";
-import React, { useContext } from "react";
+import React from "react";
 import { Layer, Line, Rect, Stage, Text } from "react-konva";
 
-import FramesContext from "../../contexts/frames/framesContext";
 import { ObjectBlock } from "../../utils/labeling/functions";
 import { ExtendedObject } from "../../utils/labeling/types";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 
 export interface ObjectCanvasProps {
   object: ExtendedObject;
@@ -24,7 +24,8 @@ export function ObjectCanvas(props: ObjectCanvasProps): JSX.Element {
   const deselectionColor = theme.palette.primary.dark;
   const errorColor = theme.palette.error.light;
 
-  const { duration, currentFrame } = useContext(FramesContext);
+  const { duration, history } = useLabelingContext();
+  const { currentFrame } = history.data;
   const scale = width / duration;
 
   return (

@@ -6,22 +6,25 @@ import {
   getFieldValue,
 } from "../../utils/editors/functions";
 import { FieldEditorProps, FieldType } from "../../utils/editors/types";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 
-export default function NumericEditor(
-  props: FieldEditorProps<FieldType.NUMERIC>,
-): JSX.Element {
+export default function NumericEditor(props: FieldEditorProps): JSX.Element {
   const { disabled, name, perFrame, frame, attributes, onChange } = props;
+  const { preferences } = usePreferences();
   const config = attributes.Numeric;
-  const fieldValue = getFieldValue(props);
-  const type = FieldType.NUMERIC;
-  return fieldValue && config ? (
+
+  const frameValues = getFieldValue(props)?.Numeric;
+  if (!frameValues) return <></>;
+  const frameValue = frameValues[0];
+
+  return frameValue && config ? (
     <TextField
       label={name}
       disabled={disabled}
       fullWidth
       type="number"
       variant="outlined"
-      value={fieldValue.value}
+      value={frameValue.value}
       inputProps={{
         max: config.max,
         min: config.min,
@@ -29,12 +32,21 @@ export default function NumericEditor(
       }}
       onChange={event => {
         const value = Number(event.target.value);
-        onChange(values => ({
-          [type]: calculateNewValues<typeof type>(values[type], perFrame, {
-            frame,
-            value,
-          }),
-        }));
+        onChange(values =>
+          calculateNewValues(
+            values,
+            perFrame,
+            {
+              [FieldType.NUMERIC]: [
+                {
+                  frame,
+                  value,
+                },
+              ],
+            },
+            preferences.labelingDirection,
+          ),
+        );
       }}
     />
   ) : (

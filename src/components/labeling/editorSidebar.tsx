@@ -16,21 +16,20 @@ import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import ViewListIcon from "@material-ui/icons/ViewList";
 import clsx from "clsx";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
-import FramesContext from "../../contexts/frames/framesContext";
-import LabelingContext from "../../contexts/labeling/labelingContext";
-import SelectionContext from "../../contexts/selection/selectionContext";
-import ToolContext, { ToolType } from "../../contexts/tool/toolContext";
 import { getFirstFrame, getLastFrame } from "../../utils/labeling/functions";
-import {
-  addObjectUpdate,
-  copyObjectsUpdate,
-  deleteBackwardUpdate,
-  deleteForwardUpdate,
-  removeObjectsUpdate,
-} from "../../utils/labeling/updates";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
+import addObjectCopyUpdate from "../../utils/labeling/updates/addObjectCopyUpdate";
+import addObjectUpdate from "../../utils/labeling/updates/addObjectUpdate";
+import deleteBackwardUpdate from "../../utils/labeling/updates/deleteBackwardUpdate";
+import deleteForwardUpdate from "../../utils/labeling/updates/deleteForwardUpdate";
+import deleteObjectsUpdate from "../../utils/labeling/updates/deleteObjectsUpdate";
+import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
 import { filterIcons, LabelingViewsState } from "../../utils/labeling/views";
+import useToolContext from "../../utils/visualization/hooks/useToolContext";
+import { ToolType } from "../../utils/visualization/types";
 import EditorSettingsDialog from "./editorSettingsDialog";
 
 const drawerWidth = 240;
@@ -80,10 +79,11 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
   const { viewsState, setViewsState } = props;
   const classes = useStyles();
 
-  const { history, document } = useContext(LabelingContext);
-  const { currentFrame, moveTo: moveToFrame } = useContext(FramesContext);
-  const { selected, select } = useContext(SelectionContext);
-  const { setTool } = useContext(ToolContext);
+  const { history, document } = useLabelingContext();
+  const { pushLabeling } = history;
+  const { selected, currentFrame } = history.data;
+  const { setTool } = useToolContext();
+  const { preferences } = usePreferences();
 
   const selectedObjects = selected.filter(
     object => !object.singleton && object.objectSelected,
@@ -118,28 +118,17 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
                   key={object.id}
                   button
                   onClick={() =>
-                    history.setLabeling(doc => {
-                      const [newObject, data] = addObjectUpdate(
+                    pushLabeling(doc => {
+                      const [newObjectId, state] = addObjectUpdate(
                         doc,
                         object,
                         currentFrame,
                       );
-                      select([
-                        {
-                          fieldIds: [],
-                          objectId: newObject.id,
-                          objectSelected: true,
-                          singleton: object.singleton,
-                        },
-                      ]);
                       setTool({
                         toolType: ToolType.DRAWING_TOOL,
-                        objectId: newObject.id,
+                        objectId: newObjectId,
                       });
-                      return {
-                        message: `New ${object.name} added`,
-                        data,
-                      };
+                      return state;
                     })
                   }
                 >
@@ -158,10 +147,9 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             disabled={!isSelected}
             button
             onClick={() =>
-              history.setLabeling(data => ({
-                message: "Objects copied",
-                data: copyObjectsUpdate(data, selectedObjectsIds),
-              }))
+              pushLabeling(data =>
+                addObjectCopyUpdate(data, selectedObjectsIds),
+              )
             }
           >
             <ListItemIcon>
@@ -173,10 +161,9 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             disabled={!isSelected}
             button
             onClick={() =>
-              history.setLabeling(data => ({
-                message: "Objects removed",
-                data: removeObjectsUpdate(data, selectedObjectsIds),
-              }))
+              pushLabeling(data =>
+                deleteObjectsUpdate(data, selectedObjectsIds),
+              )
             }
           >
             <ListItemIcon>
@@ -188,14 +175,9 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             disabled={!isSelected}
             button
             onClick={() =>
-              history.setLabeling(data => ({
-                message: "Objects removed backward",
-                data: deleteBackwardUpdate(
-                  data,
-                  selectedObjectsIds,
-                  currentFrame,
-                ),
-              }))
+              pushLabeling(data =>
+                deleteBackwardUpdate(data, selectedObjectsIds, currentFrame),
+              )
             }
           >
             <ListItemIcon>
@@ -207,14 +189,9 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             disabled={!isSelected}
             button
             onClick={() =>
-              history.setLabeling(data => ({
-                message: "Objects removed forward",
-                data: deleteForwardUpdate(
-                  data,
-                  selectedObjectsIds,
-                  currentFrame,
-                ),
-              }))
+              pushLabeling(data =>
+                deleteForwardUpdate(data, selectedObjectsIds, currentFrame),
+              )
             }
           >
             <ListItemIcon>
@@ -226,14 +203,17 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
           <ListItem
             disabled={!isSelected}
             button
-            onClick={() => {
-              const firstFrame = getFirstFrame(
-                history.data,
-                selectedObjectsIds,
-              );
-              if (!firstFrame) return;
-              moveToFrame(firstFrame);
-            }}
+            onClick={() =>
+              pushLabeling(data => {
+                const frame = getFirstFrame(history.data, selectedObjectsIds);
+                if (!frame) return;
+                return setCurrentFrameUpdate(
+                  data,
+                  frame,
+                  preferences.frameChangeStep,
+                );
+              })
+            }
           >
             <ListItemIcon>
               <FirstPageIcon />
@@ -243,11 +223,17 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
           <ListItem
             disabled={!isSelected}
             button
-            onClick={() => {
-              const lastFrame = getLastFrame(history.data, selectedObjectsIds);
-              if (!lastFrame) return;
-              moveToFrame(lastFrame);
-            }}
+            onClick={() =>
+              pushLabeling(data => {
+                const frame = getLastFrame(history.data, selectedObjectsIds);
+                if (!frame) return;
+                return setCurrentFrameUpdate(
+                  data,
+                  frame,
+                  preferences.frameChangeStep,
+                );
+              })
+            }
           >
             <ListItemIcon>
               <LastPageIcon />

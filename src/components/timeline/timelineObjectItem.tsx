@@ -1,9 +1,9 @@
 import TreeItem, { TreeItemProps } from "@material-ui/lab/TreeItem/TreeItem";
-import React, { useContext } from "react";
-import FramesContext from "../../contexts/frames/framesContext";
-import { calculateObjectBlocks } from "../../utils/labeling/functions";
+import React from "react";
 
+import { calculateObjectBlocks } from "../../utils/labeling/functions";
 import { ExtendedObject } from "../../utils/labeling/types";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import { FieldCanvas } from "./fieldCanvas";
 import { ObjectCanvas } from "./objectCanvas";
 
@@ -25,7 +25,7 @@ export function TimelineObjectItem(
   const fieldOffset = 18;
   const fontSize = 14;
 
-  const { duration } = useContext(FramesContext);
+  const { duration } = useLabelingContext();
   const blocks = calculateObjectBlocks(object, duration);
 
   return (

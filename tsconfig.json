@@ -21,6 +21,7 @@
     "**/*.tsx",
     "src/utils/auth/initFirebase.ts",
     "src/utils/auth/user.ts",
-    "src/components/common/link.jsx"
+    "src/components/common/link.jsx",
+    "src/components/visualization/objects/pixiObject.tss"
   ]
 }

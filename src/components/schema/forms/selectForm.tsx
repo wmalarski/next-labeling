@@ -15,8 +15,8 @@ import React, { useState } from "react";
 import {
   FieldType,
   OnAttributeChangeHandler,
-  SelectAttributes,
 } from "../../../utils/editors/types";
+import { SelectAttributes } from "../../../utils/editors/types/select";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

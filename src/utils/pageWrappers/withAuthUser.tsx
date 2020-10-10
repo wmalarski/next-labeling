@@ -20,7 +20,6 @@ export function getAuthUserInfo(ctx: NextPageContext): AuthUserInfo {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { addSession } = require("../middleware/cookieSession");
     addSession(req, res);
-    console.log("server-side");
     return createAuthUserInfo({
       firebaseUser: get(req, "session.decodedToken", null),
       token: get(req, "session.token", null),
@@ -53,7 +52,7 @@ export function getAuthUserInfo(ctx: NextPageContext): AuthUserInfo {
 export default function withAuthUser(
   ComposedComponent: any,
 ): (props: WithAuthUserCompProps) => JSX.Element {
-  const withAuthUserComp = (props: WithAuthUserCompProps) => {
+  const WithAuthUserComp = (props: WithAuthUserCompProps) => {
     const { authUserInfo, ...otherProps } = props;
 
     // We'll use the authed user from client-side auth (Firebase JS SDK)
@@ -72,7 +71,7 @@ export default function withAuthUser(
     );
   };
 
-  withAuthUserComp.getInitialProps = async (ctx: NextPageContext) => {
+  WithAuthUserComp.getInitialProps = async (ctx: NextPageContext) => {
     // Get the AuthUserInfo object.
     const authUserInfo = getAuthUserInfo(ctx);
 
@@ -92,7 +91,7 @@ export default function withAuthUser(
     };
   };
 
-  withAuthUserComp.displayName = `WithAuthUser(${ComposedComponent.displayName})`;
+  WithAuthUserComp.displayName = `WithAuthUser(${ComposedComponent.displayName})`;
 
-  return withAuthUserComp;
+  return WithAuthUserComp;
 }

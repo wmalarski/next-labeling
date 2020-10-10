@@ -10,17 +10,21 @@ import {
   getFieldValue,
 } from "../../utils/editors/functions";
 import { FieldEditorProps, FieldType } from "../../utils/editors/types";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 
 export default function MultiSelectEditor(
-  props: FieldEditorProps<FieldType.MULSELECT>,
+  props: FieldEditorProps,
 ): JSX.Element {
   const { disabled, frame, perFrame, attributes, onChange } = props;
+  const { preferences } = usePreferences();
   const config = attributes.MultiSelect;
-  const fieldValue = getFieldValue(props);
-  const selected = fieldValue?.value ?? [];
-  const type = FieldType.MULSELECT;
 
-  return fieldValue && config ? (
+  const frameValues = getFieldValue(props)?.MultiSelect;
+  if (!frameValues) return <></>;
+  const frameValue = frameValues[0];
+  const selected = frameValue?.value ?? [];
+
+  return frameValue && config ? (
     <FormControl>
       <InputLabel id="select-field-type-label">{name}</InputLabel>
       <Grid container spacing={1}>
@@ -40,29 +44,35 @@ export default function MultiSelectEditor(
                 onChange(values => {
                   const textIndex = selected.indexOf(option.text);
                   if (textIndex === -1) {
-                    return {
-                      [type]: calculateNewValues<typeof type>(
-                        values[type],
-                        perFrame,
-                        {
-                          frame,
-                          value: [...selected, option.text],
-                        },
-                      ),
-                    };
+                    return calculateNewValues(
+                      values,
+                      perFrame,
+                      {
+                        [FieldType.MULSELECT]: [
+                          {
+                            frame,
+                            value: [...selected, option.text],
+                          },
+                        ],
+                      },
+                      preferences.labelingDirection,
+                    );
                   }
                   const newSelected = [...selected];
                   newSelected.splice(textIndex, 1);
-                  return {
-                    [type]: calculateNewValues<typeof type>(
-                      values[type],
-                      perFrame,
-                      {
-                        frame,
-                        value: newSelected,
-                      },
-                    ),
-                  };
+                  return calculateNewValues(
+                    values,
+                    perFrame,
+                    {
+                      [FieldType.MULSELECT]: [
+                        {
+                          frame,
+                          value: newSelected,
+                        },
+                      ],
+                    },
+                    preferences.labelingDirection,
+                  );
                 })
               }
             >

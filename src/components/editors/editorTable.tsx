@@ -2,18 +2,14 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
-import React, { useContext } from "react";
+import React from "react";
 
-import FramesContext from "../../contexts/frames/framesContext";
-import LabelingContext from "../../contexts/labeling/labelingContext";
-import SelectionContext from "../../contexts/selection/selectionContext";
 import { ExtendedField, ExtendedObject } from "../../utils/labeling/types";
-import {
-  changeAttributeUpdate,
-  changeIsDoneUpdate,
-  changeIsTrackedUpdate,
-  changeNameUpdate,
-} from "../../utils/labeling/updates";
+import setAttributeUpdate from "../../utils/labeling/updates/setAttributeUpdate";
+import setIsDoneUpdate from "../../utils/labeling/updates/setIsDoneUpdate";
+import setIsTrackedUpdate from "../../utils/labeling/updates/setIsTrackedUpdate";
+import setNameUpdate from "../../utils/labeling/updates/setNameUpdate";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import FieldEditor from "./fieldEditor";
 
 export interface TableObject {
@@ -22,11 +18,9 @@ export interface TableObject {
 }
 
 export default function EditorTable(): JSX.Element {
-  const { history } = useContext(LabelingContext);
-  const { selected } = useContext(SelectionContext);
-  const { currentFrame } = useContext(FramesContext);
-
-  const { objects } = history.data;
+  const { history } = useLabelingContext();
+  const { pushLabeling } = history;
+  const { objects, selected, currentFrame } = history.data;
 
   const tableObjects: TableObject[] = selected.flatMap(selection => {
     const object = objects.find(object => object.id === selection.objectId);
@@ -59,10 +53,7 @@ export default function EditorTable(): JSX.Element {
               margin="dense"
               onChange={event => {
                 const value = event.target.value;
-                history.setLabeling(data => ({
-                  message: "Name changed",
-                  data: changeNameUpdate(data, object, value),
-                }));
+                pushLabeling(data => setNameUpdate(data, object, value));
               }}
             />
             <FormControlLabel
@@ -71,10 +62,9 @@ export default function EditorTable(): JSX.Element {
                   checked={object.isDone}
                   onChange={event => {
                     const checked = event.target.checked;
-                    history.setLabeling(data => ({
-                      message: "Is Done changed",
-                      data: changeIsDoneUpdate(data, object, checked),
-                    }));
+                    pushLabeling(data =>
+                      setIsDoneUpdate(data, object, checked),
+                    );
                   }}
                 />
               }
@@ -86,10 +76,9 @@ export default function EditorTable(): JSX.Element {
                   checked={object.isTracked}
                   onChange={event => {
                     const checked = event.target.checked;
-                    history.setLabeling(data => ({
-                      message: "Is tracked changed",
-                      data: changeIsTrackedUpdate(data, object, checked),
-                    }));
+                    pushLabeling(data =>
+                      setIsTrackedUpdate(data, object, checked),
+                    );
                   }}
                 />
               }
@@ -106,19 +95,17 @@ export default function EditorTable(): JSX.Element {
               perFrame={field.fieldSchema.perFrame}
               values={field.values}
               onChange={provider =>
-                history.setLabeling(data => ({
-                  message: "Attribute value changed",
-                  data: changeAttributeUpdate(
+                pushLabeling(data =>
+                  setAttributeUpdate(
                     data,
-                    object,
-                    field,
+                    object.id,
+                    field.id,
                     provider(field.values),
                   ),
-                }))
+                )
               }
             />
           ))}
-          {/* <pre>{JSON.stringify(object, null, 2)}</pre> */}
         </Paper>
       ))}
     </>

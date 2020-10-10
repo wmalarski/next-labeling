@@ -10,16 +10,15 @@ import EditorTable from "../../src/components/editors/editorTable";
 import EditorHeader from "../../src/components/labeling/editorHeader";
 import EditorSidebar from "../../src/components/labeling/editorSidebar";
 import FrameSlider from "../../src/components/labeling/frameSlider";
+import LabelingProvider from "../../src/components/labeling/labelingProvider";
 import LabelingWorkspace from "../../src/components/labeling/labelingWorkspace";
+import PreferencesProvider from "../../src/components/labeling/preferencesProvider";
 import TimelineView from "../../src/components/timeline/timelineView";
-import FramesProvider from "../../src/contexts/frames/framesProvider";
-import LabelingProvider from "../../src/contexts/labeling/labelingProvider";
-import SelectionProvider from "../../src/contexts/selection/selectionProvider";
-import ToolProvider from "../../src/contexts/tool/toolProvider";
+import ToolProvider from "../../src/components/visualization/toolProvider";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import initFirebase from "../../src/utils/auth/initFirebase";
 import { ResultSnackbarState } from "../../src/utils/firestore/types";
-import useFetchLabeling from "../../src/utils/labeling/useFetchLabeling";
+import useFetchLabeling from "../../src/utils/labeling/hooks/useFetchLabeling";
 import { LabelingViewsState } from "../../src/utils/labeling/views";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
@@ -78,67 +77,65 @@ function LabelingEditor(): JSX.Element {
   return (
     <>
       {document && (
-        <SelectionProvider>
-          <ToolProvider>
-            <LabelingProvider
-              document={document}
-              setSnackbarState={setSnackbarState}
-            >
+        <ToolProvider>
+          <LabelingProvider
+            document={document}
+            setSnackbarState={setSnackbarState}
+          >
+            <PreferencesProvider>
               <RemoveScrollBar />
-              <FramesProvider>
-                <div className={classes.root}>
-                  <Header>
-                    <EditorHeader />
-                  </Header>
-                  <EditorSidebar
-                    viewsState={viewsState}
-                    setViewsState={setViewsState}
-                  />
-                  {!isLoading && (
-                    <div className={classes.content}>
-                      <div className={classes.toolbar} />
+              <div className={classes.root}>
+                <Header>
+                  <EditorHeader />
+                </Header>
+                <EditorSidebar
+                  viewsState={viewsState}
+                  setViewsState={setViewsState}
+                />
+                {!isLoading && (
+                  <div className={classes.content}>
+                    <div className={classes.toolbar} />
+                    <div
+                      style={{
+                        display: "flex",
+                        flexFlow: "column",
+                      }}
+                    >
                       <div
                         style={{
-                          display: "flex",
-                          flexFlow: "column",
+                          display: "flex", // TODO: fix sizes #3
+                          flexFlow: "row",
+                          flexGrow: 1,
                         }}
                       >
-                        <div
-                          style={{
-                            display: "flex", // TODO: fix sizes #3
-                            flexFlow: "row",
-                            flexGrow: 1,
-                          }}
-                        >
-                          <div style={{ flexGrow: 1 }}>
-                            <LabelingWorkspace />
-                          </div>
-                          <div style={{ overflow: "auto", height: 400 }}>
-                            {viewsState.properties && <EditorTable />}
-                          </div>
+                        <div style={{ flexGrow: 1 }}>
+                          <LabelingWorkspace />
                         </div>
-                        <div
-                          style={{ overflow: "auto", height: 100, flexGrow: 1 }}
-                        >
-                          {viewsState.timeline && <TimelineView />}
+                        <div style={{ overflow: "auto", height: 400 }}>
+                          {viewsState.properties && <EditorTable />}
                         </div>
-                        <FrameSlider />
                       </div>
+                      <div
+                        style={{ overflow: "auto", height: 100, flexGrow: 1 }}
+                      >
+                        {viewsState.timeline && <TimelineView />}
+                      </div>
+                      <FrameSlider />
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
+              </div>
 
-                <ResultSnackbar
-                  state={snackbarState}
-                  setState={setSnackbarState}
-                />
-                <LoadingBackdrop isLoading={isLoading} />
+              <ResultSnackbar
+                state={snackbarState}
+                setState={setSnackbarState}
+              />
+              <LoadingBackdrop isLoading={isLoading} />
 
-                {/* <Footer /> */}
-              </FramesProvider>
-            </LabelingProvider>
-          </ToolProvider>
-        </SelectionProvider>
+              {/* <Footer /> */}
+            </PreferencesProvider>
+          </LabelingProvider>
+        </ToolProvider>
       )}
     </>
   );

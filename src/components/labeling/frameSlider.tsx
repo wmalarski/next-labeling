@@ -1,15 +1,19 @@
+import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid/Grid";
+import IconButton from "@material-ui/core/IconButton";
 import Slider from "@material-ui/core/Slider/Slider";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import Forward5Icon from "@material-ui/icons/Forward5";
 import Replay5Icon from "@material-ui/icons/Replay5";
-import React, { useContext } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import FramesContext from "../../contexts/frames/framesContext";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
+import React, { useCallback } from "react";
+
+import { frameToRange } from "../../utils/labeling/functions";
+import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,7 +33,23 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function FrameSlider(): JSX.Element {
   const classes = useStyles();
-  const { currentFrame, duration, moveTo, moveBy } = useContext(FramesContext);
+  const { history, duration } = useLabelingContext();
+  const { pushLabeling } = history;
+  const { currentFrame } = history.data;
+  const { preferences } = usePreferences();
+  const frameStep = preferences.frameChangeStep;
+
+  const moveBy = useCallback(
+    (value: number): void =>
+      pushLabeling(data =>
+        setCurrentFrameUpdate(
+          data,
+          frameToRange(currentFrame + Number(value) * frameStep, duration),
+          frameStep,
+        ),
+      ),
+    [currentFrame, duration, frameStep, pushLabeling],
+  );
 
   return (
     <div className={classes.frameSlider}>
@@ -39,7 +59,15 @@ export default function FrameSlider(): JSX.Element {
           value={currentFrame}
           min={0}
           max={duration}
-          onChange={(_event, value) => moveTo(Number(value))}
+          onChange={(_event, value) =>
+            pushLabeling(data =>
+              setCurrentFrameUpdate(
+                data,
+                frameToRange(Number(value), duration),
+                frameStep,
+              ),
+            )
+          }
           aria-labelledby="continuous-slider"
         />
 
