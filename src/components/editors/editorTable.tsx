@@ -6,12 +6,10 @@ import React, { useContext } from "react";
 
 import LabelingContext from "../../contexts/labeling/labelingContext";
 import { ExtendedField, ExtendedObject } from "../../utils/labeling/types";
-import {
-  changeAttributeUpdate,
-  changeIsDoneUpdate,
-  changeIsTrackedUpdate,
-  changeNameUpdate,
-} from "../../utils/labeling/updates";
+import setAttributeUpdate from "../../utils/labeling/updates/setAttributeUpdate";
+import setIsDoneUpdate from "../../utils/labeling/updates/setIsDoneUpdate";
+import setIsTrackedUpdate from "../../utils/labeling/updates/setIsTrackedUpdate";
+import setNameUpdate from "../../utils/labeling/updates/setNameUpdate";
 import FieldEditor from "./fieldEditor";
 
 export interface TableObject {
@@ -58,7 +56,7 @@ export default function EditorTable(): JSX.Element {
                 const value = event.target.value;
                 history.setLabeling(data => ({
                   message: "Name changed",
-                  data: changeNameUpdate(data, object, value),
+                  data: setNameUpdate(data, object, value),
                 }));
               }}
             />
@@ -70,7 +68,7 @@ export default function EditorTable(): JSX.Element {
                     const checked = event.target.checked;
                     history.setLabeling(data => ({
                       message: "Is Done changed",
-                      data: changeIsDoneUpdate(data, object, checked),
+                      data: setIsDoneUpdate(data, object, checked),
                     }));
                   }}
                 />
@@ -85,7 +83,7 @@ export default function EditorTable(): JSX.Element {
                     const checked = event.target.checked;
                     history.setLabeling(data => ({
                       message: "Is tracked changed",
-                      data: changeIsTrackedUpdate(data, object, checked),
+                      data: setIsTrackedUpdate(data, object, checked),
                     }));
                   }}
                 />
@@ -105,10 +103,10 @@ export default function EditorTable(): JSX.Element {
               onChange={provider =>
                 history.setLabeling(data => ({
                   message: "Attribute value changed",
-                  data: changeAttributeUpdate(
+                  data: setAttributeUpdate(
                     data,
-                    object,
-                    field,
+                    object.id,
+                    field.id,
                     provider(field.values),
                   ),
                 }))

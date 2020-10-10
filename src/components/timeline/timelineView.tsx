@@ -5,10 +5,8 @@ import React, { useContext } from "react";
 
 import LabelingContext from "../../contexts/labeling/labelingContext";
 import { ObjectSelection } from "../../utils/labeling/types";
-import {
-  setSelectedUpdate,
-  setToggledUpdate,
-} from "../../utils/labeling/updates";
+import setSelectedUpdate from "../../utils/labeling/updates/setSelectedUpdate";
+import setToggledUpdate from "../../utils/labeling/updates/setToggledUpdate";
 import { TimelineObjectItem } from "./timelineObjectItem";
 
 export default function TimelineView(): JSX.Element {

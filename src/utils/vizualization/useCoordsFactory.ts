@@ -1,26 +1,17 @@
 import * as PIXI from "pixi.js";
-import {
-  MutableRefObject,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { LabelingFieldValue } from "../editors/types";
+import { useCallback, useEffect, useState } from "react";
 
-import { FieldSchema } from "../schema/types";
 import { CoordsBuilderResult, CoordsFieldBuilder } from "./coordsBuilders";
-import { MouseButton } from "./types";
 
 export interface UseCoordsFactoryState {
   lastValue?: CoordsBuilderResult;
   currentValue?: CoordsBuilderResult;
   isDrawing: boolean;
+  isEnded: boolean;
 }
 
 export interface UseCoordsFactoryResult {
   factoryState: UseCoordsFactoryState;
-  fieldSchema?: FieldSchema;
   pushPoint: (point: PIXI.Point) => void;
   acceptPoint: (point: PIXI.Point, finish: boolean) => void;
   resetEdit: () => void;
@@ -31,11 +22,12 @@ export default function useCoordsFactory(
 ): UseCoordsFactoryResult {
   const [factoryState, setFactoryState] = useState<UseCoordsFactoryState>({
     isDrawing: !!fieldBuilder,
+    isEnded: false,
   });
 
   useEffect(() => {
     if (!fieldBuilder) return;
-    setFactoryState({ isDrawing: true });
+    setFactoryState({ isDrawing: true, isEnded: false });
   }, [fieldBuilder]);
 
   const pushPoint = useCallback(
@@ -62,28 +54,20 @@ export default function useCoordsFactory(
           point,
           state.lastValue?.value,
         );
+        const isDrawing = !finish && !builderResult?.isFinished;
         return finish && !builderResult?.canBeFinished
-          ? { isDrawing: false }
+          ? { isDrawing: false, isEnded: true }
           : {
-              isDrawing: !finish && !builderResult?.isFinished,
+              isDrawing,
+              isEnded: !isDrawing,
               lastValue: builderResult,
             };
       }),
     [fieldBuilder],
   );
 
-  // const removePoint = useCallback((): void => {
-  //   const oldState = coords.current;
-  //   const newHistory = [...oldState.history];
-  //   const temporary = newHistory.pop();
-  //   coords.current = {
-  //     history: newHistory,
-  //     temporary,
-  //   };
-  // }, []);
-
   const resetEdit = useCallback(
-    (): void => setFactoryState({ isDrawing: false }),
+    (): void => setFactoryState({ isDrawing: false, isEnded: false }),
     [],
   );
 

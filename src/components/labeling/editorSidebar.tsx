@@ -21,14 +21,12 @@ import React, { useContext, useState } from "react";
 import LabelingContext from "../../contexts/labeling/labelingContext";
 import ToolContext, { ToolType } from "../../contexts/tool/toolContext";
 import { getFirstFrame, getLastFrame } from "../../utils/labeling/functions";
-import {
-  addObjectUpdate,
-  copyObjectsUpdate,
-  deleteBackwardUpdate,
-  deleteForwardUpdate,
-  removeObjectsUpdate,
-  setCurrentFrameUpdate,
-} from "../../utils/labeling/updates";
+import addObjectCopyUpdate from "../../utils/labeling/updates/addObjectCopyUpdate";
+import addObjectUpdate from "../../utils/labeling/updates/addObjectUpdate";
+import deleteBackwardUpdate from "../../utils/labeling/updates/deleteBackwardUpdate";
+import deleteForwardUpdate from "../../utils/labeling/updates/deleteForwardUpdate";
+import deleteObjectsUpdate from "../../utils/labeling/updates/deleteObjectsUpdate";
+import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
 import { filterIcons, LabelingViewsState } from "../../utils/labeling/views";
 import EditorSettingsDialog from "./editorSettingsDialog";
 
@@ -150,7 +148,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             onClick={() =>
               history.setLabeling(data => ({
                 message: "Objects copied",
-                data: copyObjectsUpdate(data, selectedObjectsIds),
+                data: addObjectCopyUpdate(data, selectedObjectsIds),
               }))
             }
           >
@@ -165,7 +163,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             onClick={() =>
               history.setLabeling(data => ({
                 message: "Objects removed",
-                data: removeObjectsUpdate(data, selectedObjectsIds),
+                data: deleteObjectsUpdate(data, selectedObjectsIds),
               }))
             }
           >

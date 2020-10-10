@@ -1,17 +1,18 @@
+import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid/Grid";
+import IconButton from "@material-ui/core/IconButton";
 import Slider from "@material-ui/core/Slider/Slider";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import Forward5Icon from "@material-ui/icons/Forward5";
 import Replay5Icon from "@material-ui/icons/Replay5";
 import React, { useCallback, useContext } from "react";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import Divider from "@material-ui/core/Divider";
-import IconButton from "@material-ui/core/IconButton";
+
 import LabelingContext from "../../contexts/labeling/labelingContext";
 import { frameToRange } from "../../utils/labeling/functions";
-import { setCurrentFrameUpdate } from "../../utils/labeling/updates";
+import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

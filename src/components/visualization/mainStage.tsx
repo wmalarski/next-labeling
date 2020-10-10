@@ -1,12 +1,11 @@
 import { Container, Sprite, Stage, Text } from "@inlet/react-pixi";
 import * as PIXI from "pixi.js";
-import React, { useContext, useMemo } from "react";
+import React, { useContext } from "react";
 
 import LabelingContext from "../../contexts/labeling/labelingContext";
 import ToolContext, { ToolType } from "../../contexts/tool/toolContext";
-import getCoordsBuilders from "../../utils/vizualization/coordsBuilders";
 import { MouseButton } from "../../utils/vizualization/types";
-import useCoordsFactory from "../../utils/vizualization/useCoordsFactory";
+import useDrawingTool from "../../utils/vizualization/useDrawingTool";
 import useZoomAndPane from "../../utils/vizualization/useZoomAndPane";
 import ToolsHeader from "./toolsHeader";
 
@@ -14,23 +13,18 @@ export default function MainStage(): JSX.Element {
   const { document, history, duration, setDuration } = useContext(
     LabelingContext,
   );
-  const { objects, currentFrame } = history.data;
+  const { currentFrame, objects, selected } = history.data;
   const fps = document.fps ?? 24;
 
-  const { toolType, objectId } = useContext(ToolContext);
+  const { toolType } = useContext(ToolContext);
 
-  const isBuilderInProgress = !!objectId;
-  const object = isBuilderInProgress
-    ? objects.find(object => object.id === objectId)
-    : undefined;
-  const builders = useMemo(() => getCoordsBuilders(object), [object]);
-  const { acceptPoint, pushPoint, factoryState } = useCoordsFactory(
-    (builders ?? [])[0],
-  );
-  console.log(
-    JSON.stringify(factoryState.lastValue, null, 2),
-    JSON.stringify(factoryState.currentValue, null, 2),
-  );
+  const { acceptPoint, pushPoint, factoryState } = useDrawingTool();
+
+  const tableObjects = objects.flatMap(object => {
+    const isInFrame = object.frames?.includes(currentFrame) ?? true;
+    const isSelected = selected.some(sel => sel.objectId === object.id);
+    return [];
+  });
 
   const zoomAndPaneSelected = toolType === ToolType.ZOOM_AND_PANE;
   const {
