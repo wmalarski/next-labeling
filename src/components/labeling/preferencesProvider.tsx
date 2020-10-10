@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import PreferencesContext, {
   defaultPreferencesContextState,
@@ -16,31 +16,30 @@ export default function PreferencesProvider(
 ): JSX.Element {
   const { children } = props;
 
-  const setPreferences = useCallback(
-    (preferences: PreferencesContextState) =>
-      localStorage.setItem(preferencesStorageKey, JSON.stringify(preferences)),
-    [],
+  const [state, setState] = useState<PreferencesContextState>(
+    defaultPreferencesContextState,
   );
 
-  const getOrCreatePreferences = useCallback((): PreferencesContextState => {
-    const preferences = localStorage.getItem(preferencesStorageKey);
-    if (preferences) return JSON.parse(preferences);
-    setPreferences(defaultPreferencesContextState);
-    return defaultPreferencesContextState;
-  }, [setPreferences]);
+  const setPreferences = useCallback((preferences: PreferencesContextState) => {
+    localStorage.setItem(preferencesStorageKey, JSON.stringify(preferences));
+    setState(preferences);
+  }, []);
 
-  useEffect(() => {
-    getOrCreatePreferences();
-  }, [getOrCreatePreferences]);
+  useEffect(
+    () =>
+      setState(() => {
+        const preferences = localStorage.getItem(preferencesStorageKey);
+        if (preferences) return JSON.parse(preferences);
+        return defaultPreferencesContextState;
+      }),
+    [],
+  );
 
   return (
     <PreferencesContext.Provider
       value={{
         setPreferences,
-        preferences:
-          typeof window === "undefined"
-            ? defaultPreferencesContextState
-            : getOrCreatePreferences(),
+        preferences: state,
       }}
     >
       {children}
