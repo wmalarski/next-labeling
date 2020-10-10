@@ -1,8 +1,9 @@
 import { ExtendedLabeling } from "../types";
+import { LabelingState } from "../useLabelingHistory";
 
 export default function setToggledUpdate(
   data: ExtendedLabeling,
   toggled: string[],
-): ExtendedLabeling {
-  return { ...data, toggled };
+): LabelingState {
+  return { message: "Selection changed", data: { ...data, toggled } };
 }

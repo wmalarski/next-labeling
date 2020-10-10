@@ -15,7 +15,7 @@ import { LabelingDocument } from "../../utils/labeling/types";
 export default function EditorHeader(): JSX.Element {
   const router = useRouter();
 
-  const { document, pushLabeling, removeLabeling, history } = useContext(
+  const { document, saveLabeling, removeLabeling, history } = useContext(
     LabelingContext,
   );
 
@@ -46,7 +46,7 @@ export default function EditorHeader(): JSX.Element {
       <Button
         startIcon={<SaveIcon />}
         onClick={() => {
-          pushLabeling(
+          saveLabeling(
             LabelingDocument.encode({
               ...document,
               objects: history.data.objects,

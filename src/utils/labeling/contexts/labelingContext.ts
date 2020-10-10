@@ -4,7 +4,7 @@ import { LabelingDocument } from "../types";
 import { UseLabelingHistoryResult } from "../useLabelingHistory";
 
 export interface LabelingContextValue {
-  pushLabeling: (doc: LabelingDocument) => void;
+  saveLabeling: (doc: LabelingDocument) => void;
   removeLabeling: (doc: LabelingDocument) => void;
   setDuration: (duration: number) => void;
   duration: number;
@@ -13,7 +13,7 @@ export interface LabelingContextValue {
 }
 
 const LabelingContext = createContext<LabelingContextValue>({
-  pushLabeling: () => void 0,
+  saveLabeling: () => void 0,
   removeLabeling: () => void 0,
   setDuration: () => void 0,
   duration: 1,
@@ -21,7 +21,10 @@ const LabelingContext = createContext<LabelingContextValue>({
     message: "",
     redoLabeling: () => void 0,
     undoLabeling: () => void 0,
-    setLabeling: () => void 0,
+    pushLabeling: () => void 0,
+    setIndex: () => void 0,
+    messages: [],
+    index: 0,
     data: {
       objects: [],
       currentFrame: 0,

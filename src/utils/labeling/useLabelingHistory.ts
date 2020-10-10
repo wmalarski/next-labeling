@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { createExtendedLabeling } from "./functions";
 import { ExtendedLabeling, LabelingDocument } from "./types";
 
@@ -15,13 +15,16 @@ export interface UseLabelingHistoryState {
 export interface UseLabelingHistoryResult {
   data: ExtendedLabeling;
   message: string;
-  setLabeling: (
+  pushLabeling: (
     provider: (data: ExtendedLabeling) => LabelingState | undefined,
   ) => void;
   undoLabeling: () => void;
   redoLabeling: () => void;
+  setIndex: (index: number) => void;
+  index: number;
   undoMessage?: string;
   redoMessage?: string;
+  messages: string[];
 }
 
 export default function useLabelingHistory(
@@ -52,7 +55,7 @@ export default function useLabelingHistory(
       })),
     [setState],
   );
-  const setLabeling = useCallback(
+  const pushLabeling = useCallback(
     (provider: (data: ExtendedLabeling) => LabelingState | undefined): void =>
       setState(value => {
         const currentLabeling = value.history[value.index].data;
@@ -77,12 +80,26 @@ export default function useLabelingHistory(
       }),
     [setState],
   );
+  const setIndex = useCallback(
+    (index: number): void =>
+      setState(value => ({
+        ...value,
+        index: Math.min(Math.max(index - 1, 0), value.history.length - 1),
+      })),
+    [],
+  );
+  const messages = useMemo(() => state.history.map(pair => pair.message), [
+    state.history,
+  ]);
 
   return {
     ...state.history[state.index],
+    setIndex,
     undoLabeling,
     redoLabeling,
-    setLabeling,
+    pushLabeling,
+    messages,
+    index: state.index,
     undoMessage: state.history[state.index - 1]?.message,
     redoMessage: state.history[state.index + 1]?.message,
   };

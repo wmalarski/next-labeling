@@ -63,7 +63,7 @@ export default function LabelingProvider(
         history,
         duration,
         setDuration,
-        pushLabeling: document => {
+        saveLabeling: document => {
           if (document.id) {
             updateLabeling(document.id, document);
           }

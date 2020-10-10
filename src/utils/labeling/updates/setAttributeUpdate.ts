@@ -1,12 +1,13 @@
 import { LabelingFieldValues } from "../../editors/types";
 import { ExtendedLabeling } from "../types";
+import { LabelingState } from "../useLabelingHistory";
 
 export default function setAttributeUpdate(
   data: ExtendedLabeling,
   objectId: string,
   fieldId: string,
   values: LabelingFieldValues,
-): ExtendedLabeling {
+): LabelingState {
   const objectIndex = data.objects.findIndex(obj => obj.id === objectId);
   const objects = [...data.objects];
   const object = objects[objectIndex];
@@ -15,5 +16,5 @@ export default function setAttributeUpdate(
 
   fields[fieldIndex] = { ...fields[fieldIndex], values };
   objects[objectIndex] = { ...object, fields };
-  return { ...data, objects };
+  return { message: "Attribute value changed", data: { ...data, objects } };
 }

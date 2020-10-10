@@ -10,7 +10,7 @@ import useToolContext from "./useToolContext";
 
 export default function useDrawingTool(): UseCoordsFactoryResult {
   const { history } = useLabelingContext();
-  const { setLabeling } = history;
+  const { pushLabeling } = history;
   const { objects, currentFrame } = history.data;
 
   const { objectId, setTool } = useToolContext();
@@ -26,7 +26,7 @@ export default function useDrawingTool(): UseCoordsFactoryResult {
   useEffect(() => {
     if (!factoryState.isEnded || !factoryState.lastValue || !objectId) return;
     setTool({ toolType: ToolType.SELECTOR });
-    setLabeling(data => {
+    pushLabeling(data => {
       const { id, values, fieldSchema } = builder.field;
       const result = Object.entries(values)[0];
       if (!result) return;
@@ -36,10 +36,7 @@ export default function useDrawingTool(): UseCoordsFactoryResult {
         frame: currentFrame,
         value: factoryState.lastValue,
       });
-      return {
-        message: "Coords saved",
-        data: setAttributeUpdate(data, objectId, id, { [key]: newValues }),
-      };
+      return setAttributeUpdate(data, objectId, id, { [key]: newValues });
     });
   }, [
     builder.field,
@@ -47,7 +44,7 @@ export default function useDrawingTool(): UseCoordsFactoryResult {
     factoryState.isEnded,
     factoryState.lastValue,
     objectId,
-    setLabeling,
+    pushLabeling,
     setTool,
   ]);
 

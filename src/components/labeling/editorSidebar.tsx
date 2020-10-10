@@ -79,6 +79,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
   const classes = useStyles();
 
   const { history, document } = useLabelingContext();
+  const { pushLabeling } = history;
   const { selected, currentFrame } = history.data;
   const { setTool } = useToolContext();
 
@@ -115,20 +116,17 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
                   key={object.id}
                   button
                   onClick={() =>
-                    history.setLabeling(doc => {
-                      const [newObject, data] = addObjectUpdate(
+                    pushLabeling(doc => {
+                      const [newObjectId, state] = addObjectUpdate(
                         doc,
                         object,
                         currentFrame,
                       );
                       setTool({
                         toolType: ToolType.DRAWING_TOOL,
-                        objectId: newObject.id,
+                        objectId: newObjectId,
                       });
-                      return {
-                        message: `New ${object.name} added`,
-                        data,
-                      };
+                      return state;
                     })
                   }
                 >
@@ -147,10 +145,9 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             disabled={!isSelected}
             button
             onClick={() =>
-              history.setLabeling(data => ({
-                message: "Objects copied",
-                data: addObjectCopyUpdate(data, selectedObjectsIds),
-              }))
+              pushLabeling(data =>
+                addObjectCopyUpdate(data, selectedObjectsIds),
+              )
             }
           >
             <ListItemIcon>
@@ -162,10 +159,9 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             disabled={!isSelected}
             button
             onClick={() =>
-              history.setLabeling(data => ({
-                message: "Objects removed",
-                data: deleteObjectsUpdate(data, selectedObjectsIds),
-              }))
+              pushLabeling(data =>
+                deleteObjectsUpdate(data, selectedObjectsIds),
+              )
             }
           >
             <ListItemIcon>
@@ -177,14 +173,9 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             disabled={!isSelected}
             button
             onClick={() =>
-              history.setLabeling(data => ({
-                message: "Objects removed backward",
-                data: deleteBackwardUpdate(
-                  data,
-                  selectedObjectsIds,
-                  currentFrame,
-                ),
-              }))
+              pushLabeling(data =>
+                deleteBackwardUpdate(data, selectedObjectsIds, currentFrame),
+              )
             }
           >
             <ListItemIcon>
@@ -196,14 +187,9 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             disabled={!isSelected}
             button
             onClick={() =>
-              history.setLabeling(data => ({
-                message: "Objects removed forward",
-                data: deleteForwardUpdate(
-                  data,
-                  selectedObjectsIds,
-                  currentFrame,
-                ),
-              }))
+              pushLabeling(data =>
+                deleteForwardUpdate(data, selectedObjectsIds, currentFrame),
+              )
             }
           >
             <ListItemIcon>
@@ -216,13 +202,10 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             disabled={!isSelected}
             button
             onClick={() =>
-              history.setLabeling(data => {
+              pushLabeling(data => {
                 const frame = getFirstFrame(history.data, selectedObjectsIds);
                 if (!frame) return;
-                return {
-                  message: "Frame changed",
-                  data: setCurrentFrameUpdate(data, frame),
-                };
+                return setCurrentFrameUpdate(data, frame);
               })
             }
           >
@@ -235,13 +218,10 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             disabled={!isSelected}
             button
             onClick={() =>
-              history.setLabeling(data => {
+              pushLabeling(data => {
                 const frame = getLastFrame(history.data, selectedObjectsIds);
                 if (!frame) return;
-                return {
-                  message: "Frame changed",
-                  data: setCurrentFrameUpdate(data, frame),
-                };
+                return setCurrentFrameUpdate(data, frame);
               })
             }
           >

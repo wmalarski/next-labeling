@@ -11,6 +11,7 @@ import { TimelineObjectItem } from "./timelineObjectItem";
 
 export default function TimelineView(): JSX.Element {
   const { history } = useLabelingContext();
+  const { pushLabeling } = history;
 
   const { objects, selected: selectedObjects, toggled } = history.data;
   const selected = selectedObjects.flatMap(object => [
@@ -18,12 +19,8 @@ export default function TimelineView(): JSX.Element {
     ...object.fieldIds.map(field => `${object.objectId}|${field}`),
   ]);
 
-  const handleToggle = (_event: any, nodeIds: string[]) => {
-    history.setLabeling(data => ({
-      message: "Toggle changed",
-      data: setToggledUpdate(data, nodeIds),
-    }));
-  };
+  const handleToggle = (_event: any, nodeIds: string[]) =>
+    pushLabeling(data => setToggledUpdate(data, nodeIds));
 
   const handleSelect = (_event: any, nodeIds: string[]) => {
     const result = Object.values(
@@ -49,10 +46,7 @@ export default function TimelineView(): JSX.Element {
         };
       }, {}),
     );
-    history.setLabeling(data => ({
-      message: "Selection changed",
-      data: setSelectedUpdate(data, result),
-    }));
+    pushLabeling(data => setSelectedUpdate(data, result));
   };
 
   return (

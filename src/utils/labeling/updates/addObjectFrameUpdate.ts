@@ -1,10 +1,11 @@
 import { ExtendedLabeling } from "../types";
+import { LabelingState } from "../useLabelingHistory";
 
 export default function addObjectFrameUpdate(
   data: ExtendedLabeling,
   currentFrame: number,
   changeValue: number,
-): { result: ExtendedLabeling; tracked: boolean } {
+): LabelingState {
   const nextFrame = currentFrame + changeValue;
   // TODO: return idexes of items that was tracked #1
   const pairs = data.objects.map(object => {
@@ -51,7 +52,11 @@ export default function addObjectFrameUpdate(
   });
 
   return {
-    result: { ...data, objects: pairs.map(pair => pair.object) },
-    tracked: pairs.filter(pair => pair.tracked).length > 0,
+    data: { ...data, objects: pairs.map(pair => pair.object) },
+    message: "Frame changed",
   };
+  // return {
+  //   ...data,
+  //   objects: pairs.map(pair => pair.object),
+  // };
 }

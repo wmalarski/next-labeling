@@ -14,7 +14,7 @@ import React, { useState } from "react";
 import useLabelingContext from "../../utils/labeling/useLabelingContext";
 
 export default function EditorSettingsDialog(): JSX.Element {
-  const { document, pushLabeling } = useLabelingContext();
+  const { document, saveLabeling } = useLabelingContext();
 
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);
@@ -67,7 +67,7 @@ export default function EditorSettingsDialog(): JSX.Element {
             }
             onClick={() => {
               if (name !== document.name || filename !== document.filename) {
-                pushLabeling({ ...document, name, filename });
+                saveLabeling({ ...document, name, filename });
               }
               handleClose();
             }}

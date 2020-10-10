@@ -1,26 +1,30 @@
 import { ObjectSchema } from "../../schema/types";
 import { createObject } from "../functions";
-import { ExtendedLabeling, ExtendedObject } from "../types";
+import { ExtendedLabeling } from "../types";
+import { LabelingState } from "../useLabelingHistory";
 
 export default function addObjectUpdate(
   data: ExtendedLabeling,
   objectSchema: ObjectSchema,
   currentFrame: number,
-): [ExtendedObject, ExtendedLabeling] {
+): [string, LabelingState] {
   const object = createObject(objectSchema, currentFrame);
   return [
-    object,
+    object.id,
     {
-      ...data,
-      objects: [...data.objects, object],
-      selected: [
-        {
-          fieldIds: [],
-          objectId: object.id,
-          objectSelected: true,
-          singleton: objectSchema.singleton,
-        },
-      ],
+      message: "Object created",
+      data: {
+        ...data,
+        objects: [...data.objects, object],
+        selected: [
+          {
+            fieldIds: [],
+            objectId: object.id,
+            objectSelected: true,
+            singleton: objectSchema.singleton,
+          },
+        ],
+      },
     },
   ];
 }

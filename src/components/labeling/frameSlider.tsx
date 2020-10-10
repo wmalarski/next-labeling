@@ -33,19 +33,18 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function FrameSlider(): JSX.Element {
   const classes = useStyles();
   const { history, duration } = useLabelingContext();
-  const { setLabeling } = history;
+  const { pushLabeling } = history;
   const { currentFrame } = history.data;
 
   const moveBy = useCallback(
     (value: number): void =>
-      setLabeling(data => ({
-        message: "Frame changed",
-        data: setCurrentFrameUpdate(
+      pushLabeling(data =>
+        setCurrentFrameUpdate(
           data,
           frameToRange(currentFrame + Number(value), duration),
         ),
-      })),
-    [currentFrame, duration, setLabeling],
+      ),
+    [currentFrame, duration, pushLabeling],
   );
 
   return (
@@ -57,13 +56,12 @@ export default function FrameSlider(): JSX.Element {
           min={0}
           max={duration}
           onChange={(_event, value) =>
-            history.setLabeling(data => ({
-              message: "Frame changed",
-              data: setCurrentFrameUpdate(
+            pushLabeling(data =>
+              setCurrentFrameUpdate(
                 data,
                 frameToRange(Number(value), duration),
               ),
-            }))
+            )
           }
           aria-labelledby="continuous-slider"
         />

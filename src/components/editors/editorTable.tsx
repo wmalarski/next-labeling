@@ -19,9 +19,8 @@ export interface TableObject {
 
 export default function EditorTable(): JSX.Element {
   const { history } = useLabelingContext();
-  const { selected, currentFrame } = history.data;
-
-  const { objects } = history.data;
+  const { pushLabeling } = history;
+  const { objects, selected, currentFrame } = history.data;
 
   const tableObjects: TableObject[] = selected.flatMap(selection => {
     const object = objects.find(object => object.id === selection.objectId);
@@ -54,10 +53,7 @@ export default function EditorTable(): JSX.Element {
               margin="dense"
               onChange={event => {
                 const value = event.target.value;
-                history.setLabeling(data => ({
-                  message: "Name changed",
-                  data: setNameUpdate(data, object, value),
-                }));
+                pushLabeling(data => setNameUpdate(data, object, value));
               }}
             />
             <FormControlLabel
@@ -66,10 +62,9 @@ export default function EditorTable(): JSX.Element {
                   checked={object.isDone}
                   onChange={event => {
                     const checked = event.target.checked;
-                    history.setLabeling(data => ({
-                      message: "Is Done changed",
-                      data: setIsDoneUpdate(data, object, checked),
-                    }));
+                    pushLabeling(data =>
+                      setIsDoneUpdate(data, object, checked),
+                    );
                   }}
                 />
               }
@@ -81,10 +76,9 @@ export default function EditorTable(): JSX.Element {
                   checked={object.isTracked}
                   onChange={event => {
                     const checked = event.target.checked;
-                    history.setLabeling(data => ({
-                      message: "Is tracked changed",
-                      data: setIsTrackedUpdate(data, object, checked),
-                    }));
+                    pushLabeling(data =>
+                      setIsTrackedUpdate(data, object, checked),
+                    );
                   }}
                 />
               }
@@ -101,15 +95,14 @@ export default function EditorTable(): JSX.Element {
               perFrame={field.fieldSchema.perFrame}
               values={field.values}
               onChange={provider =>
-                history.setLabeling(data => ({
-                  message: "Attribute value changed",
-                  data: setAttributeUpdate(
+                pushLabeling(data =>
+                  setAttributeUpdate(
                     data,
                     object.id,
                     field.id,
                     provider(field.values),
                   ),
-                }))
+                )
               }
             />
           ))}
