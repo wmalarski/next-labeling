@@ -2,14 +2,14 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
-import React, { useContext } from "react";
+import React from "react";
 
-import LabelingContext from "../../contexts/labeling/labelingContext";
 import { ExtendedField, ExtendedObject } from "../../utils/labeling/types";
 import setAttributeUpdate from "../../utils/labeling/updates/setAttributeUpdate";
 import setIsDoneUpdate from "../../utils/labeling/updates/setIsDoneUpdate";
 import setIsTrackedUpdate from "../../utils/labeling/updates/setIsTrackedUpdate";
 import setNameUpdate from "../../utils/labeling/updates/setNameUpdate";
+import useLabelingContext from "../../utils/labeling/useLabelingContext";
 import FieldEditor from "./fieldEditor";
 
 export interface TableObject {
@@ -18,7 +18,7 @@ export interface TableObject {
 }
 
 export default function EditorTable(): JSX.Element {
-  const { history } = useContext(LabelingContext);
+  const { history } = useLabelingContext();
   const { selected, currentFrame } = history.data;
 
   const { objects } = history.data;

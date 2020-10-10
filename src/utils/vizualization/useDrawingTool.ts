@@ -1,18 +1,19 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
-import LabelingContext from "../../contexts/labeling/labelingContext";
-import ToolContext, { ToolType } from "../../contexts/tool/toolContext";
 import { calculateNewValues } from "../editors/functions";
 import setAttributeUpdate from "../labeling/updates/setAttributeUpdate";
+import useLabelingContext from "../labeling/useLabelingContext";
 import getCoordsBuilders from "./coordsBuilders";
+import { ToolType } from "./types";
 import useCoordsFactory, { UseCoordsFactoryResult } from "./useCoordsFactory";
+import useToolContext from "./useToolContext";
 
 export default function useDrawingTool(): UseCoordsFactoryResult {
-  const { history } = useContext(LabelingContext);
+  const { history } = useLabelingContext();
   const { setLabeling } = history;
   const { objects, currentFrame } = history.data;
 
-  const { objectId, setTool } = useContext(ToolContext);
+  const { objectId, setTool } = useToolContext();
 
   const isBuilderInProgress = !!objectId;
   const object = isBuilderInProgress

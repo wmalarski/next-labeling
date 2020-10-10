@@ -9,12 +9,12 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import TextField from "@material-ui/core/TextField";
 import SettingsIcon from "@material-ui/icons/Settings";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
-import LabelingContext from "../../contexts/labeling/labelingContext";
+import useLabelingContext from "../../utils/labeling/useLabelingContext";
 
 export default function EditorSettingsDialog(): JSX.Element {
-  const { document, pushLabeling } = useContext(LabelingContext);
+  const { document, pushLabeling } = useLabelingContext();
 
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);

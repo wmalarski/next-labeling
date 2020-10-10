@@ -8,11 +8,11 @@ import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import Forward5Icon from "@material-ui/icons/Forward5";
 import Replay5Icon from "@material-ui/icons/Replay5";
-import React, { useCallback, useContext } from "react";
+import React, { useCallback } from "react";
 
-import LabelingContext from "../../contexts/labeling/labelingContext";
 import { frameToRange } from "../../utils/labeling/functions";
 import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
+import useLabelingContext from "../../utils/labeling/useLabelingContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function FrameSlider(): JSX.Element {
   const classes = useStyles();
-  const { history, duration } = useContext(LabelingContext);
+  const { history, duration } = useLabelingContext();
   const { setLabeling } = history;
   const { currentFrame } = history.data;
 

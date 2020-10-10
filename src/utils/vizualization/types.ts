@@ -27,6 +27,12 @@ export interface PixiFinishedObjectProps {
   object: ExtendedObject;
 }
 
+export enum ToolType {
+  SELECTOR,
+  ZOOM_AND_PANE,
+  DRAWING_TOOL,
+}
+
 export enum MouseButton {
   LEFT = 0,
   MIDDLE = 1,

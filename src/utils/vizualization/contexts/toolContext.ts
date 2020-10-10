@@ -1,10 +1,5 @@
 import { createContext } from "react";
-
-export enum ToolType {
-  SELECTOR,
-  ZOOM_AND_PANE,
-  DRAWING_TOOL,
-}
+import { ToolType } from "../types";
 
 export interface ToolContextState {
   toolType: ToolType;

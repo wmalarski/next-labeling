@@ -1,8 +1,7 @@
 import { useTheme } from "@material-ui/core";
 import { TextConfig } from "konva/types/shapes/Text";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { Layer, Line, Rect, Stage, Text } from "react-konva";
-import LabelingContext from "../../contexts/labeling/labelingContext";
 
 import {
   darkerTimelineColors,
@@ -13,6 +12,7 @@ import {
   ObjectBlock,
 } from "../../utils/labeling/functions";
 import { ExtendedField } from "../../utils/labeling/types";
+import useLabelingContext from "../../utils/labeling/useLabelingContext";
 
 export interface FieldCanvasProps {
   field: ExtendedField;
@@ -32,7 +32,7 @@ export function FieldCanvas(props: FieldCanvasProps): JSX.Element {
   // const deselectionColor = theme.palette.primary.dark;
   const errorColor = theme.palette.error.light;
 
-  const { duration, history } = useContext(LabelingContext);
+  const { duration, history } = useLabelingContext();
   const { currentFrame } = history.data;
   const scale = width / duration;
   const fieldBlocks = calculateFieldBlocks(field, blocks, duration);

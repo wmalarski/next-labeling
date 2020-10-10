@@ -2,10 +2,10 @@ import { Container, Sprite, Stage, Text } from "@inlet/react-pixi";
 import * as PIXI from "pixi.js";
 import React, { useContext } from "react";
 
-import LabelingContext from "../../contexts/labeling/labelingContext";
-import ToolContext, { ToolType } from "../../contexts/tool/toolContext";
-import { MouseButton } from "../../utils/vizualization/types";
+import LabelingContext from "../../utils/labeling/contexts/labelingContext";
+import { MouseButton, ToolType } from "../../utils/vizualization/types";
 import useDrawingTool from "../../utils/vizualization/useDrawingTool";
+import useToolContext from "../../utils/vizualization/useToolContext";
 import useZoomAndPane from "../../utils/vizualization/useZoomAndPane";
 import ToolsHeader from "./toolsHeader";
 
@@ -16,7 +16,7 @@ export default function MainStage(): JSX.Element {
   const { currentFrame, objects, selected } = history.data;
   const fps = document.fps ?? 24;
 
-  const { toolType } = useContext(ToolContext);
+  const { toolType } = useToolContext();
 
   const { acceptPoint, pushPoint, factoryState } = useDrawingTool();
 

@@ -16,10 +16,8 @@ import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import ViewListIcon from "@material-ui/icons/ViewList";
 import clsx from "clsx";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
-import LabelingContext from "../../contexts/labeling/labelingContext";
-import ToolContext, { ToolType } from "../../contexts/tool/toolContext";
 import { getFirstFrame, getLastFrame } from "../../utils/labeling/functions";
 import addObjectCopyUpdate from "../../utils/labeling/updates/addObjectCopyUpdate";
 import addObjectUpdate from "../../utils/labeling/updates/addObjectUpdate";
@@ -27,7 +25,10 @@ import deleteBackwardUpdate from "../../utils/labeling/updates/deleteBackwardUpd
 import deleteForwardUpdate from "../../utils/labeling/updates/deleteForwardUpdate";
 import deleteObjectsUpdate from "../../utils/labeling/updates/deleteObjectsUpdate";
 import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
+import useLabelingContext from "../../utils/labeling/useLabelingContext";
 import { filterIcons, LabelingViewsState } from "../../utils/labeling/views";
+import { ToolType } from "../../utils/vizualization/types";
+import useToolContext from "../../utils/vizualization/useToolContext";
 import EditorSettingsDialog from "./editorSettingsDialog";
 
 const drawerWidth = 240;
@@ -77,9 +78,9 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
   const { viewsState, setViewsState } = props;
   const classes = useStyles();
 
-  const { history, document } = useContext(LabelingContext);
+  const { history, document } = useLabelingContext();
   const { selected, currentFrame } = history.data;
-  const { setTool } = useContext(ToolContext);
+  const { setTool } = useToolContext();
 
   const selectedObjects = selected.filter(
     object => !object.singleton && object.objectSelected,

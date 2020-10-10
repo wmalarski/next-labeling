@@ -6,9 +6,10 @@ import TouchAppIcon from "@material-ui/icons/TouchApp";
 import ZoomInIcon from "@material-ui/icons/ZoomIn";
 import ZoomOutIcon from "@material-ui/icons/ZoomOut";
 import ToggleButton from "@material-ui/lab/ToggleButton";
-import React, { useContext } from "react";
+import React from "react";
 
-import ToolContext, { ToolType } from "../../contexts/tool/toolContext";
+import { ToolType } from "../../utils/vizualization/types";
+import useToolContext from "../../utils/vizualization/useToolContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,7 +29,7 @@ export default function ToolsHeader(props: ToolsHeaderProps): JSX.Element {
   const { onResetClicked, onZoomInClicked, onZoomOutlicked } = props;
   const classes = useStyles();
 
-  const { toolType, setTool } = useContext(ToolContext);
+  const { toolType, setTool } = useToolContext();
 
   return (
     <div className={classes.root}>

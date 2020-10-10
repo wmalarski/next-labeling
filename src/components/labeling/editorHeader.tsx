@@ -9,7 +9,7 @@ import UndoIcon from "@material-ui/icons/Undo";
 import { useRouter } from "next/router";
 import React, { useContext } from "react";
 
-import LabelingContext from "../../contexts/labeling/labelingContext";
+import LabelingContext from "../../utils/labeling/contexts/labelingContext";
 import { LabelingDocument } from "../../utils/labeling/types";
 
 export default function EditorHeader(): JSX.Element {

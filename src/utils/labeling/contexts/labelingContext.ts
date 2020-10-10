@@ -1,7 +1,7 @@
 import { createContext } from "react";
 
-import { LabelingDocument } from "../../utils/labeling/types";
-import { UseLabelingHistoryResult } from "../../utils/labeling/useLabelingHistory";
+import { LabelingDocument } from "../types";
+import { UseLabelingHistoryResult } from "../useLabelingHistory";
 
 export interface LabelingContextValue {
   pushLabeling: (doc: LabelingDocument) => void;

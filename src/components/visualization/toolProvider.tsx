@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-
-import ToolContext, { ToolContextState, ToolType } from "./toolContext";
+import ToolContext, {
+  ToolContextState,
+} from "../../utils/vizualization/contexts/toolContext";
+import { ToolType } from "../../utils/vizualization/types";
 
 export interface ToolProviderProps {
   children: React.ReactNode | React.ReactNode[] | null;

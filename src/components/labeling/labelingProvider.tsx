@@ -9,7 +9,7 @@ import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
 import useUpdateDocument from "../../utils/firestore/useUpdateLabeling";
 import { LabelingDocument } from "../../utils/labeling/types";
 import useLabelingHistory from "../../utils/labeling/useLabelingHistory";
-import LabelingContext from "./labelingContext";
+import LabelingContext from "../../utils/labeling/contexts/labelingContext";
 
 export interface LabelingProviderProps {
   document: LabelingDocument;
