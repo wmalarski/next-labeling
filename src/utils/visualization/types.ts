@@ -1,29 +1,31 @@
-import { LabelingFieldValue } from "../editors/types";
-import { ExtendedObject } from "../labeling/types";
+import { LabelingFieldValues } from "../editors/types";
+import { ExtendedField, ExtendedObject } from "../labeling/types";
 import { FieldSchema } from "../schema/types";
 
 export interface CoordsBuilderResult {
   stage: number;
-  value?: LabelingFieldValue;
+  value?: LabelingFieldValues;
   isFinished: boolean;
   canBeFinished: boolean;
 }
 
 export type CoordsBuilder = (
   point: PIXI.Point,
-  value?: LabelingFieldValue,
+  frame: number,
+  value?: LabelingFieldValues,
 ) => CoordsBuilderResult | undefined;
 
 export interface PixiInProgressObjectProps {
   stage: number;
   fieldSchema: FieldSchema;
-  value: LabelingFieldValue;
+  value: LabelingFieldValues;
   object: ExtendedObject;
 }
 
 export interface PixiFinishedObjectProps {
-  fieldSchema: FieldSchema;
-  value: LabelingFieldValue;
+  isSelected: boolean;
+  field: ExtendedField;
+  frame: number;
   object: ExtendedObject;
 }
 

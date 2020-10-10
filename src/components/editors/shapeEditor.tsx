@@ -1,17 +1,9 @@
 import { Button } from "@material-ui/core";
 import React from "react";
 
-import { FieldEditorProps, FieldType } from "../../utils/editors/types";
+import { FieldEditorProps } from "../../utils/editors/types";
 
-type ShapeTypes =
-  | FieldType.LINE
-  | FieldType.RECTANGLE
-  | FieldType.POINT
-  | FieldType.POLYGON;
-
-export default function ShapeEditor(
-  props: FieldEditorProps<ShapeTypes>,
-): JSX.Element {
+export default function ShapeEditor(props: FieldEditorProps): JSX.Element {
   const { disabled } = props;
   // TODO: send signal to context - select tool and start drawing #6
   return (

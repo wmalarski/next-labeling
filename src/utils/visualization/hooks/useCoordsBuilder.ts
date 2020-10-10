@@ -1,42 +1,43 @@
 import * as PIXI from "pixi.js";
 import { useCallback, useEffect, useState } from "react";
 
-import { CoordsFieldBuilder } from "../coordsBuilders";
+import { CoordsFieldBuilder } from "../getCoordsBuilder";
 import { CoordsBuilderResult } from "../types";
 
-export interface UseCoordsFactoryState {
+export interface UseCoordsBuilderState {
   lastValue?: CoordsBuilderResult;
   currentValue?: CoordsBuilderResult;
   isDrawing: boolean;
   isEnded: boolean;
 }
 
-export interface UseCoordsFactoryResult {
-  factoryState: UseCoordsFactoryState;
-  pushPoint: (point: PIXI.Point) => void;
-  acceptPoint: (point: PIXI.Point, finish: boolean) => void;
+export interface UseCoordsBuilderResult {
+  builderState: UseCoordsBuilderState;
+  pushPoint: (point: PIXI.Point, frame: number) => void;
+  acceptPoint: (point: PIXI.Point, finish: boolean, frame: number) => void;
   resetEdit: () => void;
 }
 
-export default function useCoordsFactory(
+export default function useCoordsBuilder(
   fieldBuilder?: CoordsFieldBuilder,
-): UseCoordsFactoryResult {
-  const [factoryState, setFactoryState] = useState<UseCoordsFactoryState>({
+): UseCoordsBuilderResult {
+  const [builderState, setBuilderState] = useState<UseCoordsBuilderState>({
     isDrawing: !!fieldBuilder,
     isEnded: false,
   });
 
   useEffect(() => {
     if (!fieldBuilder) return;
-    setFactoryState({ isDrawing: true, isEnded: false });
+    setBuilderState({ isDrawing: true, isEnded: false });
   }, [fieldBuilder]);
 
   const pushPoint = useCallback(
-    (point: PIXI.Point): void =>
-      setFactoryState(state => {
+    (point: PIXI.Point, frame: number): void =>
+      setBuilderState(state => {
         if (!state.isDrawing || !fieldBuilder) return state;
         const builderResult = fieldBuilder.builder(
           point,
+          frame,
           state.lastValue?.value,
         );
         return {
@@ -48,11 +49,12 @@ export default function useCoordsFactory(
   );
 
   const acceptPoint = useCallback(
-    (point: PIXI.Point, finish: boolean): void =>
-      setFactoryState(state => {
+    (point: PIXI.Point, finish: boolean, frame: number): void =>
+      setBuilderState(state => {
         if (!state.isDrawing || !fieldBuilder) return state;
         const builderResult = fieldBuilder.builder(
           point,
+          frame,
           state.lastValue?.value,
         );
         const isDrawing = !finish && !builderResult?.isFinished;
@@ -68,12 +70,12 @@ export default function useCoordsFactory(
   );
 
   const resetEdit = useCallback(
-    (): void => setFactoryState({ isDrawing: false, isEnded: false }),
+    (): void => setBuilderState({ isDrawing: false, isEnded: false }),
     [],
   );
 
   return {
-    factoryState,
+    builderState,
     pushPoint,
     acceptPoint,
     resetEdit,

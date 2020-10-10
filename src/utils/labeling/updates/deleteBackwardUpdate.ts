@@ -1,6 +1,6 @@
-import { FieldValue } from "../../editors/types";
 import { ExtendedLabeling } from "../types";
 import { LabelingState } from "../hooks/useLabelingHistory";
+import { unpackValues } from "../../editors/functions";
 
 export default function deleteBackwardUpdate(
   data: ExtendedLabeling,
@@ -23,11 +23,10 @@ export default function deleteBackwardUpdate(
             ...object,
             frames,
             fields: object.fields.map(field => {
-              const entry = Object.entries(field.values)[0];
-              const [key, values] = entry;
-              if (!values) return field;
+              const unpacked = unpackValues(field.values);
+              if (!unpacked) return field;
 
-              const newValues: FieldValue<any>[] = [...values];
+              const newValues = [...unpacked.pairs];
               const lower = newValues.filter(
                 value => value.frame < currentFrame,
               );
@@ -45,7 +44,7 @@ export default function deleteBackwardUpdate(
               }
               return {
                 ...field,
-                values: { [key]: newValues },
+                values: { [unpacked.type]: newValues },
               };
             }),
           },

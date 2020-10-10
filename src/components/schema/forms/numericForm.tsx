@@ -3,9 +3,9 @@ import React from "react";
 
 import {
   FieldType,
-  NumberAttributes,
   OnAttributeChangeHandler,
 } from "../../../utils/editors/types";
+import { NumberAttributes } from "../../../utils/editors/types/number";
 
 export interface NumberFormProps {
   attributes: NumberAttributes;

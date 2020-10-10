@@ -14,9 +14,9 @@ import React, { useState } from "react";
 
 import {
   FieldType,
-  MultiSelectAttributes,
   OnAttributeChangeHandler,
 } from "../../../utils/editors/types";
+import { MultiSelectAttributes } from "../../../utils/editors/types/multiSelect";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

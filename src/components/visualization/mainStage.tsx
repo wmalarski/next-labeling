@@ -3,10 +3,11 @@ import * as PIXI from "pixi.js";
 import React, { useContext } from "react";
 
 import LabelingContext from "../../utils/labeling/contexts/labelingContext";
-import { MouseButton, ToolType } from "../../utils/visualization/types";
 import useDrawingTool from "../../utils/visualization/hooks/useDrawingTool";
 import useToolContext from "../../utils/visualization/hooks/useToolContext";
 import useZoomAndPane from "../../utils/visualization/hooks/useZoomAndPane";
+import { MouseButton, ToolType } from "../../utils/visualization/types";
+import { PixiFinishedObject, PixiInProgressObject } from "./pixiObject";
 import ToolsHeader from "./toolsHeader";
 
 export default function MainStage(): JSX.Element {
@@ -18,13 +19,23 @@ export default function MainStage(): JSX.Element {
 
   const { toolType } = useToolContext();
 
-  const { acceptPoint, pushPoint, factoryState } = useDrawingTool();
+  const drawingTool = useDrawingTool();
+  const { acceptPoint, pushPoint, builderState } = drawingTool.builderResult;
+  const drawingSchema = drawingTool.field?.fieldSchema;
+  const drawingStage = builderState.currentValue?.stage;
+  const drawingValue = builderState.currentValue?.value;
 
-  const tableObjects = objects.flatMap(object => {
-    const isInFrame = object.frames?.includes(currentFrame) ?? true;
+  const finishedObjects = objects.flatMap(object => {
     const isSelected = selected.some(sel => sel.objectId === object.id);
-    // return object.fields.map(field => (<PixiFinishedObject fieldSchema={field} />));
-    return [];
+    return object.fields.map(field => (
+      <PixiFinishedObject
+        key={field.id}
+        isSelected={isSelected}
+        object={object}
+        field={field}
+        frame={currentFrame}
+      />
+    ));
   });
 
   const zoomAndPaneSelected = toolType === ToolType.ZOOM_AND_PANE;
@@ -56,6 +67,7 @@ export default function MainStage(): JSX.Element {
                 event.currentTarget,
                 event.data.global,
               ),
+              currentFrame,
             )
           }
           pointerdown={event =>
@@ -65,6 +77,7 @@ export default function MainStage(): JSX.Element {
                 event.data.global,
               ),
               event.data.button === MouseButton.MIDDLE,
+              currentFrame,
             )
           }
         >
@@ -94,20 +107,18 @@ export default function MainStage(): JSX.Element {
               fill: "white",
             }}
           />
-          {/* {objectsInProgress.map(value =>
-            value.fieldSchema && value.value ? (
-              <PixiObject
-                key={value.fieldSchema.id}
-                canBeFinished={value.canBeFinished}
-                fieldSchema={value.fieldSchema}
-                isFinished={value.isFinished}
-                stage={value.stage}
-                value={value.value}
+          {finishedObjects}
+          {drawingSchema &&
+            drawingTool.object &&
+            drawingStage &&
+            drawingValue && (
+              <PixiInProgressObject
+                fieldSchema={drawingSchema}
+                object={drawingTool.object}
+                stage={drawingStage}
+                value={drawingValue}
               />
-            ) : (
-              <></>
-            ),
-          )} */}
+            )}
         </Container>
       </Stage>
     </div>

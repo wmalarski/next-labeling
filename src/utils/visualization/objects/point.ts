@@ -6,11 +6,11 @@ export enum PointBuilderStage {
   ONE_POINT = 1,
 }
 
-export const PointBuilder: CoordsBuilder = point => {
+export const PointBuilder: CoordsBuilder = (point, frame) => {
   return {
     canBeFinished: true,
     isFinished: true,
-    value: { [FieldType.POINT]: [point.x, point.y] },
+    value: { [FieldType.POINT]: [{ value: [point.x, point.y], frame }] },
     stage: PointBuilderStage.ONE_POINT,
   };
 };

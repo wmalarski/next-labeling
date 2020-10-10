@@ -1,6 +1,6 @@
-import { FieldValue } from "../../editors/types";
 import { ExtendedLabeling } from "../types";
 import { LabelingState } from "../hooks/useLabelingHistory";
+import { unpackValues } from "../../editors/functions";
 
 export default function deleteForwardUpdate(
   data: ExtendedLabeling,
@@ -23,16 +23,13 @@ export default function deleteForwardUpdate(
             ...object,
             frames,
             fields: object.fields.map(field => {
-              const entry = Object.entries(field.values)[0];
-              const [key, values]: [
-                string,
-                FieldValue<any>[] | undefined,
-              ] = entry;
-              if (!values) return field;
+              const unpacked = unpackValues(field.values);
+              if (!unpacked) return field;
+              const { type, pairs } = unpacked;
               return {
                 ...field,
                 values: {
-                  [key]: values.filter(value => value.frame <= currentFrame),
+                  [type]: pairs.filter(value => value.frame <= currentFrame),
                 },
               };
             }),

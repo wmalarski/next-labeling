@@ -6,7 +6,7 @@ import {
   PixiInProgressObjectProps,
 } from "../../utils/visualization/types";
 import {
-  RectangleBuilderStage,
+  RectangleFinished,
   RectangleInProgress,
 } from "../../utils/visualization/objects/rectangle";
 
@@ -27,17 +27,12 @@ export function PixiInProgressObject(
 export function PixiFinishedObject(
   props: PixiFinishedObjectProps,
 ): JSX.Element {
-  const { attributes } = props.fieldSchema;
+  const { attributes } = props.field.fieldSchema;
   const type = Object.keys(attributes)[0];
 
   switch (type) {
     case FieldType.RECTANGLE:
-      return (
-        <RectangleInProgress
-          {...props}
-          stage={RectangleBuilderStage.TWO_POINTS}
-        />
-      );
+      return <RectangleFinished {...props} />;
     default:
       return <></>;
   }

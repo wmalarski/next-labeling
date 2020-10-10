@@ -1,11 +1,18 @@
-import { FieldType, FieldValue, LabelingFieldAttributes } from "./types";
+import { unpackValues } from "./functions";
+import {
+  FieldType,
+  LabelingFieldAttributes,
+  LabelingFieldValues,
+} from "./types";
 
-export default function getValueIndex<T extends FieldType>(
-  type: T,
-  fieldValue: FieldValue<any>,
+export default function getValueIndex(
+  values: LabelingFieldValues,
   attributes: LabelingFieldAttributes,
 ): number {
-  const value = fieldValue.value;
+  const unpacked = unpackValues(values);
+  if (!unpacked) return 0;
+  const { type, pairs } = unpacked;
+  const value = pairs[0].value;
   if (!value) return 0;
 
   switch (type) {

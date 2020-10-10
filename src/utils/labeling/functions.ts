@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import uniqueId from "lodash/uniqueId";
 import getValueIndex from "../editors/indexes";
 
-import { FieldType, FieldValue } from "../editors/types";
+import { FieldType } from "../editors/types";
 import { ObjectSchema, Schema } from "../schema/types";
 import {
   ExtendedField,
@@ -11,6 +11,7 @@ import {
   LabelingDocument,
   LabelingObject,
 } from "./types";
+import { UnpackedFrameValuePair, unpackValues } from "../editors/functions";
 
 export function createObject(
   objectSchema: ObjectSchema,
@@ -174,15 +175,14 @@ export function calculateFieldBlocks(
   objectBlocks: ObjectBlock[],
   duration: number,
 ): FieldBlock[] {
-  const [type, values]: [
-    string,
-    FieldValue<any>[] | undefined,
-  ] = Object.entries(field.values)[0];
   const attributes = field.fieldSchema.attributes;
-  if (!values)
-    return [{ firstFrame: 0, lastFrame: duration, index: 0, value: "" }];
 
-  const res = values.reduce<FieldValue<any>[][]>(
+  const unpacked = unpackValues(field.values);
+  if (!unpacked)
+    return [{ firstFrame: 0, lastFrame: duration, index: 0, value: "" }];
+  const { type, pairs } = unpacked;
+
+  const res = pairs.reduce<UnpackedFrameValuePair[][]>(
     (prev, curr, index, array) => [...prev, [curr, array[index + 1]]],
     [],
   );
@@ -191,7 +191,7 @@ export function calculateFieldBlocks(
       const [left, right] = curr;
       const [currentBlock, ...otherBlocks] = prev.objectBlocks;
       const rightFrame = right ? right.frame : currentBlock.lastFrame;
-      const index = getValueIndex(type as FieldType, left, attributes);
+      const index = getValueIndex({ [type]: [left] }, attributes);
       if (rightFrame <= currentBlock.lastFrame) {
         return {
           objectBlocks: prev.objectBlocks,

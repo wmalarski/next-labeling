@@ -10,31 +10,35 @@ import {
 } from "../../utils/editors/functions";
 import { FieldEditorProps, FieldType } from "../../utils/editors/types";
 
-export default function ComboBoxEditor(
-  props: FieldEditorProps<FieldType.COMBOBOX>,
-): JSX.Element {
+export default function ComboBoxEditor(props: FieldEditorProps): JSX.Element {
   const { disabled, name, perFrame, frame, attributes, onChange } = props;
   const config = attributes.ComboBox;
-  const fieldValue = getFieldValue(props);
-  const type = FieldType.COMBOBOX;
 
-  return fieldValue && config ? (
+  const frameValues = getFieldValue(props)?.ComboBox;
+  if (!frameValues) return <></>;
+  const frameValue = frameValues[0];
+
+  return frameValue && config ? (
     <FormControl fullWidth>
       <InputLabel id="select-field-type-label">{name}</InputLabel>
       <Select
         disabled={disabled}
         labelId="select-field-type-label"
         id="select-field-type"
-        value={fieldValue.value}
+        value={frameValue.value}
         fullWidth
         onChange={event => {
-          const newText = event.target.value;
-          onChange(values => ({
-            [type]: calculateNewValues<typeof type>(values[type], perFrame, {
-              frame,
-              value: newText,
+          const newText = event.target.value as string;
+          onChange(values =>
+            calculateNewValues(values, perFrame, {
+              [FieldType.COMBOBOX]: [
+                {
+                  frame,
+                  value: newText,
+                },
+              ],
             }),
-          }));
+          );
         }}
       >
         {config.options.map(

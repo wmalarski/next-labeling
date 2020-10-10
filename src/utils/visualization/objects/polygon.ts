@@ -6,12 +6,22 @@ export enum PolygonBuilderStage {
   MANY_POINTS = 1,
 }
 
-export const PolygonBuilder: CoordsBuilder = (point, values) => {
-  const points = values?.Line ?? [];
+export const PolygonBuilder: CoordsBuilder = (point, frame, values) => {
+  const polygon = values?.Polygon;
+  if (!polygon)
+    return {
+      canBeFinished: true,
+      isFinished: false,
+      value: values,
+      stage: PolygonBuilderStage.MANY_POINTS,
+    };
+  const points = polygon[0].value;
   return {
     canBeFinished: true,
     isFinished: false,
-    value: { [FieldType.POLYGON]: [...points, [point.x, point.y]] },
+    value: {
+      [FieldType.POLYGON]: [{ frame, value: [...points, [point.x, point.y]] }],
+    },
     stage: PolygonBuilderStage.MANY_POINTS,
   };
 };

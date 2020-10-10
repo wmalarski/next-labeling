@@ -11,16 +11,16 @@ import {
 } from "../../utils/editors/functions";
 import { FieldEditorProps, FieldType } from "../../utils/editors/types";
 
-export default function SelectEditor(
-  props: FieldEditorProps<FieldType.SELECT>,
-): JSX.Element {
+export default function SelectEditor(props: FieldEditorProps): JSX.Element {
   const { disabled, frame, perFrame, attributes, onChange } = props;
   const config = attributes.Select;
-  const fieldValue = getFieldValue(props);
-  const selected = fieldValue?.value;
-  const type = FieldType.SELECT;
 
-  return fieldValue && config ? (
+  const frameValues = getFieldValue(props)?.Select;
+  if (!frameValues) return <></>;
+  const frameValue = frameValues[0];
+  const selected = frameValue?.value;
+
+  return frameValue && config ? (
     <FormControl>
       <InputLabel id="select-field-type-label">{name}</InputLabel>
       <Grid container spacing={1}>
@@ -37,16 +37,16 @@ export default function SelectEditor(
               size="small"
               color="inherit"
               onChange={() =>
-                onChange(values => ({
-                  [type]: calculateNewValues<typeof type>(
-                    values[type],
-                    perFrame,
-                    {
-                      frame,
-                      value: option.text,
-                    },
-                  ),
-                }))
+                onChange(values =>
+                  calculateNewValues(values, perFrame, {
+                    [FieldType.SELECT]: [
+                      {
+                        frame,
+                        value: option.text,
+                      },
+                    ],
+                  }),
+                )
               }
             >
               {option.text}

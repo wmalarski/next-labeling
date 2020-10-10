@@ -3,12 +3,19 @@ import { useEffect, useMemo } from "react";
 import { calculateNewValues } from "../../editors/functions";
 import setAttributeUpdate from "../../labeling/updates/setAttributeUpdate";
 import useLabelingContext from "../../labeling/hooks/useLabelingContext";
-import getCoordsBuilders from "../coordsBuilders";
+import getCoordsBuilders from "../getCoordsBuilder";
 import { ToolType } from "../types";
-import useCoordsFactory, { UseCoordsFactoryResult } from "./useCoordsFactory";
+import useCoordsBuilder, { UseCoordsBuilderResult } from "./useCoordsBuilder";
 import useToolContext from "./useToolContext";
+import { ExtendedField, ExtendedObject } from "../../labeling/types";
 
-export default function useDrawingTool(): UseCoordsFactoryResult {
+export interface UseDrawingToolResult {
+  builderResult: UseCoordsBuilderResult;
+  object?: ExtendedObject;
+  field?: ExtendedField;
+}
+
+export default function useDrawingTool(): UseDrawingToolResult {
   const { history } = useLabelingContext();
   const { pushLabeling } = history;
   const { objects, currentFrame } = history.data;
@@ -20,33 +27,32 @@ export default function useDrawingTool(): UseCoordsFactoryResult {
     ? objects.find(object => object.id === objectId)
     : undefined;
   const builder = useMemo(() => (getCoordsBuilders(object) ?? [])[0], [object]);
-  const result = useCoordsFactory(builder);
-  const { factoryState } = result;
+  const builderResult = useCoordsBuilder(builder);
+  const { builderState } = builderResult;
 
   useEffect(() => {
-    if (!factoryState.isEnded || !factoryState.lastValue || !objectId) return;
+    if (!builderState.isEnded || !builderState.lastValue || !objectId) return;
     setTool({ toolType: ToolType.SELECTOR });
     pushLabeling(data => {
       const { id, values, fieldSchema } = builder.field;
-      const result = Object.entries(values)[0];
-      if (!result) return;
-
-      const [key, oldValues] = result;
-      const newValues = calculateNewValues(oldValues, fieldSchema.perFrame, {
-        frame: currentFrame,
-        value: factoryState.lastValue,
-      });
-      return setAttributeUpdate(data, objectId, id, { [key]: newValues });
+      const value = builderState.lastValue?.value;
+      if (!value) return;
+      return setAttributeUpdate(
+        data,
+        objectId,
+        id,
+        calculateNewValues(values, fieldSchema.perFrame, value),
+      );
     });
   }, [
-    builder.field,
+    builder?.field,
     currentFrame,
-    factoryState.isEnded,
-    factoryState.lastValue,
+    builderState.isEnded,
+    builderState.lastValue,
     objectId,
     pushLabeling,
     setTool,
   ]);
 
-  return result;
+  return { builderResult, object, field: builder?.field };
 }
