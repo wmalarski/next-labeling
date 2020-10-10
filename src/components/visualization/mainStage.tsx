@@ -23,6 +23,7 @@ export default function MainStage(): JSX.Element {
   const tableObjects = objects.flatMap(object => {
     const isInFrame = object.frames?.includes(currentFrame) ?? true;
     const isSelected = selected.some(sel => sel.objectId === object.id);
+    // return object.fields.map(field => (<PixiFinishedObject fieldSchema={field} />));
     return [];
   });
 
