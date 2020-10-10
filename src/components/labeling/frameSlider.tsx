@@ -5,11 +5,13 @@ import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import Forward5Icon from "@material-ui/icons/Forward5";
 import Replay5Icon from "@material-ui/icons/Replay5";
-import React, { useContext } from "react";
+import React, { useCallback, useContext } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import FramesContext from "../../contexts/frames/framesContext";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
+import LabelingContext from "../../contexts/labeling/labelingContext";
+import { frameToRange } from "../../utils/labeling/functions";
+import { setCurrentFrameUpdate } from "../../utils/labeling/updates";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -29,7 +31,21 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function FrameSlider(): JSX.Element {
   const classes = useStyles();
-  const { currentFrame, duration, moveTo, moveBy } = useContext(FramesContext);
+  const { history, duration } = useContext(LabelingContext);
+  const { setLabeling } = history;
+  const { currentFrame } = history.data;
+
+  const moveBy = useCallback(
+    (value: number): void =>
+      setLabeling(data => ({
+        message: "Frame changed",
+        data: setCurrentFrameUpdate(
+          data,
+          frameToRange(currentFrame + Number(value), duration),
+        ),
+      })),
+    [currentFrame, duration, setLabeling],
+  );
 
   return (
     <div className={classes.frameSlider}>
@@ -39,7 +55,15 @@ export default function FrameSlider(): JSX.Element {
           value={currentFrame}
           min={0}
           max={duration}
-          onChange={(_event, value) => moveTo(Number(value))}
+          onChange={(_event, value) =>
+            history.setLabeling(data => ({
+              message: "Frame changed",
+              data: setCurrentFrameUpdate(
+                data,
+                frameToRange(Number(value), duration),
+              ),
+            }))
+          }
           aria-labelledby="continuous-slider"
         />
 

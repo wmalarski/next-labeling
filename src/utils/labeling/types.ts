@@ -60,6 +60,14 @@ export const LabelingDocument = t.strict({
 export type LabelingDocument = t.TypeOf<typeof LabelingDocument>;
 
 // ------------ WIP DATA --------------
+export const ObjectSelection = t.strict({
+  objectId: t.string,
+  objectSelected: t.boolean,
+  fieldIds: t.array(t.string),
+  singleton: t.boolean,
+});
+export type ObjectSelection = t.TypeOf<typeof ObjectSelection>;
+
 export const ExtendedField = t.strict({
   ...LabelingFieldFields,
   fieldSchema: FieldSchema,
@@ -75,5 +83,8 @@ export type ExtendedObject = t.TypeOf<typeof ExtendedObject>;
 
 export const ExtendedLabeling = t.strict({
   objects: t.array(ExtendedObject),
+  currentFrame: t.number,
+  selected: t.array(ObjectSelection),
+  toggled: t.array(t.string),
 });
 export type ExtendedLabeling = t.TypeOf<typeof ExtendedLabeling>;

@@ -3,7 +3,6 @@ import { BuildRounded } from "@material-ui/icons";
 import * as PIXI from "pixi.js";
 import React, { useContext } from "react";
 
-import FramesContext from "../../contexts/frames/framesContext";
 import LabelingContext from "../../contexts/labeling/labelingContext";
 import ToolContext, { ToolType } from "../../contexts/tool/toolContext";
 import useObjectBuilder from "../../utils/vizualization/useObjectBuilder";
@@ -12,15 +11,17 @@ import PixiObject from "./objects/pixiObject";
 import ToolsHeader from "./toolsHeader";
 
 export default function MainStage(): JSX.Element {
-  const { document, history } = useContext(LabelingContext);
-  const { currentFrame, duration, setDuration } = useContext(FramesContext);
+  const { document, history, duration, setDuration } = useContext(
+    LabelingContext,
+  );
+  const { objects, currentFrame } = history.data;
   const fps = document.fps ?? 24;
 
   const { toolType, objectId } = useContext(ToolContext);
 
   const objectBuilderSelected = !!objectId;
   const object = objectBuilderSelected
-    ? history.data.objects.find(object => object.id === objectId)
+    ? objects.find(object => object.id === objectId)
     : undefined;
   const objectBuilder = useObjectBuilder(object);
   const objectsInProgress = [objectBuilder.current, ...objectBuilder.coords];
@@ -61,7 +62,7 @@ export default function MainStage(): JSX.Element {
           }}
           pointerdown={() => {
             if (!objectBuilder.current.canBeFinished) {
-              objectBuilder.acceptPoint();
+              // objectBuilder.acceptPoint();
             }
           }}
         >

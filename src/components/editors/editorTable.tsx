@@ -4,9 +4,7 @@ import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import React, { useContext } from "react";
 
-import FramesContext from "../../contexts/frames/framesContext";
 import LabelingContext from "../../contexts/labeling/labelingContext";
-import SelectionContext from "../../contexts/selection/selectionContext";
 import { ExtendedField, ExtendedObject } from "../../utils/labeling/types";
 import {
   changeAttributeUpdate,
@@ -23,8 +21,7 @@ export interface TableObject {
 
 export default function EditorTable(): JSX.Element {
   const { history } = useContext(LabelingContext);
-  const { selected } = useContext(SelectionContext);
-  const { currentFrame } = useContext(FramesContext);
+  const { selected, currentFrame } = history.data;
 
   const { objects } = history.data;
 

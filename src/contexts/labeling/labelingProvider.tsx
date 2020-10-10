@@ -24,6 +24,7 @@ export default function LabelingProvider(
   const router = useRouter();
 
   const [document, setDocument] = useState(initialDocument);
+  const [duration, setDuration] = useState(1000);
   const history = useLabelingHistory(initialDocument);
 
   const { update: updateLabeling, state: updateState } = useUpdateDocument<
@@ -60,6 +61,8 @@ export default function LabelingProvider(
       value={{
         document,
         history,
+        duration,
+        setDuration,
         pushLabeling: document => {
           if (document.id) {
             updateLabeling(document.id, document);

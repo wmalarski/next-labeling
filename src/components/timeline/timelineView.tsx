@@ -4,25 +4,27 @@ import TreeView from "@material-ui/lab/TreeView/TreeView";
 import React, { useContext } from "react";
 
 import LabelingContext from "../../contexts/labeling/labelingContext";
-import SelectionContext, {
-  ObjectSelection,
-} from "../../contexts/selection/selectionContext";
+import { ObjectSelection } from "../../utils/labeling/types";
+import {
+  setSelectedUpdate,
+  setToggledUpdate,
+} from "../../utils/labeling/updates";
 import { TimelineObjectItem } from "./timelineObjectItem";
 
 export default function TimelineView(): JSX.Element {
   const { history } = useContext(LabelingContext);
-  const { selected: selectedObjects, select, toggle, toggled } = useContext(
-    SelectionContext,
-  );
 
-  const { objects } = history.data;
+  const { objects, selected: selectedObjects, toggled } = history.data;
   const selected = selectedObjects.flatMap(object => [
     ...(object.objectSelected ? [object.objectId] : []),
     ...object.fieldIds.map(field => `${object.objectId}|${field}`),
   ]);
 
   const handleToggle = (_event: any, nodeIds: string[]) => {
-    toggle(nodeIds);
+    history.setLabeling(data => ({
+      message: "Toggle changed",
+      data: setToggledUpdate(data, nodeIds),
+    }));
   };
 
   const handleSelect = (_event: any, nodeIds: string[]) => {
@@ -49,7 +51,10 @@ export default function TimelineView(): JSX.Element {
         };
       }, {}),
     );
-    select(result);
+    history.setLabeling(data => ({
+      message: "Selection changed",
+      data: setSelectedUpdate(data, result),
+    }));
   };
 
   return (

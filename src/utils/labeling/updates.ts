@@ -1,7 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { createObject } from "./functions";
-import { ExtendedField, ExtendedLabeling, ExtendedObject } from "./types";
+import {
+  ExtendedField,
+  ExtendedLabeling,
+  ExtendedObject,
+  ObjectSelection,
+} from "./types";
 import { ObjectSchema } from "../schema/types";
 import { FieldValue, LabelingFieldValues } from "../editors/types";
 
@@ -16,6 +21,14 @@ export function addObjectUpdate(
     {
       ...data,
       objects: [...data.objects, object],
+      selected: [
+        {
+          fieldIds: [],
+          objectId: object.id,
+          objectSelected: true,
+          singleton: objectSchema.singleton,
+        },
+      ],
     },
   ];
 }
@@ -33,7 +46,7 @@ export function changeAttributeUpdate(
   const objectIndex = data.objects.findIndex(obj => obj.id === object.id);
   const objects = [...data.objects];
   objects[objectIndex] = { ...object, fields };
-  return { objects };
+  return { ...data, objects };
 }
 
 export function changeIsDoneUpdate(
@@ -44,7 +57,7 @@ export function changeIsDoneUpdate(
   const objectIndex = data.objects.findIndex(obj => obj.id === object.id);
   const objects = [...data.objects];
   objects[objectIndex] = { ...object, isDone: checked };
-  return { objects };
+  return { ...data, objects };
 }
 
 export function changeIsTrackedUpdate(
@@ -55,7 +68,7 @@ export function changeIsTrackedUpdate(
   const objectIndex = data.objects.findIndex(obj => obj.id === object.id);
   const objects = [...data.objects];
   objects[objectIndex] = { ...object, isTracked: checked };
-  return { objects };
+  return { ...data, objects };
 }
 
 export function changeNameUpdate(
@@ -66,7 +79,7 @@ export function changeNameUpdate(
   const objectIndex = data.objects.findIndex(obj => obj.id === object.id);
   const objects = [...data.objects];
   objects[objectIndex] = { ...object, name };
-  return { objects };
+  return { ...data, objects };
 }
 
 export function trackObjectsUpdate(
@@ -120,7 +133,7 @@ export function trackObjectsUpdate(
   });
 
   return {
-    result: { objects: pairs.map(pair => pair.object) },
+    result: { ...data, objects: pairs.map(pair => pair.object) },
     tracked: pairs.filter(pair => pair.tracked).length > 0,
   };
 }
@@ -130,6 +143,7 @@ export function removeObjectsUpdate(
   ids: string[],
 ): ExtendedLabeling {
   return {
+    ...data,
     objects: data.objects.filter(object => !ids.includes(object.id)),
   };
 }
@@ -139,6 +153,7 @@ export function copyObjectsUpdate(
   ids: string[],
 ): ExtendedLabeling {
   return {
+    ...data,
     objects: [
       ...data.objects,
       ...data.objects
@@ -162,6 +177,7 @@ export function deleteForwardUpdate(
   currentFrame: number,
 ): ExtendedLabeling {
   return {
+    ...data,
     objects: data.objects.flatMap(object => {
       if (!ids.includes(object.id)) return [object];
 
@@ -199,6 +215,7 @@ export function deleteBackwardUpdate(
   currentFrame: number,
 ): ExtendedLabeling {
   return {
+    ...data,
     objects: data.objects.flatMap(object => {
       if (!ids.includes(object.id)) return [object];
 
@@ -238,4 +255,25 @@ export function deleteBackwardUpdate(
       ];
     }),
   };
+}
+
+export function setSelectedUpdate(
+  data: ExtendedLabeling,
+  selected: ObjectSelection[],
+): ExtendedLabeling {
+  return { ...data, selected };
+}
+
+export function setToggledUpdate(
+  data: ExtendedLabeling,
+  toggled: string[],
+): ExtendedLabeling {
+  return { ...data, toggled };
+}
+
+export function setCurrentFrameUpdate(
+  data: ExtendedLabeling,
+  frame: number,
+): ExtendedLabeling {
+  return { ...data, currentFrame: frame };
 }

@@ -67,6 +67,9 @@ export function createExtendedLabeling(
   document: LabelingDocument,
 ): ExtendedLabeling {
   return {
+    currentFrame: 0,
+    selected: [],
+    toggled: [],
     objects: pairObjectsToSchema(document.objects, document.schema).map(
       ({ object, objectSchema }) => {
         const fields = object.fields.flatMap(field => {
@@ -115,6 +118,10 @@ export function getLastFrame(
   const frames = getFrames(data, ids);
   if (frames.length === 0) return undefined;
   return Math.max(...frames);
+}
+
+export function frameToRange(frame: number, duration: number): number {
+  return Math.max(Math.min(frame, duration), 0);
 }
 
 export interface ObjectBlock {
