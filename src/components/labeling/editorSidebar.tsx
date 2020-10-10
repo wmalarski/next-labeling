@@ -25,10 +25,10 @@ import deleteBackwardUpdate from "../../utils/labeling/updates/deleteBackwardUpd
 import deleteForwardUpdate from "../../utils/labeling/updates/deleteForwardUpdate";
 import deleteObjectsUpdate from "../../utils/labeling/updates/deleteObjectsUpdate";
 import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
-import useLabelingContext from "../../utils/labeling/useLabelingContext";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import { filterIcons, LabelingViewsState } from "../../utils/labeling/views";
 import { ToolType } from "../../utils/vizualization/types";
-import useToolContext from "../../utils/vizualization/useToolContext";
+import useToolContext from "../../utils/vizualization/hooks/useToolContext";
 import EditorSettingsDialog from "./editorSettingsDialog";
 
 const drawerWidth = 240;

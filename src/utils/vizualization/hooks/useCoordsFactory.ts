@@ -1,8 +1,8 @@
 import * as PIXI from "pixi.js";
 import { useCallback, useEffect, useState } from "react";
 
-import { CoordsFieldBuilder } from "./coordsBuilders";
-import { CoordsBuilderResult } from "./types";
+import { CoordsFieldBuilder } from "../coordsBuilders";
+import { CoordsBuilderResult } from "../types";
 
 export interface UseCoordsFactoryState {
   lastValue?: CoordsBuilderResult;

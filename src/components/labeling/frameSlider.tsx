@@ -12,7 +12,7 @@ import React, { useCallback } from "react";
 
 import { frameToRange } from "../../utils/labeling/functions";
 import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
-import useLabelingContext from "../../utils/labeling/useLabelingContext";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { ExtendedLabeling } from "../types";
-import { LabelingState } from "../useLabelingHistory";
+import { LabelingState } from "../hooks/useLabelingHistory";
 
 export default function addObjectCopyUpdate(
   data: ExtendedLabeling,

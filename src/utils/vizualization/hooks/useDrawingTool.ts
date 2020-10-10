@@ -1,10 +1,10 @@
 import { useEffect, useMemo } from "react";
 
-import { calculateNewValues } from "../editors/functions";
-import setAttributeUpdate from "../labeling/updates/setAttributeUpdate";
-import useLabelingContext from "../labeling/useLabelingContext";
-import getCoordsBuilders from "./coordsBuilders";
-import { ToolType } from "./types";
+import { calculateNewValues } from "../../editors/functions";
+import setAttributeUpdate from "../../labeling/updates/setAttributeUpdate";
+import useLabelingContext from "../../labeling/hooks/useLabelingContext";
+import getCoordsBuilders from "../coordsBuilders";
+import { ToolType } from "../types";
 import useCoordsFactory, { UseCoordsFactoryResult } from "./useCoordsFactory";
 import useToolContext from "./useToolContext";
 

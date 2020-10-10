@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import { createExtendedLabeling } from "./functions";
-import { ExtendedLabeling, LabelingDocument } from "./types";
+import { createExtendedLabeling } from "../functions";
+import { ExtendedLabeling, LabelingDocument } from "../types";
 
 export interface LabelingState {
   data: ExtendedLabeling;

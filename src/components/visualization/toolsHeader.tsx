@@ -9,7 +9,7 @@ import ToggleButton from "@material-ui/lab/ToggleButton";
 import React from "react";
 
 import { ToolType } from "../../utils/vizualization/types";
-import useToolContext from "../../utils/vizualization/useToolContext";
+import useToolContext from "../../utils/vizualization/hooks/useToolContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

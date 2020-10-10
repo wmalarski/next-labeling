@@ -4,8 +4,8 @@ import firebase from "firebase/app";
 import { PathReporter } from "io-ts/lib/PathReporter";
 import { useEffect, useState } from "react";
 
-import { LabelingCollection } from "../firestore/types";
-import { LabelingDocument } from "./types";
+import { LabelingCollection } from "../../firestore/types";
+import { LabelingDocument } from "../types";
 
 export interface UseFetchLabelingResult {
   isLoading: boolean;

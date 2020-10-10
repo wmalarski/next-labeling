@@ -9,7 +9,7 @@ import setAttributeUpdate from "../../utils/labeling/updates/setAttributeUpdate"
 import setIsDoneUpdate from "../../utils/labeling/updates/setIsDoneUpdate";
 import setIsTrackedUpdate from "../../utils/labeling/updates/setIsTrackedUpdate";
 import setNameUpdate from "../../utils/labeling/updates/setNameUpdate";
-import useLabelingContext from "../../utils/labeling/useLabelingContext";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import FieldEditor from "./fieldEditor";
 
 export interface TableObject {

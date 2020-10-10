@@ -11,7 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import SettingsIcon from "@material-ui/icons/Settings";
 import React, { useState } from "react";
 
-import useLabelingContext from "../../utils/labeling/useLabelingContext";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 
 export default function EditorSettingsDialog(): JSX.Element {
   const { document, saveLabeling } = useLabelingContext();

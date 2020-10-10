@@ -1,6 +1,6 @@
 import { LabelingFieldValues } from "../../editors/types";
 import { ExtendedLabeling } from "../types";
-import { LabelingState } from "../useLabelingHistory";
+import { LabelingState } from "../hooks/useLabelingHistory";
 
 export default function setAttributeUpdate(
   data: ExtendedLabeling,

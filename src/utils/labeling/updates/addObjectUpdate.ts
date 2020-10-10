@@ -1,7 +1,7 @@
 import { ObjectSchema } from "../../schema/types";
 import { createObject } from "../functions";
 import { ExtendedLabeling } from "../types";
-import { LabelingState } from "../useLabelingHistory";
+import { LabelingState } from "../hooks/useLabelingHistory";
 
 export default function addObjectUpdate(
   data: ExtendedLabeling,

@@ -1,5 +1,5 @@
 import { ExtendedLabeling } from "../types";
-import { LabelingState } from "../useLabelingHistory";
+import { LabelingState } from "../hooks/useLabelingHistory";
 
 export default function setToggledUpdate(
   data: ExtendedLabeling,

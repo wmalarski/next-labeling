@@ -3,7 +3,7 @@ import React from "react";
 
 import { calculateObjectBlocks } from "../../utils/labeling/functions";
 import { ExtendedObject } from "../../utils/labeling/types";
-import useLabelingContext from "../../utils/labeling/useLabelingContext";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import { FieldCanvas } from "./fieldCanvas";
 import { ObjectCanvas } from "./objectCanvas";
 

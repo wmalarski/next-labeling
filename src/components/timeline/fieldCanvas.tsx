@@ -12,7 +12,7 @@ import {
   ObjectBlock,
 } from "../../utils/labeling/functions";
 import { ExtendedField } from "../../utils/labeling/types";
-import useLabelingContext from "../../utils/labeling/useLabelingContext";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 
 export interface FieldCanvasProps {
   field: ExtendedField;

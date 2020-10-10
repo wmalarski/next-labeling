@@ -17,7 +17,7 @@ import ToolProvider from "../../src/components/visualization/toolProvider";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import initFirebase from "../../src/utils/auth/initFirebase";
 import { ResultSnackbarState } from "../../src/utils/firestore/types";
-import useFetchLabeling from "../../src/utils/labeling/useFetchLabeling";
+import useFetchLabeling from "../../src/utils/labeling/hooks/useFetchLabeling";
 import { LabelingViewsState } from "../../src/utils/labeling/views";
 import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
