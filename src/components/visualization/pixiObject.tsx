@@ -4,11 +4,11 @@ import { FieldType } from "../../utils/editors/types";
 import {
   PixiFinishedObjectProps,
   PixiInProgressObjectProps,
-} from "../../utils/vizualization/types";
+} from "../../utils/visualization/types";
 import {
   RectangleBuilderStage,
   RectangleInProgress,
-} from "../../utils/vizualization/objects/rectangle";
+} from "../../utils/visualization/objects/rectangle";
 
 export function PixiInProgressObject(
   props: PixiInProgressObjectProps,

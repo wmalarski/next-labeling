@@ -2,7 +2,7 @@ import { FieldType } from "../../editors/types";
 import { CoordsBuilder } from "../types";
 import { Graphics } from "pixi.js";
 import { PixiComponent } from "@inlet/react-pixi";
-import { PixiInProgressObjectProps } from "../../../utils/vizualization/types";
+import { PixiInProgressObjectProps } from "../types";
 
 export enum RectangleBuilderStage {
   NO_POINTS = 0,

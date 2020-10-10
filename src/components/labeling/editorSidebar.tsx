@@ -27,8 +27,8 @@ import deleteObjectsUpdate from "../../utils/labeling/updates/deleteObjectsUpdat
 import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import { filterIcons, LabelingViewsState } from "../../utils/labeling/views";
-import { ToolType } from "../../utils/vizualization/types";
-import useToolContext from "../../utils/vizualization/hooks/useToolContext";
+import { ToolType } from "../../utils/visualization/types";
+import useToolContext from "../../utils/visualization/hooks/useToolContext";
 import EditorSettingsDialog from "./editorSettingsDialog";
 
 const drawerWidth = 240;

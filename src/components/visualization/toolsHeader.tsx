@@ -8,8 +8,8 @@ import ZoomOutIcon from "@material-ui/icons/ZoomOut";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import React from "react";
 
-import { ToolType } from "../../utils/vizualization/types";
-import useToolContext from "../../utils/vizualization/hooks/useToolContext";
+import { ToolType } from "../../utils/visualization/types";
+import useToolContext from "../../utils/visualization/hooks/useToolContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

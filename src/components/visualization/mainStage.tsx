@@ -3,10 +3,10 @@ import * as PIXI from "pixi.js";
 import React, { useContext } from "react";
 
 import LabelingContext from "../../utils/labeling/contexts/labelingContext";
-import { MouseButton, ToolType } from "../../utils/vizualization/types";
-import useDrawingTool from "../../utils/vizualization/hooks/useDrawingTool";
-import useToolContext from "../../utils/vizualization/hooks/useToolContext";
-import useZoomAndPane from "../../utils/vizualization/hooks/useZoomAndPane";
+import { MouseButton, ToolType } from "../../utils/visualization/types";
+import useDrawingTool from "../../utils/visualization/hooks/useDrawingTool";
+import useToolContext from "../../utils/visualization/hooks/useToolContext";
+import useZoomAndPane from "../../utils/visualization/hooks/useZoomAndPane";
 import ToolsHeader from "./toolsHeader";
 
 export default function MainStage(): JSX.Element {
