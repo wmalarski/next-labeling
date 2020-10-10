@@ -18,6 +18,7 @@ import { LabelingDirection } from "../../utils/labeling/contexts/preferencesCont
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 import NumberInput from "../common/numberInput";
+import ShortcutsSettingsTreeView from "./shortcutsSettingsTreeView";
 
 export default function EditorSettingsDialog(): JSX.Element {
   const { document, saveLabeling } = useLabelingContext();
@@ -105,6 +106,8 @@ export default function EditorSettingsDialog(): JSX.Element {
               />
             </Grid>
           </Grid>
+          <DialogContentText>Shortcuts</DialogContentText>
+          <ShortcutsSettingsTreeView />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="inherit">

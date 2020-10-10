@@ -9,6 +9,7 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import Forward5Icon from "@material-ui/icons/Forward5";
 import Replay5Icon from "@material-ui/icons/Replay5";
 import React, { useCallback } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 import { frameToRange } from "../../utils/labeling/functions";
 import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
@@ -37,7 +38,7 @@ export default function FrameSlider(): JSX.Element {
   const { pushLabeling } = history;
   const { currentFrame } = history.data;
   const { preferences } = usePreferences();
-  const frameStep = preferences.frameChangeStep;
+  const { frameChangeStep: frameStep, shortcuts } = preferences;
 
   const moveBy = useCallback(
     (value: number): void =>
@@ -50,6 +51,11 @@ export default function FrameSlider(): JSX.Element {
       ),
     [currentFrame, duration, frameStep, pushLabeling],
   );
+
+  useHotkeys(shortcuts.DoubleFrameBackward, () => moveBy(-5), [moveBy]);
+  useHotkeys(shortcuts.FrameBackward, () => moveBy(-1), [moveBy]);
+  useHotkeys(shortcuts.FrameForward, () => moveBy(1), [moveBy]);
+  useHotkeys(shortcuts.DoubleFrameForward, () => moveBy(-5), [moveBy]);
 
   return (
     <div className={classes.frameSlider}>

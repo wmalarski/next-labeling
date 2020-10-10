@@ -4,9 +4,11 @@ import { unpackValues } from "../../editors/functions";
 
 export default function deleteForwardUpdate(
   data: ExtendedLabeling,
-  ids: string[],
-  currentFrame: number,
 ): LabelingState {
+  const currentFrame = data.currentFrame;
+  const ids = data.selected
+    .filter(object => object.objectSelected)
+    .map(object => object.objectId);
   return {
     message: "Objects deleted forward",
     data: {

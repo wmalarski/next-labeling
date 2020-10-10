@@ -15,7 +15,6 @@ export interface LabelingViewsState {
 }
 
 export const filterIcons = [
-  FilterIcon,
   Filter1Icon,
   Filter2Icon,
   Filter3Icon,
@@ -25,4 +24,5 @@ export const filterIcons = [
   Filter7Icon,
   Filter8Icon,
   Filter9Icon,
+  FilterIcon,
 ];
