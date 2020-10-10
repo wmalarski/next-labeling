@@ -19,16 +19,17 @@ import clsx from "clsx";
 import React, { useState } from "react";
 
 import { getFirstFrame, getLastFrame } from "../../utils/labeling/functions";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 import addObjectCopyUpdate from "../../utils/labeling/updates/addObjectCopyUpdate";
 import addObjectUpdate from "../../utils/labeling/updates/addObjectUpdate";
 import deleteBackwardUpdate from "../../utils/labeling/updates/deleteBackwardUpdate";
 import deleteForwardUpdate from "../../utils/labeling/updates/deleteForwardUpdate";
 import deleteObjectsUpdate from "../../utils/labeling/updates/deleteObjectsUpdate";
 import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
-import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import { filterIcons, LabelingViewsState } from "../../utils/labeling/views";
-import { ToolType } from "../../utils/visualization/types";
 import useToolContext from "../../utils/visualization/hooks/useToolContext";
+import { ToolType } from "../../utils/visualization/types";
 import EditorSettingsDialog from "./editorSettingsDialog";
 
 const drawerWidth = 240;
@@ -82,6 +83,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
   const { pushLabeling } = history;
   const { selected, currentFrame } = history.data;
   const { setTool } = useToolContext();
+  const { preferences } = usePreferences();
 
   const selectedObjects = selected.filter(
     object => !object.singleton && object.objectSelected,
@@ -205,7 +207,11 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
               pushLabeling(data => {
                 const frame = getFirstFrame(history.data, selectedObjectsIds);
                 if (!frame) return;
-                return setCurrentFrameUpdate(data, frame);
+                return setCurrentFrameUpdate(
+                  data,
+                  frame,
+                  preferences.frameChangeStep,
+                );
               })
             }
           >
@@ -221,7 +227,11 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
               pushLabeling(data => {
                 const frame = getLastFrame(history.data, selectedObjectsIds);
                 if (!frame) return;
-                return setCurrentFrameUpdate(data, frame);
+                return setCurrentFrameUpdate(
+                  data,
+                  frame,
+                  preferences.frameChangeStep,
+                );
               })
             }
           >

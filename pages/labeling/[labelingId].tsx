@@ -12,6 +12,7 @@ import EditorSidebar from "../../src/components/labeling/editorSidebar";
 import FrameSlider from "../../src/components/labeling/frameSlider";
 import LabelingProvider from "../../src/components/labeling/labelingProvider";
 import LabelingWorkspace from "../../src/components/labeling/labelingWorkspace";
+import PreferencesProvider from "../../src/components/labeling/preferencesProvider";
 import TimelineView from "../../src/components/timeline/timelineView";
 import ToolProvider from "../../src/components/visualization/toolProvider";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
@@ -81,51 +82,58 @@ function LabelingEditor(): JSX.Element {
             document={document}
             setSnackbarState={setSnackbarState}
           >
-            <RemoveScrollBar />
-            <div className={classes.root}>
-              <Header>
-                <EditorHeader />
-              </Header>
-              <EditorSidebar
-                viewsState={viewsState}
-                setViewsState={setViewsState}
-              />
-              {!isLoading && (
-                <div className={classes.content}>
-                  <div className={classes.toolbar} />
-                  <div
-                    style={{
-                      display: "flex",
-                      flexFlow: "column",
-                    }}
-                  >
+            <PreferencesProvider>
+              <RemoveScrollBar />
+              <div className={classes.root}>
+                <Header>
+                  <EditorHeader />
+                </Header>
+                <EditorSidebar
+                  viewsState={viewsState}
+                  setViewsState={setViewsState}
+                />
+                {!isLoading && (
+                  <div className={classes.content}>
+                    <div className={classes.toolbar} />
                     <div
                       style={{
-                        display: "flex", // TODO: fix sizes #3
-                        flexFlow: "row",
-                        flexGrow: 1,
+                        display: "flex",
+                        flexFlow: "column",
                       }}
                     >
-                      <div style={{ flexGrow: 1 }}>
-                        <LabelingWorkspace />
+                      <div
+                        style={{
+                          display: "flex", // TODO: fix sizes #3
+                          flexFlow: "row",
+                          flexGrow: 1,
+                        }}
+                      >
+                        <div style={{ flexGrow: 1 }}>
+                          <LabelingWorkspace />
+                        </div>
+                        <div style={{ overflow: "auto", height: 400 }}>
+                          {viewsState.properties && <EditorTable />}
+                        </div>
                       </div>
-                      <div style={{ overflow: "auto", height: 400 }}>
-                        {viewsState.properties && <EditorTable />}
+                      <div
+                        style={{ overflow: "auto", height: 100, flexGrow: 1 }}
+                      >
+                        {viewsState.timeline && <TimelineView />}
                       </div>
+                      <FrameSlider />
                     </div>
-                    <div style={{ overflow: "auto", height: 100, flexGrow: 1 }}>
-                      {viewsState.timeline && <TimelineView />}
-                    </div>
-                    <FrameSlider />
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
 
-            <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
-            <LoadingBackdrop isLoading={isLoading} />
+              <ResultSnackbar
+                state={snackbarState}
+                setState={setSnackbarState}
+              />
+              <LoadingBackdrop isLoading={isLoading} />
 
-            {/* <Footer /> */}
+              {/* <Footer /> */}
+            </PreferencesProvider>
           </LabelingProvider>
         </ToolProvider>
       )}

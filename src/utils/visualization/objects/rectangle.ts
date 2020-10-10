@@ -71,7 +71,6 @@ export const RectangleFinished = PixiComponent<
       frame,
     })?.Rectangle;
     if (!values || !values[0].value) return;
-    console.log({ values });
     const [x1, y1, x2, y2] = values[0].value;
 
     ins.x = x1;

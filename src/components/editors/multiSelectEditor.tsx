@@ -10,11 +10,13 @@ import {
   getFieldValue,
 } from "../../utils/editors/functions";
 import { FieldEditorProps, FieldType } from "../../utils/editors/types";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 
 export default function MultiSelectEditor(
   props: FieldEditorProps,
 ): JSX.Element {
   const { disabled, frame, perFrame, attributes, onChange } = props;
+  const { preferences } = usePreferences();
   const config = attributes.MultiSelect;
 
   const frameValues = getFieldValue(props)?.MultiSelect;
@@ -42,25 +44,35 @@ export default function MultiSelectEditor(
                 onChange(values => {
                   const textIndex = selected.indexOf(option.text);
                   if (textIndex === -1) {
-                    return calculateNewValues(values, perFrame, {
-                      [FieldType.MULSELECT]: [
-                        {
-                          frame,
-                          value: [...selected, option.text],
-                        },
-                      ],
-                    });
+                    return calculateNewValues(
+                      values,
+                      perFrame,
+                      {
+                        [FieldType.MULSELECT]: [
+                          {
+                            frame,
+                            value: [...selected, option.text],
+                          },
+                        ],
+                      },
+                      preferences.labelingDirection,
+                    );
                   }
                   const newSelected = [...selected];
                   newSelected.splice(textIndex, 1);
-                  return calculateNewValues(values, perFrame, {
-                    [FieldType.MULSELECT]: [
-                      {
-                        frame,
-                        value: newSelected,
-                      },
-                    ],
-                  });
+                  return calculateNewValues(
+                    values,
+                    perFrame,
+                    {
+                      [FieldType.MULSELECT]: [
+                        {
+                          frame,
+                          value: newSelected,
+                        },
+                      ],
+                    },
+                    preferences.labelingDirection,
+                  );
                 })
               }
             >

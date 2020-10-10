@@ -7,9 +7,11 @@ import {
   getFieldValue,
 } from "../../utils/editors/functions";
 import { FieldEditorProps, FieldType } from "../../utils/editors/types";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 
 export default function CheckBoxEditor(props: FieldEditorProps): JSX.Element {
   const { disabled, name, perFrame, frame, onChange } = props;
+  const { preferences } = usePreferences();
 
   const frameValues = getFieldValue(props)?.CheckBox;
   if (!frameValues) return <></>;
@@ -24,14 +26,19 @@ export default function CheckBoxEditor(props: FieldEditorProps): JSX.Element {
           onChange={event => {
             const checked = event.target.checked;
             onChange(values =>
-              calculateNewValues(values, perFrame, {
-                [FieldType.CHECKBOX]: [
-                  {
-                    frame,
-                    value: checked,
-                  },
-                ],
-              }),
+              calculateNewValues(
+                values,
+                perFrame,
+                {
+                  [FieldType.CHECKBOX]: [
+                    {
+                      frame,
+                      value: checked,
+                    },
+                  ],
+                },
+                preferences.labelingDirection,
+              ),
             );
           }}
         />

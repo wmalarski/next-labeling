@@ -6,9 +6,11 @@ import {
   getFieldValue,
 } from "../../utils/editors/functions";
 import { FieldEditorProps, FieldType } from "../../utils/editors/types";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 
 export default function NumericEditor(props: FieldEditorProps): JSX.Element {
   const { disabled, name, perFrame, frame, attributes, onChange } = props;
+  const { preferences } = usePreferences();
   const config = attributes.Numeric;
 
   const frameValues = getFieldValue(props)?.Numeric;
@@ -31,14 +33,19 @@ export default function NumericEditor(props: FieldEditorProps): JSX.Element {
       onChange={event => {
         const value = Number(event.target.value);
         onChange(values =>
-          calculateNewValues(values, perFrame, {
-            [FieldType.NUMERIC]: [
-              {
-                frame,
-                value,
-              },
-            ],
-          }),
+          calculateNewValues(
+            values,
+            perFrame,
+            {
+              [FieldType.NUMERIC]: [
+                {
+                  frame,
+                  value,
+                },
+              ],
+            },
+            preferences.labelingDirection,
+          ),
         );
       }}
     />

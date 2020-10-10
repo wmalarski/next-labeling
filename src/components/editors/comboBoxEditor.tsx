@@ -9,9 +9,11 @@ import {
   getFieldValue,
 } from "../../utils/editors/functions";
 import { FieldEditorProps, FieldType } from "../../utils/editors/types";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 
 export default function ComboBoxEditor(props: FieldEditorProps): JSX.Element {
   const { disabled, name, perFrame, frame, attributes, onChange } = props;
+  const { preferences } = usePreferences();
   const config = attributes.ComboBox;
 
   const frameValues = getFieldValue(props)?.ComboBox;
@@ -30,14 +32,19 @@ export default function ComboBoxEditor(props: FieldEditorProps): JSX.Element {
         onChange={event => {
           const newText = event.target.value as string;
           onChange(values =>
-            calculateNewValues(values, perFrame, {
-              [FieldType.COMBOBOX]: [
-                {
-                  frame,
-                  value: newText,
-                },
-              ],
-            }),
+            calculateNewValues(
+              values,
+              perFrame,
+              {
+                [FieldType.COMBOBOX]: [
+                  {
+                    frame,
+                    value: newText,
+                  },
+                ],
+              },
+              preferences.labelingDirection,
+            ),
           );
         }}
       >

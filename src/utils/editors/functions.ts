@@ -1,3 +1,4 @@
+import { LabelingDirection } from "../labeling/contexts/preferencesContext";
 import { FieldType, LabelingFieldValues } from "./types";
 
 export interface UnpackedFrameValuePair {
@@ -57,7 +58,10 @@ export function calculateNewValues(
   values: LabelingFieldValues,
   perFrame: boolean,
   newValue: LabelingFieldValues,
+  direction: LabelingDirection,
 ): LabelingFieldValues {
+  if (direction !== LabelingDirection.FORWARD) return values; // TODO: #20
+
   const unpackedValues = unpackValues(values);
   const unpackedNewValue = unpackValues(newValue);
   if (!unpackedValues || !unpackedNewValue) return values;

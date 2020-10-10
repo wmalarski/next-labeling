@@ -10,9 +10,11 @@ import {
   getFieldValue,
 } from "../../utils/editors/functions";
 import { FieldEditorProps, FieldType } from "../../utils/editors/types";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 
 export default function SelectEditor(props: FieldEditorProps): JSX.Element {
   const { disabled, frame, perFrame, attributes, onChange } = props;
+  const { preferences } = usePreferences();
   const config = attributes.Select;
 
   const frameValues = getFieldValue(props)?.Select;
@@ -38,14 +40,19 @@ export default function SelectEditor(props: FieldEditorProps): JSX.Element {
               color="inherit"
               onChange={() =>
                 onChange(values =>
-                  calculateNewValues(values, perFrame, {
-                    [FieldType.SELECT]: [
-                      {
-                        frame,
-                        value: option.text,
-                      },
-                    ],
-                  }),
+                  calculateNewValues(
+                    values,
+                    perFrame,
+                    {
+                      [FieldType.SELECT]: [
+                        {
+                          frame,
+                          value: option.text,
+                        },
+                      ],
+                    },
+                    preferences.labelingDirection,
+                  ),
                 )
               }
             >

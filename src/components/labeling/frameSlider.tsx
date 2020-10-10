@@ -13,6 +13,7 @@ import React, { useCallback } from "react";
 import { frameToRange } from "../../utils/labeling/functions";
 import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -35,16 +36,19 @@ export default function FrameSlider(): JSX.Element {
   const { history, duration } = useLabelingContext();
   const { pushLabeling } = history;
   const { currentFrame } = history.data;
+  const { preferences } = usePreferences();
+  const frameStep = preferences.frameChangeStep;
 
   const moveBy = useCallback(
     (value: number): void =>
       pushLabeling(data =>
         setCurrentFrameUpdate(
           data,
-          frameToRange(currentFrame + Number(value), duration),
+          frameToRange(currentFrame + Number(value) * frameStep, duration),
+          frameStep,
         ),
       ),
-    [currentFrame, duration, pushLabeling],
+    [currentFrame, duration, frameStep, pushLabeling],
   );
 
   return (
@@ -60,6 +64,7 @@ export default function FrameSlider(): JSX.Element {
               setCurrentFrameUpdate(
                 data,
                 frameToRange(Number(value), duration),
+                frameStep,
               ),
             )
           }
