@@ -1,4 +1,5 @@
 import { Sprite, Stage, Text, Container } from "@inlet/react-pixi";
+import { BuildRounded } from "@material-ui/icons";
 import * as PIXI from "pixi.js";
 import React, { useContext } from "react";
 
@@ -7,6 +8,7 @@ import LabelingContext from "../../contexts/labeling/labelingContext";
 import ToolContext, { ToolType } from "../../contexts/tool/toolContext";
 import useObjectBuilder from "../../utils/vizualization/useObjectBuilder";
 import useZoomAndPane from "../../utils/vizualization/useZoomAndPane";
+import PixiObject from "./objects/pixiObject";
 import ToolsHeader from "./toolsHeader";
 
 export default function MainStage(): JSX.Element {
@@ -21,6 +23,8 @@ export default function MainStage(): JSX.Element {
     ? history.data.objects.find(object => object.id === objectId)
     : undefined;
   const objectBuilder = useObjectBuilder(object);
+  const objectsInProgress = [objectBuilder.current, ...objectBuilder.coords];
+  // console.log({ objectBuilder });
 
   const zoomAndPaneSelected = toolType === ToolType.ZOOM_AND_PANE;
   const {
@@ -51,13 +55,13 @@ export default function MainStage(): JSX.Element {
               event.currentTarget,
               event.data.global,
             );
-            if (!objectBuilder.isFinished) {
+            if (!objectBuilder.current.isFinished) {
               objectBuilder.pushPoint(local);
             }
           }}
           pointerdown={() => {
-            if (!objectBuilder.isFinished) {
-              objectBuilder.acceptPoint(objectBuilder.canBeFinished);
+            if (!objectBuilder.current.canBeFinished) {
+              objectBuilder.acceptPoint();
             }
           }}
         >
@@ -87,6 +91,20 @@ export default function MainStage(): JSX.Element {
               fill: "white",
             }}
           />
+          {/* {objectsInProgress.map(value =>
+            value.fieldSchema && value.value ? (
+              <PixiObject
+                key={value.fieldSchema.id}
+                canBeFinished={value.canBeFinished}
+                fieldSchema={value.fieldSchema}
+                isFinished={value.isFinished}
+                stage={value.stage}
+                value={value.value}
+              />
+            ) : (
+              <></>
+            ),
+          )} */}
         </Container>
       </Stage>
     </div>

@@ -6,6 +6,7 @@ import { ExtendedField, ExtendedObject } from "../labeling/types";
 export interface CoordsBuilderResult {
   stage: number;
   value?: LabelingFieldValue;
+  isFinished: boolean;
   canBeFinished: boolean;
 }
 
@@ -24,12 +25,14 @@ export const RectangleBuilder: CoordsBuilder = (point, value) => {
   if (!value?.Rectangle) {
     return {
       canBeFinished: false,
+      isFinished: false,
       value: { [FieldType.RECTANGLE]: [point.x, point.y, 0, 0] },
       stage: RectangleBuilderStage.ONE_POINT,
     };
   }
   return {
     canBeFinished: true,
+    isFinished: true,
     value: {
       [FieldType.RECTANGLE]: [
         value.Rectangle[0],
@@ -50,6 +53,7 @@ export enum PointBuilderStage {
 export const PointBuilder: CoordsBuilder = point => {
   return {
     canBeFinished: true,
+    isFinished: true,
     value: { [FieldType.POINT]: [point.x, point.y] },
     stage: PointBuilderStage.ONE_POINT,
   };
@@ -63,7 +67,8 @@ export enum LineBuilderStage {
 export const LineBuilder: CoordsBuilder = (point, values) => {
   const points = values?.Line ?? [];
   return {
-    canBeFinished: false,
+    canBeFinished: true,
+    isFinished: false,
     value: { [FieldType.LINE]: [...points, [point.x, point.y]] },
     stage: LineBuilderStage.MANY_POINTS,
   };
@@ -77,7 +82,8 @@ export enum PolygonBuilderStage {
 export const PolygonBuilder: CoordsBuilder = (point, values) => {
   const points = values?.Line ?? [];
   return {
-    canBeFinished: false,
+    canBeFinished: true,
+    isFinished: false,
     value: { [FieldType.POLYGON]: [...points, [point.x, point.y]] },
     stage: LineBuilderStage.MANY_POINTS,
   };

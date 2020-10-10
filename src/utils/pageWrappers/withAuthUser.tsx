@@ -20,7 +20,6 @@ export function getAuthUserInfo(ctx: NextPageContext): AuthUserInfo {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const { addSession } = require("../middleware/cookieSession");
     addSession(req, res);
-    console.log("server-side");
     return createAuthUserInfo({
       firebaseUser: get(req, "session.decodedToken", null),
       token: get(req, "session.token", null),

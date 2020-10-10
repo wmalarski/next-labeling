@@ -1,13 +1,13 @@
 import * as PIXI from "pixi.js";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { LabelingFieldValue } from "../editors/types";
+import { FieldSchema } from "../schema/types";
 import { CoordsBuilderResult, CoordsFieldBuilder } from "./coordsBuilders";
 
 export interface UseCoordsBuilderState {
   history: CoordsBuilderResult[];
   temporary?: CoordsBuilderResult;
-  isFinished: boolean;
 }
 
 export interface UseCoordsBuilderResult {
@@ -15,24 +15,29 @@ export interface UseCoordsBuilderResult {
   isFinished: boolean;
   canBeFinished: boolean;
   value?: LabelingFieldValue;
+  fieldSchema?: FieldSchema;
   pushPoint: (point: PIXI.Point) => void;
   acceptPoint: (isFinished: boolean) => void;
   removePoint: () => void;
   resetEdit: () => void;
 }
 
+const defaultState: UseCoordsBuilderState = {
+  history: [
+    {
+      stage: 0,
+      isFinished: false,
+      canBeFinished: false,
+    },
+  ],
+};
+
 export default function useCoordsBuilder(
   fieldBuilder?: CoordsFieldBuilder,
 ): UseCoordsBuilderResult {
-  const [{ history, isFinished }, setState] = useState<UseCoordsBuilderState>({
-    isFinished: false,
-    history: [
-      {
-        stage: 0,
-        canBeFinished: false,
-      },
-    ],
-  });
+  const [{ history }, setState] = useState<UseCoordsBuilderState>(defaultState);
+
+  useEffect(() => setState(defaultState), [fieldBuilder]);
 
   const pushPoint = useCallback(
     (point: PIXI.Point): void => {
@@ -75,14 +80,11 @@ export default function useCoordsBuilder(
     [],
   );
 
-  const resetEdit = useCallback(
-    (): void => setState({ history: [], isFinished: false }),
-    [],
-  );
+  const resetEdit = useCallback((): void => setState({ history: [] }), []);
 
   return {
-    isFinished,
     ...history[history.length - 1],
+    fieldSchema: fieldBuilder?.field.fieldSchema,
     pushPoint,
     acceptPoint,
     removePoint,
