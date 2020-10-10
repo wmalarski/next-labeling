@@ -16,7 +16,8 @@ import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import ViewListIcon from "@material-ui/icons/ViewList";
 import clsx from "clsx";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
 import { getFirstFrame, getLastFrame } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
@@ -27,6 +28,10 @@ import deleteBackwardUpdate from "../../utils/labeling/updates/deleteBackwardUpd
 import deleteForwardUpdate from "../../utils/labeling/updates/deleteForwardUpdate";
 import deleteObjectsUpdate from "../../utils/labeling/updates/deleteObjectsUpdate";
 import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
+import setObjectsIsDoneUpdate from "../../utils/labeling/updates/setObjectsIsDoneUpdate";
+import setSelectedAllUpdate from "../../utils/labeling/updates/setSelectedAllUpdate";
+import setSelectedNextUpdate from "../../utils/labeling/updates/setSelectedNextUpdate";
+import setSelectedUpdate from "../../utils/labeling/updates/setSelectedUpdate";
 import { filterIcons, LabelingViewsState } from "../../utils/labeling/views";
 import useToolContext from "../../utils/visualization/hooks/useToolContext";
 import { ToolType } from "../../utils/visualization/types";
@@ -84,6 +89,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
   const { selected, currentFrame } = history.data;
   const { setTool } = useToolContext();
   const { preferences } = usePreferences();
+  const { shortcuts } = preferences;
 
   const selectedObjects = selected.filter(
     object => !object.singleton && object.objectSelected,
@@ -91,6 +97,55 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
   const selectedObjectsIds = selectedObjects.map(object => object.objectId);
   const isSelected = selectedObjects.length !== 0;
   const [open, setOpen] = useState(true);
+
+  const setObjectDone = useCallback(
+    () => pushLabeling(data => setObjectsIsDoneUpdate(data)),
+    [pushLabeling],
+  );
+
+  const deleteObjects = useCallback(
+    () => pushLabeling(data => deleteObjectsUpdate(data)),
+    [pushLabeling],
+  );
+
+  const deleteForward = useCallback(
+    () => pushLabeling(data => deleteForwardUpdate(data)),
+    [pushLabeling],
+  );
+
+  const deleteBackward = useCallback(
+    () => pushLabeling(data => deleteBackwardUpdate(data)),
+    [pushLabeling],
+  );
+
+  const selectAll = useCallback(
+    () => pushLabeling(data => setSelectedAllUpdate(data)),
+    [pushLabeling],
+  );
+
+  const deselect = useCallback(
+    () => pushLabeling(data => setSelectedUpdate(data, [])),
+    [pushLabeling],
+  );
+
+  const selectPrevious = useCallback(
+    () => pushLabeling(data => setSelectedNextUpdate(data, -1)),
+    [pushLabeling],
+  );
+
+  const selectNext = useCallback(
+    () => pushLabeling(data => setSelectedNextUpdate(data, 1)),
+    [pushLabeling],
+  );
+
+  useHotkeys(shortcuts.SetObjectDone, setObjectDone, [setObjectDone]);
+  useHotkeys(shortcuts.DeleteObject, deleteObjects, [deleteObjects]);
+  useHotkeys(shortcuts.DeleteForward, deleteForward, [deleteForward]);
+  useHotkeys(shortcuts.DeleteBackward, deleteBackward, [deleteBackward]);
+  useHotkeys(shortcuts.SelectAll, selectAll, [selectAll]);
+  useHotkeys(shortcuts.Deselect, deselect, [deselect]);
+  useHotkeys(shortcuts.SelectNext, selectNext, [selectNext]);
+  useHotkeys(shortcuts.SelectPrevious, selectPrevious, [selectPrevious]);
 
   return (
     <Drawer
@@ -157,43 +212,19 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             </ListItemIcon>
             <ListItemText primary={"Copy"} />
           </ListItem>
-          <ListItem
-            disabled={!isSelected}
-            button
-            onClick={() =>
-              pushLabeling(data =>
-                deleteObjectsUpdate(data, selectedObjectsIds),
-              )
-            }
-          >
+          <ListItem disabled={!isSelected} button onClick={deleteObjects}>
             <ListItemIcon>
               <HighlightOffIcon />
             </ListItemIcon>
             <ListItemText primary={"Delete"} />
           </ListItem>
-          <ListItem
-            disabled={!isSelected}
-            button
-            onClick={() =>
-              pushLabeling(data =>
-                deleteBackwardUpdate(data, selectedObjectsIds, currentFrame),
-              )
-            }
-          >
+          <ListItem disabled={!isSelected} button onClick={deleteBackward}>
             <ListItemIcon>
               <ArrowBackIcon />
             </ListItemIcon>
             <ListItemText primary={"Delete Backward"} />
           </ListItem>
-          <ListItem
-            disabled={!isSelected}
-            button
-            onClick={() =>
-              pushLabeling(data =>
-                deleteForwardUpdate(data, selectedObjectsIds, currentFrame),
-              )
-            }
-          >
+          <ListItem disabled={!isSelected} button onClick={deleteForward}>
             <ListItemIcon>
               <ArrowForwardIcon />
             </ListItemIcon>

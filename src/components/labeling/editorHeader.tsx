@@ -7,23 +7,41 @@ import RedoIcon from "@material-ui/icons/Redo";
 import SaveIcon from "@material-ui/icons/Save";
 import UndoIcon from "@material-ui/icons/Undo";
 import { useRouter } from "next/router";
-import React, { useContext } from "react";
+import React from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
-import LabelingContext from "../../utils/labeling/contexts/labelingContext";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 import { LabelingDocument } from "../../utils/labeling/types";
 
 export default function EditorHeader(): JSX.Element {
   const router = useRouter();
 
-  const { document, saveLabeling, removeLabeling, history } = useContext(
-    LabelingContext,
-  );
+  const { preferences } = usePreferences();
+  const { shortcuts } = preferences;
+  const {
+    document,
+    saveLabeling,
+    removeLabeling,
+    history,
+  } = useLabelingContext();
+  const {
+    undoLabeling,
+    redoLabeling,
+    message,
+    undoMessage,
+    redoMessage,
+    data,
+  } = history;
+
+  useHotkeys(shortcuts.Undo, undoLabeling, [undoLabeling]);
+  useHotkeys(shortcuts.Redo, redoLabeling, [redoLabeling]);
 
   return (
     <ButtonGroup size="small" color="inherit" variant="text">
-      {history.undoMessage ? (
-        <Tooltip title={history.message}>
-          <Button startIcon={<UndoIcon />} onClick={history.undoLabeling}>
+      {undoMessage ? (
+        <Tooltip title={message}>
+          <Button startIcon={<UndoIcon />} onClick={undoLabeling}>
             Undo
           </Button>
         </Tooltip>
@@ -32,9 +50,9 @@ export default function EditorHeader(): JSX.Element {
           Undo
         </Button>
       )}
-      {history.redoMessage ? (
-        <Tooltip title={history.redoMessage}>
-          <Button startIcon={<RedoIcon />} onClick={history.redoLabeling}>
+      {redoMessage ? (
+        <Tooltip title={redoMessage}>
+          <Button startIcon={<RedoIcon />} onClick={redoLabeling}>
             Redo
           </Button>
         </Tooltip>
@@ -49,7 +67,7 @@ export default function EditorHeader(): JSX.Element {
           saveLabeling(
             LabelingDocument.encode({
               ...document,
-              objects: history.data.objects,
+              objects: data.objects,
             }),
           );
         }}

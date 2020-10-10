@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import { defaultShortcutActions, ShortcutActions } from "../shortcuts";
 
 export enum LabelingDirection {
   FORWARD = "FORWARD",
@@ -8,11 +9,13 @@ export enum LabelingDirection {
 export interface PreferencesContextState {
   labelingDirection: LabelingDirection;
   frameChangeStep: number;
+  shortcuts: ShortcutActions;
 }
 
-export const defaultPreferencesContextState = {
+export const defaultPreferencesContextState: PreferencesContextState = {
   labelingDirection: LabelingDirection.FORWARD,
   frameChangeStep: 1,
+  shortcuts: defaultShortcutActions,
 };
 
 export interface PreferencesContextValue {

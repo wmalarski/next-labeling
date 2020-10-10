@@ -28,6 +28,7 @@
     "react": "^16.13.1",
     "react-color": "^2.18.1",
     "react-dom": "^16.13.1",
+    "react-hotkeys-hook": "^2.3.1",
     "react-konva": "^16.13.0-6",
     "react-remove-scroll-bar": "^2.1.0",
     "react-resize-detector": "^5.2.0",

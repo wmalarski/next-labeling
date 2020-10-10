@@ -29,8 +29,17 @@ export default function PreferencesProvider(
     () =>
       setState(() => {
         const preferences = localStorage.getItem(preferencesStorageKey);
-        if (preferences) return JSON.parse(preferences);
-        return defaultPreferencesContextState;
+        const newPreferences = preferences
+          ? {
+              ...defaultPreferencesContextState,
+              ...JSON.parse(preferences),
+            }
+          : defaultPreferencesContextState;
+        localStorage.setItem(
+          preferencesStorageKey,
+          JSON.stringify(newPreferences),
+        );
+        return newPreferences;
       }),
     [],
   );
