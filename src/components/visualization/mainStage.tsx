@@ -1,13 +1,13 @@
-import { Sprite, Stage, Text, Container } from "@inlet/react-pixi";
-import { BuildRounded } from "@material-ui/icons";
+import { Container, Sprite, Stage, Text } from "@inlet/react-pixi";
 import * as PIXI from "pixi.js";
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 
 import LabelingContext from "../../contexts/labeling/labelingContext";
 import ToolContext, { ToolType } from "../../contexts/tool/toolContext";
-import useObjectBuilder from "../../utils/vizualization/useObjectBuilder";
+import getCoordsBuilders from "../../utils/vizualization/coordsBuilders";
+import { MouseButton } from "../../utils/vizualization/types";
+import useCoordsFactory from "../../utils/vizualization/useCoordsFactory";
 import useZoomAndPane from "../../utils/vizualization/useZoomAndPane";
-import PixiObject from "./objects/pixiObject";
 import ToolsHeader from "./toolsHeader";
 
 export default function MainStage(): JSX.Element {
@@ -19,13 +19,18 @@ export default function MainStage(): JSX.Element {
 
   const { toolType, objectId } = useContext(ToolContext);
 
-  const objectBuilderSelected = !!objectId;
-  const object = objectBuilderSelected
+  const isBuilderInProgress = !!objectId;
+  const object = isBuilderInProgress
     ? objects.find(object => object.id === objectId)
     : undefined;
-  const objectBuilder = useObjectBuilder(object);
-  const objectsInProgress = [objectBuilder.current, ...objectBuilder.coords];
-  // console.log({ objectBuilder });
+  const builders = useMemo(() => getCoordsBuilders(object), [object]);
+  const { acceptPoint, pushPoint, factoryState } = useCoordsFactory(
+    (builders ?? [])[0],
+  );
+  console.log(
+    JSON.stringify(factoryState.lastValue, null, 2),
+    JSON.stringify(factoryState.currentValue, null, 2),
+  );
 
   const zoomAndPaneSelected = toolType === ToolType.ZOOM_AND_PANE;
   const {
@@ -50,21 +55,23 @@ export default function MainStage(): JSX.Element {
           x={position.x}
           y={position.y}
           interactive={true}
-          pointermove={event => {
-            if (!objectBuilderSelected) return;
-            const local = event.data.getLocalPosition(
-              event.currentTarget,
-              event.data.global,
-            );
-            if (!objectBuilder.current.isFinished) {
-              objectBuilder.pushPoint(local);
-            }
-          }}
-          pointerdown={() => {
-            if (!objectBuilder.current.canBeFinished) {
-              // objectBuilder.acceptPoint();
-            }
-          }}
+          pointermove={event =>
+            pushPoint(
+              event.data.getLocalPosition(
+                event.currentTarget,
+                event.data.global,
+              ),
+            )
+          }
+          pointerdown={event =>
+            acceptPoint(
+              event.data.getLocalPosition(
+                event.currentTarget,
+                event.data.global,
+              ),
+              event.data.button === MouseButton.MIDDLE,
+            )
+          }
         >
           <Sprite
             texture={PIXI.Texture.from(document.filename)}

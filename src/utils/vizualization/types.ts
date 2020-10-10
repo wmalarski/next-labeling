@@ -8,3 +8,9 @@ export interface PixiObjectProps {
   fieldSchema: FieldSchema;
   value: LabelingFieldValue;
 }
+
+export enum MouseButton {
+  LEFT = 0,
+  MIDDLE = 1,
+  RIGHT = 2,
+}

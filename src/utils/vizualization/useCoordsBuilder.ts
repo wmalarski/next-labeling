@@ -1,28 +1,16 @@
 import * as PIXI from "pixi.js";
-import { useCallback, useEffect, useState } from "react";
+import { MutableRefObject, useCallback, useEffect, useRef } from "react";
 
-import { LabelingFieldValue } from "../editors/types";
 import { FieldSchema } from "../schema/types";
 import { CoordsBuilderResult, CoordsFieldBuilder } from "./coordsBuilders";
+import { MouseButton } from "./types";
 
-export interface UseCoordsBuilderState {
+export interface CoordsRefState {
   history: CoordsBuilderResult[];
   temporary?: CoordsBuilderResult;
 }
 
-export interface UseCoordsBuilderResult {
-  stage: number;
-  isFinished: boolean;
-  canBeFinished: boolean;
-  value?: LabelingFieldValue;
-  fieldSchema?: FieldSchema;
-  pushPoint: (point: PIXI.Point) => void;
-  acceptPoint: (isFinished: boolean) => void;
-  removePoint: () => void;
-  resetEdit: () => void;
-}
-
-const defaultState: UseCoordsBuilderState = {
+const initCoordsRefState = {
   history: [
     {
       stage: 0,
@@ -32,58 +20,74 @@ const defaultState: UseCoordsBuilderState = {
   ],
 };
 
+export interface UseCoordsBuilderResult {
+  coords: MutableRefObject<CoordsRefState>;
+  fieldSchema?: FieldSchema;
+  pushPoint: (point: PIXI.Point) => void;
+  acceptPoint: (forceFinish: boolean) => void;
+  removePoint: () => void;
+  resetEdit: () => void;
+}
+
 export default function useCoordsBuilder(
   fieldBuilder?: CoordsFieldBuilder,
 ): UseCoordsBuilderResult {
-  const [{ history }, setState] = useState<UseCoordsBuilderState>(defaultState);
-
-  useEffect(() => setState(defaultState), [fieldBuilder]);
+  const coords = useRef<CoordsRefState>(initCoordsRefState);
+  useEffect(() => {
+    coords.current = initCoordsRefState;
+  }, [fieldBuilder]);
 
   const pushPoint = useCallback(
     (point: PIXI.Point): void => {
       if (!fieldBuilder) return;
-      setState(oldState => {
-        const last = oldState.history[oldState.history.length - 1];
-        const result = fieldBuilder.builder(point, last.value);
-        if (!result) return oldState;
-        return { ...oldState, temporary: result };
-      });
+      const oldState = coords.current;
+      const last = oldState.history[oldState.history.length - 1];
+      const result = fieldBuilder.builder(point, last.value);
+      if (!result) return;
+      coords.current = { ...oldState, temporary: result };
     },
     [fieldBuilder],
   );
 
   const acceptPoint = useCallback(
-    (isFinished: boolean): void => {
+    (forceFinish: boolean): void => {
       if (!fieldBuilder) return;
-      setState(oldState => {
-        if (!oldState.temporary) return oldState;
-        return {
-          history: [...oldState.history, oldState.temporary],
-          isFinished,
-        };
-      });
+      const oldState = coords.current;
+      if (!oldState.temporary) return;
+
+      const isFinished =
+        oldState.temporary.isFinished ||
+        (oldState.temporary.canBeFinished && forceFinish);
+
+      coords.current = {
+        history: [
+          ...oldState.history,
+          {
+            ...oldState.temporary,
+            isFinished,
+          },
+        ],
+      };
     },
     [fieldBuilder],
   );
 
-  const removePoint = useCallback(
-    (): void =>
-      setState(oldState => {
-        const newHistory = [...oldState.history];
-        const temporary = newHistory.pop();
-        return {
-          isFinished: false,
-          temporary,
-          history: newHistory,
-        };
-      }),
-    [],
-  );
+  const removePoint = useCallback((): void => {
+    const oldState = coords.current;
+    const newHistory = [...oldState.history];
+    const temporary = newHistory.pop();
+    coords.current = {
+      history: newHistory,
+      temporary,
+    };
+  }, []);
 
-  const resetEdit = useCallback((): void => setState({ history: [] }), []);
+  const resetEdit = useCallback((): void => {
+    coords.current = initCoordsRefState;
+  }, []);
 
   return {
-    ...history[history.length - 1],
+    coords,
     fieldSchema: fieldBuilder?.field.fieldSchema,
     pushPoint,
     acceptPoint,
