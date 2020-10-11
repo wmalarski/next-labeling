@@ -1,9 +1,11 @@
 import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Grid from "@material-ui/core/Grid";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -121,6 +123,40 @@ export default function EditorSettingsDialog(): JSX.Element {
                 value={preferences.frameChangeStep}
                 onChange={value =>
                   setPreferences({ ...preferences, frameChangeStep: value })
+                }
+              />
+            </Grid>
+            <Grid item xs={4}>
+              Autosave interval(minutes)
+            </Grid>
+            <Grid item xs={6}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={!!preferences.autoSaveDelayMinutes}
+                    onChange={() =>
+                      setPreferences({
+                        ...preferences,
+                        autoSaveDelayMinutes: preferences.autoSaveDelayMinutes
+                          ? null
+                          : 5,
+                      })
+                    }
+                    name="checkedA"
+                  />
+                }
+                label="Enable"
+              />
+              <NumberInput
+                max={16}
+                min={1}
+                disabled={!preferences.autoSaveDelayMinutes}
+                value={preferences.autoSaveDelayMinutes ?? 5}
+                onChange={value =>
+                  setPreferences({
+                    ...preferences,
+                    autoSaveDelayMinutes: value,
+                  })
                 }
               />
             </Grid>
