@@ -10,12 +10,14 @@ export interface PreferencesContextState {
   labelingDirection: LabelingDirection;
   frameChangeStep: number;
   shortcuts: ShortcutActions;
+  autoSaveDelayMinutes: number | null;
 }
 
 export const defaultPreferencesContextState: PreferencesContextState = {
   labelingDirection: LabelingDirection.FORWARD,
   frameChangeStep: 1,
   shortcuts: defaultShortcutActions,
+  autoSaveDelayMinutes: 1,
 };
 
 export interface PreferencesContextValue {

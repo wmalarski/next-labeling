@@ -21,9 +21,20 @@ export enum ShortcutAction {
   MoveObjectDown = "MoveObjectDown",
   MoveObjectLeft = "MoveObjectLeft",
   MoveObjectRight = "MoveObjectRight",
+  SaveDatabase = "SaveDatabase",
 }
 
 export const shortcutCategories = [
+  {
+    name: "General",
+    actions: [
+      {
+        name: "Save in database",
+        action: ShortcutAction.SaveDatabase,
+        default: "ctrl+shift+s",
+      },
+    ],
+  },
   {
     name: "Frame change",
     actions: [

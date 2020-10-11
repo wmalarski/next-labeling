@@ -5,8 +5,11 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import SaveIcon from "@material-ui/icons/Save";
 import { useRouter } from "next/router";
 import React from "react";
+import { useHotkeys } from "react-hotkeys-hook";
 
+import { useLabelingAutosave } from "../../utils/labeling/hooks/useLabelingAutosave";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 import { LabelingDocument } from "../../utils/labeling/types";
 import UndoRedoButtons from "./undoRedoButtons";
 
@@ -20,21 +23,24 @@ export default function EditorHeader(): JSX.Element {
     history,
   } = useLabelingContext();
   const { data } = history;
+  const { preferences } = usePreferences();
+  const { shortcuts } = preferences;
+
+  const saveCallback = () =>
+    saveLabeling(
+      LabelingDocument.encode({
+        ...document,
+        objects: data.objects,
+      }),
+    );
+
+  useLabelingAutosave();
+  useHotkeys(shortcuts.SaveDatabase, saveCallback, [saveCallback]);
 
   return (
     <ButtonGroup size="small" color="inherit" variant="text">
       <UndoRedoButtons />
-      <Button
-        startIcon={<SaveIcon />}
-        onClick={() => {
-          saveLabeling(
-            LabelingDocument.encode({
-              ...document,
-              objects: data.objects,
-            }),
-          );
-        }}
-      >
+      <Button startIcon={<SaveIcon />} onClick={saveCallback}>
         Save
       </Button>
       <Button
