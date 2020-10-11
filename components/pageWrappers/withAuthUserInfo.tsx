@@ -3,8 +3,8 @@ import { get } from "lodash";
 import { NextPageContext } from "next";
 import React from "react";
 
-import { AuthUserInfoContext } from "../auth/hooks";
-import { AuthUserInfo } from "../auth/user";
+import { AuthUserInfoContext } from "../../utils/auth/hooks";
+import { AuthUserInfo } from "../../utils/auth/user";
 
 export interface WithAuthUserInfoCompProps {
   authUserInfo: AuthUserInfo;

@@ -17,8 +17,8 @@ import {
   LabelingCollection,
   ResultSnackbarState,
 } from "../../utils/firestore/types";
-import withAuthUser from "../../utils/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../utils/pageWrappers/withAuthUserInfo";
+import withAuthUser from "../../components/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
 
 initFirebase();
 

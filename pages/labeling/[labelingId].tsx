@@ -20,8 +20,8 @@ import initFirebase from "../../utils/auth/initFirebase";
 import { ResultSnackbarState } from "../../utils/firestore/types";
 import useFetchLabeling from "../../utils/labeling/hooks/useFetchLabeling";
 import { LabelingViewsState } from "../../utils/labeling/views";
-import withAuthUser from "../../utils/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../utils/pageWrappers/withAuthUserInfo";
+import withAuthUser from "../../components/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

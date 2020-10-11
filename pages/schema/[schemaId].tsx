@@ -23,8 +23,8 @@ import {
 } from "../../utils/firestore/types";
 import useCreate from "../../utils/firestore/useCreate";
 import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
-import withAuthUser from "../../utils/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../utils/pageWrappers/withAuthUserInfo";
+import withAuthUser from "../../components/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
 import { SchemaDocument } from "../../utils/schema/types";
 import useFetchSchema from "../../utils/schema/useFetchSchema";
 import CreateLabelingDialog from "../../components/labeling/createLabelingDialog";

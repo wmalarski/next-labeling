@@ -8,8 +8,8 @@ import Footer from "../components/common/footer";
 import Header from "../components/common/header";
 import initFirebase from "../utils/auth/initFirebase";
 import { AuthUserInfo } from "../utils/auth/user";
-import withAuthUser from "../utils/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../utils/pageWrappers/withAuthUserInfo";
+import withAuthUser from "../components/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../components/pageWrappers/withAuthUserInfo";
 
 initFirebase();
 

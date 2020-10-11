@@ -3,8 +3,12 @@ import { get, set } from "lodash";
 import { NextPageContext } from "next";
 import React from "react";
 
-import { AuthUserInfoContext, useFirebaseAuth } from "../auth/hooks";
-import { AuthUserInfo, createAuthUser, createAuthUserInfo } from "../auth/user";
+import { AuthUserInfoContext, useFirebaseAuth } from "../../utils/auth/hooks";
+import {
+  AuthUserInfo,
+  createAuthUser,
+  createAuthUserInfo,
+} from "../../utils/auth/user";
 
 export interface WithAuthUserCompProps {
   authUserInfo: AuthUserInfo;
