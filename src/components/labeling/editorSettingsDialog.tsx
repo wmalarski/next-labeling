@@ -64,6 +64,25 @@ export default function EditorSettingsDialog(): JSX.Element {
             margin="dense"
             onChange={event => setFilename(event.target.value)}
           />
+          <DialogActions>
+            <Button onClick={handleClose} color="inherit">
+              Cancel
+            </Button>
+            <Button
+              disabled={
+                document.name?.length === 0 || document.filename?.length === 0
+              }
+              onClick={() => {
+                if (name !== document.name || filename !== document.filename) {
+                  saveLabeling({ ...document, name, filename });
+                }
+                handleClose();
+              }}
+              color="inherit"
+            >
+              Save
+            </Button>
+          </DialogActions>
           <DialogContentText>Labeling</DialogContentText>
           <Grid container>
             <Grid item xs={4}>
@@ -108,26 +127,8 @@ export default function EditorSettingsDialog(): JSX.Element {
           </Grid>
           <DialogContentText>Shortcuts</DialogContentText>
           <ShortcutsSettingsTreeView />
+          <DialogActions />
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="inherit">
-            Cancel
-          </Button>
-          <Button
-            disabled={
-              document.name?.length === 0 || document.filename?.length === 0
-            }
-            onClick={() => {
-              if (name !== document.name || filename !== document.filename) {
-                saveLabeling({ ...document, name, filename });
-              }
-              handleClose();
-            }}
-            color="inherit"
-          >
-            Save
-          </Button>
-        </DialogActions>
       </Dialog>
     </>
   );

@@ -1,3 +1,5 @@
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+
 import { ExtendedLabeling } from "../types";
 import { LabelingState } from "../hooks/useLabelingHistory";
 import { unpackValues } from "../../editors/functions";
@@ -11,6 +13,7 @@ export default function deleteBackwardUpdate(
     .map(object => object.objectId);
   return {
     message: "Objects deleted forward",
+    icon: ArrowBackIcon,
     data: {
       ...data,
       objects: data.objects.flatMap(object => {

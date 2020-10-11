@@ -31,6 +31,7 @@ export default function ShortcutsSettingsTreeView(): JSX.Element {
               key={action.name}
               nodeId={action.name}
               onKeyDown={event => event.stopPropagation()}
+              onFocusCapture={event => event.preventDefault()}
               label={
                 <Grid container>
                   <Grid item xs={6}>

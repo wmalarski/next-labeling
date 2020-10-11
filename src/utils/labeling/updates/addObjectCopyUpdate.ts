@@ -1,7 +1,8 @@
+import FileCopyIcon from "@material-ui/icons/FileCopy";
 import { v4 as uuidv4 } from "uuid";
 
-import { ExtendedLabeling } from "../types";
 import { LabelingState } from "../hooks/useLabelingHistory";
+import { ExtendedLabeling } from "../types";
 
 export default function addObjectCopyUpdate(
   data: ExtendedLabeling,
@@ -9,6 +10,7 @@ export default function addObjectCopyUpdate(
 ): LabelingState {
   return {
     message: "Objects copied",
+    icon: FileCopyIcon,
     data: {
       ...data,
       objects: [

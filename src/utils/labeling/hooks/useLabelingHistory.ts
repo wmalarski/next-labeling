@@ -1,14 +1,29 @@
+import { v4 as uuidv4 } from "uuid";
+
 import { useCallback, useMemo, useRef, useState } from "react";
 import { createExtendedLabeling } from "../functions";
 import { ExtendedLabeling, LabelingDocument } from "../types";
+import { OverridableComponent } from "@material-ui/core/OverridableComponent";
+import { SvgIconTypeMap } from "@material-ui/core/SvgIcon";
 
 export interface LabelingState {
   data: ExtendedLabeling;
   message: string;
+  icon?: OverridableComponent<SvgIconTypeMap<unknown, "svg">>;
+}
+
+export interface LabelingIndexedState extends LabelingState {
+  id: string;
+}
+
+export interface LabelingMessage {
+  id: string;
+  message: string;
+  icon?: OverridableComponent<SvgIconTypeMap<unknown, "svg">>;
 }
 
 export interface UseLabelingHistoryState {
-  history: LabelingState[];
+  history: LabelingIndexedState[];
   index: number;
 }
 
@@ -20,11 +35,11 @@ export interface UseLabelingHistoryResult {
   ) => void;
   undoLabeling: () => void;
   redoLabeling: () => void;
-  setIndex: (index: number) => void;
-  index: number;
+  setLabelingId: (id: string) => void;
+  currentId: string;
   undoMessage?: string;
   redoMessage?: string;
-  messages: string[];
+  messages: LabelingMessage[];
 }
 
 export default function useLabelingHistory(
@@ -37,6 +52,7 @@ export default function useLabelingHistory(
       {
         data: createExtendedLabeling(document),
         message: "Labeling loaded",
+        id: uuidv4(),
       },
     ],
     index: 0,
@@ -62,44 +78,53 @@ export default function useLabelingHistory(
         const result = provider(currentLabeling);
         if (!result) return value;
 
-        const { data, message } = result;
+        const newState = { ...result, id: uuidv4() };
         const newHistory = [...value.history];
         newHistory.splice(value.index + 1);
 
         if (newHistory.length < bufferSize.current) {
           return {
-            history: [...newHistory, { data, message }],
+            history: [...newHistory, newState],
             index: value.index + 1,
           };
         }
         newHistory.shift();
         return {
-          history: [...newHistory, { data, message }],
+          history: [...newHistory, newState],
           index: value.index,
         };
       }),
     [setState],
   );
-  const setIndex = useCallback(
-    (index: number): void =>
-      setState(value => ({
-        ...value,
-        index: Math.min(Math.max(index - 1, 0), value.history.length - 1),
-      })),
+  const setLabelingId = useCallback(
+    (id: string): void =>
+      setState(value => {
+        const newIndex = value.history.findIndex(pair => pair.id === id);
+        return {
+          ...value,
+          index: newIndex === -1 ? value.index : newIndex,
+        };
+      }),
     [],
   );
-  const messages = useMemo(() => state.history.map(pair => pair.message), [
-    state.history,
-  ]);
+  const messages = useMemo(
+    () =>
+      state.history.map(pair => ({
+        message: pair.message,
+        id: pair.id,
+        icon: pair.icon,
+      })),
+    [state.history],
+  );
 
   return {
     ...state.history[state.index],
-    setIndex,
+    setLabelingId,
     undoLabeling,
     redoLabeling,
     pushLabeling,
     messages,
-    index: state.index,
+    currentId: state.history[state.index]?.id,
     undoMessage: state.history[state.index - 1]?.message,
     redoMessage: state.history[state.index + 1]?.message,
   };

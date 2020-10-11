@@ -1,6 +1,9 @@
-import { ExtendedLabeling } from "../types";
-import { LabelingState } from "../hooks/useLabelingHistory";
+import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
+
 import { unpackValues } from "../../editors/functions";
+import { LabelingState } from "../hooks/useLabelingHistory";
+import { ExtendedLabeling } from "../types";
 
 export default function setCurrentFrameUpdate(
   data: ExtendedLabeling,
@@ -9,9 +12,13 @@ export default function setCurrentFrameUpdate(
 ): LabelingState {
   const { objects, currentFrame } = data;
   const changeStep = nextFrame - currentFrame;
+  const message = `Frame changed`;
+  const icon = changeStep < 0 ? ArrowLeftIcon : ArrowRightIcon;
+
   if (changeStep !== propagationStep)
     return {
-      message: "Frame changed",
+      message,
+      icon,
       data: { ...data, currentFrame: nextFrame },
     };
   const newObjects = objects.map(object => {
@@ -55,7 +62,8 @@ export default function setCurrentFrameUpdate(
   });
 
   return {
-    message: "Frame changed",
+    message,
+    icon,
     data: { ...data, currentFrame: nextFrame, objects: newObjects },
   };
 }

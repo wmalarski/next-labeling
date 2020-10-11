@@ -1,6 +1,8 @@
+import EditIcon from "@material-ui/icons/Edit";
+
 import { LabelingFieldValues } from "../../editors/types";
-import { ExtendedLabeling } from "../types";
 import { LabelingState } from "../hooks/useLabelingHistory";
+import { ExtendedLabeling } from "../types";
 
 export default function setAttributeUpdate(
   data: ExtendedLabeling,
@@ -13,8 +15,13 @@ export default function setAttributeUpdate(
   const object = objects[objectIndex];
   const fieldIndex = object.fields.findIndex(f => f.id === fieldId);
   const fields = [...object.fields];
+  const field = fields[fieldIndex];
 
-  fields[fieldIndex] = { ...fields[fieldIndex], values };
+  fields[fieldIndex] = { ...field, values };
   objects[objectIndex] = { ...object, fields };
-  return { message: "Attribute value changed", data: { ...data, objects } };
+  return {
+    message: `Attribute ${field.fieldSchema.name} changed`,
+    icon: EditIcon,
+    data: { ...data, objects },
+  };
 }

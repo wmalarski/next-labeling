@@ -1,5 +1,7 @@
-import { ExtendedLabeling } from "../types";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+
 import { LabelingState } from "../hooks/useLabelingHistory";
+import { ExtendedLabeling } from "../types";
 
 export default function setSelectedNextUpdate(
   data: ExtendedLabeling,
@@ -27,6 +29,7 @@ export default function setSelectedNextUpdate(
   const firstObject = objectsInFrame[nextSelectedIndex];
   return {
     message: "Selection changed",
+    icon: NavigateNextIcon,
     data: {
       ...data,
       selected: firstObject

@@ -1,7 +1,9 @@
+import AddBoxIcon from "@material-ui/icons/AddBox";
+
 import { ObjectSchema } from "../../schema/types";
 import { createObject } from "../functions";
-import { ExtendedLabeling } from "../types";
 import { LabelingState } from "../hooks/useLabelingHistory";
+import { ExtendedLabeling } from "../types";
 
 export default function addObjectUpdate(
   data: ExtendedLabeling,
@@ -12,7 +14,8 @@ export default function addObjectUpdate(
   return [
     object.id,
     {
-      message: "Object created",
+      message: `${object.name} created`,
+      icon: AddBoxIcon,
       data: {
         ...data,
         objects: [...data.objects, object],

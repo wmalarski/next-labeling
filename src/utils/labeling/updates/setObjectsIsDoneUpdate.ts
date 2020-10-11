@@ -1,3 +1,5 @@
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+
 import { ExtendedLabeling } from "../types";
 import { LabelingState } from "../hooks/useLabelingHistory";
 
@@ -12,6 +14,7 @@ export default function setObjectsIsDoneUpdate(
   const ids = objects.map(object => object.objectId);
   return {
     message: "Objects Done toggled",
+    icon: CheckCircleIcon,
     data: {
       ...data,
       objects: data.objects.map(object =>

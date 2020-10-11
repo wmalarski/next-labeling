@@ -1,3 +1,5 @@
+import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+
 import { ExtendedLabeling } from "../types";
 import { LabelingState } from "../hooks/useLabelingHistory";
 import { unpackValues } from "../../editors/functions";
@@ -11,6 +13,7 @@ export default function deleteForwardUpdate(
     .map(object => object.objectId);
   return {
     message: "Objects deleted forward",
+    icon: ArrowForwardIcon,
     data: {
       ...data,
       objects: data.objects.flatMap(object => {
