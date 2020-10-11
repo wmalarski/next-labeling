@@ -9,25 +9,25 @@ import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 
-import Footer from "../../src/components/common/footer";
-import Header from "../../src/components/common/header";
-import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
-import ResultSnackbar from "../../src/components/common/resultSnackbar";
-import SchemaDetails from "../../src/components/schema/details/schemaDetails";
-import RawForm from "../../src/components/schema/forms/rawForm";
-import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
-import initFirebase from "../../src/utils/auth/initFirebase";
+import Footer from "../../components/common/footer";
+import Header from "../../components/common/header";
+import LoadingBackdrop from "../../components/common/loadingBackdrop";
+import ResultSnackbar from "../../components/common/resultSnackbar";
+import SchemaDetails from "../../components/schema/details/schemaDetails";
+import RawForm from "../../components/schema/forms/rawForm";
+import { AuthUserInfoContext } from "../../utils/auth/hooks";
+import initFirebase from "../../utils/auth/initFirebase";
 import {
   ResultSnackbarState,
   SchemaCollection,
-} from "../../src/utils/firestore/types";
-import useCreate from "../../src/utils/firestore/useCreate";
-import useRemoveDocument from "../../src/utils/firestore/useRemoveDocument";
-import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
-import { SchemaDocument } from "../../src/utils/schema/types";
-import useFetchSchema from "../../src/utils/schema/useFetchSchema";
-import CreateLabelingDialog from "../../src/components/labeling/createLabelingDialog";
+} from "../../utils/firestore/types";
+import useCreate from "../../utils/firestore/useCreate";
+import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
+import withAuthUser from "../../utils/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../utils/pageWrappers/withAuthUserInfo";
+import { SchemaDocument } from "../../utils/schema/types";
+import useFetchSchema from "../../utils/schema/useFetchSchema";
+import CreateLabelingDialog from "../../components/labeling/createLabelingDialog";
 
 initFirebase();
 

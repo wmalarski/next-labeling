@@ -1,16 +1,18 @@
 ## [DEV.TO: ▲🔥 Getting started with Next.js + Now + Firebase](https://dev.to/benzguo/getting-started-with-next-js-now-firebase-4ejg)
 
-> This is a tutorial focused on setting up a minimal template project for Next.js, ZEIT Now, and Firebase. 
-> - The template project is an extension of the official Next.js [with-firebase-authentication-serverless](https://github.com/zeit/next.js/tree/canary/examples/with-firebase-authentication-serverless) example, with a bit more functionality. 
+> This is a tutorial focused on setting up a minimal template project for Next.js, ZEIT Now, and Firebase.
+>
+> - The template project is an extension of the official Next.js [with-firebase-authentication-serverless](https://github.com/zeit/next.js/tree/canary/examples/with-firebase-authentication-serverless) example, with a bit more functionality.
 > - This tutorial provides some extra guidance on setting up environments & keys.
 > - I've included lots of screenshots, so even if you aren't starting a new project, you'll get a feel for what working with these tools is like. I think this is a good snapshot of **the state of the art in 2020** for quick-start developer products.
 
 Recently, I started a new side project using:
+
 - [Next.js](https://nextjs.org/) (React framework)
 - [ZEIT Now](https://zeit.co/docs) (Hosting)
 - Firebase: [Authentication](https://firebase.google.com/docs/auth/), [Storage](https://firebase.google.com/docs/firestore/), & [Functions](https://firebase.google.com/docs/functions/)
 
-I like this combination of tools a lot, so I decided to put together a detailed tutorial. 
+I like this combination of tools a lot, so I decided to put together a detailed tutorial.
 
 You can follow along using this template project:
 
@@ -21,32 +23,30 @@ The template also includes [Tailwind CSS](https://tailwindcss.com/) (with ~zero 
 <img src="https://dev-to-uploads.s3.amazonaws.com/i/6rtjok6xjab61vlzz8or.png" width="400px">
 
 This template app includes:
+
 - Sign up, log in, log out
 - Update display name
 - Add object to a Firestore collection
 - List objects in a Firestore collection (using [firestore-pagination-hook](https://github.com/bmcmahen/firestore-pagination-hook))
 - Fetch data with a simple Firebase function (server-side rendering using [getInitialProps](https://nextjs.org/docs/api-reference/data-fetching/getInitialProps))
 
-
 # ▲ Sign up for ZEIT
 
-[[ ⤴️ Sign up for ZEIT ]](https://zeit.co/signup?with-email=1) 
+[[ ⤴️ Sign up for ZEIT ]](https://zeit.co/signup?with-email=1)
 
 I used the email signup flow, and thought it was pretty nice ✨ You can check out screenshots of the ZEIT onboarding flow [[ ⤵️ here ]](https://dev.to/benzguo/zeit-now-signup-flow-49le).
 
 ![ZEIT – empty dashboard](https://dev-to-uploads.s3.amazonaws.com/i/55wy84o7oy0vzmajs1cl.png)
 
-
 # 🔥 Set up Firebase
 
-[[ ⤴️ Sign up for Firebase ]](https://console.firebase.google.com/) 
+[[ ⤴️ Sign up for Firebase ]](https://console.firebase.google.com/)
 
 Sign into your Firebase account, and create **two** projects (one for your **staging** environment, and another for your **production** environment).
 
 tl;dr: You'll need to do some clicking around to fully configure a new Firebase project. Check out the full Firebase project onboarding walkthrough [[ ⤵️ here ]](https://dev.to/benzguo/firebase-setup-3320).
 
 ![Firebase – 2 projects](https://dev-to-uploads.s3.amazonaws.com/i/3fb0iadewxeiz6qe0qxy.png)
-
 
 # ▲ Set up Now CLI
 
@@ -60,10 +60,11 @@ tl;dr: You'll need to do some clicking around to fully configure a new Firebase 
 
 ![firebase login](https://dev-to-uploads.s3.amazonaws.com/i/d62gved7hiqdnizsc79j.png)
 
-If you haven't done this already: 
+If you haven't done this already:
+
 - generate a new project from the GitHub template repo
 - clone it to your machine
-- and navigate to the directory in your terminal. 
+- and navigate to the directory in your terminal.
 
 {% github benzguo/nextjs-now-firebase no-readme %}
 
@@ -71,8 +72,8 @@ Run `firebase use --add` to add the two projects you created to the Firebase CLI
 
 ![firebase use --add](https://dev-to-uploads.s3.amazonaws.com/i/x02qksb1bfohnm1r6hy3.png)
 
-
 # ▲🔥 Now + Firebase
+
 ## Staging environment
 
 First, we'll configure our project's staging environment with keys from Firebase.
@@ -84,13 +85,13 @@ In the Firebase console, open your **staging** project, navigate to the "Service
 Save the key file in the `functions` directory as `serviceAccount-staging.json`
 
 > 📁 functions
-> ├── serviceAccount-staging.json 
+> ├── serviceAccount-staging.json
 
 <img src="https://dev-to-uploads.s3.amazonaws.com/i/brwrosh6u4gvtrudjif2.png" width="400px">
 
 > ⚠️ Your private key (in your service account key file) gives access to your project's Firebase services. Keep it confidential and **never store it in a public repository**.
 >
-> Note that `serviceAccount*` files are in the project's `.gitignore`, so they won't be checked into your repository.  Make sure you [follow best practices for keeping these keys safe](https://cloud.google.com/blog/products/gcp/help-keep-your-google-cloud-service-account-keys-safe)! 🔒
+> Note that `serviceAccount*` files are in the project's `.gitignore`, so they won't be checked into your repository. Make sure you [follow best practices for keeping these keys safe](https://cloud.google.com/blog/products/gcp/help-keep-your-google-cloud-service-account-keys-safe)! 🔒
 
 Next, find your **app keys** (under Project settings).
 
@@ -105,40 +106,32 @@ Create two `env` files:
 - `.env`: runtime environment variables
 - `.env.build`: build step environment variables
 
-
 Open your your editor, and the content below to the 2 `.env` files, filling in your Firebase keys.
 
 #### .env
 
 ```html
-# .env
-# == Firebase app keys (staging) ==
-FIREBASE_API_KEY=■■■■■■■■-■■■■■■■■
+# .env # == Firebase app keys (staging) == FIREBASE_API_KEY=■■■■■■■■-■■■■■■■■
 FIREBASE_AUTH_DOMAIN=■■■■■■■■.firebaseapp.com
 FIREBASE_DATABASE_URL=https://■■■■■■■■.firebaseio.com
-FIREBASE_PROJECT_ID=■■■■■■■■
-FIREBASE_STORAGE_BUCKET=■■■■■■■■.appspot.com
-FIREBASE_MESSAGING_SENDER_ID=■■■■■■■■
-FIREBASE_APP_ID=1:■■■■■■■■:web:■■■■■■■■
+FIREBASE_PROJECT_ID=■■■■■■■■ FIREBASE_STORAGE_BUCKET=■■■■■■■■.appspot.com
+FIREBASE_MESSAGING_SENDER_ID=■■■■■■■■ FIREBASE_APP_ID=1:■■■■■■■■:web:■■■■■■■■
 FIREBASE_MEASUREMENT_ID=G-■■■■■■■■
 ```
 
 #### .env.build
 
 ```html
-# .env.build
-# == Firebase app keys (staging) ==
-FIREBASE_API_KEY=■■■■■■■■-■■■■■■■■
-FIREBASE_AUTH_DOMAIN=■■■■■■■■.firebaseapp.com
+# .env.build # == Firebase app keys (staging) ==
+FIREBASE_API_KEY=■■■■■■■■-■■■■■■■■ FIREBASE_AUTH_DOMAIN=■■■■■■■■.firebaseapp.com
 FIREBASE_DATABASE_URL=https://■■■■■■■■.firebaseio.com
-FIREBASE_PROJECT_ID=■■■■■■■■
-FIREBASE_STORAGE_BUCKET=■■■■■■■■.appspot.com
-FIREBASE_MESSAGING_SENDER_ID=■■■■■■■■
-FIREBASE_APP_ID=1:■■■■■■■■:web:■■■■■■■■
-FIREBASE_MEASUREMENT_ID=G-■■■■■■■■
-# == Firebase admin keys (from serviceAccount-staging.json) ==
+FIREBASE_PROJECT_ID=■■■■■■■■ FIREBASE_STORAGE_BUCKET=■■■■■■■■.appspot.com
+FIREBASE_MESSAGING_SENDER_ID=■■■■■■■■ FIREBASE_APP_ID=1:■■■■■■■■:web:■■■■■■■■
+FIREBASE_MEASUREMENT_ID=G-■■■■■■■■ # == Firebase admin keys (from
+serviceAccount-staging.json) ==
 FIREBASE_CLIENT_EMAIL=firebase-adminsdk-■■■■@■■■■■■■■.iam.gserviceaccount.com
-FIREBASE_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\n■■■■■■■■\n-----END PRIVATE KEY-----\n
+FIREBASE_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\n■■■■■■■■\n-----END PRIVATE
+KEY-----\n
 ```
 
 > ⚠️ These keys give access to your project's Firebase services. Keep them confidential and **never store them in a public repository**.
@@ -193,7 +186,7 @@ $ now secrets add -- firebase-private-key "-----BEGIN PRIVATE KEY-----\n■■�
 
 Here, we'll walk through creating an index in Firestore. You'll need to do this pretty frequently as you iterate on your app's data model.
 
-Navigate to [http://localhost:3000/spaces](http://localhost:3000/spaces), and open your browser's console. 
+Navigate to [http://localhost:3000/spaces](http://localhost:3000/spaces), and open your browser's console.
 
 You should see an error in the console, with a link to create an index.
 
@@ -203,7 +196,7 @@ Following the link takes you to the Firestore dashboard, with a modal to create 
 
 <img src="https://dev-to-uploads.s3.amazonaws.com/i/8nk879f55kqrvbxf44w8.png" width="300px">
 
-This workflow is great for prototyping. As you solidify your data model, you can switch to deploying indexes [from the CLI](https://firebase.google.com/docs/firestore/query-data/indexing#use_the_firebase_cli). 
+This workflow is great for prototyping. As you solidify your data model, you can switch to deploying indexes [from the CLI](https://firebase.google.com/docs/firestore/query-data/indexing#use_the_firebase_cli).
 
 # 🔥 Firebase functions – setup
 
@@ -213,7 +206,7 @@ Now, navigate to [http://localhost:3000/account](http://localhost:3000/account)
 
 You should see an error. This page makes a request to a Firebase function, and we haven't deployed functions yet.
 
-To set up functions, we'll configure our staging & production projects with an `environment` config variable. Functions [use this config variable](https://github.com/benzguo/nextjs-now-firebase/blob/master/functions/src/index.ts#L6) to decide which keys to use at runtime.
+To set up functions, we'll configure our staging & production projects with an `environment` config variable. Functions [use this config variable](https://github.com/benzguo/nextjs-now-firebase/blob/master/functions/index.ts#L6) to decide which keys to use at runtime.
 
 ```
 $ firebase use staging
@@ -229,7 +222,7 @@ $ firebase functions:config:set app.environment="production"
 ✔  Functions config updated.
 ```
 
-Now, we can deploy functions to staging and production. 
+Now, we can deploy functions to staging and production.
 
 First, install dependencies:
 `$ cd functions && npm install && cd ..`
@@ -256,24 +249,27 @@ Finally, we'll run `now` to set up a ZEIT Now project and deploy to production.
 
 In the future, you can deploy your app to production using `now --prod`. To run the app locally, use `now dev`.
 
-
 # 📌 Reference
 
 ##### Run app locally (using staging environment)
-`$ now dev` 
+
+`$ now dev`
 
 ##### Deploy functions to staging
-`$ firebase deploy -P staging --only functions` 
+
+`$ firebase deploy -P staging --only functions`
 
 ##### Deploy functions to production
-`$ firebase deploy -P production --only functions` 
+
+`$ firebase deploy -P production --only functions`
 
 ##### Run functions locally
-`$ cd functions && npm run shell` 
+
+`$ cd functions && npm run shell`
 
 ##### Deploy to production
-`$ now --prod` 
 
+`$ now --prod`
 
 ### Running functions locally
 
@@ -286,7 +282,7 @@ $ cd functions && npm run shell
 i  functions: Loaded functions: getEnvironment
 firebase > getEnvironment({})
 Sent request to function.
-firebase > 
+firebase >
 RESPONSE RECEIVED FROM FUNCTION: 200, {
   "result": {
     "environment": "staging"
@@ -298,10 +294,4 @@ This project [is configured](https://firebase.google.com/docs/functions/local-em
 
 Running functions locally can be convenient for development, but handling authenticated functions can be tricky. Firebase has some [local emulators](https://firebase.google.com/docs/emulator-suite), but it's unclear what the story is for emulating authentication.
 
-Often, I'll just deploy functions directly to staging, and open http://localhost:3000 to verify changes. 
-
-
-
-
-
-
+Often, I'll just deploy functions directly to staging, and open http://localhost:3000 to verify changes.

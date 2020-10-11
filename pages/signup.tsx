@@ -11,9 +11,9 @@ import Link from "next/link";
 import Router from "next/router";
 import React from "react";
 
-import Footer from "../src/components/common/footer";
-import { useUserFormStyles } from "../src/themes/styles";
-import initFirebase from "../src/utils/auth/initFirebase";
+import Footer from "../components/common/footer";
+import { useUserFormStyles } from "../themes/styles";
+import initFirebase from "../utils/auth/initFirebase";
 
 initFirebase();
 

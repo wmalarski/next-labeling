@@ -8,23 +8,23 @@ import usePagination from "firestore-pagination-hook";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 
-import Footer from "../../src/components/common/footer";
-import Header from "../../src/components/common/header";
-import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
-import ResultSnackbar from "../../src/components/common/resultSnackbar";
-import SearchInput from "../../src/components/common/searchInput";
-import SchemaListItem from "../../src/components/schema/details/schemaListItem";
-import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
-import initFirebase from "../../src/utils/auth/initFirebase";
+import Footer from "../../components/common/footer";
+import Header from "../../components/common/header";
+import LoadingBackdrop from "../../components/common/loadingBackdrop";
+import ResultSnackbar from "../../components/common/resultSnackbar";
+import SearchInput from "../../components/common/searchInput";
+import SchemaListItem from "../../components/schema/details/schemaListItem";
+import { AuthUserInfoContext } from "../../utils/auth/hooks";
+import initFirebase from "../../utils/auth/initFirebase";
 import {
   ResultSnackbarState,
   SchemaCollection,
-} from "../../src/utils/firestore/types";
-import useCreate from "../../src/utils/firestore/useCreate";
-import useRemoveDocument from "../../src/utils/firestore/useRemoveDocument";
-import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
-import { SchemaDocument } from "../../src/utils/schema/types";
+} from "../../utils/firestore/types";
+import useCreate from "../../utils/firestore/useCreate";
+import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
+import withAuthUser from "../../utils/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../utils/pageWrappers/withAuthUserInfo";
+import { SchemaDocument } from "../../utils/schema/types";
 
 initFirebase();
 

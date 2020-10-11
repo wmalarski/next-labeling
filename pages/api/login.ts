@@ -1,7 +1,7 @@
 import { NextApiResponse } from "next";
 
-import { verifyIdToken } from "../../src/utils/auth/firebaseAdmin";
-import commonMiddleware from "../../src/utils/middleware/commonMiddleware";
+import { verifyIdToken } from "../../utils/auth/firebaseAdmin";
+import commonMiddleware from "../../utils/middleware/commonMiddleware";
 
 // req type: CookieSession?
 const handler = async (req: any, res: NextApiResponse) => {

@@ -21,7 +21,7 @@ import {
   SchemaDocument,
 } from "../../../utils/schema/types";
 import CreateLabelingDialog from "../../labeling/createLabelingDialog";
-import RawForm from "./../forms/rawForm";
+import RawForm from "../forms/rawForm";
 import FieldDetails from "./fieldDetails";
 
 const useStyles = makeStyles((theme: Theme) =>

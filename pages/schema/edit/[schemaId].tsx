@@ -10,24 +10,24 @@ import UndoIcon from "@material-ui/icons/Undo";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 
-import Footer from "../../../src/components/common/footer";
-import Header from "../../../src/components/common/header";
-import LoadingBackdrop from "../../../src/components/common/loadingBackdrop";
-import ResultSnackbar from "../../../src/components/common/resultSnackbar";
-import SchemaForm from "../../../src/components/schema/forms/schemaForm";
-import { AuthUserInfoContext } from "../../../src/utils/auth/hooks";
-import initFirebase from "../../../src/utils/auth/initFirebase";
+import Footer from "../../../components/common/footer";
+import Header from "../../../components/common/header";
+import LoadingBackdrop from "../../../components/common/loadingBackdrop";
+import ResultSnackbar from "../../../components/common/resultSnackbar";
+import SchemaForm from "../../../components/schema/forms/schemaForm";
+import { AuthUserInfoContext } from "../../../utils/auth/hooks";
+import initFirebase from "../../../utils/auth/initFirebase";
 import {
   ResultSnackbarState,
   SchemaCollection,
-} from "../../../src/utils/firestore/types";
-import useRemoveDocument from "../../../src/utils/firestore/useRemoveDocument";
-import useUpdateDocument from "../../../src/utils/firestore/useUpdateLabeling";
-import withAuthUser from "../../../src/utils/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../../src/utils/pageWrappers/withAuthUserInfo";
-import { SchemaDocument } from "../../../src/utils/schema/types";
-import useFetchSchema from "../../../src/utils/schema/useFetchSchema";
-import useSchemaHistory from "../../../src/utils/schema/useSchemaHistory";
+} from "../../../utils/firestore/types";
+import useRemoveDocument from "../../../utils/firestore/useRemoveDocument";
+import useUpdateDocument from "../../../utils/firestore/useUpdateLabeling";
+import withAuthUser from "../../../utils/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../../utils/pageWrappers/withAuthUserInfo";
+import { SchemaDocument } from "../../../utils/schema/types";
+import useFetchSchema from "../../../utils/schema/useFetchSchema";
+import useSchemaHistory from "../../../utils/schema/useSchemaHistory";
 
 initFirebase();
 

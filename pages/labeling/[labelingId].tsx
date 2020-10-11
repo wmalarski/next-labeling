@@ -3,25 +3,25 @@ import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 import { RemoveScrollBar } from "react-remove-scroll-bar";
 
-import Header from "../../src/components/common/header";
-import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
-import ResultSnackbar from "../../src/components/common/resultSnackbar";
-import EditorTable from "../../src/components/editors/editorTable";
-import EditorHeader from "../../src/components/labeling/editorHeader";
-import EditorSidebar from "../../src/components/labeling/editorSidebar";
-import FrameSlider from "../../src/components/labeling/frameSlider";
-import LabelingProvider from "../../src/components/labeling/labelingProvider";
-import LabelingWorkspace from "../../src/components/labeling/labelingWorkspace";
-import PreferencesProvider from "../../src/components/labeling/preferencesProvider";
-import TimelineView from "../../src/components/timeline/timelineView";
-import ToolProvider from "../../src/components/visualization/toolProvider";
-import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
-import initFirebase from "../../src/utils/auth/initFirebase";
-import { ResultSnackbarState } from "../../src/utils/firestore/types";
-import useFetchLabeling from "../../src/utils/labeling/hooks/useFetchLabeling";
-import { LabelingViewsState } from "../../src/utils/labeling/views";
-import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
+import Header from "../../components/common/header";
+import LoadingBackdrop from "../../components/common/loadingBackdrop";
+import ResultSnackbar from "../../components/common/resultSnackbar";
+import EditorTable from "../../components/editors/editorTable";
+import EditorHeader from "../../components/labeling/editorHeader";
+import EditorSidebar from "../../components/labeling/editorSidebar";
+import FrameSlider from "../../components/labeling/frameSlider";
+import LabelingProvider from "../../components/labeling/labelingProvider";
+import LabelingWorkspace from "../../components/labeling/labelingWorkspace";
+import PreferencesProvider from "../../components/labeling/preferencesProvider";
+import TimelineView from "../../components/timeline/timelineView";
+import ToolProvider from "../../components/visualization/toolProvider";
+import { AuthUserInfoContext } from "../../utils/auth/hooks";
+import initFirebase from "../../utils/auth/initFirebase";
+import { ResultSnackbarState } from "../../utils/firestore/types";
+import useFetchLabeling from "../../utils/labeling/hooks/useFetchLabeling";
+import { LabelingViewsState } from "../../utils/labeling/views";
+import withAuthUser from "../../utils/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../utils/pageWrappers/withAuthUserInfo";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -4,12 +4,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 
-import Footer from "../src/components/common/footer";
-import Header from "../src/components/common/header";
-import initFirebase from "../src/utils/auth/initFirebase";
-import { AuthUserInfo } from "../src/utils/auth/user";
-import withAuthUser from "../src/utils/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../src/utils/pageWrappers/withAuthUserInfo";
+import Footer from "../components/common/footer";
+import Header from "../components/common/header";
+import initFirebase from "../utils/auth/initFirebase";
+import { AuthUserInfo } from "../utils/auth/user";
+import withAuthUser from "../utils/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../utils/pageWrappers/withAuthUserInfo";
 
 initFirebase();
 

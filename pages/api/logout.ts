@@ -1,6 +1,6 @@
 import { NextApiResponse } from "next";
 
-import commonMiddleware from "../../src/utils/middleware/commonMiddleware";
+import commonMiddleware from "../../utils/middleware/commonMiddleware";
 
 // req type: CookieSession?
 const handler = (req: any, res: NextApiResponse) => {

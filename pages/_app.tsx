@@ -3,7 +3,7 @@ import { makeStyles, Theme, ThemeProvider } from "@material-ui/core/styles";
 import Head from "next/head";
 import React from "react";
 
-import theme from "../src/themes/theme";
+import theme from "../themes/theme";
 
 import type { AppProps /*, AppContext */ } from "next/app";
 const useStyles = makeStyles((theme: Theme) => ({

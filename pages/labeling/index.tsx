@@ -7,18 +7,18 @@ import usePagination from "firestore-pagination-hook";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
 
-import Footer from "../../src/components/common/footer";
-import Header from "../../src/components/common/header";
-import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
-import ResultSnackbar from "../../src/components/common/resultSnackbar";
-import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
-import initFirebase from "../../src/utils/auth/initFirebase";
+import Footer from "../../components/common/footer";
+import Header from "../../components/common/header";
+import LoadingBackdrop from "../../components/common/loadingBackdrop";
+import ResultSnackbar from "../../components/common/resultSnackbar";
+import { AuthUserInfoContext } from "../../utils/auth/hooks";
+import initFirebase from "../../utils/auth/initFirebase";
 import {
   LabelingCollection,
   ResultSnackbarState,
-} from "../../src/utils/firestore/types";
-import withAuthUser from "../../src/utils/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../src/utils/pageWrappers/withAuthUserInfo";
+} from "../../utils/firestore/types";
+import withAuthUser from "../../utils/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../utils/pageWrappers/withAuthUserInfo";
 
 initFirebase();
 

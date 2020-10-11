@@ -11,8 +11,8 @@ import Document, {
 } from "next/document";
 import React from "react";
 
-import theme from "../src/themes/theme";
-import { AuthUserInfo } from "../src/utils/auth/user";
+import theme from "../themes/theme";
+import { AuthUserInfo } from "../utils/auth/user";
 
 export interface CustomDocumentProps extends DocumentProps {
   authUserInfo: AuthUserInfo;
