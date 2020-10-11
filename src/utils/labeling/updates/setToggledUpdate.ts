@@ -1,10 +1,10 @@
 import SelectAllIcon from "@material-ui/icons/SelectAll";
 
-import { ExtendedLabeling } from "../types";
+import { LabelingDocument } from "../types/client";
 import { LabelingState } from "../hooks/useLabelingHistory";
 
 export default function setToggledUpdate(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
   toggled: string[],
 ): LabelingState {
   return {

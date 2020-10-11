@@ -1,11 +1,11 @@
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
 
-import { ExtendedLabeling } from "../types";
+import { LabelingDocument } from "../types/client";
 import { LabelingState } from "../hooks/useLabelingHistory";
 import { unpackValues } from "../../editors/functions";
 
 export default function deleteForwardUpdate(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
 ): LabelingState {
   const currentFrame = data.currentFrame;
   const ids = data.selected

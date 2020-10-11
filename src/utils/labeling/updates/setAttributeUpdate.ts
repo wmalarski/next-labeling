@@ -2,10 +2,10 @@ import EditIcon from "@material-ui/icons/Edit";
 
 import { LabelingFieldValues } from "../../editors/types";
 import { LabelingState } from "../hooks/useLabelingHistory";
-import { ExtendedLabeling } from "../types";
+import { LabelingDocument } from "../types/client";
 
 export default function setAttributeUpdate(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
   objectId: string,
   fieldId: string,
   values: LabelingFieldValues,

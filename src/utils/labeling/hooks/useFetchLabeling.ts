@@ -5,11 +5,11 @@ import { PathReporter } from "io-ts/lib/PathReporter";
 import { useEffect, useState } from "react";
 
 import { LabelingCollection } from "../../firestore/types";
-import { LabelingDocument } from "../types";
+import { ExternalDocument } from "../types/database";
 
 export interface UseFetchLabelingResult {
   isLoading: boolean;
-  document?: LabelingDocument;
+  document?: ExternalDocument;
   exist?: boolean;
   errors?: string[];
 }
@@ -42,14 +42,14 @@ export default function useFetchLabeling(
           });
           return;
         }
-        const decoded = LabelingDocument.decode(data);
+        const decoded = ExternalDocument.decode(data);
         const errors =
           decoded._tag === "Left" ? PathReporter.report(decoded) : [];
         setState({
           isLoading: false,
           exist: true,
           errors,
-          document: { id: documentId, ...(data as LabelingDocument) }, // TODO: fix validation
+          document: { id: documentId, ...(data as ExternalDocument) }, // TODO: fix validation
         });
       });
   }, [documentId]);

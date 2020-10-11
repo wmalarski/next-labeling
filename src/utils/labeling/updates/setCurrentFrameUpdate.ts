@@ -3,10 +3,10 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 
 import { unpackValues } from "../../editors/functions";
 import { LabelingState } from "../hooks/useLabelingHistory";
-import { ExtendedLabeling } from "../types";
+import { LabelingDocument } from "../types/client";
 
 export default function setCurrentFrameUpdate(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
   nextFrame: number,
   propagationStep: number,
 ): LabelingState {

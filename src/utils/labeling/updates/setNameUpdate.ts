@@ -1,11 +1,11 @@
 import EditIcon from "@material-ui/icons/Edit";
 
 import { LabelingState } from "../hooks/useLabelingHistory";
-import { ExtendedLabeling, ExtendedObject } from "../types";
+import { LabelingDocument, LabelingObject } from "../types/client";
 
 export default function setNameUpdate(
-  data: ExtendedLabeling,
-  object: ExtendedObject,
+  data: LabelingDocument,
+  object: LabelingObject,
   name: string,
 ): LabelingState {
   const objectIndex = data.objects.findIndex(obj => obj.id === object.id);

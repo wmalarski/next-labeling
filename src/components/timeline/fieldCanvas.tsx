@@ -11,11 +11,11 @@ import {
   calculateFieldBlocks,
   ObjectBlock,
 } from "../../utils/labeling/functions";
-import { ExtendedField } from "../../utils/labeling/types";
+import { LabelingField } from "../../utils/labeling/types/client";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 
 export interface FieldCanvasProps {
-  field: ExtendedField;
+  field: LabelingField;
   blocks: ObjectBlock[];
   isSelected: boolean;
   width: number;

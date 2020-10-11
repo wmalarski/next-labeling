@@ -4,17 +4,20 @@ import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import React from "react";
 
-import { ExtendedField, ExtendedObject } from "../../utils/labeling/types";
 import setAttributeUpdate from "../../utils/labeling/updates/setAttributeUpdate";
 import setIsDoneUpdate from "../../utils/labeling/updates/setIsDoneUpdate";
 import setIsTrackedUpdate from "../../utils/labeling/updates/setIsTrackedUpdate";
 import setNameUpdate from "../../utils/labeling/updates/setNameUpdate";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import FieldEditor from "./fieldEditor";
+import {
+  LabelingField,
+  LabelingObject,
+} from "../../utils/labeling/types/client";
 
 export interface TableObject {
-  object: ExtendedObject;
-  fields: ExtendedField[];
+  object: LabelingObject;
+  fields: LabelingField[];
 }
 
 export default function EditorTable(): JSX.Element {

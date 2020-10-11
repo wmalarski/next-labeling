@@ -7,12 +7,12 @@ import {
 } from "../../utils/firestore/types";
 import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
 import useUpdateDocument from "../../utils/firestore/useUpdateLabeling";
-import { LabelingDocument } from "../../utils/labeling/types";
+import { ExternalDocument } from "../../utils/labeling/types/database";
 import useLabelingHistory from "../../utils/labeling/hooks/useLabelingHistory";
 import LabelingContext from "../../utils/labeling/contexts/labelingContext";
 
 export interface LabelingProviderProps {
-  document: LabelingDocument;
+  document: ExternalDocument;
   children: React.ReactNode | React.ReactNode[] | null;
   setSnackbarState: (state: ResultSnackbarState) => void;
 }
@@ -28,7 +28,7 @@ export default function LabelingProvider(
   const history = useLabelingHistory(initialDocument);
 
   const { update: updateLabeling, state: updateState } = useUpdateDocument<
-    LabelingDocument
+    ExternalDocument
   >(LabelingCollection);
   useEffect(() => {
     if (updateState.document) {

@@ -3,11 +3,11 @@ import React from "react";
 import { Layer, Line, Rect, Stage, Text } from "react-konva";
 
 import { ObjectBlock } from "../../utils/labeling/functions";
-import { ExtendedObject } from "../../utils/labeling/types";
+import { LabelingObject } from "../../utils/labeling/types/client";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 
 export interface ObjectCanvasProps {
-  object: ExtendedObject;
+  object: LabelingObject;
   blocks: ObjectBlock[];
   isSelected: boolean;
   width: number;

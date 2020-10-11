@@ -1,5 +1,5 @@
 import { FieldType } from "../editors/types";
-import { ExtendedField, ExtendedObject } from "../labeling/types";
+import { LabelingField, LabelingObject } from "../labeling/types/client";
 import { LineBuilder } from "./objects/lane";
 import { PointBuilder } from "./objects/point";
 import { PolygonBuilder } from "./objects/polygon";
@@ -8,11 +8,11 @@ import { CoordsBuilder } from "./types";
 
 export interface CoordsFieldBuilder {
   builder: CoordsBuilder;
-  field: ExtendedField;
+  field: LabelingField;
 }
 
 export default function getCoordsBuilders(
-  object?: ExtendedObject,
+  object?: LabelingObject,
 ): CoordsFieldBuilder[] {
   if (!object) return [];
   return object.fields.flatMap(field => {

@@ -10,7 +10,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useLabelingAutosave } from "../../utils/labeling/hooks/useLabelingAutosave";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
-import { LabelingDocument } from "../../utils/labeling/types";
+import { ExternalDocument } from "../../utils/labeling/types/database";
 import UndoRedoButtons from "./undoRedoButtons";
 
 export default function EditorHeader(): JSX.Element {
@@ -28,7 +28,7 @@ export default function EditorHeader(): JSX.Element {
 
   const saveCallback = () =>
     saveLabeling(
-      LabelingDocument.encode({
+      ExternalDocument.encode({
         ...document,
         objects: data.objects,
       }),

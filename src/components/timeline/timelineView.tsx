@@ -3,7 +3,7 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import TreeView from "@material-ui/lab/TreeView/TreeView";
 import React from "react";
 
-import { ObjectSelection } from "../../utils/labeling/types";
+import { ObjectSelection } from "../../utils/labeling/types/client";
 import setSelectedUpdate from "../../utils/labeling/updates/setSelectedUpdate";
 import setToggledUpdate from "../../utils/labeling/updates/setToggledUpdate";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";

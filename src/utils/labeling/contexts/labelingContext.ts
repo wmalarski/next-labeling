@@ -1,14 +1,14 @@
 import { createContext } from "react";
 
-import { LabelingDocument } from "../types";
+import { ExternalDocument } from "../types/database";
 import { UseLabelingHistoryResult } from "../hooks/useLabelingHistory";
 
 export interface LabelingContextValue {
-  saveLabeling: (doc: LabelingDocument) => void;
-  removeLabeling: (doc: LabelingDocument) => void;
+  saveLabeling: (doc: ExternalDocument) => void;
+  removeLabeling: (doc: ExternalDocument) => void;
   setDuration: (duration: number) => void;
   duration: number;
-  document: LabelingDocument;
+  document: ExternalDocument;
   history: UseLabelingHistoryResult;
 }
 
@@ -22,9 +22,9 @@ const LabelingContext = createContext<LabelingContextValue>({
     redoLabeling: () => void 0,
     undoLabeling: () => void 0,
     pushLabeling: () => void 0,
-    setIndex: () => void 0,
+    setLabelingId: () => void 0,
     messages: [],
-    index: 0,
+    currentId: "",
     data: {
       objects: [],
       currentFrame: 0,
@@ -33,7 +33,6 @@ const LabelingContext = createContext<LabelingContextValue>({
     },
   },
   document: {
-    comments: [],
     contributors: [],
     created: "",
     objects: [],

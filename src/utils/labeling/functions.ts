@@ -2,21 +2,19 @@ import { v4 as uuidv4 } from "uuid";
 import uniqueId from "lodash/uniqueId";
 import getValueIndex from "../editors/indexes";
 
-import { FieldType } from "../editors/types";
 import { ObjectSchema, Schema } from "../schema/types";
 import {
-  ExtendedField,
-  ExtendedLabeling,
-  ExtendedObject,
+  LabelingField,
   LabelingDocument,
   LabelingObject,
-} from "./types";
+} from "./types/client";
 import { UnpackedFrameValuePair, unpackValues } from "../editors/functions";
+import { ExternalDocument, ExternalObject } from "./types/database";
 
 export function createObject(
   objectSchema: ObjectSchema,
   currentFrame: number,
-): ExtendedObject {
+): LabelingObject {
   return {
     id: uuidv4(),
     isTracked: true,
@@ -38,9 +36,9 @@ export function createObject(
 }
 
 export function groupObjectsBySchema(
-  objects: LabelingObject[],
-): { [definition: string]: LabelingObject[] } {
-  return objects.reduce<{ [definition: string]: LabelingObject[] }>(
+  objects: ExternalObject[],
+): { [definition: string]: ExternalObject[] } {
+  return objects.reduce<{ [definition: string]: ExternalObject[] }>(
     (prev, curr) => ({
       ...prev,
       [curr.objectSchemaId]: [...(prev[curr.objectSchemaId] ?? []), curr],
@@ -50,9 +48,9 @@ export function groupObjectsBySchema(
 }
 
 export function pairObjectsToSchema(
-  objects: LabelingObject[],
+  objects: ExternalObject[],
   schema: Schema,
-): { object: LabelingObject; objectSchema: ObjectSchema }[] {
+): { object: ExternalObject; objectSchema: ObjectSchema }[] {
   return Object.entries(groupObjectsBySchema(objects)).flatMap(
     ([objectSchemaId, schemaObjects]) => {
       const objectSchema = schema.objects.find(
@@ -64,9 +62,9 @@ export function pairObjectsToSchema(
   );
 }
 
-export function createExtendedLabeling(
-  document: LabelingDocument,
-): ExtendedLabeling {
+export function createLabelingDocument(
+  document: ExternalDocument,
+): LabelingDocument {
   return {
     currentFrame: 0,
     selected: [],
@@ -90,21 +88,21 @@ export function createExtendedLabeling(
 }
 
 export function pairObjectsToIds(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
   ids: string[],
-): ExtendedObject[] {
+): LabelingObject[] {
   return ids.flatMap(objectId => {
     const object = data.objects.find(object => object.id === objectId);
     return object ? [object] : [];
   });
 }
 
-export function getFrames(data: ExtendedLabeling, ids: string[]): number[] {
+export function getFrames(data: LabelingDocument, ids: string[]): number[] {
   return pairObjectsToIds(data, ids).flatMap(object => object.frames ?? []);
 }
 
 export function getFirstFrame(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
   ids: string[],
 ): number | undefined {
   const frames = getFrames(data, ids);
@@ -113,7 +111,7 @@ export function getFirstFrame(
 }
 
 export function getLastFrame(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
   ids: string[],
 ): number | undefined {
   const frames = getFrames(data, ids);
@@ -131,7 +129,7 @@ export interface ObjectBlock {
 }
 
 export function calculateObjectBlocks(
-  object: ExtendedObject,
+  object: LabelingObject,
   duration: number,
 ): ObjectBlock[] {
   if (object.objectSchema.singleton || !object.frames) {
@@ -171,7 +169,7 @@ interface ReduceFieldBlocksState {
 }
 
 export function calculateFieldBlocks(
-  field: ExtendedField,
+  field: LabelingField,
   objectBlocks: ObjectBlock[],
   duration: number,
 ): FieldBlock[] {
