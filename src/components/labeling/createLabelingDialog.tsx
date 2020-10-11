@@ -12,16 +12,15 @@ import { AuthUserInfoContext } from "../../utils/auth/hooks";
 import { LabelingCollection } from "../../utils/firestore/types";
 import useCreate from "../../utils/firestore/useCreate";
 import { createObject } from "../../utils/labeling/functions";
-import { LabelingDocument } from "../../utils/labeling/types";
+import { ExternalDocument } from "../../utils/labeling/types/database";
 import { SchemaDocument } from "../../utils/schema/types";
 
-const defaultDocument: Partial<LabelingDocument> = {
+const defaultDocument: Partial<ExternalDocument> = {
   filename: "",
   stars: 0,
   public: true,
   contributors: [],
   fps: 24,
-  comments: [],
   name: "",
   objects: [],
 };
@@ -36,7 +35,7 @@ export default function CreateLabelingDialog(
   const { schema, ...other } = props;
 
   const { authUser } = useContext(AuthUserInfoContext);
-  const [document, setDocument] = useState<Partial<LabelingDocument>>({
+  const [document, setDocument] = useState<Partial<ExternalDocument>>({
     ...defaultDocument,
     schema: schema.schema,
     schemaId: schema.id,
@@ -49,7 +48,7 @@ export default function CreateLabelingDialog(
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const createLabeling = useCreate<LabelingDocument>({
+  const createLabeling = useCreate<ExternalDocument>({
     collection: LabelingCollection,
     setSnackbarState: () => void 0,
     routerOptions: document => ({

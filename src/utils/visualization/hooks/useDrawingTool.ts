@@ -7,13 +7,13 @@ import getCoordsBuilders from "../getCoordsBuilder";
 import { ToolType } from "../types";
 import useCoordsBuilder, { UseCoordsBuilderResult } from "./useCoordsBuilder";
 import useToolContext from "./useToolContext";
-import { ExtendedField, ExtendedObject } from "../../labeling/types";
+import { LabelingField, LabelingObject } from "../../labeling/types/client";
 import usePreferences from "../../labeling/hooks/usePreferencesContext";
 
 export interface UseDrawingToolResult {
   builderResult: UseCoordsBuilderResult;
-  object?: ExtendedObject;
-  field?: ExtendedField;
+  object?: LabelingObject;
+  field?: LabelingField;
 }
 
 export default function useDrawingTool(): UseDrawingToolResult {

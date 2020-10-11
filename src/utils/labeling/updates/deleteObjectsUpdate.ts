@@ -1,10 +1,10 @@
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 
-import { ExtendedLabeling } from "../types";
+import { LabelingDocument } from "../types/client";
 import { LabelingState } from "../hooks/useLabelingHistory";
 
 export default function deleteObjectsUpdate(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
 ): LabelingState {
   const ids = data.selected
     .filter(object => object.objectSelected)

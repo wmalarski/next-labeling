@@ -2,9 +2,7 @@ import "firebase/firestore";
 
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
-import InputBase from "@material-ui/core/InputBase";
 import AddIcon from "@material-ui/icons/Add";
-import SearchIcon from "@material-ui/icons/Search";
 import firebase from "firebase/app";
 import usePagination from "firestore-pagination-hook";
 import { useRouter } from "next/router";
@@ -14,8 +12,8 @@ import Footer from "../../src/components/common/footer";
 import Header from "../../src/components/common/header";
 import LoadingBackdrop from "../../src/components/common/loadingBackdrop";
 import ResultSnackbar from "../../src/components/common/resultSnackbar";
+import SearchInput from "../../src/components/common/searchInput";
 import SchemaListItem from "../../src/components/schema/details/schemaListItem";
-import { useSearchBarStyle } from "../../src/themes/styles";
 import { AuthUserInfoContext } from "../../src/utils/auth/hooks";
 import initFirebase from "../../src/utils/auth/initFirebase";
 import {
@@ -31,7 +29,6 @@ import { SchemaDocument } from "../../src/utils/schema/types";
 initFirebase();
 
 function SchemaList(): JSX.Element {
-  const classes = useSearchBarStyle();
   const { authUser } = useContext(AuthUserInfoContext);
   const router = useRouter();
 
@@ -83,22 +80,7 @@ function SchemaList(): JSX.Element {
     <>
       <Header>
         <>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ "aria-label": "search" }}
-              onEnded={event => {
-                console.log("event", event);
-              }}
-            />
-          </div>
+          <SearchInput onSubmit={() => void 0} />
           <Button
             size="small"
             color="inherit"

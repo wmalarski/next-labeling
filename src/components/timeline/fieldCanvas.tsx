@@ -10,12 +10,12 @@ import {
 import {
   calculateFieldBlocks,
   ObjectBlock,
-} from "../../utils/labeling/functions";
-import { ExtendedField } from "../../utils/labeling/types";
+} from "../../utils/editors/timeline";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
+import { LabelingField } from "../../utils/labeling/types/client";
 
 export interface FieldCanvasProps {
-  field: ExtendedField;
+  field: LabelingField;
   blocks: ObjectBlock[];
   isSelected: boolean;
   width: number;

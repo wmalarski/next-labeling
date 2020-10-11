@@ -116,7 +116,7 @@ function LabelingEditor(): JSX.Element {
                         </div>
                       </div>
                       <div
-                        style={{ overflow: "auto", height: 100, flexGrow: 1 }}
+                        style={{ overflow: "auto", height: 200, flexGrow: 1 }}
                       >
                         {viewsState.timeline && <TimelineView />}
                       </div>

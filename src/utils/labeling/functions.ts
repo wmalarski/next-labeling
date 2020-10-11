@@ -1,22 +1,19 @@
-import { v4 as uuidv4 } from "uuid";
 import uniqueId from "lodash/uniqueId";
-import getValueIndex from "../editors/indexes";
+import { v4 as uuidv4 } from "uuid";
 
-import { FieldType } from "../editors/types";
 import { ObjectSchema, Schema } from "../schema/types";
 import {
-  ExtendedField,
-  ExtendedLabeling,
-  ExtendedObject,
+  IsDoneFilterValue,
+  LabelingDisplayFilters,
   LabelingDocument,
   LabelingObject,
-} from "./types";
-import { UnpackedFrameValuePair, unpackValues } from "../editors/functions";
+} from "./types/client";
+import { ExternalDocument, ExternalObject } from "./types/database";
 
 export function createObject(
   objectSchema: ObjectSchema,
   currentFrame: number,
-): ExtendedObject {
+): LabelingObject {
   return {
     id: uuidv4(),
     isTracked: true,
@@ -38,9 +35,9 @@ export function createObject(
 }
 
 export function groupObjectsBySchema(
-  objects: LabelingObject[],
-): { [definition: string]: LabelingObject[] } {
-  return objects.reduce<{ [definition: string]: LabelingObject[] }>(
+  objects: ExternalObject[],
+): { [definition: string]: ExternalObject[] } {
+  return objects.reduce<{ [definition: string]: ExternalObject[] }>(
     (prev, curr) => ({
       ...prev,
       [curr.objectSchemaId]: [...(prev[curr.objectSchemaId] ?? []), curr],
@@ -50,9 +47,9 @@ export function groupObjectsBySchema(
 }
 
 export function pairObjectsToSchema(
-  objects: LabelingObject[],
+  objects: ExternalObject[],
   schema: Schema,
-): { object: LabelingObject; objectSchema: ObjectSchema }[] {
+): { object: ExternalObject; objectSchema: ObjectSchema }[] {
   return Object.entries(groupObjectsBySchema(objects)).flatMap(
     ([objectSchemaId, schemaObjects]) => {
       const objectSchema = schema.objects.find(
@@ -64,9 +61,9 @@ export function pairObjectsToSchema(
   );
 }
 
-export function createExtendedLabeling(
-  document: LabelingDocument,
-): ExtendedLabeling {
+export function createLabelingDocument(
+  document: ExternalDocument,
+): LabelingDocument {
   return {
     currentFrame: 0,
     selected: [],
@@ -90,21 +87,21 @@ export function createExtendedLabeling(
 }
 
 export function pairObjectsToIds(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
   ids: string[],
-): ExtendedObject[] {
+): LabelingObject[] {
   return ids.flatMap(objectId => {
     const object = data.objects.find(object => object.id === objectId);
     return object ? [object] : [];
   });
 }
 
-export function getFrames(data: ExtendedLabeling, ids: string[]): number[] {
+export function getFrames(data: LabelingDocument, ids: string[]): number[] {
   return pairObjectsToIds(data, ids).flatMap(object => object.frames ?? []);
 }
 
 export function getFirstFrame(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
   ids: string[],
 ): number | undefined {
   const frames = getFrames(data, ids);
@@ -113,7 +110,7 @@ export function getFirstFrame(
 }
 
 export function getLastFrame(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
   ids: string[],
 ): number | undefined {
   const frames = getFrames(data, ids);
@@ -125,114 +122,18 @@ export function frameToRange(frame: number, duration: number): number {
   return Math.max(Math.min(frame, duration), 0);
 }
 
-export interface ObjectBlock {
-  firstFrame: number;
-  lastFrame: number;
-}
-
-export function calculateObjectBlocks(
-  object: ExtendedObject,
-  duration: number,
-): ObjectBlock[] {
-  if (object.objectSchema.singleton || !object.frames) {
-    return [{ firstFrame: 0, lastFrame: duration }];
-  }
-
-  const [first, ...frames] = object.frames.sort((a, b) => a - b);
-  return frames
-    .reduce(
-      (prev, curr, index, array) => {
-        const next = array[index + 1];
-        if (!next) return [...prev, curr];
-        return curr + 1 === next ? prev : [...prev, curr, next];
-      },
-      [first],
-    )
-    .reduce<ObjectBlock[]>((prev, current, index, array) => {
-      return index % 2 === 0
-        ? [
-            ...prev,
-            { firstFrame: current, lastFrame: array[index + 1] ?? current },
-          ]
-        : prev;
-    }, []);
-}
-
-export interface FieldBlock {
-  firstFrame: number;
-  lastFrame: number;
-  value: string;
-  index: number;
-}
-
-interface ReduceFieldBlocksState {
-  fieldBlocks: FieldBlock[];
-  objectBlocks: ObjectBlock[];
-}
-
-export function calculateFieldBlocks(
-  field: ExtendedField,
-  objectBlocks: ObjectBlock[],
-  duration: number,
-): FieldBlock[] {
-  const attributes = field.fieldSchema.attributes;
-
-  const unpacked = unpackValues(field.values);
-  if (!unpacked)
-    return [{ firstFrame: 0, lastFrame: duration, index: 0, value: "" }];
-  const { type, pairs } = unpacked;
-
-  const res = pairs.reduce<UnpackedFrameValuePair[][]>(
-    (prev, curr, index, array) => [...prev, [curr, array[index + 1]]],
-    [],
-  );
-  const result = res.reduce<ReduceFieldBlocksState>(
-    (prev, curr) => {
-      const [left, right] = curr;
-      const [currentBlock, ...otherBlocks] = prev.objectBlocks;
-      const rightFrame = right ? right.frame : currentBlock.lastFrame;
-      const index = getValueIndex({ [type]: [left] }, attributes);
-      if (rightFrame <= currentBlock.lastFrame) {
-        return {
-          objectBlocks: prev.objectBlocks,
-          fieldBlocks: [
-            ...prev.fieldBlocks,
-            {
-              firstFrame: left.frame,
-              lastFrame: rightFrame,
-              value: `${left.value}`,
-              index,
-            },
-          ],
-        };
-      }
-      // TODO: test this part - multiple blocks #11
-      const [nextBlock] = otherBlocks;
-      return {
-        objectBlocks: otherBlocks,
-        fieldBlocks: [
-          ...prev.fieldBlocks,
-          {
-            firstFrame: left.frame,
-            lastFrame: currentBlock.lastFrame,
-            value: `${left.value}`,
-
-            index,
-          },
-          {
-            firstFrame: nextBlock.firstFrame,
-            lastFrame: right.frame,
-            value: `${left.value}`,
-            index,
-          },
-        ],
-      };
-    },
-    {
-      fieldBlocks: [],
-      objectBlocks,
-    },
-  );
-
-  return [...result.fieldBlocks];
+export function applyLabelingFilters(
+  objects: LabelingObject[],
+  filters: LabelingDisplayFilters,
+): LabelingObject[] {
+  const { objectSchemaIds, name, isDone } = filters;
+  return objects
+    .filter(object => objectSchemaIds.includes(object.objectSchemaId))
+    .filter(object => (name ? object.name.includes(name) : true))
+    .filter(object => {
+      if (isDone === IsDoneFilterValue.ALL) return true;
+      if (isDone === IsDoneFilterValue.IS_DONE && object.isDone) return true;
+      if (isDone === IsDoneFilterValue.WIP && !object.isDone) return true;
+      return false;
+    });
 }

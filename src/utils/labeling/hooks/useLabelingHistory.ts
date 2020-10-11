@@ -1,13 +1,14 @@
 import { v4 as uuidv4 } from "uuid";
 
 import { useCallback, useMemo, useRef, useState } from "react";
-import { createExtendedLabeling } from "../functions";
-import { ExtendedLabeling, LabelingDocument } from "../types";
+import { createLabelingDocument } from "../functions";
+import { LabelingDocument } from "../types/client";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core/SvgIcon";
+import { ExternalDocument } from "../types/database";
 
 export interface LabelingState {
-  data: ExtendedLabeling;
+  data: LabelingDocument;
   message: string;
   icon?: OverridableComponent<SvgIconTypeMap<unknown, "svg">>;
 }
@@ -28,10 +29,10 @@ export interface UseLabelingHistoryState {
 }
 
 export interface UseLabelingHistoryResult {
-  data: ExtendedLabeling;
+  data: LabelingDocument;
   message: string;
   pushLabeling: (
-    provider: (data: ExtendedLabeling) => LabelingState | undefined,
+    provider: (data: LabelingDocument) => LabelingState | undefined,
   ) => void;
   undoLabeling: () => void;
   redoLabeling: () => void;
@@ -43,14 +44,14 @@ export interface UseLabelingHistoryResult {
 }
 
 export default function useLabelingHistory(
-  document: LabelingDocument,
+  document: ExternalDocument,
   maxSize?: number,
 ): UseLabelingHistoryResult {
   const bufferSize = useRef(maxSize ?? 20);
   const [state, setState] = useState<UseLabelingHistoryState>({
     history: [
       {
-        data: createExtendedLabeling(document),
+        data: createLabelingDocument(document),
         message: "Labeling loaded",
         id: uuidv4(),
       },
@@ -72,7 +73,7 @@ export default function useLabelingHistory(
     [setState],
   );
   const pushLabeling = useCallback(
-    (provider: (data: ExtendedLabeling) => LabelingState | undefined): void =>
+    (provider: (data: LabelingDocument) => LabelingState | undefined): void =>
       setState(value => {
         const currentLabeling = value.history[value.index].data;
         const result = provider(currentLabeling);

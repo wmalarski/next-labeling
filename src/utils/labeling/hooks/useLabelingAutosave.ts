@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { useInterval } from "../../common/useInterval";
-import { LabelingDocument } from "../types";
+import { ExternalDocument } from "../types/database";
 import useLabelingContext from "./useLabelingContext";
 import usePreferences from "./usePreferencesContext";
 
@@ -16,7 +16,7 @@ export function useLabelingAutosave(): void {
   const callback = useCallback(
     () =>
       saveLabeling(
-        LabelingDocument.encode({
+        ExternalDocument.encode({
           ...document,
           objects: data.objects,
         }),

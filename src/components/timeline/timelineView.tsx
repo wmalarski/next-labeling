@@ -3,14 +3,16 @@ import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import TreeView from "@material-ui/lab/TreeView/TreeView";
 import React from "react";
 
-import { ObjectSelection } from "../../utils/labeling/types";
+import { ObjectSelection } from "../../utils/labeling/types/client";
 import setSelectedUpdate from "../../utils/labeling/updates/setSelectedUpdate";
 import setToggledUpdate from "../../utils/labeling/updates/setToggledUpdate";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import { TimelineObjectItem } from "./timelineObjectItem";
+import { TimelineFilterControls } from "./timelineFilterControls";
+import { applyLabelingFilters } from "../../utils/labeling/functions";
 
 export default function TimelineView(): JSX.Element {
-  const { history } = useLabelingContext();
+  const { history, filters } = useLabelingContext();
   const { pushLabeling } = history;
 
   const { objects, selected: selectedObjects, toggled } = history.data;
@@ -50,24 +52,27 @@ export default function TimelineView(): JSX.Element {
   };
 
   return (
-    <TreeView
-      defaultCollapseIcon={<ArrowDropDownIcon />}
-      defaultExpandIcon={<ArrowRightIcon />}
-      defaultEndIcon={<div style={{ width: 24 }} />}
-      expanded={toggled}
-      selected={selected}
-      onNodeToggle={handleToggle}
-      onNodeSelect={handleSelect}
-      multiSelect
-    >
-      {objects.map(object => (
-        <TimelineObjectItem
-          nodeId={object.id}
-          key={object.id}
-          object={object}
-          selected={selected}
-        />
-      ))}
-    </TreeView>
+    <>
+      <TimelineFilterControls />
+      <TreeView
+        defaultCollapseIcon={<ArrowDropDownIcon />}
+        defaultExpandIcon={<ArrowRightIcon />}
+        defaultEndIcon={<div style={{ width: 24 }} />}
+        expanded={toggled}
+        selected={selected}
+        onNodeToggle={handleToggle}
+        onNodeSelect={handleSelect}
+        multiSelect
+      >
+        {applyLabelingFilters(objects, filters).map(object => (
+          <TimelineObjectItem
+            nodeId={object.id}
+            key={object.id}
+            object={object}
+            selected={selected}
+          />
+        ))}
+      </TreeView>
+    </>
   );
 }

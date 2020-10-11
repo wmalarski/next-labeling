@@ -1,10 +1,10 @@
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
-import { ExtendedLabeling } from "../types";
+import { LabelingDocument } from "../types/client";
 import { LabelingState } from "../hooks/useLabelingHistory";
 
 export default function setObjectsIsDoneUpdate(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
 ): LabelingState {
   const objects = data.selected.filter(object => object.objectSelected);
   const firstId = objects[0]?.objectId;

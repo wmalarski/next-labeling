@@ -1,8 +1,9 @@
 import { Container, Sprite, Stage, Text } from "@inlet/react-pixi";
 import * as PIXI from "pixi.js";
-import React, { useContext } from "react";
+import React from "react";
 
-import LabelingContext from "../../utils/labeling/contexts/labelingContext";
+import { applyLabelingFilters } from "../../utils/labeling/functions";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import useDrawingTool from "../../utils/visualization/hooks/useDrawingTool";
 import useToolContext from "../../utils/visualization/hooks/useToolContext";
 import useZoomAndPane from "../../utils/visualization/hooks/useZoomAndPane";
@@ -11,9 +12,13 @@ import { PixiFinishedObject, PixiInProgressObject } from "./pixiObject";
 import ToolsHeader from "./toolsHeader";
 
 export default function MainStage(): JSX.Element {
-  const { document, history, duration, setDuration } = useContext(
-    LabelingContext,
-  );
+  const {
+    document,
+    history,
+    duration,
+    setDuration,
+    filters,
+  } = useLabelingContext();
   const { currentFrame, objects, selected } = history.data;
   const fps = document.fps ?? 24;
 
@@ -25,18 +30,20 @@ export default function MainStage(): JSX.Element {
   const drawingStage = builderState.currentValue?.stage;
   const drawingValue = builderState.currentValue?.value;
 
-  const finishedObjects = objects.flatMap(object => {
-    const isSelected = selected.some(sel => sel.objectId === object.id);
-    return object.fields.map(field => (
-      <PixiFinishedObject
-        key={field.id}
-        isSelected={isSelected}
-        object={object}
-        field={field}
-        frame={currentFrame}
-      />
-    ));
-  });
+  const finishedObjects = applyLabelingFilters(objects, filters).flatMap(
+    object => {
+      const isSelected = selected.some(sel => sel.objectId === object.id);
+      return object.fields.map(field => (
+        <PixiFinishedObject
+          key={field.id}
+          isSelected={isSelected}
+          object={object}
+          field={field}
+          frame={currentFrame}
+        />
+      ));
+    },
+  );
 
   const zoomAndPaneSelected = toolType === ToolType.ZOOM_AND_PANE;
   const {

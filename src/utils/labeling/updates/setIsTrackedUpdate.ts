@@ -1,10 +1,10 @@
-import { ExtendedLabeling, ExtendedObject } from "../types";
+import { LabelingDocument, LabelingObject } from "../types/client";
 import { LabelingState } from "../hooks/useLabelingHistory";
 import ImageSearchIcon from "@material-ui/icons/ImageSearch";
 
 export default function setIsTrackedUpdate(
-  data: ExtendedLabeling,
-  object: ExtendedObject,
+  data: LabelingDocument,
+  object: LabelingObject,
   checked: boolean,
 ): LabelingState {
   const objectIndex = data.objects.findIndex(obj => obj.id === object.id);

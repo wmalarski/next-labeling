@@ -1,11 +1,11 @@
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 
-import { ExtendedLabeling } from "../types";
+import { LabelingDocument } from "../types/client";
 import { LabelingState } from "../hooks/useLabelingHistory";
 import { unpackValues } from "../../editors/functions";
 
 export default function deleteBackwardUpdate(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
 ): LabelingState {
   const currentFrame = data.currentFrame;
   const ids = data.selected

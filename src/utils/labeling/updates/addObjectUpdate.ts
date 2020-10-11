@@ -3,10 +3,10 @@ import AddBoxIcon from "@material-ui/icons/AddBox";
 import { ObjectSchema } from "../../schema/types";
 import { createObject } from "../functions";
 import { LabelingState } from "../hooks/useLabelingHistory";
-import { ExtendedLabeling } from "../types";
+import { LabelingDocument } from "../types/client";
 
 export default function addObjectUpdate(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
   objectSchema: ObjectSchema,
   currentFrame: number,
 ): [string, LabelingState] {

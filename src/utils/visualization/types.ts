@@ -1,5 +1,5 @@
 import { LabelingFieldValues } from "../editors/types";
-import { ExtendedField, ExtendedObject } from "../labeling/types";
+import { LabelingField, LabelingObject } from "../labeling/types/client";
 import { FieldSchema } from "../schema/types";
 
 export interface CoordsBuilderResult {
@@ -19,14 +19,14 @@ export interface PixiInProgressObjectProps {
   stage: number;
   fieldSchema: FieldSchema;
   value: LabelingFieldValues;
-  object: ExtendedObject;
+  object: LabelingObject;
 }
 
 export interface PixiFinishedObjectProps {
   isSelected: boolean;
-  field: ExtendedField;
+  field: LabelingField;
   frame: number;
-  object: ExtendedObject;
+  object: LabelingObject;
 }
 
 export enum ToolType {

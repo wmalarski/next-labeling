@@ -1,10 +1,10 @@
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 
 import { LabelingState } from "../hooks/useLabelingHistory";
-import { ExtendedLabeling } from "../types";
+import { LabelingDocument } from "../types/client";
 
 export default function setSelectedNextUpdate(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
   change: number,
 ): LabelingState {
   const { currentFrame, objects, selected } = data;

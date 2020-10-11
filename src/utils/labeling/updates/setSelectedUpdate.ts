@@ -1,10 +1,10 @@
 import SelectAllIcon from "@material-ui/icons/SelectAll";
 
 import { LabelingState } from "../hooks/useLabelingHistory";
-import { ExtendedLabeling, ObjectSelection } from "../types";
+import { LabelingDocument, ObjectSelection } from "../types/client";
 
 export default function setSelectedUpdate(
-  data: ExtendedLabeling,
+  data: LabelingDocument,
   selected: ObjectSelection[],
 ): LabelingState {
   return {
