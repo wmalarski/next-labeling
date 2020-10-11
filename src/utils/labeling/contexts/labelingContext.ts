@@ -2,20 +2,28 @@ import { createContext } from "react";
 
 import { ExternalDocument } from "../types/database";
 import { UseLabelingHistoryResult } from "../hooks/useLabelingHistory";
+import { IsDoneFilterValue, LabelingDisplayFilters } from "../types/client";
 
 export interface LabelingContextValue {
   saveLabeling: (doc: ExternalDocument) => void;
   removeLabeling: (doc: ExternalDocument) => void;
   setDuration: (duration: number) => void;
+  setFilters: (filters: LabelingDisplayFilters) => void;
   duration: number;
   document: ExternalDocument;
   history: UseLabelingHistoryResult;
+  filters: LabelingDisplayFilters;
 }
 
 const LabelingContext = createContext<LabelingContextValue>({
   saveLabeling: () => void 0,
   removeLabeling: () => void 0,
   setDuration: () => void 0,
+  setFilters: () => void 0,
+  filters: {
+    objectSchemaIds: [],
+    isDone: IsDoneFilterValue.ALL,
+  },
   duration: 1,
   history: {
     message: "",

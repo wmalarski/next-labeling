@@ -10,9 +10,9 @@ import {
 import {
   calculateFieldBlocks,
   ObjectBlock,
-} from "../../utils/labeling/functions";
-import { LabelingField } from "../../utils/labeling/types/client";
+} from "../../utils/editors/timeline";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
+import { LabelingField } from "../../utils/labeling/types/client";
 
 export interface FieldCanvasProps {
   field: LabelingField;

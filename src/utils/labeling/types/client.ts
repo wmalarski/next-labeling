@@ -32,8 +32,14 @@ export const LabelingDocument = t.strict({
 });
 export type LabelingDocument = t.TypeOf<typeof LabelingDocument>;
 
+export enum IsDoneFilterValue {
+  ALL,
+  IS_DONE,
+  WIP,
+}
+
 export interface LabelingDisplayFilters {
-  objectIds: string[];
-  name: string | null;
-  isDone: string;
+  objectSchemaIds: string[];
+  name?: string | null;
+  isDone: IsDoneFilterValue;
 }
