@@ -1,3 +1,4 @@
+import "firebase/firestore";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Container from "@material-ui/core/Container";
@@ -9,6 +10,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import UndoIcon from "@material-ui/icons/Undo";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
+import firebase from "firebase/app";
 
 import Footer from "../../../components/common/footer";
 import Header from "../../../components/common/header";
@@ -57,10 +59,13 @@ function SchemaEdit(): JSX.Element {
     }
   }, [authUser, router]);
 
+  const db = firebase.firestore();
+  const collection = db.collection(SchemaCollection);
+
   const { isLoading, document, exist } = useFetchSchema(documentId);
   const { update: updateSchema, state: updateSchemaState } = useUpdateDocument<
     SchemaDocument
-  >(SchemaCollection);
+  >(collection);
 
   useEffect(() => {
     if (!isLoading && !exist) {
@@ -89,7 +94,7 @@ function SchemaEdit(): JSX.Element {
   }, [updateSchemaState.document, updateSchemaState.errors]);
 
   const { remove: removeSchema, state: removeSchemaState } = useRemoveDocument(
-    SchemaCollection,
+    collection,
   );
   useEffect(() => {
     if (removeSchemaState.success) {

@@ -1,7 +1,8 @@
 import "firebase/firestore";
 
-import firebase from "firebase/app";
 import { useCallback, useState } from "react";
+
+import { FirestoreCollection } from "./types";
 
 export interface UseCreateDocumentState<T> {
   isLoading: boolean;
@@ -15,7 +16,7 @@ export interface UseCreateDocumentResult<T> {
 }
 
 export default function useCreateDocument<T>(
-  collection: string,
+  collection: FirestoreCollection,
 ): UseCreateDocumentResult<T> {
   const [state, setState] = useState<UseCreateDocumentState<T>>({
     isLoading: false,
@@ -26,8 +27,7 @@ export default function useCreateDocument<T>(
       setState({
         isLoading: true,
       });
-      const db = firebase.firestore();
-      db.collection(collection)
+      collection
         .add(document)
         .then(snap =>
           setState({

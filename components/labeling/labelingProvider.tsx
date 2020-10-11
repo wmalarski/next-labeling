@@ -1,5 +1,7 @@
+import "firebase/firestore";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import firebase from "firebase/app";
 
 import {
   LabelingCollection,
@@ -37,9 +39,12 @@ export default function LabelingProvider(
     ),
   });
 
+  const db = firebase.firestore();
+  const collection = db.collection(LabelingCollection);
+
   const { update: updateLabeling, state: updateState } = useUpdateDocument<
     ExternalDocument
-  >(LabelingCollection);
+  >(collection);
   useEffect(() => {
     if (updateState.document) {
       setDocument(updateState.document);
@@ -53,7 +58,7 @@ export default function LabelingProvider(
   }, [setSnackbarState, updateState.document, updateState.errors]);
 
   const { remove: removeLabeling, state: removeState } = useRemoveDocument(
-    LabelingCollection,
+    collection,
   );
   useEffect(() => {
     if (removeState.success) {

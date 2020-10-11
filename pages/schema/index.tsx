@@ -13,6 +13,8 @@ import Header from "../../components/common/header";
 import LoadingBackdrop from "../../components/common/loadingBackdrop";
 import ResultSnackbar from "../../components/common/resultSnackbar";
 import SearchInput from "../../components/common/searchInput";
+import withAuthUser from "../../components/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
 import SchemaListItem from "../../components/schema/details/schemaListItem";
 import { AuthUserInfoContext } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
@@ -22,8 +24,6 @@ import {
 } from "../../utils/firestore/types";
 import useCreate from "../../utils/firestore/useCreate";
 import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
-import withAuthUser from "../../components/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
 import { SchemaDocument } from "../../utils/schema/types";
 
 initFirebase();
@@ -39,9 +39,10 @@ function SchemaList(): JSX.Element {
   });
 
   const db = firebase.firestore();
+  const collection = db.collection(SchemaCollection);
 
   const { loading, loadingMore, hasMore, items, loadMore } = usePagination(
-    db.collection(SchemaCollection).orderBy("created", "asc"),
+    collection.orderBy("created", "asc"),
     {
       limit: 10,
     },
@@ -52,7 +53,7 @@ function SchemaList(): JSX.Element {
   });
 
   const createSchema = useCreate<SchemaDocument>({
-    collection: SchemaCollection,
+    collection,
     setSnackbarState,
     routerOptions: document => ({
       url: "/schema/schemaId",
@@ -61,7 +62,7 @@ function SchemaList(): JSX.Element {
   });
 
   const { remove: removeSchema, state: removeSchemaState } = useRemoveDocument(
-    SchemaCollection,
+    collection,
   );
   useEffect(() => {
     if (removeSchemaState.success) {

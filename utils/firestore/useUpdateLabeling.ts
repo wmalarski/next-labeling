@@ -1,7 +1,8 @@
 import "firebase/firestore";
 
-import firebase from "firebase/app";
 import { useCallback, useState } from "react";
+
+import { FirestoreCollection } from "./types";
 
 export interface UseUpdateDocumentState<T> {
   isLoading: boolean;
@@ -15,7 +16,7 @@ export interface UseUpdateDocumentResult<T> {
 }
 
 export default function useUpdateDocument<T>(
-  collection: string,
+  collection: FirestoreCollection,
 ): UseUpdateDocumentResult<T> {
   const [state, setState] = useState<UseUpdateDocumentState<T>>({
     isLoading: false,
@@ -23,9 +24,8 @@ export default function useUpdateDocument<T>(
 
   const update = useCallback(
     (documentId: string, document: T): void => {
-      const db = firebase.firestore();
       setState({ isLoading: true });
-      db.collection(collection)
+      collection
         .doc(documentId)
         .set({ ...document, created: new Date().toJSON() })
         .then(() => setState({ document, isLoading: false }))

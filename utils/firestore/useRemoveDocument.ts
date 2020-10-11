@@ -1,7 +1,7 @@
 import "firebase/firestore";
 
-import firebase from "firebase/app";
 import { useCallback, useState } from "react";
+import { FirestoreCollection } from "./types";
 
 export interface UseRemoveDocumentState {
   success?: boolean;
@@ -15,7 +15,7 @@ export interface UseRemoveDocumentResult {
 }
 
 export default function useRemoveDocument(
-  collection: string,
+  collection: FirestoreCollection,
 ): UseRemoveDocumentResult {
   const [state, setState] = useState<UseRemoveDocumentState>({
     isLoading: false,
@@ -24,8 +24,7 @@ export default function useRemoveDocument(
   const remove = useCallback(
     (documentId: string): void => {
       setState({ isLoading: true });
-      const db = firebase.firestore();
-      db.collection(collection)
+      collection
         .doc(documentId)
         .delete()
         .then(() =>

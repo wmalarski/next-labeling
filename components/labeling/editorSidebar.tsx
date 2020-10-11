@@ -15,6 +15,7 @@ import FirstPageIcon from "@material-ui/icons/FirstPage";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import ViewListIcon from "@material-ui/icons/ViewList";
+import ChatIcon from "@material-ui/icons/Chat";
 import clsx from "clsx";
 import React, { useCallback, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
@@ -300,6 +301,18 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
               <ViewListIcon />
             </ListItemIcon>
             <ListItemText primary={"Properties"} />
+          </ListItem>
+          <ListItem
+            button
+            selected={viewsState.comments}
+            onClick={() =>
+              setViewsState({ ...viewsState, comments: !viewsState.comments })
+            }
+          >
+            <ListItemIcon>
+              <ChatIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Comments"} />
           </ListItem>
           <EditorSettingsDialog />
           <Divider />

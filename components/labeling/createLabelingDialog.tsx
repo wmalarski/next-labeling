@@ -1,3 +1,5 @@
+import "firebase/firestore";
+
 import Button, { ButtonProps } from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -6,6 +8,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import PictureInPictureIcon from "@material-ui/icons/PictureInPicture";
+import firebase from "firebase/app";
 import React, { useContext, useState } from "react";
 
 import { AuthUserInfoContext } from "../../utils/auth/hooks";
@@ -48,8 +51,10 @@ export default function CreateLabelingDialog(
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const db = firebase.firestore();
+  const collection = db.collection(LabelingCollection);
   const createLabeling = useCreate<ExternalDocument>({
-    collection: LabelingCollection,
+    collection,
     setSnackbarState: () => void 0,
     routerOptions: document => ({
       url: "/labeling/[labelingId]",

@@ -22,6 +22,7 @@ import useFetchLabeling from "../../utils/labeling/hooks/useFetchLabeling";
 import { LabelingViewsState } from "../../utils/labeling/views";
 import withAuthUser from "../../components/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
+import CommentList from "../../components/comments/commentList";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,6 +71,7 @@ function LabelingEditor(): JSX.Element {
   const [viewsState, setViewsState] = useState<LabelingViewsState>({
     properties: true,
     timeline: true,
+    comments: true,
   });
 
   if (!authUser) return <></>;
@@ -113,6 +115,11 @@ function LabelingEditor(): JSX.Element {
                         </div>
                         <div style={{ overflow: "auto", height: 400 }}>
                           {viewsState.properties && <EditorTable />}
+                        </div>
+                        <div style={{ overflow: "auto", height: 400 }}>
+                          {viewsState.comments && (
+                            <CommentList documentId={documentId} />
+                          )}
                         </div>
                       </div>
                       <div
