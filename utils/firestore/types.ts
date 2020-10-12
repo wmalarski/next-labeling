@@ -17,3 +17,8 @@ export interface DocumentWithId {
 export type FirestoreCollection = firebase.firestore.CollectionReference<
   firebase.firestore.DocumentData
 >;
+
+export interface FirestoreDate {
+  seconds: number;
+  nanoseconds: number;
+}

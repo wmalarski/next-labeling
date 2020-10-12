@@ -2,10 +2,12 @@ import "firebase/firestore";
 
 import firebase from "firebase/app";
 import usePagination from "firestore-pagination-hook";
+import compact from "lodash/compact";
+import { useMemo } from "react";
 
 import { CommentsCollection, LabelingCollection } from "../../firestore/types";
+import { decodeCommentDocument } from "../functions";
 import { CommentDocument } from "../types";
-import { useMemo } from "react";
 
 export interface UseFetchCommentsResult {
   loading: boolean;
@@ -29,18 +31,13 @@ export default function useFetchComments(
     db
       .collection(LabelingCollection)
       .doc(labelingDocumentId)
-      .collection(CommentsCollection),
+      .collection(CommentsCollection)
+      .orderBy("createdAt"),
     { limit: 10 },
   );
 
   const comments: CommentDocument[] = useMemo(
-    () =>
-      items.flatMap(doc => {
-        const data = doc.data();
-        const decoded = CommentDocument.decode(data);
-        if (decoded._tag === "Left") return [];
-        return [{ ...CommentDocument.encode(data), id: doc.id }];
-      }),
+    () => compact(items.map(decodeCommentDocument)),
     [items],
   );
 

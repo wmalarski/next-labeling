@@ -1,17 +1,21 @@
 import "firebase/firestore";
 
 import { useCallback, useState } from "react";
-
+import firebase from "firebase/app";
 import { FirestoreCollection } from "./types";
 
 export interface UseUpdateDocumentState<T> {
   isLoading: boolean;
-  document?: T;
+  document?: Partial<T>;
   errors?: string[];
 }
 
 export interface UseUpdateDocumentResult<T> {
-  update: (documentId: string, document: T) => void;
+  update: (
+    documentId: string,
+    document: Partial<T>,
+    options?: firebase.firestore.SetOptions,
+  ) => void;
   state: UseUpdateDocumentState<T>;
 }
 
@@ -23,11 +27,14 @@ export default function useUpdateDocument<T>(
   });
 
   const update = useCallback(
-    (documentId: string, document: T): void => {
+    (
+      documentId: string,
+      document: Partial<T>,
+      options?: firebase.firestore.SetOptions,
+    ): void => {
       setState({ isLoading: true });
-      collection
-        .doc(documentId)
-        .set({ ...document, created: new Date().toJSON() })
+      const doc = collection.doc(documentId);
+      (options ? doc.set(document, options) : doc.set(document))
         .then(() => setState({ document, isLoading: false }))
         .catch(reason =>
           setState({ errors: [`${reason.toString()}`], isLoading: false }),

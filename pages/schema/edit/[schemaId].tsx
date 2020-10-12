@@ -1,4 +1,5 @@
 import "firebase/firestore";
+
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Container from "@material-ui/core/Container";
@@ -8,14 +9,16 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import RedoIcon from "@material-ui/icons/Redo";
 import SaveIcon from "@material-ui/icons/Save";
 import UndoIcon from "@material-ui/icons/Undo";
+import firebase from "firebase/app";
 import { useRouter } from "next/router";
 import React, { useContext, useEffect, useState } from "react";
-import firebase from "firebase/app";
 
 import Footer from "../../../components/common/footer";
 import Header from "../../../components/common/header";
 import LoadingBackdrop from "../../../components/common/loadingBackdrop";
 import ResultSnackbar from "../../../components/common/resultSnackbar";
+import withAuthUser from "../../../components/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../../components/pageWrappers/withAuthUserInfo";
 import SchemaForm from "../../../components/schema/forms/schemaForm";
 import { AuthUserInfoContext } from "../../../utils/auth/hooks";
 import initFirebase from "../../../utils/auth/initFirebase";
@@ -24,12 +27,9 @@ import {
   SchemaCollection,
 } from "../../../utils/firestore/types";
 import useRemoveDocument from "../../../utils/firestore/useRemoveDocument";
-import useUpdateDocument from "../../../utils/firestore/useUpdateLabeling";
-import withAuthUser from "../../../components/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../../components/pageWrappers/withAuthUserInfo";
-import { SchemaDocument } from "../../../utils/schema/types";
 import useFetchSchema from "../../../utils/schema/useFetchSchema";
 import useSchemaHistory from "../../../utils/schema/useSchemaHistory";
+import useUpdateSchema from "../../../utils/schema/useUpdateSchema";
 
 initFirebase();
 
@@ -59,13 +59,8 @@ function SchemaEdit(): JSX.Element {
     }
   }, [authUser, router]);
 
-  const db = firebase.firestore();
-  const collection = db.collection(SchemaCollection);
-
   const { isLoading, document, exist } = useFetchSchema(documentId);
-  const { update: updateSchema, state: updateSchemaState } = useUpdateDocument<
-    SchemaDocument
-  >(collection);
+  const { update: updateSchema, state: updateSchemaState } = useUpdateSchema();
 
   useEffect(() => {
     if (!isLoading && !exist) {
@@ -93,6 +88,8 @@ function SchemaEdit(): JSX.Element {
     }
   }, [updateSchemaState.document, updateSchemaState.errors]);
 
+  const db = firebase.firestore();
+  const collection = db.collection(SchemaCollection);
   const { remove: removeSchema, state: removeSchemaState } = useRemoveDocument(
     collection,
   );
@@ -142,7 +139,7 @@ function SchemaEdit(): JSX.Element {
             startIcon={<SaveIcon />}
             onClick={() => {
               if (document) {
-                updateSchema(documentId, { ...document, schema });
+                updateSchema(documentId, { schema });
               }
             }}
           >

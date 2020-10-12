@@ -13,13 +13,13 @@ export type CommentSnapshot = t.TypeOf<typeof CommentSnapshot>;
 
 export const CommentDocument = t.strict({
   id: t.union([t.string, t.undefined]),
-  labelingId: t.string,
   parentId: t.union([t.string, t.null]),
+  createdAt: t.unknown,
   user: AuthUser,
-  resolved: t.boolean,
-  createDate: t.string,
-  isEdited: t.boolean,
   isThread: t.boolean,
+  isResolved: t.boolean,
+  isEdited: t.boolean,
+  isAction: t.boolean,
   message: t.string,
   snapshot: t.union([CommentSnapshot, t.null]),
   reactions: t.array(

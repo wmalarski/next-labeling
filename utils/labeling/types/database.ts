@@ -25,7 +25,7 @@ export const ExternalDocument = t.strict({
   created: t.string,
   edited: t.array(
     t.strict({
-      date: t.string,
+      date: t.unknown,
       user: AuthUser,
     }),
   ),
