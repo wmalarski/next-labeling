@@ -61,28 +61,35 @@ export function pairObjectsToSchema(
   );
 }
 
+export function createLabelingObjects(
+  objects: ExternalObject[],
+  schema: Schema,
+): LabelingObject[] {
+  return pairObjectsToSchema(objects, schema).map(
+    ({ object, objectSchema }) => {
+      const fields = object.fields.flatMap(field => {
+        const fieldSchema = objectSchema.fields.find(
+          f => f.id === field.fieldSchemaId,
+        );
+        return !fieldSchema ? [] : [{ ...field, fieldSchema }];
+      });
+      return {
+        ...object,
+        fields,
+        objectSchema,
+      };
+    },
+  );
+}
+
 export function createLabelingDocument(
   document: ExternalDocument,
 ): LabelingDocument {
   return {
+    objects: createLabelingObjects(document.objects, document.schema),
     currentFrame: 0,
     selected: [],
     toggled: [],
-    objects: pairObjectsToSchema(document.objects, document.schema).map(
-      ({ object, objectSchema }) => {
-        const fields = object.fields.flatMap(field => {
-          const fieldSchema = objectSchema.fields.find(
-            f => f.id === field.fieldSchemaId,
-          );
-          return !fieldSchema ? [] : [{ ...field, fieldSchema }];
-        });
-        return {
-          ...object,
-          fields,
-          objectSchema,
-        };
-      },
-    ),
   };
 }
 

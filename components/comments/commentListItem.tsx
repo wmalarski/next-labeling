@@ -16,6 +16,8 @@ import useUpdateComment from "../../utils/comments/hooks/useUpdateComment";
 
 import { CommentDocument } from "../../utils/comments/types";
 import { convertToDate } from "../../utils/firestore/functions";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
+import setSnapshotUpdate from "../../utils/labeling/updates/setSnapshotUpdate";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -50,6 +52,8 @@ export default function CommentListItem(
   const classes = useStyles();
   const { comment, labelingId } = props;
 
+  const { history, document } = useLabelingContext();
+  const { pushLabeling } = history;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const { update } = useUpdateComment(labelingId);
 
@@ -101,7 +105,17 @@ export default function CommentListItem(
                 >
                   <MenuItem onClick={handleClose}>Edit</MenuItem>
                   {snapshot && (
-                    <MenuItem onClick={handleClose}>Apply snapshot</MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        if (!snapshot) return;
+                        pushLabeling(data =>
+                          setSnapshotUpdate(data, document.schema, snapshot),
+                        );
+                        setAnchorEl(null);
+                      }}
+                    >
+                      Apply snapshot
+                    </MenuItem>
                   )}
                 </Menu>
               </>

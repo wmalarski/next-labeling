@@ -11,7 +11,7 @@ import SaveIcon from "@material-ui/icons/Save";
 import UndoIcon from "@material-ui/icons/Undo";
 import firebase from "firebase/app";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Footer from "../../../components/common/footer";
 import Header from "../../../components/common/header";
@@ -20,7 +20,7 @@ import ResultSnackbar from "../../../components/common/resultSnackbar";
 import withAuthUser from "../../../components/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../../components/pageWrappers/withAuthUserInfo";
 import SchemaForm from "../../../components/schema/forms/schemaForm";
-import { AuthUserInfoContext } from "../../../utils/auth/hooks";
+import { useAuthUserInfo } from "../../../utils/auth/hooks";
 import initFirebase from "../../../utils/auth/initFirebase";
 import {
   ResultSnackbarState,
@@ -34,7 +34,7 @@ import useUpdateSchema from "../../../utils/schema/useUpdateSchema";
 initFirebase();
 
 function SchemaEdit(): JSX.Element {
-  const { authUser } = useContext(AuthUserInfoContext);
+  const { authUser } = useAuthUserInfo();
 
   const router = useRouter();
   const { schemaId: queryDocumentId } = router.query;

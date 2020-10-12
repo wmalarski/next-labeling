@@ -5,25 +5,25 @@ import Container from "@material-ui/core/Container";
 import firebase from "firebase/app";
 import usePagination from "firestore-pagination-hook";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Footer from "../../components/common/footer";
 import Header from "../../components/common/header";
 import LoadingBackdrop from "../../components/common/loadingBackdrop";
 import ResultSnackbar from "../../components/common/resultSnackbar";
-import { AuthUserInfoContext } from "../../utils/auth/hooks";
+import withAuthUser from "../../components/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
+import { useAuthUserInfo } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
 import {
   LabelingCollection,
   ResultSnackbarState,
 } from "../../utils/firestore/types";
-import withAuthUser from "../../components/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
 
 initFirebase();
 
 function LabelingList(): JSX.Element {
-  const { authUser } = useContext(AuthUserInfoContext);
+  const { authUser } = useAuthUserInfo();
   const router = useRouter();
 
   useEffect(() => {

@@ -6,7 +6,7 @@ import AddIcon from "@material-ui/icons/Add";
 import firebase from "firebase/app";
 import usePagination from "firestore-pagination-hook";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Footer from "../../components/common/footer";
 import Header from "../../components/common/header";
@@ -16,7 +16,7 @@ import SearchInput from "../../components/common/searchInput";
 import withAuthUser from "../../components/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
 import SchemaListItem from "../../components/schema/details/schemaListItem";
-import { AuthUserInfoContext } from "../../utils/auth/hooks";
+import { useAuthUserInfo } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
 import {
   ResultSnackbarState,
@@ -29,7 +29,7 @@ import { SchemaDocument } from "../../utils/schema/types";
 initFirebase();
 
 function SchemaList(): JSX.Element {
-  const { authUser } = useContext(AuthUserInfoContext);
+  const { authUser } = useAuthUserInfo();
   const router = useRouter();
 
   useEffect(() => {

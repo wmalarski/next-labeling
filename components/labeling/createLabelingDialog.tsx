@@ -9,9 +9,9 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import PictureInPictureIcon from "@material-ui/icons/PictureInPicture";
 import firebase from "firebase/app";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
-import { AuthUserInfoContext } from "../../utils/auth/hooks";
+import { useAuthUserInfo } from "../../utils/auth/hooks";
 import { LabelingCollection } from "../../utils/firestore/types";
 import useCreate from "../../utils/firestore/useCreate";
 import { createObject } from "../../utils/labeling/functions";
@@ -37,7 +37,7 @@ export default function CreateLabelingDialog(
 ): JSX.Element {
   const { schema, ...other } = props;
 
-  const { authUser } = useContext(AuthUserInfoContext);
+  const { authUser } = useAuthUserInfo();
   const [document, setDocument] = useState<Partial<ExternalDocument>>({
     ...defaultDocument,
     schema: schema.schema,

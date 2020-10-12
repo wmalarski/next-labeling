@@ -1,8 +1,9 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RemoveScrollBar } from "react-remove-scroll-bar";
 
+import CommentList from "../../components/comments/commentList";
 import Header from "../../components/common/header";
 import LoadingBackdrop from "../../components/common/loadingBackdrop";
 import ResultSnackbar from "../../components/common/resultSnackbar";
@@ -13,16 +14,15 @@ import FrameSlider from "../../components/labeling/frameSlider";
 import LabelingProvider from "../../components/labeling/labelingProvider";
 import LabelingWorkspace from "../../components/labeling/labelingWorkspace";
 import PreferencesProvider from "../../components/labeling/preferencesProvider";
+import withAuthUser from "../../components/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
 import TimelineView from "../../components/timeline/timelineView";
 import ToolProvider from "../../components/visualization/toolProvider";
-import { AuthUserInfoContext } from "../../utils/auth/hooks";
+import { useAuthUserInfo } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
 import { ResultSnackbarState } from "../../utils/firestore/types";
 import useFetchLabeling from "../../utils/labeling/hooks/useFetchLabeling";
 import { LabelingViewsState } from "../../utils/labeling/views";
-import withAuthUser from "../../components/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
-import CommentList from "../../components/comments/commentList";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,7 +42,7 @@ initFirebase();
 function LabelingEditor(): JSX.Element {
   const classes = useStyles();
 
-  const { authUser } = useContext(AuthUserInfoContext);
+  const { authUser } = useAuthUserInfo();
 
   const router = useRouter();
   const { labelingId: queryDocumentId } = router.query;

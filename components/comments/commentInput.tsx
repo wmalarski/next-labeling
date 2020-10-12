@@ -3,14 +3,15 @@ import "firebase/firestore";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import firebase from "firebase/app";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
+
+import { useAuthUserInfo } from "../../utils/auth/hooks";
+import { CommentDocument } from "../../utils/comments/types";
 import {
   CommentsCollection,
   LabelingCollection,
 } from "../../utils/firestore/types";
 import useCreateDocument from "../../utils/firestore/useCreateDocument";
-import { CommentDocument } from "../../utils/comments/types";
-import { AuthUserInfoContext } from "../../utils/auth/hooks";
 
 export interface CommentInputProps {
   documentId: string;
@@ -19,7 +20,7 @@ export interface CommentInputProps {
 export default function CommentInput(props: CommentInputProps): JSX.Element {
   const { documentId } = props;
 
-  const { authUser } = useContext(AuthUserInfoContext);
+  const { authUser } = useAuthUserInfo();
   const [value, setValue] = useState("");
 
   const db = firebase.firestore();
