@@ -13,11 +13,6 @@ import React, { useCallback, useState } from "react";
 import { useAuthUserInfo } from "../../utils/auth/hooks";
 import { AuthUser } from "../../utils/auth/user";
 import { CommentDocument, CommentSnapshot } from "../../utils/comments/types";
-import {
-  CommentsCollection,
-  LabelingCollection,
-} from "../../utils/firestore/types";
-import useCreateDocument from "../../utils/firestore/useCreateDocument";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import { LabelingDocument } from "../../utils/labeling/types/client";
 import { ExternalObject } from "../../utils/labeling/types/database";
@@ -49,24 +44,16 @@ function calculateSnapshot(
 }
 
 export interface CommentInputProps {
-  documentId: string;
+  onSave: (comment: Partial<CommentDocument>) => void;
 }
 
 export default function CommentInput(props: CommentInputProps): JSX.Element {
-  const { documentId } = props;
+  const { onSave } = props;
 
   const { authUser } = useAuthUserInfo();
   const { history } = useLabelingContext();
   const [message, setMessage] = useState("");
   const [snapType, setSnapType] = useState<SnapshotType>(SnapshotType.NO);
-
-  const db = firebase.firestore();
-  const collection = db
-    .collection(LabelingCollection)
-    .doc(documentId)
-    .collection(CommentsCollection);
-
-  const { create } = useCreateDocument<CommentDocument>(collection);
 
   const createComment = useCallback(
     (
@@ -75,7 +62,7 @@ export default function CommentInput(props: CommentInputProps): JSX.Element {
       isThread: boolean,
       snapshot: CommentSnapshot | null,
     ) =>
-      create({
+      onSave({
         createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         parentId: null,
         isEdited: false,
@@ -87,7 +74,7 @@ export default function CommentInput(props: CommentInputProps): JSX.Element {
         snapshot,
         user,
       }),
-    [create],
+    [onSave],
   );
 
   return (
@@ -109,7 +96,7 @@ export default function CommentInput(props: CommentInputProps): JSX.Element {
           setMessage("");
         }}
       >
-        Add
+        Comment
       </Button>
       <Button
         color="inherit"
