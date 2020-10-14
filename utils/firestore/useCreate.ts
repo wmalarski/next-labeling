@@ -3,7 +3,7 @@ import "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-import { ResultSnackbarState } from "./types";
+import { FirestoreCollection, ResultSnackbarState } from "./types";
 import useCreateDocument from "./useCreateDocument";
 
 export interface UseCreateDocumentState<T> {
@@ -18,7 +18,7 @@ export interface UseCreateDocumentResult<T> {
 }
 
 export interface UseCreateDocumentOptions<T> {
-  collection: string;
+  collection: FirestoreCollection;
   setSnackbarState: (state: ResultSnackbarState) => void;
   routerOptions: (document: T) => { url: string; as: string };
 }

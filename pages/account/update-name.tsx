@@ -2,19 +2,19 @@ import "firebase/auth";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import Footer from "../../components/common/footer";
 import Header from "../../components/common/header";
-import { AuthUserInfoContext } from "../../utils/auth/hooks";
-import initFirebase from "../../utils/auth/initFirebase";
 import withAuthUser from "../../components/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
+import { useAuthUserInfo } from "../../utils/auth/hooks";
+import initFirebase from "../../utils/auth/initFirebase";
 
 initFirebase();
 
 function AccountUpdateName(): JSX.Element {
-  const { authUser } = useContext(AuthUserInfoContext);
+  const { authUser } = useAuthUserInfo();
   const router = useRouter();
 
   useEffect(() => {

@@ -6,16 +6,20 @@ import EditIcon from "@material-ui/icons/Edit";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
+import firebase from "firebase/app";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Footer from "../../components/common/footer";
 import Header from "../../components/common/header";
 import LoadingBackdrop from "../../components/common/loadingBackdrop";
 import ResultSnackbar from "../../components/common/resultSnackbar";
+import CreateLabelingDialog from "../../components/labeling/createLabelingDialog";
+import withAuthUser from "../../components/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
 import SchemaDetails from "../../components/schema/details/schemaDetails";
 import RawForm from "../../components/schema/forms/rawForm";
-import { AuthUserInfoContext } from "../../utils/auth/hooks";
+import { useAuthUserInfo } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
 import {
   ResultSnackbarState,
@@ -23,16 +27,13 @@ import {
 } from "../../utils/firestore/types";
 import useCreate from "../../utils/firestore/useCreate";
 import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
-import withAuthUser from "../../components/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
 import { SchemaDocument } from "../../utils/schema/types";
 import useFetchSchema from "../../utils/schema/useFetchSchema";
-import CreateLabelingDialog from "../../components/labeling/createLabelingDialog";
 
 initFirebase();
 
 function SchemaDetailsPage(): JSX.Element {
-  const { authUser } = useContext(AuthUserInfoContext);
+  const { authUser } = useAuthUserInfo();
 
   const router = useRouter();
   const { schemaId: queryDocumentId } = router.query;
@@ -58,8 +59,10 @@ function SchemaDetailsPage(): JSX.Element {
     isOpen: false,
   });
 
+  const db = firebase.firestore();
+  const collection = db.collection(SchemaCollection);
   const createSchema = useCreate<SchemaDocument>({
-    collection: SchemaCollection,
+    collection,
     setSnackbarState: setSnackbarState,
     routerOptions: doc => ({
       url: "/schema/[schemaId]",
@@ -68,7 +71,7 @@ function SchemaDetailsPage(): JSX.Element {
   });
 
   const { remove: removeSchema, state: removeSchemaState } = useRemoveDocument(
-    SchemaCollection,
+    collection,
   );
   useEffect(() => {
     if (removeSchemaState.success) {
@@ -121,7 +124,8 @@ function SchemaDetailsPage(): JSX.Element {
                   user: authUser,
                   schema: document.schema,
                   stars: 0,
-                  created: new Date().toJSON(),
+                  createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                  editedAt: firebase.firestore.FieldValue.serverTimestamp(),
                 })
               }
             >

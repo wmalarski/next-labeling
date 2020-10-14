@@ -1,3 +1,6 @@
+import "firebase/firestore";
+
+import firebase from "firebase/app";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
@@ -6,14 +9,14 @@ import {
   ResultSnackbarState,
 } from "../../utils/firestore/types";
 import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
-import useUpdateDocument from "../../utils/firestore/useUpdateLabeling";
-import { ExternalDocument } from "../../utils/labeling/types/database";
-import useLabelingHistory from "../../utils/labeling/hooks/useLabelingHistory";
 import LabelingContext from "../../utils/labeling/contexts/labelingContext";
+import useLabelingHistory from "../../utils/labeling/hooks/useLabelingHistory";
+import useUpdateLabeling from "../../utils/labeling/hooks/useUpdateLabeling";
 import {
   IsDoneFilterValue,
   LabelingDisplayFilters,
 } from "../../utils/labeling/types/client";
+import { ExternalDocument } from "../../utils/labeling/types/database";
 
 export interface LabelingProviderProps {
   document: ExternalDocument;
@@ -37,23 +40,21 @@ export default function LabelingProvider(
     ),
   });
 
-  const { update: updateLabeling, state: updateState } = useUpdateDocument<
-    ExternalDocument
-  >(LabelingCollection);
+  const db = firebase.firestore();
+  const collection = db.collection(LabelingCollection);
+
+  const { update: updateLabeling, state: updateState } = useUpdateLabeling();
   useEffect(() => {
     if (updateState.document) {
-      setDocument(updateState.document);
+      setDocument(oldState => ({ ...oldState, ...updateState.document }));
       setSnackbarState({ isOpen: true, message: "Labeling saved" });
     } else if (updateState.errors) {
-      setSnackbarState({
-        isOpen: true,
-        message: `${updateState.errors}`,
-      });
+      setSnackbarState({ isOpen: true, message: `${updateState.errors}` });
     }
   }, [setSnackbarState, updateState.document, updateState.errors]);
 
   const { remove: removeLabeling, state: removeState } = useRemoveDocument(
-    LabelingCollection,
+    collection,
   );
   useEffect(() => {
     if (removeState.success) {

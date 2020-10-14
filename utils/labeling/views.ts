@@ -12,6 +12,7 @@ import Filter9Icon from "@material-ui/icons/Filter9";
 export interface LabelingViewsState {
   timeline: boolean;
   properties: boolean;
+  comments: boolean;
 }
 
 export const filterIcons = [

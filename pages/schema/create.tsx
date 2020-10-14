@@ -1,3 +1,5 @@
+import "firebase/firestore";
+
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Container from "@material-ui/core/Container";
@@ -7,15 +9,18 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import RedoIcon from "@material-ui/icons/Redo";
 import SaveIcon from "@material-ui/icons/Save";
 import UndoIcon from "@material-ui/icons/Undo";
+import firebase from "firebase/app";
 import { useRouter } from "next/router";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import Footer from "../../components/common/footer";
 import Header from "../../components/common/header";
 import LoadingBackdrop from "../../components/common/loadingBackdrop";
 import ResultSnackbar from "../../components/common/resultSnackbar";
+import withAuthUser from "../../components/pageWrappers/withAuthUser";
+import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
 import SchemaForm from "../../components/schema/forms/schemaForm";
-import { AuthUserInfoContext } from "../../utils/auth/hooks";
+import { useAuthUserInfo } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
 import {
   ResultSnackbarState,
@@ -23,15 +28,13 @@ import {
 } from "../../utils/firestore/types";
 import useCreateDocument from "../../utils/firestore/useCreateDocument";
 import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
-import withAuthUser from "../../components/pageWrappers/withAuthUser";
-import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
 import { SchemaDocument } from "../../utils/schema/types";
 import useSchemaHistory from "../../utils/schema/useSchemaHistory";
 
 initFirebase();
 
 function SchemaCreate(): JSX.Element {
-  const { authUser } = useContext(AuthUserInfoContext);
+  const { authUser } = useAuthUserInfo();
   const router = useRouter();
 
   const {
@@ -54,9 +57,11 @@ function SchemaCreate(): JSX.Element {
     isOpen: false,
   });
 
+  const db = firebase.firestore();
+  const collection = db.collection(SchemaCollection);
   const { create: createSchema, state: createSchemaState } = useCreateDocument<
     SchemaDocument
-  >(SchemaCollection);
+  >(collection);
   const documentId = createSchemaState?.document?.id;
   useEffect(() => {
     if (createSchemaState.document) {
@@ -70,7 +75,7 @@ function SchemaCreate(): JSX.Element {
   }, [createSchemaState.document, createSchemaState.errors]);
 
   const { remove: removeSchema, state: removeSchemaState } = useRemoveDocument(
-    SchemaCollection,
+    collection,
   );
   useEffect(() => {
     if (removeSchemaState.success) {
@@ -119,7 +124,8 @@ function SchemaCreate(): JSX.Element {
                 user: authUser,
                 schema,
                 stars: 0,
-                created: new Date().toJSON(),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                editedAt: firebase.firestore.FieldValue.serverTimestamp(),
               })
             }
           >

@@ -12,9 +12,9 @@ import FileCopyIcon from "@material-ui/icons/FileCopy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import ViewListIcon from "@material-ui/icons/ViewList";
 import { useRouter } from "next/router";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
-import { AuthUserInfoContext } from "../../../utils/auth/hooks";
+import { useAuthUserInfo } from "../../../utils/auth/hooks";
 import {
   FieldSchema,
   ObjectSchema,
@@ -57,7 +57,7 @@ export default function SchemaListItem(
   } = props;
   const classes = useStyles();
 
-  const { authUser } = useContext(AuthUserInfoContext);
+  const { authUser } = useAuthUserInfo();
   const isSameUser = user.id === authUser?.id;
 
   const router = useRouter();

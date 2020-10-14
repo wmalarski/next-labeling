@@ -33,6 +33,7 @@ export const SchemaDocument = t.strict({
   user: AuthUser,
   schema: Schema,
   stars: t.number,
-  created: t.string,
+  createdAt: t.unknown,
+  editedAt: t.unknown,
 });
 export type SchemaDocument = t.TypeOf<typeof SchemaDocument>;
