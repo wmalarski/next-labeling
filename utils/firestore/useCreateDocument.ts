@@ -6,6 +6,7 @@ import { FirestoreCollection } from "./types";
 
 export interface UseCreateDocumentState<T> {
   isLoading: boolean;
+  id?: string;
   document?: T;
   errors?: string[];
 }
@@ -31,7 +32,8 @@ export default function useCreateDocument<T>(
         .add(document)
         .then(snap =>
           setState({
-            document: { ...document, id: snap.id },
+            id: snap.id,
+            document,
             isLoading: false,
           }),
         )

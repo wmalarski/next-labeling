@@ -13,7 +13,7 @@ import React, { useState } from "react";
 
 import { useAuthUserInfo } from "../../utils/auth/hooks";
 import { LabelingCollection } from "../../utils/firestore/types";
-import useCreate from "../../utils/firestore/useCreate";
+import useRouterCreate from "../../utils/firestore/useRouterCreate";
 import { createObject } from "../../utils/labeling/functions";
 import { ExternalDocument } from "../../utils/labeling/types/database";
 import { SchemaDocument } from "../../utils/schema/types";
@@ -21,8 +21,6 @@ import { SchemaDocument } from "../../utils/schema/types";
 const defaultDocument: Partial<ExternalDocument> = {
   filename: "",
   stars: 0,
-  public: true,
-  contributors: [],
   fps: 24,
   name: "",
   objects: [],
@@ -53,12 +51,12 @@ export default function CreateLabelingDialog(
 
   const db = firebase.firestore();
   const collection = db.collection(LabelingCollection);
-  const createLabeling = useCreate<ExternalDocument>({
+  const createLabeling = useRouterCreate<ExternalDocument>({
     collection,
     setSnackbarState: () => void 0,
-    routerOptions: document => ({
+    routerOptions: (_document, id) => ({
       url: "/labeling/[labelingId]",
-      as: `/labeling/${document.id}`,
+      as: `/labeling/${id}`,
     }),
   });
 
@@ -118,13 +116,7 @@ export default function CreateLabelingDialog(
             onClick={() => {
               createLabeling.create({
                 ...document,
-                created: new Date().toJSON(),
-                edited: [
-                  {
-                    user: authUser,
-                    date: new Date().toJSON(),
-                  },
-                ],
+                createdAt: new Date().toJSON(),
                 user: authUser,
               });
               handleClose();

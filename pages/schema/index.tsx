@@ -22,7 +22,7 @@ import {
   ResultSnackbarState,
   SchemaCollection,
 } from "../../utils/firestore/types";
-import useCreate from "../../utils/firestore/useCreate";
+import useRouterCreate from "../../utils/firestore/useRouterCreate";
 import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
 import { SchemaDocument } from "../../utils/schema/types";
 
@@ -52,12 +52,12 @@ function SchemaList(): JSX.Element {
     isOpen: false,
   });
 
-  const createSchema = useCreate<SchemaDocument>({
+  const createSchema = useRouterCreate<SchemaDocument>({
     collection,
     setSnackbarState,
-    routerOptions: document => ({
-      url: "/schema/schemaId",
-      as: `/schema/${document.id}`,
+    routerOptions: (_document, id) => ({
+      url: "/schema/[schemaId]",
+      as: `/schema/${id}`,
     }),
   });
 
