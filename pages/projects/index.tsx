@@ -59,7 +59,7 @@ function ProjectList(): JSX.Element {
             size="small"
             color="inherit"
             startIcon={<AddIcon />}
-            onClick={() => router.push("/project/create")}
+            onClick={() => router.push("/projects/create")}
           >
             New Project
           </Button>

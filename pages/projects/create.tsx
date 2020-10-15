@@ -9,7 +9,7 @@ import Footer from "../../components/common/footer";
 import Header from "../../components/common/header";
 import withAuthUser from "../../components/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
-import ProjectForm from "../../components/projects/projectForm";
+import ProjectSteps from "../../components/projects/steps/projectSteps";
 import { useAuthUserInfo } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
 import { ProjectCollection } from "../../utils/firestore/types";
@@ -43,7 +43,7 @@ function ProjectCreate(): JSX.Element {
     <>
       <Header />
       <Container>
-        <ProjectForm onSubmit={create} />
+        <ProjectSteps onSubmit={create} authUser={authUser} />
       </Container>
       <Footer />
     </>

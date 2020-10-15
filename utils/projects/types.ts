@@ -37,12 +37,12 @@ export const ProjectDocument = t.strict({
   name: t.string,
   description: t.string,
   tags: t.array(t.string),
-  createdAt: t.undefined,
+  createdAt: t.unknown,
   isPublic: t.boolean,
   reactions: ReactionsArray,
   author: AuthUser,
   roles: t.array(t.string),
-  contributors: t.array(t.string),
+  contributors: t.array(t.strict({ user: t.string, roles: t.array(t.string) })),
   schemas: t.array(t.string),
   workflow: WorkflowDocument,
 });
@@ -52,3 +52,7 @@ export interface ProjectDocumentPair {
   id: string;
   project: ProjectDocument;
 }
+
+export type ProjectChangeFnc = (
+  provider: (document: ProjectDocument) => ProjectDocument,
+) => void;
