@@ -52,7 +52,3 @@ export interface ProjectDocumentPair {
   id: string;
   project: ProjectDocument;
 }
-
-export type ProjectChangeFnc = (
-  provider: (document: ProjectDocument) => ProjectDocument,
-) => void;

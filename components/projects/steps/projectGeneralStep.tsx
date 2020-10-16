@@ -1,19 +1,15 @@
-import Step from "@material-ui/core/Step";
 import StepContent from "@material-ui/core/StepContent";
-import StepLabel from "@material-ui/core/StepLabel";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 
-import {
-  ProjectChangeFnc,
-  ProjectDocument,
-} from "../../../utils/projects/types";
+import { UseProjectHistoryFnc } from "../../../utils/projects/hooks/useProjectHistory";
+import { ProjectDocument } from "../../../utils/projects/types";
 import ProjectGeneralForm from "../forms/projectGeneralForm";
 import StepActions from "./stepActions";
 
 export interface ProjectGeneralStepProps {
-  document: ProjectDocument;
-  pushProject: ProjectChangeFnc;
+  project: ProjectDocument;
+  push: UseProjectHistoryFnc;
   onNextClicked: () => void;
   onSkipClicked: () => void;
 }
@@ -21,20 +17,14 @@ export interface ProjectGeneralStepProps {
 export default function ProjectGeneralStep(
   props: ProjectGeneralStepProps,
 ): JSX.Element {
-  const {
-    document,
-    pushProject,
-    onNextClicked,
-    onSkipClicked,
-    ...other
-  } = props;
+  const { project, push, onNextClicked, onSkipClicked, ...other } = props;
 
-  const isValid = 0 < document.name.length && document.name.length < 30;
+  const isValid = 0 < project.name.length && project.name.length < 30;
 
   return (
     <StepContent {...other}>
       <Typography>Configure general settings</Typography>
-      <ProjectGeneralForm document={document} pushProject={pushProject} />
+      <ProjectGeneralForm project={project} push={push} />
       <StepActions
         nextDisabled={!isValid}
         previousVisible={false}

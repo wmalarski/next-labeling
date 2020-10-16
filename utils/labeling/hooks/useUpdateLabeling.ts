@@ -9,12 +9,10 @@ import useUpdateDocument, {
   UseUpdateDocumentResult,
 } from "../../firestore/useUpdateDocument";
 import { ExternalDocument } from "../types/database";
-import useLabelingContext from "./useLabelingContext";
 
 export default function useUpdateLabeling(): UseUpdateDocumentResult<
   ExternalDocument
 > {
-  const { document: orgDocument } = useLabelingContext();
   const { authUser } = useAuthUserInfo();
 
   const db = firebase.firestore();
@@ -30,22 +28,9 @@ export default function useUpdateLabeling(): UseUpdateDocumentResult<
       options?: firebase.firestore.SetOptions,
     ) => {
       if (!authUser) return;
-      resultUpdate(
-        documentId,
-        {
-          ...document,
-          edited: [
-            ...orgDocument.edited,
-            {
-              date: new Date().toLocaleString(),
-              user: authUser,
-            },
-          ],
-        },
-        { merge: true, ...(options ?? {}) },
-      );
+      resultUpdate(documentId, document, { merge: true, ...(options ?? {}) });
     },
-    [authUser, orgDocument.edited, resultUpdate],
+    [authUser, resultUpdate],
   );
 
   return { ...result, update };

@@ -5,10 +5,13 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import React, { useCallback, useState } from "react";
+import React, { useCallback } from "react";
 
 import { AuthUser } from "../../../utils/auth/user";
 import { defaultProjectDocument } from "../../../utils/projects/constans";
+import useProjectHistory, {
+  ProjectStep,
+} from "../../../utils/projects/hooks/useProjectHistory";
 import { ProjectDocument } from "../../../utils/projects/types";
 import ProjectGeneralStep from "./projectGeneralStep";
 
@@ -32,55 +35,54 @@ export interface ProjectFormProps {
   onSubmit: (project: ProjectDocument) => void;
 }
 
-enum ProjectStep {
-  GENERAL = 0,
-  WORKFLOWS = 1,
-  USERS = 2,
-  SCHEMAS = 3,
-}
-
 export default function ProjectSteps(props: ProjectFormProps): JSX.Element {
   const classes = useStyles();
 
   const { authUser, onSubmit } = props;
   const stepsCount = Object.keys(ProjectStep).length;
 
-  const [activeStep, setActiveStep] = useState(ProjectStep.GENERAL);
-  const [document, setDocument] = useState<ProjectDocument>({
-    ...defaultProjectDocument,
-    author: authUser,
-    contributors: [{ roles: defaultProjectDocument.roles, user: authUser.id }],
-  });
-
-  const pushProject = useCallback(
-    (provider: (doc: ProjectDocument) => ProjectDocument): void =>
-      setDocument(provider),
-    [],
+  const { project, step, push } = useProjectHistory(
+    {
+      ...defaultProjectDocument,
+      author: authUser,
+      contributors: [
+        { roles: defaultProjectDocument.roles, user: authUser.id },
+      ],
+    },
+    ProjectStep.GENERAL,
+    10,
   );
 
-  const handleNext = () => setActiveStep(prevActiveStep => prevActiveStep + 1);
-
-  const handleBack = () => setActiveStep(prevActiveStep => prevActiveStep - 1);
-
-  const handleSkip = () => setActiveStep(stepsCount);
+  const handleBack = useCallback(
+    () => push(state => ({ ...state, step: state.step - 1 })),
+    [push],
+  );
+  const handleNext = useCallback(
+    () => push(state => ({ ...state, step: state.step + 1 })),
+    [push],
+  );
+  const handleSkip = useCallback(
+    () => push(state => ({ ...state, step: stepsCount })),
+    [push, stepsCount],
+  );
 
   return (
     <div className={classes.root}>
-      <Stepper activeStep={activeStep} orientation="vertical">
+      <Stepper activeStep={step} orientation="vertical">
         <Step>
           <StepLabel>General Settings</StepLabel>
           <ProjectGeneralStep
-            document={document}
-            pushProject={pushProject}
+            project={project}
+            push={push}
             onNextClicked={handleNext}
             onSkipClicked={handleSkip}
           />
         </Step>
       </Stepper>
-      {activeStep === stepsCount && (
+      {step === stepsCount && (
         <Paper square elevation={0} className={classes.resetContainer}>
           <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={() => onSubmit(document)} className={classes.button}>
+          <Button onClick={() => onSubmit(project)} className={classes.button}>
             Reset
           </Button>
         </Paper>

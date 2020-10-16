@@ -1,5 +1,8 @@
 import Button from "@material-ui/core/Button";
-import React, { useCallback, useState } from "react";
+import React from "react";
+import useProjectHistory, {
+  ProjectStep,
+} from "../../../utils/projects/hooks/useProjectHistory";
 
 import { ProjectDocument } from "../../../utils/projects/types";
 import ProjectGeneralForm from "./projectGeneralForm";
@@ -10,20 +13,18 @@ export interface ProjectFormProps {
 }
 
 export default function ProjectForm(props: ProjectFormProps): JSX.Element {
-  const { project, onSubmit } = props;
+  const { project: initialProject, onSubmit } = props;
 
-  const [document, setDocument] = useState<ProjectDocument>(project);
-
-  const pushProject = useCallback(
-    (provider: (doc: ProjectDocument) => ProjectDocument): void =>
-      setDocument(provider),
-    [],
+  const { project, push } = useProjectHistory(
+    initialProject,
+    ProjectStep.GENERAL,
+    10,
   );
 
   return (
     <div>
-      <ProjectGeneralForm document={document} pushProject={pushProject} />
-      <Button onClick={() => onSubmit(document)}>Save</Button>
+      <ProjectGeneralForm project={project} push={push} />
+      <Button onClick={() => onSubmit(project)}>Save</Button>
     </div>
   );
 }

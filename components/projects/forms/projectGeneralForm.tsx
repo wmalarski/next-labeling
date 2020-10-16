@@ -6,21 +6,19 @@ import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import React, { useState } from "react";
 
-import {
-  ProjectChangeFnc,
-  ProjectDocument,
-} from "../../../utils/projects/types";
+import { UseProjectHistoryFnc } from "../../../utils/projects/hooks/useProjectHistory";
+import { ProjectDocument } from "../../../utils/projects/types";
 
 export interface ProjectGeneralFormProps {
-  document: ProjectDocument;
-  pushProject: ProjectChangeFnc;
+  project: ProjectDocument;
+  push: UseProjectHistoryFnc;
 }
 
 export default function ProjectGeneralForm(
   props: ProjectGeneralFormProps,
 ): JSX.Element {
-  const { document, pushProject } = props;
-  const { name, description, tags, isPublic } = document;
+  const { project, push } = props;
+  const { name, description, tags, isPublic } = project;
 
   const [editedTag, setEditedTag] = useState<string>("");
 
@@ -32,7 +30,10 @@ export default function ProjectGeneralForm(
         label="Name"
         value={name}
         onChange={event =>
-          pushProject(doc => ({ ...doc, name: event.target.value }))
+          push(state => ({
+            ...state,
+            project: { ...state.project, name: event.target.value },
+          }))
         }
       />
       <TextField
@@ -43,7 +44,10 @@ export default function ProjectGeneralForm(
         rowsMax={6}
         value={description}
         onChange={event =>
-          pushProject(doc => ({ ...doc, description: event.target.value }))
+          push(state => ({
+            ...state,
+            project: { ...state.project, description: event.target.value },
+          }))
         }
       />
       <FormControlLabel
@@ -51,7 +55,13 @@ export default function ProjectGeneralForm(
           <Checkbox
             checked={isPublic}
             onChange={() =>
-              pushProject(doc => ({ ...doc, isPublic: !doc.isPublic }))
+              push(state => ({
+                ...state,
+                project: {
+                  ...state.project,
+                  isPublic: !state.project.isPublic,
+                },
+              }))
             }
           />
         }
@@ -62,10 +72,10 @@ export default function ProjectGeneralForm(
           key={tag}
           label={tag}
           onDelete={() =>
-            pushProject(doc => {
+            push(state => {
               const newTags = [...tags];
               newTags.splice(index, 1);
-              return { ...doc, tags: newTags };
+              return { ...state, project: { ...state.project, tags: newTags } };
             })
           }
         />
@@ -73,7 +83,13 @@ export default function ProjectGeneralForm(
       <form
         onSubmit={event => {
           event.preventDefault();
-          pushProject(doc => ({ ...doc, tags: [...doc.tags, editedTag] }));
+          push(state => ({
+            ...state,
+            project: {
+              ...state.project,
+              tags: [...state.project.tags, editedTag],
+            },
+          }));
           setEditedTag("");
         }}
       >
