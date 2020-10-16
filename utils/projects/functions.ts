@@ -1,6 +1,10 @@
 import firebase from "firebase/app";
 
-import { ProjectDocument, ProjectDocumentPair } from "./types";
+import {
+  ProjectDocument,
+  ProjectDocumentPair,
+  WorkflowDocument,
+} from "./types";
 
 export function decodeProjectDocument(
   document: firebase.firestore.DocumentData,
@@ -12,4 +16,10 @@ export function decodeProjectDocument(
     id: document.id,
     project: ProjectDocument.encode(data),
   };
+}
+
+export function normalizeWorkflowRoles(
+  workflow: WorkflowDocument,
+): WorkflowDocument {
+  return workflow;
 }

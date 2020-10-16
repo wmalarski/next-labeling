@@ -12,113 +12,70 @@ export const defaultProjectDocument: ProjectDocument = {
   description: "My favorite project",
   isPublic: true,
   name: "My Project",
-  roles: ["owner", "user"],
   schemas: [],
   reactions: [],
   tags: [],
   workflow: {
     name: "My Pipeline",
     description: "Default pipeline",
+    roles: ["owner", "user"],
     edges: [
       {
         name: "Start",
         description: "Start work on task",
         fromNode: "To Do",
         toNode: "In Progress",
-        action: {
-          roles: ["user"],
-          users: [],
-        },
+        roles: ["user"],
       },
       {
         name: "Review",
         description: "Review requested",
         fromNode: "In Progress",
         toNode: "In Review",
-        action: {
-          roles: ["user"],
-          users: [],
-        },
+        roles: ["user"],
       },
       {
         name: "Rejected",
         description: "Labeling rejected",
         fromNode: "In Review",
         toNode: "In Progress",
-        action: {
-          roles: ["owner"],
-          users: [],
-        },
+        roles: ["owner"],
       },
       {
         name: "Accept",
         description: "Labeling accepted",
         fromNode: "In Review",
         toNode: "Done",
-        action: {
-          roles: ["owner"],
-          users: [],
-        },
+        roles: ["owner"],
       },
       {
         name: "Correction",
         description: "Labeling needs to be corrected",
         fromNode: "Done",
         toNode: "To Do",
-        action: {
-          roles: ["owner"],
-          users: [],
-        },
+        roles: ["owner"],
       },
     ],
     nodes: [
       {
         name: "To Do",
         description: "Task to do",
-        read: {
-          roles: ["owner", "user"],
-          users: [],
-        },
-        write: {
-          roles: [],
-          users: [],
-        },
+        roles: [],
       },
       {
         name: "In Progress",
         description: "Task currently in progress",
-        read: {
-          roles: ["owner", "user"],
-          users: [],
-        },
-        write: {
-          roles: ["user"],
-          users: [],
-        },
+        roles: ["user"],
       },
       {
         name: "In Review",
         description: "Task to do",
-        read: {
-          roles: ["owner", "user"],
-          users: [],
-        },
-        write: {
-          roles: ["owner"],
-          users: [],
-        },
+        roles: ["owner"],
       },
       {
         name: "Done",
         description: "Done tasks",
-        read: {
-          roles: ["owner", "user"],
-          users: [],
-        },
-        write: {
-          roles: [],
-          users: [],
-        },
+        roles: [],
       },
     ],
   },

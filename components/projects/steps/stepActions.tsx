@@ -22,7 +22,7 @@ export default function StepActions(props: StepActionsProps): JSX.Element {
     <div>
       {previousVisible && (
         <Button variant="contained" color="primary" onClick={onPreviousClicked}>
-          Previous
+          Back
         </Button>
       )}
       <Button

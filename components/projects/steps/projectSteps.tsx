@@ -8,12 +8,15 @@ import Typography from "@material-ui/core/Typography";
 import React, { useCallback } from "react";
 
 import { AuthUser } from "../../../utils/auth/user";
-import { defaultProjectDocument } from "../../../utils/projects/constans";
+import { defaultProjectDocument } from "../../../utils/projects/constants";
 import useProjectHistory, {
   ProjectStep,
 } from "../../../utils/projects/hooks/useProjectHistory";
 import { ProjectDocument } from "../../../utils/projects/types";
 import ProjectGeneralStep from "./projectGeneralStep";
+import ProjectSchemasStep from "./projectSchemasStep";
+import ProjectUsersStep from "./projectUsersStep";
+import ProjectWorkflowStep from "./projectWorkflowStep";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,14 +42,14 @@ export default function ProjectSteps(props: ProjectFormProps): JSX.Element {
   const classes = useStyles();
 
   const { authUser, onSubmit } = props;
-  const stepsCount = Object.keys(ProjectStep).length;
+  const stepsCount = ProjectStep.SCHEMAS + 1;
 
   const { project, step, push } = useProjectHistory(
     {
       ...defaultProjectDocument,
       author: authUser,
       contributors: [
-        { roles: defaultProjectDocument.roles, user: authUser.id },
+        { roles: defaultProjectDocument.workflow.roles, user: authUser.id },
       ],
     },
     ProjectStep.GENERAL,
@@ -78,12 +81,45 @@ export default function ProjectSteps(props: ProjectFormProps): JSX.Element {
             onSkipClicked={handleSkip}
           />
         </Step>
+        <Step>
+          <StepLabel>Workflow</StepLabel>
+          <ProjectWorkflowStep
+            project={project}
+            push={push}
+            onPreviousClicked={handleBack}
+            onNextClicked={handleNext}
+            onSkipClicked={handleSkip}
+          />
+        </Step>
+        <Step>
+          <StepLabel>Users</StepLabel>
+          <ProjectUsersStep
+            project={project}
+            push={push}
+            onPreviousClicked={handleBack}
+            onNextClicked={handleNext}
+            onSkipClicked={handleSkip}
+          />
+        </Step>
+        <Step>
+          <StepLabel>Schemas</StepLabel>
+          <ProjectSchemasStep
+            project={project}
+            push={push}
+            onPreviousClicked={handleBack}
+            onNextClicked={handleNext}
+            onSkipClicked={handleSkip}
+          />
+        </Step>
       </Stepper>
       {step === stepsCount && (
         <Paper square elevation={0} className={classes.resetContainer}>
           <Typography>All steps completed - you&apos;re finished</Typography>
+          <Button onClick={handleBack} className={classes.button}>
+            Back
+          </Button>
           <Button onClick={() => onSubmit(project)} className={classes.button}>
-            Reset
+            Save
           </Button>
         </Paper>
       )}
