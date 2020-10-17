@@ -5,6 +5,7 @@ import firebase from "firebase/app";
 import { ProjectCollection } from "../../firestore/types";
 import useFetchDocument from "../../firestore/useFetchDocument";
 import { ProjectDocument } from "../types";
+import { useCallback } from "react";
 
 export interface UseFetchProjectResult {
   isLoading: boolean;
@@ -16,8 +17,10 @@ export interface UseFetchProjectResult {
 export default function useFetchProject(
   documentId?: string,
 ): UseFetchProjectResult {
-  const db = firebase.firestore();
-  const collection = db.collection(ProjectCollection);
+  const collection = useCallback(
+    () => firebase.firestore().collection(ProjectCollection),
+    [],
+  );
   return useFetchDocument<ProjectDocument>({
     type: ProjectDocument,
     documentId,

@@ -1,7 +1,11 @@
-import { Typography } from "@material-ui/core";
+import Box from "@material-ui/core/Box/Box";
+import firebase from "firebase/app";
 import React from "react";
 
+import { useAuthUserInfo } from "../../../utils/auth/hooks";
+import { LabelingCollection } from "../../../utils/firestore/types";
 import { ProjectDocument } from "../../../utils/projects/types";
+import LabelingList from "../../labeling/labelingList";
 
 export interface ProjectLabelingDetailsProps {
   id: string;
@@ -11,8 +15,22 @@ export interface ProjectLabelingDetailsProps {
 export default function ProjectLabelingDetails(
   props: ProjectLabelingDetailsProps,
 ): JSX.Element {
-  const { project } = props;
-  const { name } = project;
+  const { id } = props;
+  const { authUser } = useAuthUserInfo();
 
-  return <Typography variant="body2">{`Labeling - ${name}`}</Typography>;
+  const db = firebase.firestore();
+  const collection = db.collection(LabelingCollection);
+  const query = collection.where("project", "==", id);
+
+  return (
+    <Box>
+      {authUser && (
+        <LabelingList
+          authUser={authUser}
+          collection={collection}
+          query={query}
+        />
+      )}
+    </Box>
+  );
 }

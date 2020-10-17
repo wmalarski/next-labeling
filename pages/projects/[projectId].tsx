@@ -5,12 +5,11 @@ import Paper from "@material-ui/core/Paper";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
+import CodeIcon from "@material-ui/icons/Code";
 import CropFreeIcon from "@material-ui/icons/CropFree";
-import EqualizerIcon from "@material-ui/icons/Equalizer";
 import GroupIcon from "@material-ui/icons/Group";
 import SettingsIcon from "@material-ui/icons/Settings";
 import TrendingUpIcon from "@material-ui/icons/TrendingUp";
-import TuneIcon from "@material-ui/icons/Tune";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
@@ -20,16 +19,15 @@ import LoadingBackdrop from "../../components/common/loadingBackdrop";
 import TabPanel from "../../components/common/tabPanel";
 import withAuthUser from "../../components/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
+import ProjectGeneralDetails from "../../components/projects/details/projectGeneralDetails";
 import ProjectLabelingDetails from "../../components/projects/details/projectLabelingDetails";
+import ProjectSettingsDetails from "../../components/projects/details/projectSettingsDetails";
 import ProjectSmallDetails from "../../components/projects/details/projectSmallDetails";
+import ProjectUsersDetails from "../../components/projects/details/projectUsersDetails";
+import ProjectWorkflowDetails from "../../components/projects/details/projectWorkflowDetails";
 import { useAuthUserInfo } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
 import useFetchProject from "../../utils/projects/hooks/useFetchProject";
-import ProjectSchemasDetails from "../../components/projects/details/projectSchemasDetails";
-import ProjectStatisticsDetails from "../../components/projects/details/projectStatisticsDetails";
-import ProjectUsersDetails from "../../components/projects/details/projectUsersDetails";
-import ProjectWorkflowDetails from "../../components/projects/details/projectWorkflowDetails";
-import ProjectSettingsDetails from "../../components/projects/details/projectSettingsDetails";
 
 initFirebase();
 
@@ -41,6 +39,14 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   }),
 );
+
+enum ProjectDetailsPages {
+  General,
+  Labeling,
+  Workflow,
+  Users,
+  Settings,
+}
 
 function ProjectDetailsPage(): JSX.Element {
   const classes = useStyles();
@@ -66,7 +72,9 @@ function ProjectDetailsPage(): JSX.Element {
     }
   }, [exist, isLoading, router]);
 
-  const [tabsIndex, setTabsIndex] = useState<number>(0);
+  const [tabsIndex, setTabsIndex] = useState<ProjectDetailsPages>(
+    ProjectDetailsPages.Labeling,
+  );
 
   if (!authUser) return <></>;
 
@@ -86,34 +94,28 @@ function ProjectDetailsPage(): JSX.Element {
               indicatorColor="primary"
               textColor="primary"
             >
+              <Tab icon={<CodeIcon />} label="General" />
               <Tab icon={<CropFreeIcon />} label="Labeling" />
               <Tab icon={<TrendingUpIcon />} label="Workflow" />
               <Tab icon={<GroupIcon />} label="Users" />
-              <Tab icon={<EqualizerIcon />} label="Statistics" />
-              <Tab icon={<TuneIcon />} label="Schemas" />
               <Tab icon={<SettingsIcon />} label="Settings" />
             </Tabs>
           </Paper>
-          <TabPanel index={0} value={tabsIndex}>
+          <TabPanel index={ProjectDetailsPages.General} value={tabsIndex}>
+            <ProjectGeneralDetails id={documentId} project={document} />
+          </TabPanel>
+          <TabPanel index={ProjectDetailsPages.Labeling} value={tabsIndex}>
             <ProjectLabelingDetails id={documentId} project={document} />
           </TabPanel>
-          <TabPanel index={1} value={tabsIndex}>
+          <TabPanel index={ProjectDetailsPages.Workflow} value={tabsIndex}>
             <ProjectWorkflowDetails id={documentId} project={document} />
             <Typography variant="body2">Workflow</Typography>
           </TabPanel>
-          <TabPanel index={2} value={tabsIndex}>
+          <TabPanel index={ProjectDetailsPages.Users} value={tabsIndex}>
             <ProjectUsersDetails id={documentId} project={document} />
             <Typography variant="body2">Users</Typography>
           </TabPanel>
-          <TabPanel index={3} value={tabsIndex}>
-            <ProjectStatisticsDetails id={documentId} project={document} />
-            <Typography variant="body2">Statistics</Typography>
-          </TabPanel>
-          <TabPanel index={4} value={tabsIndex}>
-            <ProjectSchemasDetails id={documentId} project={document} />
-            <Typography variant="body2">Schemas</Typography>
-          </TabPanel>
-          <TabPanel index={5} value={tabsIndex}>
+          <TabPanel index={ProjectDetailsPages.Settings} value={tabsIndex}>
             <ProjectSettingsDetails id={documentId} project={document} />
             <Typography variant="body2">Settings</Typography>
           </TabPanel>

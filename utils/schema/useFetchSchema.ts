@@ -5,6 +5,7 @@ import firebase from "firebase/app";
 import { SchemaCollection } from "../firestore/types";
 import useFetchDocument from "../firestore/useFetchDocument";
 import { SchemaDocument } from "./types";
+import { useCallback } from "react";
 
 export interface UseFetchSchemaResult {
   isLoading: boolean;
@@ -16,8 +17,10 @@ export interface UseFetchSchemaResult {
 export default function useFetchSchema(
   documentId?: string,
 ): UseFetchSchemaResult {
-  const db = firebase.firestore();
-  const collection = db.collection(SchemaCollection);
+  const collection = useCallback(
+    () => firebase.firestore().collection(SchemaCollection),
+    [],
+  );
   return useFetchDocument<SchemaDocument>({
     type: SchemaDocument,
     documentId,

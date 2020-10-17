@@ -5,10 +5,8 @@ import Container from "@material-ui/core/Container";
 import List from "@material-ui/core/List";
 import AddIcon from "@material-ui/icons/Add";
 import firebase from "firebase/app";
-import usePagination from "firestore-pagination-hook";
 import { useRouter } from "next/router";
-import compact from "lodash/compact";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 
 import Footer from "../../components/common/footer";
 import Header from "../../components/common/header";
@@ -20,11 +18,12 @@ import ProjectListItem from "../../components/projects/details/projectListItem";
 import { useAuthUserInfo } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
 import { ProjectCollection } from "../../utils/firestore/types";
-import { decodeProjectDocument } from "../../utils/projects/functions";
+import useFetchDocuments from "../../utils/firestore/useFetchDocuments";
+import { ProjectDocument } from "../../utils/projects/types";
 
 initFirebase();
 
-function ProjectList(): JSX.Element {
+function ProjectListPage(): JSX.Element {
   const { authUser } = useAuthUserInfo();
   const router = useRouter();
 
@@ -36,19 +35,11 @@ function ProjectList(): JSX.Element {
 
   const db = firebase.firestore();
   const collection = db.collection(ProjectCollection);
-
-  const { loading, loadingMore, hasMore, items, loadMore } = usePagination(
-    collection,
-    {
-      limit: 10,
-    },
-  );
-
-  const projects = useMemo(() => compact(items.map(decodeProjectDocument)), [
-    items,
-  ]);
-
-  console.log({ projects });
+  const { loading, loadingMore, hasMore, items, loadMore } = useFetchDocuments({
+    query: collection,
+    type: ProjectDocument,
+    options: { limit: 10 },
+  });
 
   if (!authUser) return <></>;
 
@@ -69,8 +60,12 @@ function ProjectList(): JSX.Element {
       </Header>
       <Container>
         <List>
-          {projects.map(pair => (
-            <ProjectListItem key={pair.id} {...pair} />
+          {items.map(pair => (
+            <ProjectListItem
+              key={pair.id}
+              id={pair.id}
+              project={pair.document}
+            />
           ))}
           {hasMore && !loadingMore && (
             <button onClick={loadMore}>[ more ]</button>
@@ -83,4 +78,4 @@ function ProjectList(): JSX.Element {
   );
 }
 
-export default withAuthUser(withAuthUserInfo(ProjectList));
+export default withAuthUser(withAuthUserInfo(ProjectListPage));

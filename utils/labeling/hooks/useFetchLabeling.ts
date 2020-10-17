@@ -5,6 +5,7 @@ import firebase from "firebase/app";
 import { LabelingCollection } from "../../firestore/types";
 import useFetchDocument from "../../firestore/useFetchDocument";
 import { ExternalDocument } from "../types/database";
+import { useCallback } from "react";
 
 export interface UseFetchLabelingResult {
   isLoading: boolean;
@@ -16,8 +17,11 @@ export interface UseFetchLabelingResult {
 export default function useFetchLabeling(
   documentId?: string,
 ): UseFetchLabelingResult {
-  const db = firebase.firestore();
-  const collection = db.collection(LabelingCollection);
+  const collection = useCallback(
+    () => firebase.firestore().collection(LabelingCollection),
+    [],
+  );
+
   return useFetchDocument<ExternalDocument>({
     type: ExternalDocument,
     documentId,

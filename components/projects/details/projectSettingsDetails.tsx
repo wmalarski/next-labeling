@@ -14,5 +14,5 @@ export default function ProjectSettingsDetails(
   const { project } = props;
   const { name } = project;
 
-  return <Typography variant="body2">{`Details - ${name}`}</Typography>;
+  return <Typography variant="body2">{`Settings - ${name}`}</Typography>;
 }

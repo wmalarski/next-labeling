@@ -14,7 +14,7 @@ export interface UseFetchDocumentResult<T> {
 }
 
 export interface UseFetchDocumentProps<T> {
-  collection: FirestoreCollection;
+  collection: () => FirestoreCollection;
   documentId?: string;
   type: t.Type<T>;
 }
@@ -36,7 +36,7 @@ export default function useFetchDocument<T>(
       });
       return;
     }
-    collection
+    collection()
       .doc(documentId)
       .get()
       .then(doc => {

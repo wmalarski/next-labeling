@@ -41,6 +41,7 @@ const LabelingContext = createContext<LabelingContextValue>({
     },
   },
   document: {
+    project: null,
     createdAt: null,
     objects: [],
     filename: "",
@@ -53,7 +54,6 @@ const LabelingContext = createContext<LabelingContextValue>({
       objects: [],
       version: "",
     },
-    stars: 0,
     user: {
       displayName: "",
       email: "",

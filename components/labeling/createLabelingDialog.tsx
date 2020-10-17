@@ -20,7 +20,6 @@ import { SchemaDocument } from "../../utils/schema/types";
 
 const defaultDocument: Partial<ExternalDocument> = {
   filename: "",
-  stars: 0,
   fps: 24,
   name: "",
   objects: [],

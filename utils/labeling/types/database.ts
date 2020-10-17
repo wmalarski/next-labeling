@@ -22,6 +22,6 @@ export const ExternalDocument = t.strict({
   schema: Schema,
   user: AuthUser,
   createdAt: t.unknown,
-  stars: t.number,
+  project: t.union([t.string, t.null]),
 });
 export type ExternalDocument = t.TypeOf<typeof ExternalDocument>;
