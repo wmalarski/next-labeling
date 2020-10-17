@@ -1,23 +1,40 @@
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControl from "@material-ui/core/FormControl";
 import IconButton from "@material-ui/core/IconButton";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+import Select from "@material-ui/core/Select";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell, { TableCellProps } from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import range from "lodash/range";
-import React, { useState } from "react";
-import ClearIcon from "@material-ui/icons/Clear";
-import AddIcon from "@material-ui/icons/Add";
-
-import { UseProjectHistoryFnc } from "../../../utils/projects/hooks/useProjectHistory";
-import { ProjectDocument, WorkflowEdge } from "../../../utils/projects/types";
-import { normalizeWorkflowRoles } from "../../../utils/projects/functions";
-import Checkbox from "@material-ui/core/Checkbox";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import AddIcon from "@material-ui/icons/Add";
+import ClearIcon from "@material-ui/icons/Clear";
+import range from "lodash/range";
+import React, { useState } from "react";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
+
+import { normalizeWorkflowRoles } from "../../../utils/projects/functions";
+import {
+  ProjectDocument,
+  WorkflowDocument,
+  WorkflowEdge,
+} from "../../../utils/projects/types";
+
+const useStyles = makeStyles(() =>
+  createStyles({
+    editor: {
+      display: "flex",
+      flexDirection: "column",
+    },
+  }),
+);
 
 export interface WorkflowEdgeTableEditorProps {
   project: ProjectDocument;
-  push: UseProjectHistoryFnc;
+  push: (provider: (workflow: WorkflowDocument) => WorkflowDocument) => void;
 }
 
 function renderTableSpace(size: number, props: TableCellProps): JSX.Element[] {
@@ -27,9 +44,11 @@ function renderTableSpace(size: number, props: TableCellProps): JSX.Element[] {
 export default function WorkflowEdgeTableEditorForm(
   props: WorkflowEdgeTableEditorProps,
 ): JSX.Element {
+  const classes = useStyles();
+
   const { project, push } = props;
   const { workflow } = project;
-  const { roles, nodes } = workflow;
+  const { roles, nodes, edges } = workflow;
 
   const [newEdge, setNewEdge] = useState<WorkflowEdge>({
     description: "",
@@ -39,28 +58,30 @@ export default function WorkflowEdgeTableEditorForm(
     roles: [],
   });
 
+  const nodeNames = nodes.map(node => node.name);
+  const edgeNames = edges.map(edge => edge.name.toUpperCase());
+  const isNewEdgeValid =
+    nodeNames.includes(newEdge.fromNode) &&
+    nodeNames.includes(newEdge.toNode) &&
+    newEdge.name.length > 0 &&
+    !edgeNames.includes(newEdge.name.toUpperCase());
+
   const handleRoleChange = (edgeName: string, role: string) => (
     _event: React.ChangeEvent<HTMLInputElement>,
     checked: boolean,
   ): void =>
     push(state => ({
       ...state,
-      project: {
-        ...state.project,
-        workflow: {
-          ...state.project.workflow,
-          edges: state.project.workflow.edges.map(edge =>
-            edge.name !== edgeName
-              ? edge
-              : {
-                  ...edge,
-                  roles: checked
-                    ? [...edge.roles, role]
-                    : edge.roles.filter(r => r !== role),
-                },
-          ),
-        },
-      },
+      edges: state.edges.map(edge =>
+        edge.name !== edgeName
+          ? edge
+          : {
+              ...edge,
+              roles: checked
+                ? [...edge.roles, role]
+                : edge.roles.filter(r => r !== role),
+            },
+      ),
     }));
 
   return (
@@ -77,30 +98,22 @@ export default function WorkflowEdgeTableEditorForm(
         {workflow.edges.map(edge => (
           <TableRow key={edge.name}>
             <TableCell component="th" scope="row">
-              <Typography variant="button">
-                {edge.name.toUpperCase()}
-              </Typography>
+              <Typography variant="button">{edge.name}</Typography>
               <IconButton
                 aria-label="delete edge"
                 size="small"
                 onClick={() =>
-                  push(state => ({
-                    ...state,
-                    project: {
-                      ...state.project,
-                      workflow: normalizeWorkflowRoles({
-                        ...state.project.workflow,
-                        edges: state.project.workflow.edges.filter(
-                          e => e.name !== edge.name,
-                        ),
-                      }),
-                    },
-                  }))
+                  push(state =>
+                    normalizeWorkflowRoles({
+                      ...state,
+                      edges: state.edges.filter(e => e.name !== edge.name),
+                    }),
+                  )
                 }
               >
                 <ClearIcon />
               </IconButton>
-              <Typography variant="body2">{`${edge.fromNode.toUpperCase()}->${edge.toNode.toUpperCase()}`}</Typography>
+              <Typography variant="body2">{`${edge.fromNode}->${edge.toNode}`}</Typography>
             </TableCell>
             {roles.map(role => (
               <TableCell key={role} align="center" padding="checkbox">
@@ -117,33 +130,79 @@ export default function WorkflowEdgeTableEditorForm(
         <TableRow>
           <TableCell align="right">
             <form
+              className={classes.editor}
               onSubmit={event => {
                 event.preventDefault();
                 push(state => ({
                   ...state,
-                  project: {
-                    ...state.project,
-                    workflow: {
-                      ...state.project.workflow,
-                      edges: [...state.project.workflow.edges, newEdge],
-                    },
-                  },
+                  edges: [...state.edges, newEdge],
                 }));
                 setNewEdge(prev => ({
                   ...prev,
                   name: "",
+                  description: "",
                 }));
               }}
             >
               <TextField
-                label="New node"
+                label="New edge"
+                required
                 value={newEdge.name}
                 onChange={event => {
                   const name = event.target.value;
                   setNewEdge(prev => ({ ...prev, name }));
                 }}
               />
-              <IconButton type="submit" size="small" aria-label="add">
+              <TextField
+                label="Description"
+                value={newEdge.description}
+                onChange={event => {
+                  const description = event.target.value;
+                  setNewEdge(prev => ({ ...prev, description }));
+                }}
+              />
+              <FormControl>
+                <InputLabel id="from-select-label">From</InputLabel>
+                <Select
+                  labelId="from-select-label"
+                  required
+                  value={newEdge.fromNode}
+                  onChange={event => {
+                    const fromNode = event.target.value as string;
+                    setNewEdge(prev => ({ ...prev, fromNode }));
+                  }}
+                >
+                  {nodes.map(node => (
+                    <MenuItem key={node.name} value={node.name}>
+                      {node.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <FormControl>
+                <InputLabel id="to-select-label">To</InputLabel>
+                <Select
+                  labelId="to-select-label"
+                  required
+                  value={newEdge.toNode}
+                  onChange={event => {
+                    const toNode = event.target.value as string;
+                    setNewEdge(prev => ({ ...prev, toNode }));
+                  }}
+                >
+                  {nodes.map(node => (
+                    <MenuItem key={node.name} value={node.name}>
+                      {node.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+              <IconButton
+                type="submit"
+                size="small"
+                aria-label="add"
+                disabled={!isNewEdgeValid}
+              >
                 <AddIcon />
               </IconButton>
             </form>

@@ -8,12 +8,14 @@ import ClearIcon from "@material-ui/icons/Clear";
 import React, { useState } from "react";
 
 import { normalizeWorkflowRoles } from "../../../utils/projects/functions";
-import { UseProjectHistoryFnc } from "../../../utils/projects/hooks/useProjectHistory";
-import { ProjectDocument } from "../../../utils/projects/types";
+import {
+  ProjectDocument,
+  WorkflowDocument,
+} from "../../../utils/projects/types";
 
 export interface WorkflowRoleTableEditorProps {
   project: ProjectDocument;
-  push: UseProjectHistoryFnc;
+  push: (provider: (workflow: WorkflowDocument) => WorkflowDocument) => void;
 }
 
 export default function WorkflowRoleTableEditorForm(
@@ -24,31 +26,26 @@ export default function WorkflowRoleTableEditorForm(
   const { roles } = workflow;
 
   const [newRole, setNewRole] = useState<string>("");
+  const isNewRoleValid = newRole.length > 0 && !roles.includes(newRole);
 
   return (
     <TableHead>
       <TableRow>
-        <TableCell />
+        <TableCell align="center">Write Access</TableCell>
         {roles.map(role => (
           <TableCell key={role} align="center">
-            {role.toUpperCase()}
+            {role}
             <IconButton
               aria-label="delete"
               size="small"
               disabled={roles.length < 2}
               onClick={() =>
-                push(state => ({
-                  ...state,
-                  project: {
-                    ...state.project,
-                    workflow: normalizeWorkflowRoles({
-                      ...state.project.workflow,
-                      roles: state.project.workflow.roles.filter(
-                        r => r !== role,
-                      ),
-                    }),
-                  },
-                }))
+                push(state =>
+                  normalizeWorkflowRoles({
+                    ...state,
+                    roles: state.roles.filter(r => r !== role),
+                  }),
+                )
               }
             >
               <ClearIcon />
@@ -59,25 +56,22 @@ export default function WorkflowRoleTableEditorForm(
           <form
             onSubmit={event => {
               event.preventDefault();
-              push(state => ({
-                ...state,
-                project: {
-                  ...state.project,
-                  workflow: {
-                    ...state.project.workflow,
-                    roles: [...state.project.workflow.roles, newRole],
-                  },
-                },
-              }));
+              push(state => ({ ...state, roles: [...state.roles, newRole] }));
               setNewRole("");
             }}
           >
             <TextField
               label="New role"
+              required
               value={newRole}
               onChange={event => setNewRole(event.target.value)}
             />
-            <IconButton type="submit" size="small" aria-label="delete">
+            <IconButton
+              type="submit"
+              size="small"
+              aria-label="delete"
+              disabled={!isNewRoleValid}
+            >
               <AddIcon />
             </IconButton>
           </form>
