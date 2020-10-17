@@ -4,6 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
+import { createStyles, makeStyles } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell, { TableCellProps } from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
@@ -14,14 +15,9 @@ import AddIcon from "@material-ui/icons/Add";
 import ClearIcon from "@material-ui/icons/Clear";
 import range from "lodash/range";
 import React, { useState } from "react";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
 
 import { normalizeWorkflowRoles } from "../../../utils/projects/functions";
-import {
-  ProjectDocument,
-  WorkflowDocument,
-  WorkflowEdge,
-} from "../../../utils/projects/types";
+import { WorkflowDocument, WorkflowEdge } from "../../../utils/projects/types";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -33,7 +29,7 @@ const useStyles = makeStyles(() =>
 );
 
 export interface WorkflowEdgeTableEditorProps {
-  project: ProjectDocument;
+  workflow: WorkflowDocument;
   push: (provider: (workflow: WorkflowDocument) => WorkflowDocument) => void;
 }
 
@@ -46,8 +42,7 @@ export default function WorkflowEdgeTableEditorForm(
 ): JSX.Element {
   const classes = useStyles();
 
-  const { project, push } = props;
-  const { workflow } = project;
+  const { workflow, push } = props;
   const { roles, nodes, edges } = workflow;
 
   const [newEdge, setNewEdge] = useState<WorkflowEdge>({

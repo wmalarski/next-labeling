@@ -8,21 +8,17 @@ import ClearIcon from "@material-ui/icons/Clear";
 import React, { useState } from "react";
 
 import { normalizeWorkflowRoles } from "../../../utils/projects/functions";
-import {
-  ProjectDocument,
-  WorkflowDocument,
-} from "../../../utils/projects/types";
+import { WorkflowDocument } from "../../../utils/projects/types";
 
 export interface WorkflowRoleTableEditorProps {
-  project: ProjectDocument;
+  workflow: WorkflowDocument;
   push: (provider: (workflow: WorkflowDocument) => WorkflowDocument) => void;
 }
 
 export default function WorkflowRoleTableEditorForm(
   props: WorkflowRoleTableEditorProps,
 ): JSX.Element {
-  const { project, push } = props;
-  const { workflow } = project;
+  const { workflow, push } = props;
   const { roles } = workflow;
 
   const [newRole, setNewRole] = useState<string>("");

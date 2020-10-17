@@ -13,11 +13,7 @@ import range from "lodash/range";
 import React, { useState } from "react";
 
 import { normalizeWorkflowRoles } from "../../../utils/projects/functions";
-import {
-  ProjectDocument,
-  WorkflowDocument,
-  WorkflowNode,
-} from "../../../utils/projects/types";
+import { WorkflowDocument, WorkflowNode } from "../../../utils/projects/types";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -29,7 +25,7 @@ const useStyles = makeStyles(() =>
 );
 
 export interface WorkflowNodeTableEditorProps {
-  project: ProjectDocument;
+  workflow: WorkflowDocument;
   push: (provider: (workflow: WorkflowDocument) => WorkflowDocument) => void;
 }
 
@@ -42,8 +38,7 @@ export default function WorkflowNodeTableEditorForm(
 ): JSX.Element {
   const classes = useStyles();
 
-  const { project, push } = props;
-  const { workflow } = project;
+  const { workflow, push } = props;
   const { roles, nodes } = workflow;
 
   const [newNode, setNewNode] = useState<WorkflowNode>({
