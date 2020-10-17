@@ -15,6 +15,7 @@ import initFirebase from "../../utils/auth/initFirebase";
 import { ProjectCollection } from "../../utils/firestore/types";
 import useCreateDocument from "../../utils/firestore/useCreateDocument";
 import { ProjectDocument } from "../../utils/projects/types";
+import LoadingBackdrop from "../../components/common/loadingBackdrop";
 
 initFirebase();
 
@@ -44,16 +45,17 @@ function ProjectCreate(): JSX.Element {
       <Header />
       <Container>
         <ProjectSteps
-          onSubmit={doc => {
+          onSubmit={doc =>
             create({
               ...doc,
               createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-            });
-          }}
+            })
+          }
           authUser={authUser}
         />
       </Container>
       <Footer />
+      <LoadingBackdrop isLoading={state.isLoading || state.isLoading} />
     </>
   );
 }

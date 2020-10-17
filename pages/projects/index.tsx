@@ -16,7 +16,7 @@ import LoadingBackdrop from "../../components/common/loadingBackdrop";
 import SearchInput from "../../components/common/searchInput";
 import withAuthUser from "../../components/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
-import ProjectListItem from "../../components/projects/projectListItem";
+import ProjectListItem from "../../components/projects/details/projectListItem";
 import { useAuthUserInfo } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
 import { ProjectCollection } from "../../utils/firestore/types";
@@ -38,7 +38,7 @@ function ProjectList(): JSX.Element {
   const collection = db.collection(ProjectCollection);
 
   const { loading, loadingMore, hasMore, items, loadMore } = usePagination(
-    collection.orderBy("createdAt", "asc"),
+    collection,
     {
       limit: 10,
     },
@@ -47,6 +47,8 @@ function ProjectList(): JSX.Element {
   const projects = useMemo(() => compact(items.map(decodeProjectDocument)), [
     items,
   ]);
+
+  console.log({ projects });
 
   if (!authUser) return <></>;
 

@@ -1,42 +1,21 @@
+import { Typography } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Tab from "@material-ui/core/Tab";
 import Table from "@material-ui/core/Table";
 import TableContainer from "@material-ui/core/TableContainer";
 import Tabs from "@material-ui/core/Tabs";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
 import { UseProjectHistoryFnc } from "../../../utils/projects/hooks/useProjectHistory";
 import {
   ProjectDocument,
   WorkflowDocument,
 } from "../../../utils/projects/types";
+import TabPanel from "../../common/tabPanel";
 import WorkflowEdgeTableEditorForm from "../workflows/workflowEdgeTableEditor";
 import WorkflowNodeTableEditorForm from "../workflows/workflowNodeTableEditor";
 import WorkflowRoleTableEditorForm from "../workflows/workflowRoleTableEditor";
 import WorkflowTextEditor from "../workflows/workflowTextEditor";
-
-interface TabPanelProps {
-  children?: React.ReactNode;
-  dir?: string;
-  index: any;
-  value: any;
-}
-
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && children}
-    </div>
-  );
-}
 
 export interface ProjectWorkflowFormProps {
   project: ProjectDocument;
@@ -60,17 +39,13 @@ export default function ProjectWorkflowForm(
     [push],
   );
 
-  const [value, setValue] = React.useState(1);
-
-  const handleChange = (event: React.ChangeEvent<any>, newValue: number) => {
-    setValue(newValue);
-  };
+  const [tabsIndex, setTabsIndex] = useState(1);
 
   return (
     <Paper>
       <Tabs
-        value={value}
-        onChange={handleChange}
+        value={tabsIndex}
+        onChange={(_event, newValue) => setTabsIndex(newValue)}
         indicatorColor="primary"
         textColor="primary"
         centered
@@ -80,10 +55,10 @@ export default function ProjectWorkflowForm(
         <Tab label="JSON" />
         <Tab label="Graph" disabled />
       </Tabs>
-      <TabPanel value={value} index={0}>
-        Import from exisiting project
+      <TabPanel value={tabsIndex} index={0}>
+        <Typography variant="body2">Import from exisiting project</Typography>
       </TabPanel>
-      <TabPanel value={value} index={1}>
+      <TabPanel value={tabsIndex} index={1}>
         <TableContainer component={Paper}>
           <Table aria-label="role and node access">
             <WorkflowRoleTableEditorForm
@@ -101,11 +76,11 @@ export default function ProjectWorkflowForm(
           </Table>
         </TableContainer>
       </TabPanel>
-      <TabPanel value={value} index={2}>
+      <TabPanel value={tabsIndex} index={2}>
         <WorkflowTextEditor workflow={project.workflow} push={workflowPush} />
       </TabPanel>
-      <TabPanel value={value} index={3}>
-        TODO
+      <TabPanel value={tabsIndex} index={3}>
+        <Typography variant="body2">TODO</Typography>
       </TabPanel>
     </Paper>
   );

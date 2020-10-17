@@ -9,6 +9,7 @@ export const ReactionsArray = t.array(
     count: t.number,
   }),
 );
+export type ReactionsArray = t.TypeOf<typeof ReactionsArray>;
 
 export const CommentSnapshot = t.strict({
   objects: t.union([t.array(ExternalObject), t.null]),
