@@ -41,14 +41,12 @@ const LabelingContext = createContext<LabelingContextValue>({
     },
   },
   document: {
-    contributors: [],
-    created: "",
+    project: null,
+    createdAt: null,
     objects: [],
     filename: "",
     fps: 24,
-    id: "",
     name: "",
-    public: false,
     schemaId: "",
     schema: {
       description: "",
@@ -56,15 +54,12 @@ const LabelingContext = createContext<LabelingContextValue>({
       objects: [],
       version: "",
     },
-    stars: 0,
     user: {
       displayName: "",
       email: "",
       emailVerified: false,
       id: "",
     },
-    projects: [],
-    edited: [],
   },
 });
 

@@ -25,7 +25,7 @@ import {
   ResultSnackbarState,
   SchemaCollection,
 } from "../../utils/firestore/types";
-import useCreate from "../../utils/firestore/useCreate";
+import useRouterCreate from "../../utils/firestore/useRouterCreate";
 import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
 import { SchemaDocument } from "../../utils/schema/types";
 import useFetchSchema from "../../utils/schema/useFetchSchema";
@@ -61,12 +61,12 @@ function SchemaDetailsPage(): JSX.Element {
 
   const db = firebase.firestore();
   const collection = db.collection(SchemaCollection);
-  const createSchema = useCreate<SchemaDocument>({
+  const createSchema = useRouterCreate<SchemaDocument>({
     collection,
     setSnackbarState: setSnackbarState,
-    routerOptions: doc => ({
+    routerOptions: (_schema, id) => ({
       url: "/schema/[schemaId]",
-      as: `/schema/${doc.id}`,
+      as: `/schema/${id}`,
     }),
   });
 
@@ -92,7 +92,7 @@ function SchemaDetailsPage(): JSX.Element {
       <Header>
         {!isLoading && document ? (
           <>
-            <CreateLabelingDialog schema={document} />
+            <CreateLabelingDialog schemaId={documentId} schema={document} />
             {isSameUser ? (
               <Button
                 size="small"

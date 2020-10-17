@@ -3,25 +3,23 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import firebase from "firebase/app";
-import usePagination from "firestore-pagination-hook";
-import compact from "lodash/compact";
-import React, { useMemo } from "react";
+import React from "react";
 
-import { decodeCommentDocument } from "../../utils/comments/functions";
 import { CommentDocument } from "../../utils/comments/types";
 import {
   CommentsCollection,
   LabelingCollection,
 } from "../../utils/firestore/types";
 import useCreateDocument from "../../utils/firestore/useCreateDocument";
+import useFetchDocuments from "../../utils/firestore/useFetchDocuments";
 import CommentInput from "./commentInput";
 import CommentListItem from "./commentListItem";
 
-export interface CommentListProps {
+export interface CommentChatProps {
   documentId: string;
 }
 
-export default function CommentList(props: CommentListProps): JSX.Element {
+export default function CommentChat(props: CommentChatProps): JSX.Element {
   const { documentId } = props;
 
   const db = firebase.firestore();
@@ -32,26 +30,20 @@ export default function CommentList(props: CommentListProps): JSX.Element {
 
   const { create, state } = useCreateDocument<CommentDocument>(collection);
 
-  const {
-    loading,
-    loadingMore,
-    hasMore,
-    items,
-    loadMore,
-  } = usePagination(collection.orderBy("createdAt"), { limit: 10 });
-
-  const comments: CommentDocument[] = useMemo(
-    () => compact(items.map(decodeCommentDocument)),
-    [items],
-  );
+  const { loading, loadingMore, hasMore, items, loadMore } = useFetchDocuments({
+    query: collection.orderBy("createdAt"),
+    type: CommentDocument,
+    options: { limit: 10 },
+  });
 
   return (
     <>
       <List>
-        {comments.map(comment => (
+        {items.map(pair => (
           <CommentListItem
-            key={comment.id}
-            comment={comment}
+            key={pair.id}
+            commentId={pair.id}
+            comment={pair.document}
             labelingId={documentId}
           />
         ))}

@@ -1,28 +1,22 @@
 import "firebase/firestore";
 
-import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
 import firebase from "firebase/app";
-import usePagination from "firestore-pagination-hook";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import Footer from "../../components/common/footer";
 import Header from "../../components/common/header";
-import LoadingBackdrop from "../../components/common/loadingBackdrop";
-import ResultSnackbar from "../../components/common/resultSnackbar";
+import LabelingList from "../../components/labeling/labelingList";
 import withAuthUser from "../../components/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
 import { useAuthUserInfo } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
-import {
-  LabelingCollection,
-  ResultSnackbarState,
-} from "../../utils/firestore/types";
+import { LabelingCollection } from "../../utils/firestore/types";
 
 initFirebase();
 
-function LabelingList(): JSX.Element {
+function LabelingListPage(): JSX.Element {
   const { authUser } = useAuthUserInfo();
   const router = useRouter();
 
@@ -33,18 +27,7 @@ function LabelingList(): JSX.Element {
   });
 
   const db = firebase.firestore();
-
-  const {
-    loading,
-    loadingMore,
-    hasMore,
-    items,
-    loadMore,
-  } = usePagination(db.collection(LabelingCollection), { limit: 10 });
-
-  const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
-    isOpen: false,
-  });
+  const collection = db.collection(LabelingCollection);
 
   if (!authUser) return <></>;
 
@@ -52,31 +35,11 @@ function LabelingList(): JSX.Element {
     <>
       <Header />
       <Container>
-        {items.map(doc => {
-          const document = doc.data();
-          return (
-            <div key={doc.id}>
-              {document.name}
-              <Button
-                onClick={() =>
-                  router.push("/labeling/[labelingId]", `/labeling/${doc.id}`)
-                }
-              >
-                Edit
-              </Button>
-            </div>
-          );
-        })}
-
-        {hasMore && !loadingMore && (
-          <button onClick={loadMore}>[ more ]</button>
-        )}
+        <LabelingList collection={collection} authUser={authUser} />
       </Container>
-      <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
-      <LoadingBackdrop isLoading={loading} />
       <Footer />
     </>
   );
 }
 
-export default withAuthUser(withAuthUserInfo(LabelingList));
+export default withAuthUser(withAuthUserInfo(LabelingListPage));

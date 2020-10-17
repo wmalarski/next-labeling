@@ -6,12 +6,6 @@ import { useEffect } from "react";
 import { FirestoreCollection, ResultSnackbarState } from "./types";
 import useCreateDocument from "./useCreateDocument";
 
-export interface UseCreateDocumentState<T> {
-  isLoading: boolean;
-  document?: T;
-  errors?: string[];
-}
-
 export interface UseCreateDocumentResult<T> {
   create: (document: Partial<T>) => void;
   isLoading: boolean;
@@ -20,22 +14,22 @@ export interface UseCreateDocumentResult<T> {
 export interface UseCreateDocumentOptions<T> {
   collection: FirestoreCollection;
   setSnackbarState: (state: ResultSnackbarState) => void;
-  routerOptions: (document: T) => { url: string; as: string };
+  routerOptions: (document: T, id: string) => { url: string; as: string };
 }
 
-export default function useCreate<T>(
+export default function useRouterCreate<T>(
   options: UseCreateDocumentOptions<T>,
 ): UseCreateDocumentResult<T> {
   const { collection, setSnackbarState, routerOptions } = options;
   const {
     create,
-    state: { isLoading, document, errors },
+    state: { isLoading, document, errors, id },
   } = useCreateDocument<T>(collection);
   const router = useRouter();
 
   useEffect(() => {
-    if (document) {
-      const { url, as } = routerOptions(document);
+    if (document && id) {
+      const { url, as } = routerOptions(document, id);
       router.push(url, as);
     } else if (errors) {
       setSnackbarState({
@@ -43,7 +37,7 @@ export default function useCreate<T>(
         message: `${errors}`,
       });
     }
-  }, [document, errors, router, routerOptions, setSnackbarState]);
+  }, [document, errors, id, router, routerOptions, setSnackbarState]);
 
   return { create, isLoading };
 }

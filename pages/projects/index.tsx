@@ -2,6 +2,7 @@ import "firebase/firestore";
 
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
+import List from "@material-ui/core/List";
 import AddIcon from "@material-ui/icons/Add";
 import firebase from "firebase/app";
 import { useRouter } from "next/router";
@@ -9,17 +10,20 @@ import React, { useEffect } from "react";
 
 import Footer from "../../components/common/footer";
 import Header from "../../components/common/header";
+import LoadingBackdrop from "../../components/common/loadingBackdrop";
 import SearchInput from "../../components/common/searchInput";
 import withAuthUser from "../../components/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
-import { SchemaList } from "../../components/schema/details/schemaList";
+import ProjectListItem from "../../components/projects/details/projectListItem";
 import { useAuthUserInfo } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
-import { SchemaCollection } from "../../utils/firestore/types";
+import { ProjectCollection } from "../../utils/firestore/types";
+import useFetchDocuments from "../../utils/firestore/useFetchDocuments";
+import { ProjectDocument } from "../../utils/projects/types";
 
 initFirebase();
 
-function SchemaListPage(): JSX.Element {
+function ProjectListPage(): JSX.Element {
   const { authUser } = useAuthUserInfo();
   const router = useRouter();
 
@@ -30,7 +34,12 @@ function SchemaListPage(): JSX.Element {
   });
 
   const db = firebase.firestore();
-  const collection = db.collection(SchemaCollection);
+  const collection = db.collection(ProjectCollection);
+  const { loading, loadingMore, hasMore, items, loadMore } = useFetchDocuments({
+    query: collection,
+    type: ProjectDocument,
+    options: { limit: 10 },
+  });
 
   if (!authUser) return <></>;
 
@@ -43,18 +52,30 @@ function SchemaListPage(): JSX.Element {
             size="small"
             color="inherit"
             startIcon={<AddIcon />}
-            onClick={() => router.push("/schema/create")}
+            onClick={() => router.push("/projects/create")}
           >
-            New Schema
+            New Project
           </Button>
         </>
       </Header>
       <Container>
-        <SchemaList authUser={authUser} collection={collection} />
+        <List>
+          {items.map(pair => (
+            <ProjectListItem
+              key={pair.id}
+              id={pair.id}
+              project={pair.document}
+            />
+          ))}
+          {hasMore && !loadingMore && (
+            <button onClick={loadMore}>[ more ]</button>
+          )}
+        </List>
       </Container>
+      <LoadingBackdrop isLoading={loading} />
       <Footer />
     </>
   );
 }
 
-export default withAuthUser(withAuthUserInfo(SchemaListPage));
+export default withAuthUser(withAuthUserInfo(ProjectListPage));

@@ -29,7 +29,6 @@ export const Schema = t.strict({
 export type Schema = t.TypeOf<typeof Schema>;
 
 export const SchemaDocument = t.strict({
-  id: t.union([t.string, t.undefined]),
   user: AuthUser,
   schema: Schema,
   stars: t.number,

@@ -14,7 +14,6 @@ export const ExternalObject = t.strict({
 export type ExternalObject = t.TypeOf<typeof ExternalObject>;
 
 export const ExternalDocument = t.strict({
-  id: t.union([t.string, t.undefined]),
   name: t.string,
   filename: t.string,
   fps: t.number,
@@ -22,16 +21,7 @@ export const ExternalDocument = t.strict({
   schemaId: t.string,
   schema: Schema,
   user: AuthUser,
-  created: t.string,
-  edited: t.array(
-    t.strict({
-      date: t.unknown,
-      user: AuthUser,
-    }),
-  ),
-  contributors: t.array(t.string),
-  projects: t.array(t.string),
-  public: t.boolean,
-  stars: t.number,
+  createdAt: t.unknown,
+  project: t.union([t.string, t.null]),
 });
 export type ExternalDocument = t.TypeOf<typeof ExternalDocument>;

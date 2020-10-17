@@ -1,11 +1,11 @@
 import "firebase/firestore";
 
 import firebase from "firebase/app";
-import { PathReporter } from "io-ts/lib/PathReporter";
-import { useEffect, useState } from "react";
 
 import { LabelingCollection } from "../../firestore/types";
+import useFetchDocument from "../../firestore/useFetchDocument";
 import { ExternalDocument } from "../types/database";
+import { useCallback } from "react";
 
 export interface UseFetchLabelingResult {
   isLoading: boolean;
@@ -17,42 +17,14 @@ export interface UseFetchLabelingResult {
 export default function useFetchLabeling(
   documentId?: string,
 ): UseFetchLabelingResult {
-  const [state, setState] = useState<UseFetchLabelingResult>({
-    isLoading: true,
+  const collection = useCallback(
+    () => firebase.firestore().collection(LabelingCollection),
+    [],
+  );
+
+  return useFetchDocument<ExternalDocument>({
+    type: ExternalDocument,
+    documentId,
+    collection,
   });
-
-  useEffect(() => {
-    if (!documentId) {
-      setState({
-        isLoading: false,
-        exist: false,
-      });
-      return;
-    }
-    const db = firebase.firestore();
-    db.collection(LabelingCollection)
-      .doc(documentId)
-      .get()
-      .then(doc => {
-        const data = doc.data();
-        if (!doc.exists || !data) {
-          setState({
-            isLoading: false,
-            exist: false,
-          });
-          return;
-        }
-        const decoded = ExternalDocument.decode(data);
-        const errors =
-          decoded._tag === "Left" ? PathReporter.report(decoded) : [];
-        setState({
-          isLoading: false,
-          exist: true,
-          errors,
-          document: { id: documentId, ...(data as ExternalDocument) }, // TODO: fix validation
-        });
-      });
-  }, [documentId]);
-
-  return state;
 }

@@ -62,7 +62,7 @@ function SchemaCreate(): JSX.Element {
   const { create: createSchema, state: createSchemaState } = useCreateDocument<
     SchemaDocument
   >(collection);
-  const documentId = createSchemaState?.document?.id;
+  const documentId = createSchemaState?.id;
   useEffect(() => {
     if (createSchemaState.document) {
       setSnackbarState({ isOpen: true, message: "Schema saved" });

@@ -1,11 +1,11 @@
 import "firebase/firestore";
 
 import firebase from "firebase/app";
-import { PathReporter } from "io-ts/lib/PathReporter";
-import { useEffect, useState } from "react";
 
-import { SchemaDocument } from "./types";
 import { SchemaCollection } from "../firestore/types";
+import useFetchDocument from "../firestore/useFetchDocument";
+import { SchemaDocument } from "./types";
+import { useCallback } from "react";
 
 export interface UseFetchSchemaResult {
   isLoading: boolean;
@@ -17,42 +17,13 @@ export interface UseFetchSchemaResult {
 export default function useFetchSchema(
   documentId?: string,
 ): UseFetchSchemaResult {
-  const [state, setState] = useState<UseFetchSchemaResult>({
-    isLoading: true,
+  const collection = useCallback(
+    () => firebase.firestore().collection(SchemaCollection),
+    [],
+  );
+  return useFetchDocument<SchemaDocument>({
+    type: SchemaDocument,
+    documentId,
+    collection,
   });
-
-  useEffect(() => {
-    if (!documentId) {
-      setState({
-        isLoading: false,
-        exist: false,
-      });
-      return;
-    }
-    const db = firebase.firestore();
-    db.collection(SchemaCollection)
-      .doc(documentId)
-      .get()
-      .then(doc => {
-        const data = doc.data();
-        if (!doc.exists || !data) {
-          setState({
-            isLoading: false,
-            exist: false,
-          });
-          return;
-        }
-        const decoded = SchemaDocument.decode(data);
-        const errors =
-          decoded._tag === "Left" ? PathReporter.report(decoded) : [];
-        setState({
-          isLoading: false,
-          exist: true,
-          errors,
-          document: SchemaDocument.encode(data as SchemaDocument),
-        });
-      });
-  }, [documentId]);
-
-  return state;
 }

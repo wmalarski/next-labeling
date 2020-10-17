@@ -1,12 +1,12 @@
 import firebase from "firebase/app";
 
-import { CommentDocument } from "./types";
+import { CommentDocument, CommentDocumentPair } from "./types";
 
 export function decodeCommentDocument(
   document: firebase.firestore.DocumentData,
-): CommentDocument | null {
+): CommentDocumentPair | null {
   const data = document.data();
   const decoded = CommentDocument.decode(data);
   if (decoded._tag === "Left") return null;
-  return { ...CommentDocument.encode(data), id: document.id };
+  return { comment: CommentDocument.encode(data), id: document.id };
 }

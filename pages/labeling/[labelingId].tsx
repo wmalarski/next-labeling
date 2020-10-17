@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { RemoveScrollBar } from "react-remove-scroll-bar";
 
-import CommentList from "../../components/comments/commentList";
+import CommentChat from "../../components/comments/commentChat";
 import Header from "../../components/common/header";
 import LoadingBackdrop from "../../components/common/loadingBackdrop";
 import ResultSnackbar from "../../components/common/resultSnackbar";
@@ -81,6 +81,7 @@ function LabelingEditor(): JSX.Element {
       {document && (
         <ToolProvider>
           <LabelingProvider
+            documentId={documentId}
             document={document}
             setSnackbarState={setSnackbarState}
           >
@@ -118,7 +119,7 @@ function LabelingEditor(): JSX.Element {
                         </div>
                         <div style={{ overflow: "auto", height: 400 }}>
                           {viewsState.comments && (
-                            <CommentList documentId={documentId} />
+                            <CommentChat documentId={documentId} />
                           )}
                         </div>
                       </div>

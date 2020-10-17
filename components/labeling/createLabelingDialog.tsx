@@ -13,35 +13,33 @@ import React, { useState } from "react";
 
 import { useAuthUserInfo } from "../../utils/auth/hooks";
 import { LabelingCollection } from "../../utils/firestore/types";
-import useCreate from "../../utils/firestore/useCreate";
+import useRouterCreate from "../../utils/firestore/useRouterCreate";
 import { createObject } from "../../utils/labeling/functions";
 import { ExternalDocument } from "../../utils/labeling/types/database";
 import { SchemaDocument } from "../../utils/schema/types";
 
 const defaultDocument: Partial<ExternalDocument> = {
   filename: "",
-  stars: 0,
-  public: true,
-  contributors: [],
   fps: 24,
   name: "",
   objects: [],
 };
 
 export interface CreateLabelingDialogProps extends ButtonProps {
+  schemaId: string;
   schema: SchemaDocument;
 }
 
 export default function CreateLabelingDialog(
   props: CreateLabelingDialogProps,
 ): JSX.Element {
-  const { schema, ...other } = props;
+  const { schema, schemaId, ...other } = props;
 
   const { authUser } = useAuthUserInfo();
   const [document, setDocument] = useState<Partial<ExternalDocument>>({
     ...defaultDocument,
     schema: schema.schema,
-    schemaId: schema.id,
+    schemaId: schemaId,
     objects: schema.schema.objects
       .filter(object => object.singleton)
       .map(object => createObject(object, 0)),
@@ -53,12 +51,12 @@ export default function CreateLabelingDialog(
 
   const db = firebase.firestore();
   const collection = db.collection(LabelingCollection);
-  const createLabeling = useCreate<ExternalDocument>({
+  const createLabeling = useRouterCreate<ExternalDocument>({
     collection,
     setSnackbarState: () => void 0,
-    routerOptions: document => ({
+    routerOptions: (_document, id) => ({
       url: "/labeling/[labelingId]",
-      as: `/labeling/${document.id}`,
+      as: `/labeling/${id}`,
     }),
   });
 
@@ -118,13 +116,7 @@ export default function CreateLabelingDialog(
             onClick={() => {
               createLabeling.create({
                 ...document,
-                created: new Date().toJSON(),
-                edited: [
-                  {
-                    user: authUser,
-                    date: new Date().toJSON(),
-                  },
-                ],
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 user: authUser,
               });
               handleClose();
