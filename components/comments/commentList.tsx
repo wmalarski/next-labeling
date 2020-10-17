@@ -8,7 +8,10 @@ import compact from "lodash/compact";
 import React, { useMemo } from "react";
 
 import { decodeCommentDocument } from "../../utils/comments/functions";
-import { CommentDocument } from "../../utils/comments/types";
+import {
+  CommentDocument,
+  CommentDocumentPair,
+} from "../../utils/comments/types";
 import {
   CommentsCollection,
   LabelingCollection,
@@ -40,7 +43,7 @@ export default function CommentList(props: CommentListProps): JSX.Element {
     loadMore,
   } = usePagination(collection.orderBy("createdAt"), { limit: 10 });
 
-  const comments: CommentDocument[] = useMemo(
+  const comments: CommentDocumentPair[] = useMemo(
     () => compact(items.map(decodeCommentDocument)),
     [items],
   );
@@ -48,10 +51,11 @@ export default function CommentList(props: CommentListProps): JSX.Element {
   return (
     <>
       <List>
-        {comments.map(comment => (
+        {comments.map(pair => (
           <CommentListItem
-            key={comment.id}
-            comment={comment}
+            key={pair.id}
+            commentId={pair.id}
+            comment={pair.comment}
             labelingId={documentId}
           />
         ))}

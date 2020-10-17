@@ -27,19 +27,20 @@ const defaultDocument: Partial<ExternalDocument> = {
 };
 
 export interface CreateLabelingDialogProps extends ButtonProps {
+  schemaId: string;
   schema: SchemaDocument;
 }
 
 export default function CreateLabelingDialog(
   props: CreateLabelingDialogProps,
 ): JSX.Element {
-  const { schema, ...other } = props;
+  const { schema, schemaId, ...other } = props;
 
   const { authUser } = useAuthUserInfo();
   const [document, setDocument] = useState<Partial<ExternalDocument>>({
     ...defaultDocument,
     schema: schema.schema,
-    schemaId: schema.id,
+    schemaId: schemaId,
     objects: schema.schema.objects
       .filter(object => object.singleton)
       .map(object => createObject(object, 0)),
@@ -116,7 +117,7 @@ export default function CreateLabelingDialog(
             onClick={() => {
               createLabeling.create({
                 ...document,
-                createdAt: new Date().toJSON(),
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 user: authUser,
               });
               handleClose();

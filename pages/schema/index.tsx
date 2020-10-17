@@ -98,7 +98,8 @@ function SchemaList(): JSX.Element {
           return (
             <SchemaListItem
               key={doc.id}
-              document={{ ...document, id: doc.id }}
+              schemaId={doc.id}
+              document={document}
               onCopyClicked={() =>
                 createSchema.create({
                   ...document,

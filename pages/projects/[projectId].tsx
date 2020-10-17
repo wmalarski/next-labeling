@@ -1,6 +1,5 @@
 import "firebase/firestore";
 
-import firebase from "firebase/app";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 
@@ -11,9 +10,6 @@ import withAuthUser from "../../components/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
 import { useAuthUserInfo } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
-import { SchemaCollection } from "../../utils/firestore/types";
-import useFetchDocument from "../../utils/firestore/useFetchDocument";
-import { ProjectDocument } from "../../utils/projects/types";
 import useFetchProject from "../../utils/projects/hooks/useFetchProject";
 
 initFirebase();

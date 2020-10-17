@@ -6,6 +6,7 @@ import ActionListItem from "./actionListItem";
 import CommentCard from "./commentCard";
 
 export interface CommentListItemProps {
+  commentId: string;
   labelingId: string;
   comment: CommentDocument;
 }

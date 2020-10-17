@@ -19,6 +19,7 @@ import {
 import { ExternalDocument } from "../../utils/labeling/types/database";
 
 export interface LabelingProviderProps {
+  documentId: string;
   document: ExternalDocument;
   children: React.ReactNode | React.ReactNode[] | null;
   setSnackbarState: (state: ResultSnackbarState) => void;
@@ -27,7 +28,12 @@ export interface LabelingProviderProps {
 export default function LabelingProvider(
   props: LabelingProviderProps,
 ): JSX.Element {
-  const { document: initialDocument, children, setSnackbarState } = props;
+  const {
+    documentId,
+    document: initialDocument,
+    children,
+    setSnackbarState,
+  } = props;
   const router = useRouter();
 
   const [document, setDocument] = useState(initialDocument);
@@ -76,16 +82,8 @@ export default function LabelingProvider(
         filters,
         setDuration,
         setFilters,
-        saveLabeling: document => {
-          if (document.id) {
-            updateLabeling(document.id, document);
-          }
-        },
-        removeLabeling: document => {
-          if (document.id) {
-            removeLabeling(document.id);
-          }
-        },
+        saveLabeling: document => updateLabeling(documentId, document),
+        removeLabeling: () => removeLabeling(documentId),
       }}
     >
       {children}

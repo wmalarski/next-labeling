@@ -21,14 +21,14 @@ import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import setSnapshotUpdate from "../../utils/labeling/updates/setSnapshotUpdate";
 
 export interface CommentCardProps {
+  commentId: string;
   labelingId: string;
   comment: CommentDocument;
 }
 
 export default function CommentCard(props: CommentCardProps): JSX.Element {
-  const { comment, labelingId } = props;
+  const { comment, commentId, labelingId } = props;
   const {
-    id,
     createdAt,
     isResolved,
     isThread,
@@ -64,8 +64,12 @@ export default function CommentCard(props: CommentCardProps): JSX.Element {
                 color={isResolved ? "primary" : "default"}
                 label={isResolved ? "Unresolve" : "Resolve"}
                 onClick={() => {
-                  if (!id) return;
-                  update(id, { isResolved: !isResolved }, { merge: true });
+                  if (!commentId) return;
+                  update(
+                    commentId,
+                    { isResolved: !isResolved },
+                    { merge: true },
+                  );
                 }}
               />
             )}
@@ -135,9 +139,9 @@ export default function CommentCard(props: CommentCardProps): JSX.Element {
             <IconButton
               aria-label="done"
               onClick={() => {
-                if (!id) return;
+                if (!commentId) return;
                 update(
-                  id,
+                  commentId,
                   { message: newMessage, isEdited: true },
                   { merge: true },
                 );

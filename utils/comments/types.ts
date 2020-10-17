@@ -31,3 +31,8 @@ export const CommentDocument = t.strict({
   reactions: ReactionsArray,
 });
 export type CommentDocument = t.TypeOf<typeof CommentDocument>;
+
+export interface CommentDocumentPair {
+  id: string;
+  comment: CommentDocument;
+}

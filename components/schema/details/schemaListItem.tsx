@@ -42,6 +42,7 @@ export interface SelectedState {
 }
 
 export interface SchemaListItemProps {
+  schemaId: string;
   document: SchemaDocument;
   onRemoveClicked: () => void;
   onCopyClicked: () => void;
@@ -51,7 +52,8 @@ export default function SchemaListItem(
   props: SchemaListItemProps,
 ): JSX.Element {
   const {
-    document: { schema, user, id: documentId },
+    schemaId,
+    document: { schema, user },
     onRemoveClicked,
     onCopyClicked,
   } = props;
@@ -85,22 +87,19 @@ export default function SchemaListItem(
           color="inherit"
           startIcon={<ViewListIcon />}
           onClick={() =>
-            router.push("/schema/[schemaId]", `/schema/${documentId}`)
+            router.push("/schema/[schemaId]", `/schema/${schemaId}`)
           }
         >
           Details
         </Button>
-        <CreateLabelingDialog schema={props.document} />
+        <CreateLabelingDialog schemaId={schemaId} schema={props.document} />
         {isSameUser ? (
           <Button
             size="small"
             color="inherit"
             startIcon={<EditIcon />}
             onClick={() =>
-              router.push(
-                "/schema/edit/[schemaId]",
-                `/schema/edit/${documentId}`,
-              )
+              router.push("/schema/edit/[schemaId]", `/schema/edit/${schemaId}`)
             }
           >
             Edit

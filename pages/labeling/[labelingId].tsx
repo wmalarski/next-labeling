@@ -81,6 +81,7 @@ function LabelingEditor(): JSX.Element {
       {document && (
         <ToolProvider>
           <LabelingProvider
+            documentId={documentId}
             document={document}
             setSnackbarState={setSnackbarState}
           >

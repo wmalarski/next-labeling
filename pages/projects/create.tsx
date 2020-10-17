@@ -43,7 +43,15 @@ function ProjectCreate(): JSX.Element {
     <>
       <Header />
       <Container>
-        <ProjectSteps onSubmit={create} authUser={authUser} />
+        <ProjectSteps
+          onSubmit={doc => {
+            create({
+              ...doc,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            });
+          }}
+          authUser={authUser}
+        />
       </Container>
       <Footer />
     </>

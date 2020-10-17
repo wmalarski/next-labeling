@@ -41,11 +41,10 @@ const LabelingContext = createContext<LabelingContextValue>({
     },
   },
   document: {
-    createdAt: "",
+    createdAt: null,
     objects: [],
     filename: "",
     fps: 24,
-    id: "",
     name: "",
     schemaId: "",
     schema: {

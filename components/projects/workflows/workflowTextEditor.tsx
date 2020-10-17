@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import AceEditor from "react-ace";
 
 import { WorkflowDocument } from "../../../utils/projects/types";
@@ -21,8 +21,8 @@ export interface WorkflowTextEditorProps {
 export default function WorkflowTextEditor(
   props: WorkflowTextEditorProps,
 ): JSX.Element {
-  const { workflow, push } = props;
-  const [newWorkflow, setNewWorkflow] = useState<WorkflowTextEditorState>({
+  const { workflow } = props;
+  const [, setNewWorkflow] = useState<WorkflowTextEditorState>({
     error: null,
     isValid: true,
     workflow,
@@ -43,7 +43,7 @@ export default function WorkflowTextEditor(
             isValid: true,
             error: null,
           });
-        } catch (err: any) {
+        } catch (err) {
           console.log({ err });
         }
       }}

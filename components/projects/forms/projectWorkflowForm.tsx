@@ -1,10 +1,8 @@
-import Box from "@material-ui/core/Box";
 import Paper from "@material-ui/core/Paper";
 import Tab from "@material-ui/core/Tab";
 import Table from "@material-ui/core/Table";
 import TableContainer from "@material-ui/core/TableContainer";
 import Tabs from "@material-ui/core/Tabs";
-import Typography from "@material-ui/core/Typography";
 import React, { useCallback } from "react";
 
 import { UseProjectHistoryFnc } from "../../../utils/projects/hooks/useProjectHistory";

@@ -92,7 +92,7 @@ function SchemaDetailsPage(): JSX.Element {
       <Header>
         {!isLoading && document ? (
           <>
-            <CreateLabelingDialog schema={document} />
+            <CreateLabelingDialog schemaId={documentId} schema={document} />
             {isSameUser ? (
               <Button
                 size="small"
