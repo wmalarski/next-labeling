@@ -4,7 +4,10 @@ import React from "react";
 
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 
-const MainStageNoSSR = dynamic(() => import("../visualization/mainStage"), {
+// const MainStageNoSSR = dynamic(() => import("../visualization/mainStage"), {
+//   ssr: false,
+// });
+const KonvaStageNoSSR = dynamic(() => import("../visualization/konvaStage"), {
   ssr: false,
 });
 
@@ -13,7 +16,7 @@ export default function LabelingWorkspace(): JSX.Element {
 
   return (
     <div>
-      <MainStageNoSSR />
+      <KonvaStageNoSSR />
       <Typography variant="h5">{document.name}</Typography>
       <Typography variant="subtitle2">{document.filename}</Typography>
     </div>
