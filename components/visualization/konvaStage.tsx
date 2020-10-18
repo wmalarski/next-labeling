@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useCallback, useMemo } from "react";
 import { Layer, Stage } from "react-konva";
-import { applyLabelingFilters } from "../../utils/labeling/functions";
 
+import { calculateNewValues } from "../../utils/editors/functions";
+import { inFrameFilter, labelingFilter } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
+import setAttributeUpdate from "../../utils/labeling/updates/setAttributeUpdate";
+import setSelectedObjectUpdate from "../../utils/labeling/updates/setSelectedObjectUpdate";
 import { getEventRelativePosition } from "../../utils/visualization/functions";
 import useDrawingTool from "../../utils/visualization/hooks/useDrawingTool";
 import useToolContext from "../../utils/visualization/hooks/useToolContext";
@@ -14,11 +18,14 @@ import Video from "./video";
 
 export default function KonvaStage(): JSX.Element {
   const context = useLabelingContext();
-  const { filters } = context;
-  const { currentFrame, objects, selected } = context.history.data;
+  const { filters, history } = context;
+  const { data, pushLabeling } = history;
+  const { currentFrame, objects, selected } = data;
 
   const { toolType } = useToolContext();
   const zoomAndPaneSelected = toolType === ToolType.ZOOM_AND_PANE;
+
+  const { preferences } = usePreferences();
 
   const {
     handleWheel,
@@ -28,10 +35,10 @@ export default function KonvaStage(): JSX.Element {
     stageScale,
     stageX,
     stageY,
-  } = useZoom({
-    enabled: zoomAndPaneSelected,
-    scaleBy: 1.1,
-  });
+  } = useZoom({ scaleBy: 1.1 });
+
+  const width = 400;
+  const height = 400;
 
   const drawingTool = useDrawingTool();
   const { acceptPoint, pushPoint, builderState } = drawingTool.builderResult;
@@ -39,16 +46,30 @@ export default function KonvaStage(): JSX.Element {
   const drawingStage = builderState.currentValue?.stage;
   const drawingValue = builderState.currentValue?.value;
 
+  const handleSelect = useCallback(
+    (selectedId: string | null) =>
+      pushLabeling(doc => setSelectedObjectUpdate(doc, selectedId)),
+    [pushLabeling],
+  );
+
+  const filteredObjects = useMemo(
+    () =>
+      objects
+        .filter(labelingFilter(filters))
+        .filter(inFrameFilter(currentFrame)),
+    [currentFrame, filters, objects],
+  );
+
   return (
     <div>
       <ToolsHeader
         onResetClicked={handleReset}
-        onZoomInClicked={() => handleZoomIn({ x: 250, y: 250 })}
-        onZoomOutlicked={() => handleZoomOut({ x: 250, y: 250 })}
+        onZoomInClicked={() => handleZoomIn({ x: width / 2, y: height / 2 })}
+        onZoomOutlicked={() => handleZoomOut({ x: width / 2, y: height / 2 })}
       />
       <Stage
-        width={500}
-        height={500}
+        width={width}
+        height={height}
         onWheel={handleWheel}
         scaleX={stageScale}
         scaleY={stageScale}
@@ -77,7 +98,7 @@ export default function KonvaStage(): JSX.Element {
           }}
         >
           <Video context={context} />
-          {applyLabelingFilters(objects, filters).flatMap(object => {
+          {filteredObjects.flatMap(object => {
             const isSelected = selected.some(sel => sel.objectId === object.id);
             return object.fields.map(field => (
               <FinishedObject
@@ -86,6 +107,22 @@ export default function KonvaStage(): JSX.Element {
                 object={object}
                 field={field}
                 frame={currentFrame}
+                onSelect={() => handleSelect(object.id)}
+                onChange={newValue => {
+                  pushLabeling(doc =>
+                    setAttributeUpdate(
+                      doc,
+                      object.id,
+                      field.id,
+                      calculateNewValues(
+                        field.values,
+                        field.fieldSchema.perFrame,
+                        newValue,
+                        preferences.labelingDirection,
+                      ),
+                    ),
+                  );
+                }}
               />
             ));
           })}

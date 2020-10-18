@@ -1,4 +1,5 @@
-import { LabelingFieldValues } from "../editors/types";
+import { FieldType, LabelingFieldValues } from "../editors/types";
+import { LabelingDirection } from "../labeling/contexts/preferencesContext";
 import { LabelingField, LabelingObject } from "../labeling/types/client";
 import { FieldSchema } from "../schema/types";
 
@@ -32,6 +33,8 @@ export interface FinishedObjectProps {
   field: LabelingField;
   frame: number;
   object: LabelingObject;
+  onSelect: () => void;
+  onChange: (value: LabelingFieldValues) => void;
 }
 
 export enum ToolType {

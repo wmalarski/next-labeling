@@ -2,50 +2,26 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
-import React from "react";
+import React, { useMemo } from "react";
 
+import { filterSelectedFields } from "../../utils/labeling/functions";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import setAttributeUpdate from "../../utils/labeling/updates/setAttributeUpdate";
 import setIsDoneUpdate from "../../utils/labeling/updates/setIsDoneUpdate";
 import setIsTrackedUpdate from "../../utils/labeling/updates/setIsTrackedUpdate";
 import setNameUpdate from "../../utils/labeling/updates/setNameUpdate";
-import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import FieldEditor from "./fieldEditor";
-import {
-  LabelingField,
-  LabelingObject,
-} from "../../utils/labeling/types/client";
-
-export interface TableObject {
-  object: LabelingObject;
-  fields: LabelingField[];
-}
 
 export default function EditorTable(): JSX.Element {
   const { history } = useLabelingContext();
-  const { pushLabeling } = history;
-  const { objects, selected, currentFrame } = history.data;
+  const { pushLabeling, data } = history;
+  const { currentFrame } = data;
 
-  const tableObjects: TableObject[] = selected.flatMap(selection => {
-    const object = objects.find(object => object.id === selection.objectId);
-    if (!object) return [];
-    const isInFrame = object.frames?.includes(currentFrame) ?? true;
-    return [
-      {
-        object,
-        fields: (selection.objectSelected
-          ? object.fields
-          : selection.fieldIds.flatMap(fieldId => {
-              const field = object.fields.find(f => f.id === fieldId);
-              return field ? [field] : [];
-            })
-        ).filter(field => !field.fieldSchema.perFrame || isInFrame),
-      },
-    ];
-  });
+  const filteredObjects = useMemo(() => filterSelectedFields(data), [data]);
 
   return (
     <>
-      {tableObjects.map(({ object, fields }) => (
+      {filteredObjects.map(({ object, fields }) => (
         <Paper key={object.id}>
           <div>
             <TextField
@@ -56,7 +32,7 @@ export default function EditorTable(): JSX.Element {
               margin="dense"
               onChange={event => {
                 const value = event.target.value;
-                pushLabeling(data => setNameUpdate(data, object, value));
+                pushLabeling(doc => setNameUpdate(doc, object, value));
               }}
             />
             <FormControlLabel
@@ -65,9 +41,7 @@ export default function EditorTable(): JSX.Element {
                   checked={object.isDone}
                   onChange={event => {
                     const checked = event.target.checked;
-                    pushLabeling(data =>
-                      setIsDoneUpdate(data, object, checked),
-                    );
+                    pushLabeling(doc => setIsDoneUpdate(doc, object, checked));
                   }}
                 />
               }
@@ -79,8 +53,8 @@ export default function EditorTable(): JSX.Element {
                   checked={object.isTracked}
                   onChange={event => {
                     const checked = event.target.checked;
-                    pushLabeling(data =>
-                      setIsTrackedUpdate(data, object, checked),
+                    pushLabeling(doc =>
+                      setIsTrackedUpdate(doc, object, checked),
                     );
                   }}
                 />
@@ -98,9 +72,9 @@ export default function EditorTable(): JSX.Element {
               perFrame={field.fieldSchema.perFrame}
               values={field.values}
               onChange={provider =>
-                pushLabeling(data =>
+                pushLabeling(doc =>
                   setAttributeUpdate(
-                    data,
+                    doc,
                     object.id,
                     field.id,
                     provider(field.values),

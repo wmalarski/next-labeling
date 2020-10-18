@@ -16,12 +16,11 @@ export interface UseZoomResult extends UseZoomState {
 }
 
 export interface UseZoomProps {
-  enabled: boolean;
   scaleBy: number;
 }
 
 export default function useZoom(props: UseZoomProps): UseZoomResult {
-  const { enabled, scaleBy } = props;
+  const { scaleBy } = props;
 
   const [state, setState] = useState<UseZoomState>({
     stageScale: 1,
@@ -51,15 +50,14 @@ export default function useZoom(props: UseZoomProps): UseZoomResult {
 
   const handleWheel = useCallback(
     e => {
-      if (!enabled) return;
       e.evt.preventDefault();
 
       const stage = e.target.getStage();
       const point = stage.getPointerPosition();
 
-      changeZoom(e.evt.deltaY > 0, point);
+      changeZoom(e.evt.deltaY < 0, point);
     },
-    [changeZoom, enabled],
+    [changeZoom],
   );
 
   const handleReset = useCallback(

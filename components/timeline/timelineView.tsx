@@ -1,25 +1,35 @@
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import TreeView from "@material-ui/lab/TreeView/TreeView";
-import React from "react";
+import React, { useMemo } from "react";
 
+import { labelingFilter } from "../../utils/labeling/functions";
+import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import { ObjectSelection } from "../../utils/labeling/types/client";
 import setSelectedUpdate from "../../utils/labeling/updates/setSelectedUpdate";
 import setToggledUpdate from "../../utils/labeling/updates/setToggledUpdate";
-import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
-import { TimelineObjectItem } from "./timelineObjectItem";
 import { TimelineFilterControls } from "./timelineFilterControls";
-import { applyLabelingFilters } from "../../utils/labeling/functions";
+import { TimelineObjectItem } from "./timelineObjectItem";
 
 export default function TimelineView(): JSX.Element {
   const { history, filters } = useLabelingContext();
   const { pushLabeling } = history;
 
   const { objects, selected: selectedObjects, toggled } = history.data;
-  const selected = selectedObjects.flatMap(object => [
-    ...(object.objectSelected ? [object.objectId] : []),
-    ...object.fieldIds.map(field => `${object.objectId}|${field}`),
-  ]);
+
+  const filteredObjects = useMemo(
+    () => objects.filter(labelingFilter(filters)),
+    [filters, objects],
+  );
+
+  const selected = useMemo(
+    () =>
+      selectedObjects.flatMap(object => [
+        ...(object.objectSelected ? [object.objectId] : []),
+        ...object.fieldIds.map(field => `${object.objectId}|${field}`),
+      ]),
+    [selectedObjects],
+  );
 
   const handleToggle = (_event: any, nodeIds: string[]) =>
     pushLabeling(data => setToggledUpdate(data, nodeIds));
@@ -64,7 +74,7 @@ export default function TimelineView(): JSX.Element {
         onNodeSelect={handleSelect}
         multiSelect
       >
-        {applyLabelingFilters(objects, filters).map(object => (
+        {filteredObjects.map(object => (
           <TimelineObjectItem
             nodeId={object.id}
             key={object.id}
