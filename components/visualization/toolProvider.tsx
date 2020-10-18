@@ -12,7 +12,7 @@ export default function ToolProvider(props: ToolProviderProps): JSX.Element {
   const { children } = props;
 
   const [state, setState] = useState<ToolContextState>({
-    toolType: ToolType.SELECTOR,
+    toolType: ToolType.ZOOM_AND_PANE,
   });
 
   return (

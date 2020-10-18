@@ -11,7 +11,7 @@ export interface ToolContextValue extends ToolContextState {
 }
 
 const ToolContext = createContext<ToolContextValue>({
-  toolType: ToolType.SELECTOR,
+  toolType: ToolType.ZOOM_AND_PANE,
   setTool: () => void 0,
 });
 

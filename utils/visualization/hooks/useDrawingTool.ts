@@ -29,11 +29,12 @@ export default function useDrawingTool(): UseDrawingToolResult {
     : undefined;
   const builder = useMemo(() => (getCoordsBuilders(object) ?? [])[0], [object]);
   const builderResult = useCoordsBuilder(builder);
-  const { builderState } = builderResult;
+  const { builderState, resetEdit } = builderResult;
 
   useEffect(() => {
     if (!builderState.isEnded || !builderState.lastValue || !objectId) return;
-    setTool({ toolType: ToolType.SELECTOR });
+    setTool({ toolType: ToolType.ZOOM_AND_PANE });
+    resetEdit();
     pushLabeling(data => {
       const { id, values, fieldSchema } = builder?.field;
       const value = builderState.lastValue?.value;
@@ -59,6 +60,7 @@ export default function useDrawingTool(): UseDrawingToolResult {
     pushLabeling,
     setTool,
     preferences.labelingDirection,
+    resetEdit,
   ]);
 
   return { builderResult, object, field: builder?.field };

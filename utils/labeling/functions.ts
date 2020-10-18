@@ -1,4 +1,5 @@
 import uniqueId from "lodash/uniqueId";
+import compact from "lodash/compact";
 import { v4 as uuidv4 } from "uuid";
 
 import { ObjectSchema, Schema } from "../schema/types";
@@ -6,6 +7,7 @@ import {
   IsDoneFilterValue,
   LabelingDisplayFilters,
   LabelingDocument,
+  LabelingField,
   LabelingObject,
 } from "./types/client";
 import { ExternalDocument, ExternalObject } from "./types/database";
@@ -143,4 +145,50 @@ export function applyLabelingFilters(
       if (isDone === IsDoneFilterValue.WIP && !object.isDone) return true;
       return false;
     });
+}
+
+export function labelingFilter(
+  filters: LabelingDisplayFilters,
+): (filter: LabelingObject) => boolean {
+  const { objectSchemaIds, name, isDone } = filters;
+  return object =>
+    objectSchemaIds.includes(object.objectSchemaId) &&
+    (name ? object.name.includes(name) : true) &&
+    (isDone === IsDoneFilterValue.ALL ||
+      (isDone === IsDoneFilterValue.IS_DONE && object.isDone) ||
+      (isDone === IsDoneFilterValue.WIP && !object.isDone));
+}
+export function inFrameFilter(
+  currentFrame: number,
+): (object: LabelingObject) => boolean {
+  return object => object.frames?.includes(currentFrame) ?? true;
+}
+
+export interface FilterFieldsResultPair {
+  object: LabelingObject;
+  fields: LabelingField[];
+}
+
+export function filterSelectedFields(
+  data: LabelingDocument,
+): FilterFieldsResultPair[] {
+  const { selected, objects, currentFrame } = data;
+  return compact(
+    selected.map(selection => {
+      const object = objects.find(object => object.id === selection.objectId);
+      if (!object) return null;
+      const isInFrame = object.frames?.includes(currentFrame) ?? true;
+      return {
+        object,
+        fields: (selection.objectSelected
+          ? object.fields
+          : compact(
+              selection.fieldIds.map(fieldId =>
+                object.fields.find(f => f.id === fieldId),
+              ),
+            )
+        ).filter(field => !field.fieldSchema.perFrame || isInFrame),
+      };
+    }),
+  );
 }

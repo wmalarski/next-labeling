@@ -1,8 +1,7 @@
-import * as PIXI from "pixi.js";
 import { useCallback, useEffect, useState } from "react";
 
 import { CoordsFieldBuilder } from "../getCoordsBuilder";
-import { CoordsBuilderResult } from "../types";
+import { CoordsBuilderResult, Point2D } from "../types";
 
 export interface UseCoordsBuilderState {
   lastValue?: CoordsBuilderResult;
@@ -13,8 +12,8 @@ export interface UseCoordsBuilderState {
 
 export interface UseCoordsBuilderResult {
   builderState: UseCoordsBuilderState;
-  pushPoint: (point: PIXI.Point, frame: number) => void;
-  acceptPoint: (point: PIXI.Point, finish: boolean, frame: number) => void;
+  pushPoint: (point: Point2D, frame: number) => void;
+  acceptPoint: (point: Point2D, finish: boolean, frame: number) => void;
   resetEdit: () => void;
 }
 
@@ -32,7 +31,7 @@ export default function useCoordsBuilder(
   }, [fieldBuilder]);
 
   const pushPoint = useCallback(
-    (point: PIXI.Point, frame: number): void =>
+    (point: Point2D, frame: number): void =>
       setBuilderState(state => {
         if (!state.isDrawing || !fieldBuilder) return state;
         const builderResult = fieldBuilder.builder(
@@ -49,7 +48,7 @@ export default function useCoordsBuilder(
   );
 
   const acceptPoint = useCallback(
-    (point: PIXI.Point, finish: boolean, frame: number): void =>
+    (point: Point2D, finish: boolean, frame: number): void =>
       setBuilderState(state => {
         if (!state.isDrawing || !fieldBuilder) return state;
         const builderResult = fieldBuilder.builder(

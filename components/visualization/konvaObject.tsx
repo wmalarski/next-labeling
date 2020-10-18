@@ -2,17 +2,14 @@ import React from "react";
 
 import { FieldType } from "../../utils/editors/types";
 import {
-  PixiFinishedObjectProps,
-  PixiInProgressObjectProps,
+  FinishedObjectProps,
+  InProgressObjectProps,
 } from "../../utils/visualization/types";
-import {
-  RectangleFinished,
-  RectangleInProgress,
-} from "../../utils/visualization/objects/rectangle";
+import { RectangleFinished, RectangleInProgress } from "./objects/reactangle";
 
-export function PixiInProgressObject(
-  props: PixiInProgressObjectProps,
-): JSX.Element {
+export function InProgressObject(
+  props: InProgressObjectProps,
+): JSX.Element | null {
   const { attributes } = props.fieldSchema;
   const type = Object.keys(attributes)[0];
 
@@ -20,13 +17,11 @@ export function PixiInProgressObject(
     case FieldType.RECTANGLE:
       return <RectangleInProgress {...props} />;
     default:
-      return <></>;
+      return null;
   }
 }
 
-export function PixiFinishedObject(
-  props: PixiFinishedObjectProps,
-): JSX.Element {
+export function FinishedObject(props: FinishedObjectProps): JSX.Element | null {
   const { attributes } = props.field.fieldSchema;
   const type = Object.keys(attributes)[0];
 
@@ -34,6 +29,6 @@ export function PixiFinishedObject(
     case FieldType.RECTANGLE:
       return <RectangleFinished {...props} />;
     default:
-      return <></>;
+      return null;
   }
 }

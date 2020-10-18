@@ -1,6 +1,12 @@
-import { LabelingFieldValues } from "../editors/types";
+import { FieldType, LabelingFieldValues } from "../editors/types";
+import { LabelingDirection } from "../labeling/contexts/preferencesContext";
 import { LabelingField, LabelingObject } from "../labeling/types/client";
 import { FieldSchema } from "../schema/types";
+
+export interface Point2D {
+  x: number;
+  y: number;
+}
 
 export interface CoordsBuilderResult {
   stage: number;
@@ -10,23 +16,25 @@ export interface CoordsBuilderResult {
 }
 
 export type CoordsBuilder = (
-  point: PIXI.Point,
+  point: Point2D,
   frame: number,
   value?: LabelingFieldValues,
 ) => CoordsBuilderResult | undefined;
 
-export interface PixiInProgressObjectProps {
+export interface InProgressObjectProps {
   stage: number;
   fieldSchema: FieldSchema;
   value: LabelingFieldValues;
   object: LabelingObject;
 }
 
-export interface PixiFinishedObjectProps {
+export interface FinishedObjectProps {
   isSelected: boolean;
   field: LabelingField;
   frame: number;
   object: LabelingObject;
+  onSelect: () => void;
+  onChange: (value: LabelingFieldValues) => void;
 }
 
 export enum ToolType {

@@ -35,28 +35,15 @@ export default function ToolsHeader(props: ToolsHeaderProps): JSX.Element {
   const { preferences } = usePreferences();
   const { shortcuts } = preferences;
 
-  const setSelector = useCallback(
-    () => setTool({ toolType: ToolType.SELECTOR }),
-    [setTool],
-  );
   const setPan = useCallback(
     () => setTool({ toolType: ToolType.ZOOM_AND_PANE }),
     [setTool],
   );
 
-  useHotkeys(shortcuts.SetSelectorTool, setSelector, [setSelector]);
   useHotkeys(shortcuts.SetPanTool, setPan, [setPan]);
 
   return (
     <div className={classes.root}>
-      <ToggleButton
-        selected={toolType === ToolType.SELECTOR}
-        onClick={setSelector}
-        value="selector"
-      >
-        <TouchAppIcon />
-        {" Selector"}
-      </ToggleButton>
       <ToggleButton
         selected={toolType === ToolType.ZOOM_AND_PANE}
         onClick={setPan}
