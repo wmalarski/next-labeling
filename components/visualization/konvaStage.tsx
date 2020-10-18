@@ -20,7 +20,15 @@ export default function KonvaStage(): JSX.Element {
   const { toolType } = useToolContext();
   const zoomAndPaneSelected = toolType === ToolType.ZOOM_AND_PANE;
 
-  const { handleWheel, stageScale, stageX, stageY } = useZoom({
+  const {
+    handleWheel,
+    handleReset,
+    handleZoomIn,
+    handleZoomOut,
+    stageScale,
+    stageX,
+    stageY,
+  } = useZoom({
     enabled: zoomAndPaneSelected,
     scaleBy: 1.1,
   });
@@ -34,9 +42,9 @@ export default function KonvaStage(): JSX.Element {
   return (
     <div>
       <ToolsHeader
-        onResetClicked={() => void 0}
-        onZoomInClicked={() => void 0}
-        onZoomOutlicked={() => void 0}
+        onResetClicked={handleReset}
+        onZoomInClicked={() => handleZoomIn({ x: 250, y: 250 })}
+        onZoomOutlicked={() => handleZoomOut({ x: 250, y: 250 })}
       />
       <Stage
         width={500}

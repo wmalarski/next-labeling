@@ -1,5 +1,6 @@
 import { KonvaEventObject } from "konva/types/Node";
 import { useCallback, useState } from "react";
+import { Point2D } from "../types";
 
 export interface UseZoomState {
   stageScale: number;
@@ -9,6 +10,9 @@ export interface UseZoomState {
 
 export interface UseZoomResult extends UseZoomState {
   handleWheel: (evt: KonvaEventObject<WheelEvent>) => void;
+  handleReset: () => void;
+  handleZoomIn: (center: Point2D) => void;
+  handleZoomOut: (center: Point2D) => void;
 }
 
 export interface UseZoomProps {
@@ -25,37 +29,62 @@ export default function useZoom(props: UseZoomProps): UseZoomResult {
     stageY: 0,
   });
 
+  const changeZoom = useCallback(
+    (isZoomIn: boolean, point: Point2D): void => {
+      setState(value => {
+        const { stageScale, stageX, stageY } = value;
+        const mousePointTo = {
+          x: point.x / stageScale - stageX / stageScale,
+          y: point.y / stageScale - stageY / stageScale,
+        };
+        const newScale = isZoomIn ? stageScale * scaleBy : stageScale / scaleBy;
+
+        return {
+          stageScale: newScale,
+          stageX: -(mousePointTo.x - point.x / newScale) * newScale,
+          stageY: -(mousePointTo.y - point.y / newScale) * newScale,
+        };
+      });
+    },
+    [scaleBy],
+  );
+
   const handleWheel = useCallback(
     e => {
       if (!enabled) return;
-
       e.evt.preventDefault();
 
       const stage = e.target.getStage();
-      const oldScale = stage.scaleX();
-      const mousePointTo = {
-        x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
-        y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
-      };
+      const point = stage.getPointerPosition();
 
-      const newScale =
-        e.evt.deltaY > 0 ? oldScale * scaleBy : oldScale / scaleBy;
-
-      setState({
-        stageScale: newScale,
-        stageX:
-          -(mousePointTo.x - stage.getPointerPosition().x / newScale) *
-          newScale,
-        stageY:
-          -(mousePointTo.y - stage.getPointerPosition().y / newScale) *
-          newScale,
-      });
+      changeZoom(e.evt.deltaY > 0, point);
     },
-    [enabled, scaleBy],
+    [changeZoom, enabled],
+  );
+
+  const handleReset = useCallback(
+    (): void =>
+      setState({
+        stageScale: 1,
+        stageX: 0,
+        stageY: 0,
+      }),
+    [],
+  );
+  const handleZoomIn = useCallback(
+    (center: Point2D): void => changeZoom(true, center),
+    [changeZoom],
+  );
+  const handleZoomOut = useCallback(
+    (center: Point2D): void => changeZoom(false, center),
+    [changeZoom],
   );
 
   return {
     handleWheel,
+    handleReset,
+    handleZoomIn,
+    handleZoomOut,
     ...state,
   };
 }
