@@ -63,11 +63,11 @@ export default function Video(props: VideoProps): JSX.Element {
     <Image
       ref={imageRef}
       image={videoElement}
-      x={20}
-      y={20}
+      x={0}
+      y={0}
+      stroke="red"
       width={size.width}
       height={size.height}
-      draggable
     />
   );
 }

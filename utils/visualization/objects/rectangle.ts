@@ -1,8 +1,11 @@
 import { FieldType } from "../../editors/types";
-import { CoordsBuilder, PixiFinishedObjectProps } from "../types";
+import {
+  CoordsBuilder,
+  FinishedObjectProps,
+  InProgressObjectProps,
+} from "../types";
 import { Graphics } from "pixi.js";
 import { PixiComponent } from "@inlet/react-pixi";
-import { PixiInProgressObjectProps } from "../types";
 import { getFieldValue } from "../../editors/functions";
 
 export enum RectangleBuilderStage {
@@ -40,7 +43,7 @@ export const RectangleBuilder: CoordsBuilder = (point, frame, value) => {
 };
 
 export const RectangleInProgress = PixiComponent<
-  PixiInProgressObjectProps,
+  InProgressObjectProps,
   Graphics
 >("RectangleInProgress", {
   create: () => new Graphics(),
@@ -58,24 +61,24 @@ export const RectangleInProgress = PixiComponent<
   },
 });
 
-export const RectangleFinished = PixiComponent<
-  PixiFinishedObjectProps,
-  Graphics
->("RectangleFinished", {
-  create: () => new Graphics(),
-  applyProps: (ins, _, props) => {
-    const { frame, field } = props;
-    const values = getFieldValue({
-      perFrame: field.fieldSchema.perFrame,
-      values: field.values,
-      frame,
-    })?.Rectangle;
-    if (!values || !values[0].value) return;
-    const [x1, y1, x2, y2] = values[0].value;
+export const RectangleFinished = PixiComponent<FinishedObjectProps, Graphics>(
+  "RectangleFinished",
+  {
+    create: () => new Graphics(),
+    applyProps: (ins, _, props) => {
+      const { frame, field } = props;
+      const values = getFieldValue({
+        perFrame: field.fieldSchema.perFrame,
+        values: field.values,
+        frame,
+      })?.Rectangle;
+      if (!values || !values[0].value) return;
+      const [x1, y1, x2, y2] = values[0].value;
 
-    ins.x = x1;
-    ins.beginFill(0xff0000);
-    ins.drawRect(x1, y1, x2 - x1, y2 - y1);
-    ins.endFill();
+      ins.x = x1;
+      ins.beginFill(0xff0000);
+      ins.drawRect(x1, y1, x2 - x1, y2 - y1);
+      ins.endFill();
+    },
   },
-});
+);

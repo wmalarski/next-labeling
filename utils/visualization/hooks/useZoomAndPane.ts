@@ -1,9 +1,5 @@
 import React, { useCallback, useState } from "react";
-
-interface Point2D {
-  x: number;
-  y: number;
-}
+import { Point2D } from "../types";
 
 export interface UseZoomAndPaneState {
   dragStart?: Point2D;
