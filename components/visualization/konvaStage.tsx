@@ -24,6 +24,7 @@ export default function KonvaStage(): JSX.Element {
 
   const { toolType } = useToolContext();
   const zoomAndPaneSelected = toolType === ToolType.ZOOM_AND_PANE;
+  const drawingToolSelected = toolType === ToolType.DRAWING_TOOL;
 
   const { preferences } = usePreferences();
 
@@ -75,6 +76,9 @@ export default function KonvaStage(): JSX.Element {
         scaleY={stageScale}
         x={stageX}
         y={stageY}
+        style={{
+          cursor: drawingToolSelected ? "pointer" : "inherit",
+        }}
       >
         <Layer
           draggable={zoomAndPaneSelected}

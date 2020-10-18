@@ -50,6 +50,7 @@ export default function Video(props: VideoProps): JSX.Element {
     const anim = new Konva.Animation(() => void 0, layer);
 
     anim.start();
+    videoElement.currentTime = 0;
     return () => {
       anim.stop();
     };
@@ -65,7 +66,6 @@ export default function Video(props: VideoProps): JSX.Element {
       image={videoElement}
       x={0}
       y={0}
-      stroke="red"
       width={size.width}
       height={size.height}
     />

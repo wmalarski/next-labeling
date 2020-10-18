@@ -1,9 +1,14 @@
 import Konva from "konva";
-import React, { useEffect, useRef } from "react";
-import { Rect, Transformer } from "react-konva";
+import React, { useEffect, useRef, useState } from "react";
+import { Rect, Transformer, Text } from "react-konva";
 
 import { getFieldValue } from "../../../utils/editors/functions";
 import { FieldType } from "../../../utils/editors/types";
+import {
+  FontSize,
+  SelectedStrokeWidth,
+  UnselectedStrokeWidth,
+} from "../../../utils/visualization/constanst";
 import { RectangleBuilderStage } from "../../../utils/visualization/objects/rectangle";
 import {
   FinishedObjectProps,
@@ -36,7 +41,8 @@ export function RectangleInProgress(
 export function RectangleFinished(
   props: FinishedObjectProps,
 ): JSX.Element | null {
-  const { frame, field, isSelected, onSelect, onChange } = props;
+  const { frame, field, isSelected, object, onSelect, onChange } = props;
+  const { isDone, name } = object;
   const perFrame = field.fieldSchema.perFrame;
   const values = getFieldValue({
     values: field.values,
@@ -44,11 +50,14 @@ export function RectangleFinished(
     frame,
   })?.Rectangle;
 
+  const [isTextVisible, setIsTextVisible] = useState(true);
+  const textRef = useRef<Konva.Text>(null);
   const shapeRef = useRef<Konva.Rect>(null);
   const trRef = useRef<Konva.Transformer>(null);
 
   useEffect(() => {
-    if (!isSelected || !trRef.current || !shapeRef.current) return;
+    if (!isSelected || !trRef.current || !shapeRef.current || !textRef.current)
+      return;
     trRef.current.nodes([shapeRef.current]);
     trRef.current.getLayer()?.batchDraw();
   }, [isSelected]);
@@ -63,17 +72,32 @@ export function RectangleFinished(
 
   return (
     <>
+      {isTextVisible && (
+        <Text
+          ref={textRef}
+          x={minX}
+          y={minY}
+          text={name}
+          width={width}
+          align="center"
+          fontSize={FontSize}
+        />
+      )}
       <Rect
         ref={shapeRef}
         x={minX}
         y={minY}
         width={width}
         height={height}
-        draggable
+        draggable={!isDone}
         stroke="red"
+        strokeScaleEnabled={false}
+        strokeWidth={isSelected ? SelectedStrokeWidth : UnselectedStrokeWidth}
         onClick={onSelect}
         onTap={onSelect}
+        onDragStart={() => setIsTextVisible(false)}
         onDragEnd={e => {
+          setIsTextVisible(true);
           const x = e.target.x();
           const y = e.target.y();
           onChange({
@@ -112,8 +136,11 @@ export function RectangleFinished(
       {isSelected && (
         <Transformer
           ref={trRef}
+          onTransformStart={() => setIsTextVisible(false)}
+          onTransformEnd={() => setIsTextVisible(true)}
           rotateEnabled={false}
           keepRatio={false}
+          resizeEnabled={!isDone}
           boundBoxFunc={(oldBox, newBox) => {
             // limit resize
             if (newBox.width < 5 || newBox.height < 5) {
