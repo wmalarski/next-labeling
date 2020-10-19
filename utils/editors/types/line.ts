@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 
-export const LineValue = t.array(t.tuple([t.number, t.number]));
+export const LineValue = t.array(t.number);
 export const LineValues = t.array(
   t.strict({
     frame: t.number,
