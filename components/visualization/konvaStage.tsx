@@ -7,6 +7,7 @@ import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 import setAttributeUpdate from "../../utils/labeling/updates/setAttributeUpdate";
 import setSelectedObjectUpdate from "../../utils/labeling/updates/setSelectedObjectUpdate";
+import setSelectedUpdate from "../../utils/labeling/updates/setSelectedUpdate";
 import { getEventRelativePosition } from "../../utils/visualization/functions";
 import useDrawingTool from "../../utils/visualization/hooks/useDrawingTool";
 import useToolContext from "../../utils/visualization/hooks/useToolContext";
@@ -38,7 +39,7 @@ export default function KonvaStage(): JSX.Element {
     stageY,
   } = useZoom({ scaleBy: 1.1 });
 
-  const width = 400;
+  const width = 600;
   const height = 400;
 
   const drawingTool = useDrawingTool();
@@ -50,6 +51,11 @@ export default function KonvaStage(): JSX.Element {
   const handleSelect = useCallback(
     (selectedId: string | null) =>
       pushLabeling(doc => setSelectedObjectUpdate(doc, selectedId)),
+    [pushLabeling],
+  );
+
+  const handleDeselect = useCallback(
+    () => pushLabeling(doc => setSelectedUpdate(doc, [])),
     [pushLabeling],
   );
 
@@ -101,7 +107,7 @@ export default function KonvaStage(): JSX.Element {
             acceptPoint(point, true, currentFrame);
           }}
         >
-          <Video context={context} />
+          <Video context={context} onClick={handleDeselect} />
           {filteredObjects.flatMap(object => {
             const isSelected = selected.some(sel => sel.objectId === object.id);
             return object.fields.map(field => (

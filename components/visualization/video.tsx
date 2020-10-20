@@ -6,10 +6,11 @@ import { LabelingContextValue } from "../../utils/labeling/contexts/labelingCont
 
 export interface VideoProps {
   context: LabelingContextValue;
+  onClick: () => void;
 }
 
 export default function Video(props: VideoProps): JSX.Element {
-  const { context } = props;
+  const { context, onClick } = props;
 
   const { document: labelingDocument, history, setDuration } = context;
   const { currentFrame } = history.data;
@@ -68,6 +69,7 @@ export default function Video(props: VideoProps): JSX.Element {
       y={0}
       width={size.width}
       height={size.height}
+      onClick={onClick}
     />
   );
 }

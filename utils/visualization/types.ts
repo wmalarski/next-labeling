@@ -1,5 +1,4 @@
-import { FieldType, LabelingFieldValues } from "../editors/types";
-import { LabelingDirection } from "../labeling/contexts/preferencesContext";
+import { LabelingFieldValues } from "../editors/types";
 import { LabelingField, LabelingObject } from "../labeling/types/client";
 import { FieldSchema } from "../schema/types";
 

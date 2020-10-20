@@ -1,9 +1,13 @@
 import Konva from "konva";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Rect, Transformer, Text } from "react-konva";
 
 import { getFieldValue } from "../../../utils/editors/functions";
-import { FieldType } from "../../../utils/editors/types";
+import {
+  FieldType,
+  LabelingFieldAttributes,
+  LabelingFieldValues,
+} from "../../../utils/editors/types";
 import {
   FontSize,
   SelectedStrokeWidth,
@@ -15,27 +19,47 @@ import {
   InProgressObjectProps,
 } from "../../../utils/visualization/types";
 
+export interface RectProps {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  stroke?: string;
+}
+
+export function getRectProps(
+  values?: LabelingFieldValues,
+  attributes?: LabelingFieldAttributes,
+): RectProps | null {
+  const rectangle = values?.Rectangle;
+  if (!rectangle) return null;
+  const value = rectangle[0].value;
+  if (!value) return null;
+  const [x1, y1, x2, y2] = value;
+  const [minX, maxX] = [x1, x2].sort((a, b) => a - b);
+  const [minY, maxY] = [y1, y2].sort((a, b) => a - b);
+  const stroke = attributes?.Rectangle?.color;
+  return { x: minX, y: minY, width: maxX - minX, height: maxY - minY, stroke };
+}
+
+export function updateTextProps(
+  text: React.RefObject<Konva.Text>,
+  rect: RectProps,
+): void {
+  const node = text.current;
+  node?.x(rect.x);
+  node?.y(rect.y);
+  node?.width(rect.width);
+  node?.getLayer()?.batchDraw();
+}
+
 export function RectangleInProgress(
   props: InProgressObjectProps,
 ): JSX.Element | null {
-  const rectangle = props.value.Rectangle;
-  if (!rectangle) return null;
-  const value = rectangle[0].value;
-  if (!value || props.stage <= RectangleBuilderStage.ONE_POINT) return null;
-
-  const [x1, y1, x2, y2] = value;
-  const [minX, maxX] = [x1, x2].sort();
-  const [minY, maxY] = [y1, y2].sort();
-
-  return (
-    <Rect
-      x={minX}
-      y={minY}
-      width={maxX - minX}
-      height={maxY - minY}
-      stroke="red"
-    />
-  );
+  const { stage, value, fieldSchema } = props;
+  if (stage <= RectangleBuilderStage.ONE_POINT) return null;
+  const rectProps = getRectProps(value, fieldSchema.attributes);
+  return rectProps && <Rect {...rectProps} />;
 }
 
 export function RectangleFinished(
@@ -43,74 +67,80 @@ export function RectangleFinished(
 ): JSX.Element | null {
   const { frame, field, isSelected, object, onSelect, onChange } = props;
   const { isDone, name } = object;
-  const perFrame = field.fieldSchema.perFrame;
+  const { fieldSchema } = field;
+  const { perFrame, attributes } = fieldSchema;
   const values = getFieldValue({
     values: field.values,
     perFrame,
     frame,
-  })?.Rectangle;
+  });
 
-  const [isTextVisible, setIsTextVisible] = useState(true);
   const textRef = useRef<Konva.Text>(null);
-  const shapeRef = useRef<Konva.Rect>(null);
+  const rectRef = useRef<Konva.Rect>(null);
   const trRef = useRef<Konva.Transformer>(null);
 
   useEffect(() => {
-    if (!isSelected || !trRef.current || !shapeRef.current || !textRef.current)
-      return;
-    trRef.current.nodes([shapeRef.current]);
+    if (!isSelected || !trRef.current || !rectRef.current) return;
+    trRef.current.nodes([rectRef.current]);
     trRef.current.getLayer()?.batchDraw();
   }, [isSelected]);
 
-  if (!values || !values[0].value) return null;
+  const rectProps = getRectProps(values, attributes);
+  if (!rectProps) return null;
 
-  const [x1, y1, x2, y2] = values[0].value;
-  const [minX, maxX] = [x1, x2].sort((a, b) => a - b);
-  const [minY, maxY] = [y1, y2].sort((a, b) => a - b);
-  const width = maxX - minX;
-  const height = maxY - minY;
+  const draggable = !isDone && isSelected;
 
   return (
     <>
-      {isTextVisible && (
-        <Text
-          ref={textRef}
-          x={minX}
-          y={minY}
-          text={name}
-          width={width}
-          align="center"
-          fontSize={FontSize}
-        />
-      )}
+      <Text
+        ref={textRef}
+        x={rectProps.x}
+        y={rectProps.y}
+        text={name}
+        width={rectProps.width}
+        align="center"
+        fill={rectProps.stroke}
+        fontSize={FontSize}
+      />
       <Rect
-        ref={shapeRef}
-        x={minX}
-        y={minY}
-        width={width}
-        height={height}
-        draggable={!isDone}
-        stroke="red"
+        ref={rectRef}
+        {...rectProps}
+        draggable={draggable}
         strokeScaleEnabled={false}
         strokeWidth={isSelected ? SelectedStrokeWidth : UnselectedStrokeWidth}
         onClick={onSelect}
         onTap={onSelect}
-        onDragStart={() => setIsTextVisible(false)}
+        onDragMove={e =>
+          updateTextProps(textRef, {
+            x: e.target.x(),
+            y: e.target.y(),
+            width: e.target.width(),
+            height: e.target.height(),
+          })
+        }
         onDragEnd={e => {
-          setIsTextVisible(true);
-          const x = e.target.x();
-          const y = e.target.y();
+          const node = e.target;
+          const x = node.x();
+          const y = node.y();
           onChange({
             [FieldType.RECTANGLE]: [
               {
                 frame,
-                value: [x, y, x + width, y + height],
+                value: [x, y, x + node.width(), y + node.height()],
               },
             ],
           });
         }}
+        onTransform={e =>
+          updateTextProps(textRef, {
+            x: e.target.x(),
+            y: e.target.y(),
+            width: e.target.width() * e.target.scaleX(),
+            height: e.target.height() * e.target.scaleY(),
+          })
+        }
         onTransformEnd={() => {
-          const node = shapeRef.current;
+          const node = rectRef.current;
           if (!node) return;
           const scaleX = node.scaleX();
           const scaleY = node.scaleY();
@@ -122,7 +152,6 @@ export function RectangleFinished(
           const y = node.y();
           const newWidth = Math.max(5, node.width() * scaleX);
           const newHeight = Math.max(5, node.height() * scaleY);
-
           onChange({
             [FieldType.RECTANGLE]: [
               {
@@ -136,18 +165,12 @@ export function RectangleFinished(
       {isSelected && (
         <Transformer
           ref={trRef}
-          onTransformStart={() => setIsTextVisible(false)}
-          onTransformEnd={() => setIsTextVisible(true)}
           rotateEnabled={false}
           keepRatio={false}
           resizeEnabled={!isDone}
-          boundBoxFunc={(oldBox, newBox) => {
-            // limit resize
-            if (newBox.width < 5 || newBox.height < 5) {
-              return oldBox;
-            }
-            return newBox;
-          }}
+          boundBoxFunc={(oldBox, newBox) =>
+            newBox.width < 5 || newBox.height < 5 ? oldBox : newBox
+          }
         />
       )}
     </>
