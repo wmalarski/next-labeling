@@ -69,9 +69,9 @@ function LabelingEditor(): JSX.Element {
   });
 
   const [viewsState, setViewsState] = useState<LabelingViewsState>({
-    properties: true,
+    properties: false,
     timeline: true,
-    comments: true,
+    comments: false,
   });
 
   if (!authUser) return <></>;

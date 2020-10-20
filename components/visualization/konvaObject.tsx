@@ -5,7 +5,8 @@ import {
   FinishedObjectProps,
   InProgressObjectProps,
 } from "../../utils/visualization/types";
-import { RectangleFinished, RectangleInProgress } from "./objects/reactangle";
+import { LineFinished, LineInProgress } from "./objects/line";
+import { RectangleFinished, RectangleInProgress } from "./objects/rectangle";
 
 export function InProgressObject(
   props: InProgressObjectProps,
@@ -16,6 +17,8 @@ export function InProgressObject(
   switch (type) {
     case FieldType.RECTANGLE:
       return <RectangleInProgress {...props} />;
+    case FieldType.LINE:
+      return <LineInProgress {...props} />;
     default:
       return null;
   }
@@ -28,6 +31,8 @@ export function FinishedObject(props: FinishedObjectProps): JSX.Element | null {
   switch (type) {
     case FieldType.RECTANGLE:
       return <RectangleFinished {...props} />;
+    case FieldType.LINE:
+      return <LineFinished {...props} />;
     default:
       return null;
   }

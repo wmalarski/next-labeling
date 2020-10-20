@@ -35,7 +35,11 @@ function LabelingListPage(): JSX.Element {
     <>
       <Header />
       <Container>
-        <LabelingList collection={collection} authUser={authUser} />
+        <LabelingList
+          query={collection}
+          collection={collection}
+          authUser={authUser}
+        />
       </Container>
       <Footer />
     </>
