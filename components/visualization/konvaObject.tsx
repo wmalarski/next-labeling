@@ -6,6 +6,8 @@ import {
   InProgressObjectProps,
 } from "../../utils/visualization/types";
 import { LineFinished, LineInProgress } from "./objects/line";
+import { PointFinished, PointInProgress } from "./objects/point";
+import { PolygonFinished, PolygonInProgress } from "./objects/polygon";
 import { RectangleFinished, RectangleInProgress } from "./objects/rectangle";
 
 export function InProgressObject(
@@ -19,6 +21,11 @@ export function InProgressObject(
       return <RectangleInProgress {...props} />;
     case FieldType.LINE:
       return <LineInProgress {...props} />;
+    case FieldType.POLYGON:
+      return <PolygonInProgress {...props} />;
+    case FieldType.POINT:
+      return <PointInProgress {...props} />;
+
     default:
       return null;
   }
@@ -33,6 +40,10 @@ export function FinishedObject(props: FinishedObjectProps): JSX.Element | null {
       return <RectangleFinished {...props} />;
     case FieldType.LINE:
       return <LineFinished {...props} />;
+    case FieldType.POLYGON:
+      return <PolygonFinished {...props} />;
+    case FieldType.POINT:
+      return <PointFinished {...props} />;
     default:
       return null;
   }

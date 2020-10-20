@@ -2,6 +2,7 @@ import Konva from "konva";
 import range from "lodash/range";
 import React, { useRef } from "react";
 import { Circle, Line } from "react-konva";
+
 import {
   SelectedStrokeWidth,
   UnselectedStrokeWidth,
@@ -22,13 +23,24 @@ export interface SectionsProps {
   isDone: boolean;
   points: number[];
   stroke?: string;
+  opacity?: number;
+  closed?: boolean;
   isSelected: boolean;
   onSelect: () => void;
   onChange: (points: number[]) => void;
 }
 
 export default function Sections(props: SectionsProps): JSX.Element | null {
-  const { stroke, isDone, points, isSelected, onChange, onSelect } = props;
+  const {
+    stroke,
+    closed,
+    opacity,
+    isDone,
+    points,
+    isSelected,
+    onChange,
+    onSelect,
+  } = props;
 
   const lineRef = useRef<Konva.Line>(null);
   const pointsRef = useRef<(Konva.Circle | null)[]>(
@@ -41,8 +53,10 @@ export default function Sections(props: SectionsProps): JSX.Element | null {
   return (
     <>
       <Line
-        stroke={stroke}
         ref={lineRef}
+        stroke={stroke}
+        opacity={opacity}
+        closed={closed}
         points={points}
         strokeWidth={strokeWidth}
         onClick={onSelect}

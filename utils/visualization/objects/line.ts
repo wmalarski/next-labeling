@@ -13,14 +13,7 @@ export const LineBuilder: CoordsBuilder = (point, frame, values) => {
     return {
       canBeFinished: false,
       isFinished: false,
-      value: {
-        [FieldType.LINE]: [
-          {
-            frame,
-            value: [point.x, point.y],
-          },
-        ],
-      },
+      value: { [FieldType.LINE]: [{ frame, value: [point.x, point.y] }] },
       stage: LineBuilderStage.ONE_POINT,
     };
   const points = line[0].value;
@@ -28,12 +21,7 @@ export const LineBuilder: CoordsBuilder = (point, frame, values) => {
     canBeFinished: true,
     isFinished: false,
     value: {
-      [FieldType.LINE]: [
-        {
-          frame,
-          value: [...points, point.x, point.y],
-        },
-      ],
+      [FieldType.LINE]: [{ frame, value: [...points, point.x, point.y] }],
     },
     stage: LineBuilderStage.MANY_POINTS,
   };

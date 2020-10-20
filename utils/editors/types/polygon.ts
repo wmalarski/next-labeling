@@ -1,6 +1,6 @@
 import * as t from "io-ts";
 
-export const PolygonValue = t.array(t.tuple([t.number, t.number]));
+export const PolygonValue = t.array(t.number);
 export const PolygonValues = t.array(
   t.strict({
     frame: t.number,
