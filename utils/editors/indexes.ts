@@ -20,6 +20,9 @@ export default function getValueIndex(
     case FieldType.POINT:
     case FieldType.POLYGON:
     case FieldType.RECTANGLE:
+    case FieldType.BOX3D:
+    case FieldType.EYE:
+    case FieldType.GRAPH:
       return 0;
     case FieldType.CHECKBOX:
       return value === true ? 1 : 0;

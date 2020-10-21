@@ -105,4 +105,23 @@ export const labelingFieldAttributesDefaults: LabelingFieldAttributes = {
     default: [],
     color: "#ff0000",
   },
+  [FieldType.BOX3D]: {
+    default: {
+      front: [0, 0, 0, 0],
+      side: null,
+      sideType: null,
+    },
+    color: "#ff0000",
+  },
+  [FieldType.GRAPH]: {
+    default: {
+      edges: [],
+      points: [],
+    },
+    color: "#ff0000",
+  },
+  [FieldType.EYE]: {
+    default: [],
+    color: "$ff0000",
+  },
 };

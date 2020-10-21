@@ -7,12 +7,12 @@ import {
   LabelingFieldAttributes,
   LabelingFieldValues,
 } from "../../../utils/editors/types";
-import { PolygonBuilderStage } from "../../../utils/visualization/objects/polygon";
+import { LineBuilderStage } from "../../../utils/visualization/objects/lineBuilder";
 import {
   FinishedObjectProps,
   InProgressObjectProps,
 } from "../../../utils/visualization/types";
-import Sections from "./sections";
+import Sections from "../shapes/sections";
 
 export interface PolygonProps {
   points: number[];
@@ -37,7 +37,7 @@ export function PolygonInProgress(
   props: InProgressObjectProps,
 ): JSX.Element | null {
   const { stage, value, fieldSchema } = props;
-  if (stage <= PolygonBuilderStage.ONE_POINT) return null;
+  if (stage <= LineBuilderStage.ONE_POINT) return null;
   const polygonProps = getPolygonProps(value, fieldSchema.attributes);
   return polygonProps && <Line {...polygonProps} />;
 }

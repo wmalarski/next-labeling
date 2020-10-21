@@ -6,7 +6,6 @@ import ComboBoxEditor from "./comboBoxEditor";
 import MultiSelectEditor from "./multiSelectEditor";
 import NumericEditor from "./numericEditor";
 import SelectEditor from "./selectEditor";
-import ShapeEditor from "./shapeEditor";
 import TextEditor from "./textEditor";
 
 function PrivateFieldEditor(props: FieldEditorProps): JSX.Element {
@@ -14,11 +13,6 @@ function PrivateFieldEditor(props: FieldEditorProps): JSX.Element {
   const type = Object.keys(attributes)[0];
 
   switch (type) {
-    case FieldType.LINE:
-    case FieldType.POINT:
-    case FieldType.POLYGON:
-    case FieldType.RECTANGLE:
-      return <ShapeEditor {...props} />;
     case FieldType.CHECKBOX:
       return <CheckBoxEditor {...props} />;
     case FieldType.TEXT:

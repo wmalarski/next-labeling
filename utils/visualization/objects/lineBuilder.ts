@@ -7,7 +7,7 @@ export enum LineBuilderStage {
   MANY_POINTS = 2,
 }
 
-export const LineBuilder: CoordsBuilder = (point, frame, values) => {
+const LineBuilder: CoordsBuilder = (point, frame, values) => {
   const line = values?.Line;
   if (!line)
     return {
@@ -26,3 +26,5 @@ export const LineBuilder: CoordsBuilder = (point, frame, values) => {
     stage: LineBuilderStage.MANY_POINTS,
   };
 };
+
+export default LineBuilder;

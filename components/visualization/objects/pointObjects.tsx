@@ -13,7 +13,7 @@ import {
   SelectedStrokeWidth,
   UnselectedStrokeWidth,
 } from "../../../utils/visualization/constanst";
-import { PointBuilderStage } from "../../../utils/visualization/objects/point";
+import { PointBuilderStage } from "../../../utils/visualization/objects/pointBuilder";
 import {
   FinishedObjectProps,
   InProgressObjectProps,

@@ -13,7 +13,7 @@ import {
   SelectedStrokeWidth,
   UnselectedStrokeWidth,
 } from "../../../utils/visualization/constanst";
-import { RectangleBuilderStage } from "../../../utils/visualization/objects/rectangle";
+import { RectangleBuilderStage } from "../../../utils/visualization/objects/rectangleBuilder";
 import {
   FinishedObjectProps,
   InProgressObjectProps,

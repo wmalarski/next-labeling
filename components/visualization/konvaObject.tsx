@@ -5,10 +5,13 @@ import {
   FinishedObjectProps,
   InProgressObjectProps,
 } from "../../utils/visualization/types";
-import { LineFinished, LineInProgress } from "./objects/line";
-import { PointFinished, PointInProgress } from "./objects/point";
-import { PolygonFinished, PolygonInProgress } from "./objects/polygon";
-import { RectangleFinished, RectangleInProgress } from "./objects/rectangle";
+import { LineFinished, LineInProgress } from "./objects/lineObjects";
+import { PointFinished, PointInProgress } from "./objects/pointObjects";
+import { PolygonFinished, PolygonInProgress } from "./objects/polygonObjects";
+import {
+  RectangleFinished,
+  RectangleInProgress,
+} from "./objects/rectangleObjects";
 
 export function InProgressObject(
   props: InProgressObjectProps,

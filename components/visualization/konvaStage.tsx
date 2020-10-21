@@ -12,7 +12,7 @@ import { getEventRelativePosition } from "../../utils/visualization/functions";
 import useDrawingTool from "../../utils/visualization/hooks/useDrawingTool";
 import useToolContext from "../../utils/visualization/hooks/useToolContext";
 import useZoom from "../../utils/visualization/hooks/useZoom";
-import { ToolType } from "../../utils/visualization/types";
+import { MouseButton, ToolType } from "../../utils/visualization/types";
 import { FinishedObject, InProgressObject } from "./konvaObject";
 import ToolsHeader from "./toolsHeader";
 import Video from "./video";
@@ -99,12 +99,11 @@ export default function KonvaStage(): JSX.Element {
           onClick={e => {
             const point = getEventRelativePosition(e);
             if (!point) return;
-            acceptPoint(point, false, currentFrame);
-          }}
-          onDblClick={e => {
-            const point = getEventRelativePosition(e);
-            if (!point) return;
-            acceptPoint(point, true, currentFrame);
+            acceptPoint(
+              point,
+              e.evt.button === MouseButton.RIGHT,
+              currentFrame,
+            );
           }}
         >
           <Video context={context} onClick={handleDeselect} />

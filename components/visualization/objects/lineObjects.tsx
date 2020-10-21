@@ -7,12 +7,12 @@ import {
   LabelingFieldAttributes,
   LabelingFieldValues,
 } from "../../../utils/editors/types";
-import { LineBuilderStage } from "../../../utils/visualization/objects/line";
+import { LineBuilderStage } from "../../../utils/visualization/objects/lineBuilder";
 import {
   FinishedObjectProps,
   InProgressObjectProps,
 } from "../../../utils/visualization/types";
-import Sections from "./sections";
+import Sections from "../shapes/sections";
 
 export interface LineProps {
   points: number[];

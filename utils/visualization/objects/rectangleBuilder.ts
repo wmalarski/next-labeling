@@ -7,7 +7,7 @@ export enum RectangleBuilderStage {
   TWO_POINTS = 2,
 }
 
-export const RectangleBuilder: CoordsBuilder = (point, frame, value) => {
+const RectangleBuilder: CoordsBuilder = (point, frame, value) => {
   const rectangle = value?.Rectangle;
   if (!rectangle) {
     return {
@@ -19,7 +19,7 @@ export const RectangleBuilder: CoordsBuilder = (point, frame, value) => {
       stage: RectangleBuilderStage.ONE_POINT,
     };
   }
-  const previous = rectangle[0].value;
+  const [x, y] = rectangle[0].value;
   return {
     canBeFinished: true,
     isFinished: true,
@@ -27,10 +27,12 @@ export const RectangleBuilder: CoordsBuilder = (point, frame, value) => {
       [FieldType.RECTANGLE]: [
         {
           frame,
-          value: [previous[0], previous[1], point.x, point.y],
+          value: [x, y, point.x, point.y],
         },
       ],
     },
     stage: RectangleBuilderStage.TWO_POINTS,
   };
 };
+
+export default RectangleBuilder;
