@@ -82,9 +82,7 @@ export default function KonvaStage(): JSX.Element {
         scaleY={stageScale}
         x={stageX}
         y={stageY}
-        style={{
-          cursor: drawingToolSelected ? "pointer" : "inherit",
-        }}
+        onContextMenu={event => event.evt.preventDefault()}
       >
         <Layer
           draggable={zoomAndPaneSelected}

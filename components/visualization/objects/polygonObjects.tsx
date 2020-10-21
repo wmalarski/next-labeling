@@ -12,25 +12,18 @@ import {
   FinishedObjectProps,
   InProgressObjectProps,
 } from "../../../utils/visualization/types";
-import Sections from "../shapes/sections";
+import Sections, { SectionsShapeProps } from "../shapes/sections";
 
-export interface PolygonProps {
-  points: number[];
-  stroke?: string;
-  closed?: boolean;
-  opacity?: number;
-}
-
-export function getPolygonProps(
+export function getSectionsProps(
   values?: LabelingFieldValues,
   attributes?: LabelingFieldAttributes,
-): PolygonProps | null {
+): SectionsShapeProps | null {
   const polygon = values?.Polygon;
   if (!polygon) return null;
   const points = polygon[0].value;
   if (!points) return null;
   const stroke = attributes?.Polygon?.color;
-  return { points, stroke, closed: true, opacity: 0.1 };
+  return { points, stroke, closed: true, opacity: 0.9 };
 }
 
 export function PolygonInProgress(
@@ -38,7 +31,7 @@ export function PolygonInProgress(
 ): JSX.Element | null {
   const { stage, value, fieldSchema } = props;
   if (stage <= LineBuilderStage.ONE_POINT) return null;
-  const polygonProps = getPolygonProps(value, fieldSchema.attributes);
+  const polygonProps = getSectionsProps(value, fieldSchema.attributes);
   return polygonProps && <Line {...polygonProps} />;
 }
 
@@ -46,7 +39,6 @@ export function PolygonFinished(
   props: FinishedObjectProps,
 ): JSX.Element | null {
   const { frame, field, object, isSelected, onChange, onSelect } = props;
-  const { isDone } = object;
   const { fieldSchema } = field;
   const { perFrame, attributes } = fieldSchema;
   const values = getFieldValue({
@@ -54,17 +46,17 @@ export function PolygonFinished(
     perFrame,
     frame,
   });
-  const polygonProps = getPolygonProps(values, attributes);
+  const sectionsProps = getSectionsProps(values, attributes);
 
   return (
-    polygonProps && (
+    sectionsProps && (
       <Sections
-        {...polygonProps}
-        isDone={isDone}
+        sectionsProps={sectionsProps}
+        object={object}
         onSelect={onSelect}
         isSelected={isSelected}
-        onChange={newPoints => {
-          onChange({ [FieldType.LINE]: [{ frame, value: newPoints }] });
+        onChange={value => {
+          onChange({ [FieldType.LINE]: [{ frame, value: value.points }] });
         }}
       />
     )

@@ -94,6 +94,8 @@ export function PointFinished(props: FinishedObjectProps): JSX.Element | null {
           align="center"
           fill={pointProps.fill}
           fontSize={FontSize}
+          onClick={onSelect}
+          onTap={onSelect}
         />
         <Circle
           {...pointProps}

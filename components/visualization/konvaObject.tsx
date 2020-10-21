@@ -5,6 +5,7 @@ import {
   FinishedObjectProps,
   InProgressObjectProps,
 } from "../../utils/visualization/types";
+import { EyeFinished, EyeInProgress } from "./objects/eyeObjects";
 import { LineFinished, LineInProgress } from "./objects/lineObjects";
 import { PointFinished, PointInProgress } from "./objects/pointObjects";
 import { PolygonFinished, PolygonInProgress } from "./objects/polygonObjects";
@@ -28,7 +29,8 @@ export function InProgressObject(
       return <PolygonInProgress {...props} />;
     case FieldType.POINT:
       return <PointInProgress {...props} />;
-
+    case FieldType.EYE:
+      return <EyeInProgress {...props} />;
     default:
       return null;
   }
@@ -47,6 +49,8 @@ export function FinishedObject(props: FinishedObjectProps): JSX.Element | null {
       return <PolygonFinished {...props} />;
     case FieldType.POINT:
       return <PointFinished {...props} />;
+    case FieldType.EYE:
+      return <EyeFinished {...props} />;
     default:
       return null;
   }
