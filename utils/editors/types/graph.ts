@@ -1,8 +1,8 @@
 import * as t from "io-ts";
 
 export const GraphValue = t.strict({
-  points: t.array(t.number),
-  edges: t.array(t.tuple([t.number, t.number])),
+  points: t.array(t.strict({ x: t.number, y: t.number, n: t.number })),
+  edges: t.array(t.strict({ from: t.number, to: t.number })),
 });
 export const GraphValues = t.array(
   t.strict({

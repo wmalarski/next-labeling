@@ -8,6 +8,7 @@ import {
   SelectedStrokeWidth,
   UnselectedStrokeWidth,
 } from "../../../utils/visualization/constanst";
+import { getPoints2D } from "../../../utils/visualization/functions";
 
 function getNewPoints(
   line: Konva.Line,
@@ -77,24 +78,24 @@ export default function Sections(props: SectionsProps): JSX.Element | null {
           onChange({ ...sectionsProps, points: newPoints });
         }}
       />
-      {range(0, points.length, 2).map(index => (
+      {getPoints2D(points).map(({ x, y }, index) => (
         <Circle
           key={index}
           fill={stroke}
           ref={circle => {
-            pointsRef.current[index / 2] = circle;
+            pointsRef.current[index] = circle;
           }}
-          x={points[index]}
-          y={points[index + 1]}
+          x={x}
+          y={y}
           radius={strokeWidth + 1}
-          strokeWidth={isSelected ? SelectedStrokeWidth : UnselectedStrokeWidth}
+          strokeWidth={strokeWidth}
           onClick={onSelect}
           onTap={onSelect}
           draggable={draggable}
           onDragMove={e => {
             const line = lineRef.current;
             if (!line) return;
-            line.points(getNewPoints(line, index, e));
+            line.points(getNewPoints(line, 2 * index, e));
             line.getLayer()?.batchDraw();
           }}
           onDragEnd={e => {
@@ -102,7 +103,7 @@ export default function Sections(props: SectionsProps): JSX.Element | null {
             if (!line) return;
             onChange({
               ...sectionsProps,
-              points: getNewPoints(line, index, e),
+              points: getNewPoints(line, 2 * index, e),
             });
           }}
         />
