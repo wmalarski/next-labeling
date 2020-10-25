@@ -1,7 +1,7 @@
 import React from "react";
 import { Rect } from "react-konva";
 
-import { getFieldValue } from "../../../utils/editors/functions";
+import { getFieldValues } from "../../../utils/editors/functions";
 import {
   FieldType,
   LabelingFieldAttributes,
@@ -45,7 +45,7 @@ export function RectangleFinished(
   const { fieldSchema } = field;
   const { perFrame, attributes } = fieldSchema;
   const rectProps = getRectProps(
-    getFieldValue({
+    getFieldValues({
       values: field.values,
       perFrame,
       frame,

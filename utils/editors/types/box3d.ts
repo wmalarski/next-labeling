@@ -14,5 +14,6 @@ export const Box3dAttributes = t.strict({
   default: Box3dValue,
   color: t.string,
 });
+export type Box3dValue = t.TypeOf<typeof Box3dValue>;
 export type Box3dValues = t.TypeOf<typeof Box3dValues>;
 export type Box3dAttributes = t.TypeOf<typeof Box3dAttributes>;

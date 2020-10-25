@@ -11,5 +11,6 @@ export const RectangleAttributes = t.strict({
   default: RectangleValue,
   color: t.string,
 });
+export type RectangleValue = t.TypeOf<typeof RectangleValue>;
 export type RectangleValues = t.TypeOf<typeof RectangleValues>;
 export type RectangleAttributes = t.TypeOf<typeof RectangleAttributes>;

@@ -1,18 +1,16 @@
 import Konva from "konva";
+import range from "lodash/range";
 import React, { useRef } from "react";
 import { Circle, Line } from "react-konva";
-import range from "lodash/range";
 
-import { getFieldValue } from "../../../utils/editors/functions";
+import { getFieldValues } from "../../../utils/editors/functions";
 import {
   FieldType,
   LabelingFieldAttributes,
   LabelingFieldValues,
 } from "../../../utils/editors/types";
-import {
-  SelectedStrokeWidth,
-  UnselectedStrokeWidth,
-} from "../../../utils/visualization/constanst";
+import { PointRadius } from "../../../utils/visualization/constanst";
+import { getShapeStyle } from "../../../utils/visualization/functions";
 import { EyeBuilderStage } from "../../../utils/visualization/objects/eyeBuilder";
 import {
   FinishedObjectProps,
@@ -94,10 +92,9 @@ export function EyeFinished(props: FinishedObjectProps): JSX.Element | null {
   const { isDone } = object;
   const { fieldSchema } = field;
   const { perFrame, attributes } = fieldSchema;
-  const strokeWidth = isSelected ? SelectedStrokeWidth : UnselectedStrokeWidth;
   const draggable = !isDone && isSelected;
 
-  const values = getFieldValue({
+  const values = getFieldValues({
     values: field.values,
     perFrame,
     frame,
@@ -112,10 +109,10 @@ export function EyeFinished(props: FinishedObjectProps): JSX.Element | null {
   const { firstPoints, points, secondPoints, stroke, tension } = eyeProps;
 
   const lineCommonProps = {
+    ...getShapeStyle(isSelected),
     stroke,
     tension,
     draggable,
-    strokeWidth,
     onClick: onSelect,
     onTap: onSelect,
   };
@@ -210,8 +207,8 @@ export function EyeFinished(props: FinishedObjectProps): JSX.Element | null {
           }}
           x={points[index]}
           y={points[index + 1]}
-          radius={strokeWidth + 1}
-          strokeWidth={isSelected ? SelectedStrokeWidth : UnselectedStrokeWidth}
+          radius={PointRadius}
+          strokeWidth={lineCommonProps.strokeWidth}
           onClick={onSelect}
           onTap={onSelect}
           draggable={draggable}

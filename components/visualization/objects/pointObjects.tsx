@@ -2,17 +2,14 @@ import Konva from "konva";
 import React, { useEffect, useRef } from "react";
 import { Circle, Text } from "react-konva";
 
-import { getFieldValue } from "../../../utils/editors/functions";
+import { getFieldValues } from "../../../utils/editors/functions";
 import {
   FieldType,
   LabelingFieldAttributes,
   LabelingFieldValues,
 } from "../../../utils/editors/types";
-import {
-  FontSize,
-  SelectedStrokeWidth,
-  UnselectedStrokeWidth,
-} from "../../../utils/visualization/constanst";
+import { FontSize } from "../../../utils/visualization/constanst";
+import { getShapeStyle } from "../../../utils/visualization/functions";
 import { PointBuilderStage } from "../../../utils/visualization/objects/pointBuilder";
 import {
   FinishedObjectProps,
@@ -63,7 +60,7 @@ export function PointFinished(props: FinishedObjectProps): JSX.Element | null {
   const { isDone, name } = object;
   const { fieldSchema } = field;
   const { perFrame, attributes } = fieldSchema;
-  const values = getFieldValue({
+  const values = getFieldValues({
     values: field.values,
     perFrame,
     frame,
@@ -81,7 +78,6 @@ export function PointFinished(props: FinishedObjectProps): JSX.Element | null {
 
   const pointProps = getPointProps(values, attributes);
   const draggable = !isDone && isSelected;
-  const strokeWidth = isSelected ? SelectedStrokeWidth : UnselectedStrokeWidth;
 
   return (
     pointProps && (
@@ -99,9 +95,8 @@ export function PointFinished(props: FinishedObjectProps): JSX.Element | null {
         />
         <Circle
           {...pointProps}
+          {...getShapeStyle(isSelected)}
           draggable={draggable}
-          strokeScaleEnabled={false}
-          strokeWidth={strokeWidth}
           onClick={onSelect}
           onTap={onSelect}
           onDragMove={e =>

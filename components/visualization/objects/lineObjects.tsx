@@ -1,7 +1,7 @@
 import React from "react";
 import { Line } from "react-konva";
 
-import { getFieldValue } from "../../../utils/editors/functions";
+import { getFieldValues } from "../../../utils/editors/functions";
 import {
   FieldType,
   LabelingFieldAttributes,
@@ -39,7 +39,7 @@ export function LineFinished(props: FinishedObjectProps): JSX.Element | null {
   const { frame, field, object, isSelected, onChange, onSelect } = props;
   const { fieldSchema } = field;
   const { perFrame, attributes } = fieldSchema;
-  const values = getFieldValue({
+  const values = getFieldValues({
     values: field.values,
     perFrame,
     frame,

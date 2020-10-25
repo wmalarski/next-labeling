@@ -10,5 +10,6 @@ export const TextValues = t.array(
 export const TextAttributes = t.strict({
   default: TextValue,
 });
+export type TextValue = t.TypeOf<typeof TextValue>;
 export type TextValues = t.TypeOf<typeof TextValues>;
 export type TextAttributes = t.TypeOf<typeof TextAttributes>;

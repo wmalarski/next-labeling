@@ -1,5 +1,8 @@
+import Konva from "konva";
 import { KonvaEventObject } from "konva/types/Node";
 import range from "lodash/range";
+import { LabelingObject } from "../labeling/types/client";
+import { SelectedStrokeWidth, UnselectedStrokeWidth } from "./constanst";
 
 import { Point2D } from "./types";
 
@@ -23,4 +26,11 @@ export function getPoints2D(points: number[]): Point2D[] {
 
 export function getPointDistance(a: Point2D, b: Point2D): number {
   return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+}
+
+export function getShapeStyle(isSelected: boolean): Konva.ShapeConfig {
+  return {
+    strokeScaleEnabled: false,
+    strokeWidth: isSelected ? SelectedStrokeWidth : UnselectedStrokeWidth,
+  };
 }

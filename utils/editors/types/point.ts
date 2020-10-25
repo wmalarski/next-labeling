@@ -11,5 +11,6 @@ export const PointAttributes = t.strict({
   default: PointValue,
   color: t.string,
 });
+export type PointValue = t.TypeOf<typeof PointValue>;
 export type PointValues = t.TypeOf<typeof PointValues>;
 export type PointAttributes = t.TypeOf<typeof PointAttributes>;

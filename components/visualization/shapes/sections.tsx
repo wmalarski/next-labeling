@@ -2,13 +2,13 @@ import Konva from "konva";
 import range from "lodash/range";
 import React, { useRef } from "react";
 import { Circle, Line } from "react-konva";
-import { LabelingObject } from "../../../utils/labeling/types/client";
 
+import { LabelingObject } from "../../../utils/labeling/types/client";
+import { PointRadius } from "../../../utils/visualization/constanst";
 import {
-  SelectedStrokeWidth,
-  UnselectedStrokeWidth,
-} from "../../../utils/visualization/constanst";
-import { getPoints2D } from "../../../utils/visualization/functions";
+  getPoints2D,
+  getShapeStyle,
+} from "../../../utils/visualization/functions";
 
 function getNewPoints(
   line: Konva.Line,
@@ -40,7 +40,7 @@ export default function Sections(props: SectionsProps): JSX.Element | null {
   const { object, isSelected, sectionsProps, onChange, onSelect } = props;
   const { isDone } = object;
   const { points, stroke } = sectionsProps;
-  const strokeWidth = isSelected ? SelectedStrokeWidth : UnselectedStrokeWidth;
+  const shapeStyle = getShapeStyle(isSelected);
   const draggable = !isDone && isSelected;
 
   const lineRef = useRef<Konva.Line>(null);
@@ -53,7 +53,7 @@ export default function Sections(props: SectionsProps): JSX.Element | null {
       <Line
         ref={lineRef}
         {...sectionsProps}
-        strokeWidth={strokeWidth}
+        {...shapeStyle}
         onClick={onSelect}
         onTap={onSelect}
         draggable={draggable}
@@ -80,6 +80,7 @@ export default function Sections(props: SectionsProps): JSX.Element | null {
       />
       {getPoints2D(points).map(({ x, y }, index) => (
         <Circle
+          {...shapeStyle}
           key={index}
           fill={stroke}
           ref={circle => {
@@ -87,8 +88,7 @@ export default function Sections(props: SectionsProps): JSX.Element | null {
           }}
           x={x}
           y={y}
-          radius={strokeWidth + 1}
-          strokeWidth={strokeWidth}
+          radius={PointRadius}
           onClick={onSelect}
           onTap={onSelect}
           draggable={draggable}

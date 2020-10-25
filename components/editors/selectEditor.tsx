@@ -7,7 +7,7 @@ import React from "react";
 
 import {
   calculateNewValues,
-  getFieldValue,
+  getFieldValues,
 } from "../../utils/editors/functions";
 import { FieldEditorProps, FieldType } from "../../utils/editors/types";
 import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
@@ -17,7 +17,7 @@ export default function SelectEditor(props: FieldEditorProps): JSX.Element {
   const { preferences } = usePreferences();
   const config = attributes.Select;
 
-  const frameValues = getFieldValue(props)?.Select;
+  const frameValues = getFieldValues(props)?.Select;
   if (!frameValues) return <></>;
   const frameValue = frameValues[0];
   const selected = frameValue?.value;

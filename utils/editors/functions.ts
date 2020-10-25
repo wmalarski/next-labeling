@@ -30,7 +30,7 @@ export interface GetFieldValueProps {
   values: LabelingFieldValues;
 }
 
-export function getFieldValue(
+export function getFieldValues(
   props: GetFieldValueProps,
 ): LabelingFieldValues | undefined {
   const { perFrame, frame, values } = props;

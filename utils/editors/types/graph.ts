@@ -14,5 +14,6 @@ export const GraphAttributes = t.strict({
   default: GraphValue,
   color: t.string,
 });
+export type GraphValue = t.TypeOf<typeof GraphValue>;
 export type GraphValues = t.TypeOf<typeof GraphValues>;
 export type GraphAttributes = t.TypeOf<typeof GraphAttributes>;

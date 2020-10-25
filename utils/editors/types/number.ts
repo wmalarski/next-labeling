@@ -13,5 +13,6 @@ export const NumberAttributes = t.strict({
   step: t.number,
   default: NumberValue,
 });
+export type NumberValue = t.TypeOf<typeof NumberValue>;
 export type NumberValues = t.TypeOf<typeof NumberValues>;
 export type NumberAttributes = t.TypeOf<typeof NumberAttributes>;

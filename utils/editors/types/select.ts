@@ -16,5 +16,6 @@ export const SelectAttributes = t.strict({
     }),
   ),
 });
+export type SelectValue = t.TypeOf<typeof SelectValue>;
 export type SelectValues = t.TypeOf<typeof SelectValues>;
 export type SelectAttributes = t.TypeOf<typeof SelectAttributes>;

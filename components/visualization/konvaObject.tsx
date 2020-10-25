@@ -5,6 +5,7 @@ import {
   FinishedObjectProps,
   InProgressObjectProps,
 } from "../../utils/visualization/types";
+import { Box3dFinished, Box3dInProgress } from "./objects/box3dObject";
 import { EyeFinished, EyeInProgress } from "./objects/eyeObjects";
 import { GraphFinished, GraphInProgress } from "./objects/graphObjects";
 import { LineFinished, LineInProgress } from "./objects/lineObjects";
@@ -34,6 +35,8 @@ export function InProgressObject(
       return <EyeInProgress {...props} />;
     case FieldType.GRAPH:
       return <GraphInProgress {...props} />;
+    case FieldType.BOX3D:
+      return <Box3dInProgress {...props} />;
     default:
       return null;
   }
@@ -56,6 +59,8 @@ export function FinishedObject(props: FinishedObjectProps): JSX.Element | null {
       return <EyeFinished {...props} />;
     case FieldType.GRAPH:
       return <GraphFinished {...props} />;
+    case FieldType.BOX3D:
+      return <Box3dFinished {...props} />;
     default:
       return null;
   }

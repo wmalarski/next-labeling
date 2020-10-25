@@ -11,5 +11,6 @@ export const EyeAttributes = t.strict({
   default: EyeValue,
   color: t.string,
 });
+export type EyeValue = t.TypeOf<typeof EyeValue>;
 export type EyeValues = t.TypeOf<typeof EyeValues>;
 export type EyeAttributes = t.TypeOf<typeof EyeAttributes>;

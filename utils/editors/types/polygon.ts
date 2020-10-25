@@ -11,5 +11,6 @@ export const PolygonAttributes = t.strict({
   default: PolygonValue,
   color: t.string,
 });
+export type PolygonValue = t.TypeOf<typeof PolygonValue>;
 export type PolygonValues = t.TypeOf<typeof PolygonValues>;
 export type PolygonAttributes = t.TypeOf<typeof PolygonAttributes>;

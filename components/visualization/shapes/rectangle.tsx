@@ -3,11 +3,8 @@ import React, { useEffect, useRef } from "react";
 import { Rect, Text, Transformer } from "react-konva";
 
 import { LabelingObject } from "../../../utils/labeling/types/client";
-import {
-  FontSize,
-  SelectedStrokeWidth,
-  UnselectedStrokeWidth,
-} from "../../../utils/visualization/constanst";
+import { FontSize } from "../../../utils/visualization/constanst";
+import { getShapeStyle } from "../../../utils/visualization/functions";
 
 export interface RectangleShapeProps {
   x: number;
@@ -67,9 +64,8 @@ export function Rectangle(props: RectangleProps): JSX.Element | null {
       <Rect
         ref={rectRef}
         {...rectProps}
+        {...getShapeStyle(isSelected)}
         draggable={draggable}
-        strokeScaleEnabled={false}
-        strokeWidth={isSelected ? SelectedStrokeWidth : UnselectedStrokeWidth}
         onClick={onSelect}
         onTap={onSelect}
         onDragMove={e => {

@@ -7,7 +7,7 @@ import React from "react";
 
 import {
   calculateNewValues,
-  getFieldValue,
+  getFieldValues,
 } from "../../utils/editors/functions";
 import { FieldEditorProps, FieldType } from "../../utils/editors/types";
 import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
@@ -19,7 +19,7 @@ export default function MultiSelectEditor(
   const { preferences } = usePreferences();
   const config = attributes.MultiSelect;
 
-  const frameValues = getFieldValue(props)?.MultiSelect;
+  const frameValues = getFieldValues(props)?.MultiSelect;
   if (!frameValues) return <></>;
   const frameValue = frameValues[0];
   const selected = frameValue?.value ?? [];

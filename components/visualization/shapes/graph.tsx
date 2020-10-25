@@ -1,4 +1,3 @@
-import { fromArray } from "fp-ts/lib/ReadonlyNonEmptyArray";
 import Konva from "konva";
 import range from "lodash/range";
 import React, { useMemo, useRef, useState } from "react";
@@ -6,12 +5,15 @@ import { Circle, Group, Line } from "react-konva";
 
 import { LabelingObject } from "../../../utils/labeling/types/client";
 import {
-  SelectedStrokeWidth,
-  UnselectedStrokeWidth,
+  HoverFill,
+  HoverOpacity,
+  PointBoundaryRadius,
+  PointRadius,
 } from "../../../utils/visualization/constanst";
 import {
   getEventRelativePosition,
   getPointDistance,
+  getShapeStyle,
 } from "../../../utils/visualization/functions";
 
 export interface GraphShapeNode {
@@ -43,9 +45,8 @@ export default function Graph(props: GraphProps): JSX.Element | null {
   const { object, isSelected, shapeProps, onChange, onSelect } = props;
   const { points, edges, stroke } = shapeProps;
   const { isDone } = object;
-  const strokeWidth = isSelected ? SelectedStrokeWidth : UnselectedStrokeWidth;
   const draggable = !isDone && isSelected;
-  const radius = strokeWidth + 1;
+  const shapeStyle = getShapeStyle(isSelected);
 
   const edgesRef = useRef<(Konva.Line | null)[]>(
     range(edges.length).map(() => null),
@@ -73,9 +74,9 @@ export default function Graph(props: GraphProps): JSX.Element | null {
             <Line
               key={index}
               ref={line => edgesRef.current.splice(index, 1, line)}
+              {...shapeStyle}
               points={[from.x, from.y, to.x, to.y]}
               stroke={stroke}
-              strokeWidth={strokeWidth}
               onClick={onSelect}
               onTap={onSelect}
               draggable={draggable}
@@ -138,9 +139,9 @@ export default function Graph(props: GraphProps): JSX.Element | null {
           <Circle
             x={x}
             y={y}
-            radius={3 * radius}
-            fill="white"
-            opacity={n === hoveredNode ? 0.3 : 0}
+            radius={PointBoundaryRadius}
+            fill={HoverFill}
+            opacity={n === hoveredNode ? HoverOpacity : 0}
             onMouseOver={() => {
               if (!isSelected) return;
               setHoveredNode(n);
@@ -151,23 +152,24 @@ export default function Graph(props: GraphProps): JSX.Element | null {
               if (!isSelected) return;
               const point = getEventRelativePosition(e);
               if (!point) return;
+              const newN = maxNode + 1;
               onChange({
                 ...shapeProps,
                 points: [
                   ...points,
-                  { x: point.x + x, y: point.y + y, n: maxNode + 1 },
+                  { x: point.x + x, y: point.y + y, n: newN },
                 ],
-                edges: [...edges, { from: n, to: maxNode + 1 }],
+                edges: [...edges, { from: n, to: newN }],
               });
             }}
           />
           <Circle
             ref={circle => nodesRef.current.splice(index, 1, circle)}
+            {...shapeStyle}
             x={x}
             y={y}
             fill={stroke}
-            radius={strokeWidth + 1}
-            strokeWidth={strokeWidth}
+            radius={PointRadius}
             onClick={onSelect}
             onTap={onSelect}
             draggable={draggable}
@@ -191,7 +193,9 @@ export default function Graph(props: GraphProps): JSX.Element | null {
             onDragEnd={e => {
               const pos = e.target.position();
               const nearPoints = points
-                .filter(point => getPointDistance(point, pos) < radius)
+                .filter(
+                  point => getPointDistance(point, pos) < PointBoundaryRadius,
+                )
                 .map(point => point.n);
               onChange({
                 ...shapeProps,
