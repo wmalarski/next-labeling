@@ -28,14 +28,17 @@ function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
     case FieldType.LINE:
     case FieldType.POINT:
     case FieldType.POLYGON:
+    case FieldType.BOX3D:
+    case FieldType.EYE:
+    case FieldType.GRAPH:
     case FieldType.RECTANGLE: {
-      const colorAttributes = attributesObject[type];
-      return colorAttributes ? (
+      const shapeAttributes = attributesObject[type];
+      return shapeAttributes ? (
         <CompactPicker
-          color={colorAttributes.color}
+          color={shapeAttributes.color}
           onChangeComplete={color => {
             const hex = color.hex;
-            onChange(() => ({ [type]: { color: hex } }));
+            onChange(() => ({ [type]: { ...shapeAttributes, color: hex } }));
           }}
         />
       ) : (

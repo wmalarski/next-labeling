@@ -16,5 +16,6 @@ export const MultiSelectAttributes = t.strict({
     }),
   ),
 });
+export type MultiSelectValue = t.TypeOf<typeof MultiSelectValue>;
 export type MultiSelectValues = t.TypeOf<typeof MultiSelectValues>;
 export type MultiSelectAttributes = t.TypeOf<typeof MultiSelectAttributes>;

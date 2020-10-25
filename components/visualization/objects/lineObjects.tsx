@@ -1,28 +1,23 @@
 import React from "react";
 import { Line } from "react-konva";
 
-import { getFieldValue } from "../../../utils/editors/functions";
+import { getFieldValues } from "../../../utils/editors/functions";
 import {
   FieldType,
   LabelingFieldAttributes,
   LabelingFieldValues,
 } from "../../../utils/editors/types";
-import { LineBuilderStage } from "../../../utils/visualization/objects/line";
+import { LineBuilderStage } from "../../../utils/visualization/objects/lineBuilder";
 import {
   FinishedObjectProps,
   InProgressObjectProps,
 } from "../../../utils/visualization/types";
-import Sections from "./sections";
+import Sections, { SectionsShapeProps } from "../shapes/sections";
 
-export interface LineProps {
-  points: number[];
-  stroke?: string;
-}
-
-export function getLineProps(
+export function getSectionsProps(
   values?: LabelingFieldValues,
   attributes?: LabelingFieldAttributes,
-): LineProps | null {
+): SectionsShapeProps | null {
   const line = values?.Line;
   if (!line) return null;
   const points = line[0].value;
@@ -36,31 +31,30 @@ export function LineInProgress(
 ): JSX.Element | null {
   const { stage, value, fieldSchema } = props;
   if (stage <= LineBuilderStage.ONE_POINT) return null;
-  const lineProps = getLineProps(value, fieldSchema.attributes);
+  const lineProps = getSectionsProps(value, fieldSchema.attributes);
   return lineProps && <Line {...lineProps} />;
 }
 
 export function LineFinished(props: FinishedObjectProps): JSX.Element | null {
   const { frame, field, object, isSelected, onChange, onSelect } = props;
-  const { isDone } = object;
   const { fieldSchema } = field;
   const { perFrame, attributes } = fieldSchema;
-  const values = getFieldValue({
+  const values = getFieldValues({
     values: field.values,
     perFrame,
     frame,
   });
-  const lineProps = getLineProps(values, attributes);
+  const lineProps = getSectionsProps(values, attributes);
 
   return (
     lineProps && (
       <Sections
-        {...lineProps}
-        isDone={isDone}
+        sectionsProps={lineProps}
+        object={object}
         onSelect={onSelect}
         isSelected={isSelected}
-        onChange={newPoints => {
-          onChange({ [FieldType.LINE]: [{ frame, value: newPoints }] });
+        onChange={value => {
+          onChange({ [FieldType.LINE]: [{ frame, value: value.points }] });
         }}
       />
     )

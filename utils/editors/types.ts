@@ -1,6 +1,9 @@
 import * as t from "io-ts";
+import { Box3dAttributes, Box3dValues } from "./types/box3d";
 import { CheckBoxAttributes, CheckBoxValues } from "./types/checkBox";
 import { ComboBoxAttributes, ComboBoxValues } from "./types/comboBox";
+import { EyeAttributes, EyeValues } from "./types/eye";
+import { GraphAttributes, GraphValues } from "./types/graph";
 import { LineAttributes, LineValues } from "./types/line";
 import { MultiSelectAttributes, MultiSelectValues } from "./types/multiSelect";
 import { NumberAttributes, NumberValues } from "./types/number";
@@ -21,6 +24,9 @@ export enum FieldType {
   LINE = "Line",
   POINT = "Point",
   POLYGON = "Polygon",
+  BOX3D = "Box3d",
+  EYE = "Eye",
+  GRAPH = "Graph",
 }
 
 // TODO: add check if exact one exist #10
@@ -35,6 +41,9 @@ export const LabelingFieldValues = t.partial({
   [FieldType.LINE]: LineValues,
   [FieldType.POINT]: PointValues,
   [FieldType.POLYGON]: PolygonValues,
+  [FieldType.BOX3D]: Box3dValues,
+  [FieldType.EYE]: EyeValues,
+  [FieldType.GRAPH]: GraphValues,
 });
 export type LabelingFieldValues = t.TypeOf<typeof LabelingFieldValues>;
 export type OnValueChangeHandler = (
@@ -53,6 +62,9 @@ export const LabelingFieldAttributes = t.partial({
   [FieldType.LINE]: LineAttributes,
   [FieldType.POINT]: PointAttributes,
   [FieldType.POLYGON]: PolygonAttributes,
+  [FieldType.BOX3D]: Box3dAttributes,
+  [FieldType.EYE]: EyeAttributes,
+  [FieldType.GRAPH]: GraphAttributes,
 });
 export type LabelingFieldAttributes = t.TypeOf<typeof LabelingFieldAttributes>;
 export type OnAttributeChangeHandler = (

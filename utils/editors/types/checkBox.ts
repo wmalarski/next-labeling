@@ -10,5 +10,6 @@ export const CheckBoxValues = t.array(
 export const CheckBoxAttributes = t.strict({
   default: CheckBoxValue,
 });
+export type CheckBoxValue = t.TypeOf<typeof CheckBoxValue>;
 export type CheckBoxValues = t.TypeOf<typeof CheckBoxValues>;
 export type CheckBoxAttributes = t.TypeOf<typeof CheckBoxAttributes>;

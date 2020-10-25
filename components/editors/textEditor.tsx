@@ -3,7 +3,7 @@ import React from "react";
 
 import {
   calculateNewValues,
-  getFieldValue,
+  getFieldValues,
 } from "../../utils/editors/functions";
 import { FieldEditorProps, FieldType } from "../../utils/editors/types";
 import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
@@ -12,7 +12,7 @@ export default function TextEditor(props: FieldEditorProps): JSX.Element {
   const { disabled, name, perFrame, frame, onChange } = props;
   const { preferences } = usePreferences();
 
-  const frameValues = getFieldValue(props)?.Text;
+  const frameValues = getFieldValues(props)?.Text;
   if (!frameValues) return <></>;
   const frameValue = frameValues[0];
 

@@ -2,49 +2,58 @@ import Konva from "konva";
 import range from "lodash/range";
 import React, { useRef } from "react";
 import { Circle, Line } from "react-konva";
+
+import { LabelingObject } from "../../../utils/labeling/types/client";
+import { PointRadius } from "../../../utils/visualization/constanst";
 import {
-  SelectedStrokeWidth,
-  UnselectedStrokeWidth,
-} from "../../../utils/visualization/constanst";
+  getPoints2D,
+  getShapeStyle,
+} from "../../../utils/visualization/functions";
 
 function getNewPoints(
   line: Konva.Line,
   index: number,
   event: Konva.KonvaEventObject<DragEvent>,
 ): number[] {
-  const newPoints = [...line.points()];
+  const points = [...line.points()];
   const { x, y } = event.target.position();
-  newPoints.splice(index, 2, x, y);
-  return newPoints;
+  points.splice(index, 2, x, y);
+  return points;
+}
+
+export interface SectionsShapeProps {
+  points: number[];
+  stroke?: string;
+  opacity?: number;
+  closed?: boolean;
 }
 
 export interface SectionsProps {
-  isDone: boolean;
-  points: number[];
-  stroke?: string;
   isSelected: boolean;
+  object: LabelingObject;
+  sectionsProps: SectionsShapeProps;
   onSelect: () => void;
-  onChange: (points: number[]) => void;
+  onChange: (sectionsProps: SectionsShapeProps) => void;
 }
 
 export default function Sections(props: SectionsProps): JSX.Element | null {
-  const { stroke, isDone, points, isSelected, onChange, onSelect } = props;
+  const { object, isSelected, sectionsProps, onChange, onSelect } = props;
+  const { isDone } = object;
+  const { points, stroke } = sectionsProps;
+  const shapeStyle = getShapeStyle(isSelected);
+  const draggable = !isDone && isSelected;
 
   const lineRef = useRef<Konva.Line>(null);
   const pointsRef = useRef<(Konva.Circle | null)[]>(
     range(points.length).map(() => null),
   );
 
-  const strokeWidth = isSelected ? SelectedStrokeWidth : UnselectedStrokeWidth;
-  const draggable = !isDone && isSelected;
-
   return (
     <>
       <Line
-        stroke={stroke}
         ref={lineRef}
-        points={points}
-        strokeWidth={strokeWidth}
+        {...sectionsProps}
+        {...shapeStyle}
         onClick={onSelect}
         onTap={onSelect}
         draggable={draggable}
@@ -55,8 +64,8 @@ export default function Sections(props: SectionsProps): JSX.Element | null {
           const { x, y } = e.target.position();
           pointsRef.current.forEach((point, index) => {
             if (!point) return;
-            point.x(newPoints[index] + x);
-            point.y(newPoints[index + 1] + y);
+            point.x(newPoints[2 * index] + x);
+            point.y(newPoints[2 * index + 1] + y);
           });
           line.getLayer()?.batchDraw();
         }}
@@ -66,35 +75,36 @@ export default function Sections(props: SectionsProps): JSX.Element | null {
           const { x, y } = e.target.position();
           const newPoints = line.points().map((v, i) => v + (i % 2 ? y : x));
           line.position({ x: 0, y: 0 });
-          onChange(newPoints);
+          onChange({ ...sectionsProps, points: newPoints });
         }}
       />
-      {range(0, points.length, 2).map(index => (
+      {getPoints2D(points).map(({ x, y }, index) => (
         <Circle
+          {...shapeStyle}
           key={index}
           fill={stroke}
           ref={circle => {
-            const newRefs = [...pointsRef.current];
-            newRefs[index] = circle;
-            pointsRef.current = newRefs;
+            pointsRef.current[index] = circle;
           }}
-          x={points[index]}
-          y={points[index + 1]}
-          radius={strokeWidth + 1}
-          strokeWidth={isSelected ? SelectedStrokeWidth : UnselectedStrokeWidth}
+          x={x}
+          y={y}
+          radius={PointRadius}
           onClick={onSelect}
           onTap={onSelect}
           draggable={draggable}
           onDragMove={e => {
             const line = lineRef.current;
             if (!line) return;
-            line.points(getNewPoints(line, index, e));
+            line.points(getNewPoints(line, 2 * index, e));
             line.getLayer()?.batchDraw();
           }}
           onDragEnd={e => {
             const line = lineRef.current;
             if (!line) return;
-            onChange(getNewPoints(line, index, e));
+            onChange({
+              ...sectionsProps,
+              points: getNewPoints(line, 2 * index, e),
+            });
           }}
         />
       ))}

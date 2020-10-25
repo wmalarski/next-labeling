@@ -11,5 +11,6 @@ export const ComboBoxAttributes = t.strict({
   default: ComboBoxValue,
   options: t.array(t.string),
 });
+export type ComboBoxValue = t.TypeOf<typeof ComboBoxValue>;
 export type ComboBoxValues = t.TypeOf<typeof ComboBoxValues>;
 export type ComboBoxAttributes = t.TypeOf<typeof ComboBoxAttributes>;

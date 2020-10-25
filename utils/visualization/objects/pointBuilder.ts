@@ -6,7 +6,7 @@ export enum PointBuilderStage {
   ONE_POINT = 1,
 }
 
-export const PointBuilder: CoordsBuilder = (point, frame) => {
+const PointBuilder: CoordsBuilder = (point, frame) => {
   return {
     canBeFinished: true,
     isFinished: true,
@@ -14,3 +14,5 @@ export const PointBuilder: CoordsBuilder = (point, frame) => {
     stage: PointBuilderStage.ONE_POINT,
   };
 };
+
+export default PointBuilder;
