@@ -6,7 +6,7 @@ import List from "@material-ui/core/List";
 import AddIcon from "@material-ui/icons/Add";
 import firebase from "firebase/app";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import Footer from "../../components/common/footer";
 import Header from "../../components/common/header";
@@ -27,16 +27,21 @@ function ProjectListPage(): JSX.Element {
   const { authUser } = useAuthUserInfo();
   const router = useRouter();
 
+  const [searchText, setSearchText] = useState<string | null>(null);
+
   useEffect(() => {
     if (!authUser) {
       router.push("/");
     }
   });
 
-  const db = firebase.firestore();
-  const collection = db.collection(ProjectCollection);
+  const collection = firebase.firestore().collection(ProjectCollection);
+  const query = searchText
+    ? collection.where("name", "==", searchText)
+    : collection;
+
   const { loading, loadingMore, hasMore, items, loadMore } = useFetchDocuments({
-    query: collection,
+    query,
     type: ProjectDocument,
     options: { limit: 10 },
   });
@@ -47,7 +52,9 @@ function ProjectListPage(): JSX.Element {
     <>
       <Header>
         <>
-          <SearchInput onSubmit={() => void 0} />
+          <SearchInput
+            onSubmit={text => setSearchText(text.length ? text : null)}
+          />
           <Button
             size="small"
             color="inherit"

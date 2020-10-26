@@ -5,8 +5,9 @@ import React, { useEffect, useState } from "react";
 
 import { AuthUser } from "../../../utils/auth/user";
 import {
-  FirestoreCollection,
+  FirestoreQuery,
   ResultSnackbarState,
+  SchemaCollection,
 } from "../../../utils/firestore/types";
 import useFetchDocuments from "../../../utils/firestore/useFetchDocuments";
 import useRemoveDocument from "../../../utils/firestore/useRemoveDocument";
@@ -18,16 +19,16 @@ import SchemaListItem from "./schemaListItem";
 
 export interface SchemaListProps {
   authUser: AuthUser;
-  collection: FirestoreCollection;
+  query: FirestoreQuery;
 }
 
 export function SchemaList(props: SchemaListProps): JSX.Element {
-  const { collection, authUser } = props;
+  const { query, authUser } = props;
 
   const router = useRouter();
 
   const { loading, loadingMore, hasMore, items, loadMore } = useFetchDocuments({
-    query: collection,
+    query,
     type: SchemaDocument,
     options: { limit: 10 },
   });
@@ -36,6 +37,7 @@ export function SchemaList(props: SchemaListProps): JSX.Element {
     isOpen: false,
   });
 
+  const collection = firebase.firestore().collection(SchemaCollection);
   const createSchema = useRouterCreate<SchemaDocument>({
     collection,
     setSnackbarState,

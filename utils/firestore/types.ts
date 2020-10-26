@@ -20,7 +20,9 @@ export type FirestoreCollection = firebase.firestore.CollectionReference<
   firebase.firestore.DocumentData
 >;
 
-export type FirestoreQuery = firebase.firestore.Query;
+export type FirestoreQuery<
+  T = firebase.firestore.DocumentData
+> = firebase.firestore.Query<T>;
 
 export interface FirestoreDate {
   seconds: number;

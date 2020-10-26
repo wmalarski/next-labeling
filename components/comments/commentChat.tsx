@@ -22,16 +22,17 @@ export interface CommentChatProps {
 export default function CommentChat(props: CommentChatProps): JSX.Element {
   const { documentId } = props;
 
-  const db = firebase.firestore();
-  const collection = db
+  const collection = firebase
+    .firestore()
     .collection(LabelingCollection)
     .doc(documentId)
     .collection(CommentsCollection);
 
   const { create, state } = useCreateDocument<CommentDocument>(collection);
 
+  const query = collection.orderBy("createdAt");
   const { loading, loadingMore, hasMore, items, loadMore } = useFetchDocuments({
-    query: collection.orderBy("createdAt"),
+    query,
     type: CommentDocument,
     options: { limit: 10 },
   });

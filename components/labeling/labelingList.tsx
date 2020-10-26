@@ -8,28 +8,24 @@ import React from "react";
 
 import LoadingBackdrop from "../../components/common/loadingBackdrop";
 import { AuthUser } from "../../utils/auth/user";
-import {
-  FirestoreCollection,
-  FirestoreQuery,
-} from "../../utils/firestore/types";
+import { FirestoreQuery } from "../../utils/firestore/types";
 import useFetchDocuments from "../../utils/firestore/useFetchDocuments";
 import { ExternalDocument } from "../../utils/labeling/types/database";
 
 export interface LabelingListProps {
-  collection: FirestoreCollection;
   authUser: AuthUser;
   query: FirestoreQuery;
 }
 
 export default function LabelingList(props: LabelingListProps): JSX.Element {
-  const { collection, query } = props;
+  const { query } = props;
 
   const router = useRouter();
 
   const { loading, loadingMore, hasMore, items, loadMore } = useFetchDocuments({
-    query: query ?? collection,
+    query,
     type: ExternalDocument,
-    options: { limit: 10 },
+    options: { limit: 2 },
   });
 
   return (

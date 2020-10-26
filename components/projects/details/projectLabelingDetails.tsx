@@ -1,10 +1,11 @@
 import Box from "@material-ui/core/Box/Box";
 import firebase from "firebase/app";
-import React from "react";
+import React, { useState } from "react";
 
 import { useAuthUserInfo } from "../../../utils/auth/hooks";
 import { LabelingCollection } from "../../../utils/firestore/types";
 import { ProjectDocument } from "../../../utils/projects/types";
+import SearchInput from "../../common/searchInput";
 import LabelingList from "../../labeling/labelingList";
 
 export interface ProjectLabelingDetailsProps {
@@ -18,19 +19,20 @@ export default function ProjectLabelingDetails(
   const { id } = props;
   const { authUser } = useAuthUserInfo();
 
-  const db = firebase.firestore();
-  const collection = db.collection(LabelingCollection);
-  const query = collection.where("project", "==", id);
+  const [searchText, setSearchText] = useState<string | null>(null);
+
+  const collection = firebase.firestore().collection(LabelingCollection);
+  const query = (searchText
+    ? collection.where("schema.name", "==", searchText)
+    : collection
+  ).where("project", "==", id);
 
   return (
     <Box>
-      {authUser && (
-        <LabelingList
-          authUser={authUser}
-          collection={collection}
-          query={query}
-        />
-      )}
+      <SearchInput
+        onSubmit={text => setSearchText(text.length ? text : null)}
+      />
+      {authUser && <LabelingList authUser={authUser} query={query} />}
     </Box>
   );
 }

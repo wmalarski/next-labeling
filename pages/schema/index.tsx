@@ -5,7 +5,7 @@ import Container from "@material-ui/core/Container";
 import AddIcon from "@material-ui/icons/Add";
 import firebase from "firebase/app";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import Footer from "../../components/common/footer";
 import Header from "../../components/common/header";
@@ -23,14 +23,18 @@ function SchemaListPage(): JSX.Element {
   const { authUser } = useAuthUserInfo();
   const router = useRouter();
 
+  const [searchText, setSearchText] = useState<string | null>(null);
+
   useEffect(() => {
     if (!authUser) {
       router.push("/");
     }
   });
 
-  const db = firebase.firestore();
-  const collection = db.collection(SchemaCollection);
+  const collection = firebase.firestore().collection(SchemaCollection);
+  const query = searchText
+    ? collection.where("schema.name", "==", searchText)
+    : collection;
 
   if (!authUser) return <></>;
 
@@ -38,7 +42,9 @@ function SchemaListPage(): JSX.Element {
     <>
       <Header>
         <>
-          <SearchInput onSubmit={() => void 0} />
+          <SearchInput
+            onSubmit={text => setSearchText(text.length ? text : null)}
+          />
           <Button
             size="small"
             color="inherit"
@@ -50,7 +56,7 @@ function SchemaListPage(): JSX.Element {
         </>
       </Header>
       <Container>
-        <SchemaList authUser={authUser} collection={collection} />
+        <SchemaList authUser={authUser} query={query} />
       </Container>
       <Footer />
     </>

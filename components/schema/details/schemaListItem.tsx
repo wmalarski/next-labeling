@@ -51,12 +51,8 @@ export interface SchemaListItemProps {
 export default function SchemaListItem(
   props: SchemaListItemProps,
 ): JSX.Element {
-  const {
-    schemaId,
-    document: { schema, user },
-    onRemoveClicked,
-    onCopyClicked,
-  } = props;
+  const { schemaId, document, onRemoveClicked, onCopyClicked } = props;
+  const { schema, user } = document;
   const classes = useStyles();
 
   const { authUser } = useAuthUserInfo();
@@ -92,7 +88,7 @@ export default function SchemaListItem(
         >
           Details
         </Button>
-        <CreateLabelingDialog schemaId={schemaId} schema={props.document} />
+        <CreateLabelingDialog schemaId={schemaId} schema={document} />
         {isSameUser ? (
           <Button
             size="small"
