@@ -40,7 +40,7 @@ function ProjectListPage(): JSX.Element {
     ? collection.where("name", "==", searchText)
     : collection;
 
-  const { loading, loadingMore, hasMore, items, loadMore } = useFetchDocuments({
+  const { loading, hasMore, items, loadMore } = useFetchDocuments({
     query,
     type: ProjectDocument,
     options: { limit: 10 },
@@ -74,9 +74,7 @@ function ProjectListPage(): JSX.Element {
               project={pair.document}
             />
           ))}
-          {hasMore && !loadingMore && (
-            <button onClick={loadMore}>[ more ]</button>
-          )}
+          {hasMore && <button onClick={loadMore}>[ more ]</button>}
         </List>
       </Container>
       <LoadingBackdrop isLoading={loading} />

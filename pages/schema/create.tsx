@@ -22,12 +22,12 @@ import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
 import SchemaForm from "../../components/schema/forms/schemaForm";
 import { useAuthUserInfo } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
+import useRouterRemove from "../../utils/common/useRouterRemove";
 import {
   ResultSnackbarState,
   SchemaCollection,
 } from "../../utils/firestore/types";
 import useCreateDocument from "../../utils/firestore/useCreateDocument";
-import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
 import { SchemaDocument } from "../../utils/schema/types";
 import useSchemaHistory from "../../utils/schema/useSchemaHistory";
 
@@ -74,20 +74,11 @@ function SchemaCreate(): JSX.Element {
     }
   }, [createSchemaState.document, createSchemaState.errors]);
 
-  const { remove: removeSchema, state: removeSchemaState } = useRemoveDocument(
+  const { remove, isLoading: isRemoveLoading } = useRouterRemove({
     collection,
-  );
-  useEffect(() => {
-    if (removeSchemaState.success) {
-      setSnackbarState({ isOpen: true, message: "Schema removed" });
-      router.back();
-    } else if (removeSchemaState.errors) {
-      setSnackbarState({
-        isOpen: true,
-        message: `${removeSchemaState.errors}`,
-      });
-    }
-  }, [removeSchemaState.errors, removeSchemaState.success, router]);
+    backOnSuccess: true,
+    setSnackbarState,
+  });
 
   if (!authUser) return <></>;
 
@@ -136,7 +127,7 @@ function SchemaCreate(): JSX.Element {
             startIcon={<DeleteOutlineIcon />}
             onClick={() => {
               if (documentId) {
-                removeSchema(documentId);
+                remove(documentId);
               }
             }}
           >
@@ -152,7 +143,7 @@ function SchemaCreate(): JSX.Element {
       </Container>
       <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
       <LoadingBackdrop
-        isLoading={removeSchemaState.isLoading || createSchemaState.isLoading}
+        isLoading={isRemoveLoading || createSchemaState.isLoading}
       />
       <Footer />
     </>

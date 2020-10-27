@@ -1,14 +1,13 @@
 import "firebase/firestore";
 
 import firebase from "firebase/app";
-import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
+import useRouterRemove from "../../utils/common/useRouterRemove";
 import {
   LabelingCollection,
   ResultSnackbarState,
 } from "../../utils/firestore/types";
-import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
 import LabelingContext from "../../utils/labeling/contexts/labelingContext";
 import useLabelingHistory from "../../utils/labeling/hooks/useLabelingHistory";
 import useUpdateLabeling from "../../utils/labeling/hooks/useUpdateLabeling";
@@ -34,7 +33,6 @@ export default function LabelingProvider(
     children,
     setSnackbarState,
   } = props;
-  const router = useRouter();
 
   const [document, setDocument] = useState(initialDocument);
   const [duration, setDuration] = useState(1000);
@@ -59,19 +57,11 @@ export default function LabelingProvider(
     }
   }, [setSnackbarState, updateState.document, updateState.errors]);
 
-  const { remove: removeLabeling, state: removeState } = useRemoveDocument(
+  const { remove } = useRouterRemove({
+    setSnackbarState: setSnackbarState,
+    backOnSuccess: true,
     collection,
-  );
-  useEffect(() => {
-    if (removeState.success) {
-      router.back();
-    } else if (removeState.errors) {
-      setSnackbarState({
-        isOpen: true,
-        message: `${removeState.errors}`,
-      });
-    }
-  }, [removeState.errors, removeState.success, router, setSnackbarState]);
+  });
 
   return (
     <LabelingContext.Provider
@@ -83,7 +73,7 @@ export default function LabelingProvider(
         setDuration,
         setFilters,
         saveLabeling: document => updateLabeling(documentId, document),
-        removeLabeling: () => removeLabeling(documentId),
+        removeLabeling: () => remove(documentId),
       }}
     >
       {children}

@@ -13,7 +13,7 @@ import React, { useState } from "react";
 
 import { useAuthUserInfo } from "../../utils/auth/hooks";
 import { LabelingCollection } from "../../utils/firestore/types";
-import useRouterCreate from "../../utils/firestore/useRouterCreate";
+import useRouterCreate from "../../utils/common/useRouterCreate";
 import { createObject } from "../../utils/labeling/functions";
 import { ExternalDocument } from "../../utils/labeling/types/database";
 import { SchemaDocument } from "../../utils/schema/types";

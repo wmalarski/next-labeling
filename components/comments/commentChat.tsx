@@ -31,7 +31,7 @@ export default function CommentChat(props: CommentChatProps): JSX.Element {
   const { create, state } = useCreateDocument<CommentDocument>(collection);
 
   const query = collection.orderBy("createdAt");
-  const { loading, loadingMore, hasMore, items, loadMore } = useFetchDocuments({
+  const { loading, hasMore, items, loadMore } = useFetchDocuments({
     query,
     type: CommentDocument,
     options: { limit: 10 },
@@ -48,7 +48,7 @@ export default function CommentChat(props: CommentChatProps): JSX.Element {
             labelingId={documentId}
           />
         ))}
-        <ListItem>{(loading || loadingMore) && <CircularProgress />}</ListItem>
+        <ListItem>{loading && <CircularProgress />}</ListItem>
       </List>
       {hasMore && !state.isLoading && (
         <Button variant="outlined" onClick={loadMore}>
