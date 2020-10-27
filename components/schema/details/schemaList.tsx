@@ -1,16 +1,16 @@
 import List from "@material-ui/core/List";
 import firebase from "firebase/app";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { AuthUser } from "../../../utils/auth/user";
+import useRouterCreate from "../../../utils/common/useRouterCreate";
+import useSnackbarRemove from "../../../utils/common/useRouterRemove";
 import {
-  FirestoreCollection,
+  FirestoreQuery,
   ResultSnackbarState,
+  SchemaCollection,
 } from "../../../utils/firestore/types";
 import useFetchDocuments from "../../../utils/firestore/useFetchDocuments";
-import useRemoveDocument from "../../../utils/firestore/useRemoveDocument";
-import useRouterCreate from "../../../utils/firestore/useRouterCreate";
 import { SchemaDocument } from "../../../utils/schema/types";
 import LoadingBackdrop from "../../common/loadingBackdrop";
 import ResultSnackbar from "../../common/resultSnackbar";
@@ -18,16 +18,14 @@ import SchemaListItem from "./schemaListItem";
 
 export interface SchemaListProps {
   authUser: AuthUser;
-  collection: FirestoreCollection;
+  query: FirestoreQuery;
 }
 
 export function SchemaList(props: SchemaListProps): JSX.Element {
-  const { collection, authUser } = props;
+  const { query, authUser } = props;
 
-  const router = useRouter();
-
-  const { loading, loadingMore, hasMore, items, loadMore } = useFetchDocuments({
-    query: collection,
+  const { loading, hasMore, items, loadMore } = useFetchDocuments({
+    query,
     type: SchemaDocument,
     options: { limit: 10 },
   });
@@ -36,6 +34,7 @@ export function SchemaList(props: SchemaListProps): JSX.Element {
     isOpen: false,
   });
 
+  const collection = firebase.firestore().collection(SchemaCollection);
   const createSchema = useRouterCreate<SchemaDocument>({
     collection,
     setSnackbarState,
@@ -44,20 +43,12 @@ export function SchemaList(props: SchemaListProps): JSX.Element {
       as: `/schema/${id}`,
     }),
   });
-
-  const { remove: removeSchema, state: removeSchemaState } = useRemoveDocument(
+  const { remove } = useSnackbarRemove({
+    backOnSuccess: false,
+    successMessage: "Schema removed",
+    setSnackbarState,
     collection,
-  );
-  useEffect(() => {
-    if (removeSchemaState.success) {
-      setSnackbarState({ isOpen: true, message: "Schema removed" });
-    } else if (removeSchemaState.errors) {
-      setSnackbarState({
-        isOpen: true,
-        message: `${removeSchemaState.errors}`,
-      });
-    }
-  }, [removeSchemaState.errors, removeSchemaState.success, router]);
+  });
 
   return (
     <>
@@ -76,13 +67,11 @@ export function SchemaList(props: SchemaListProps): JSX.Element {
                   createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 })
               }
-              onRemoveClicked={() => removeSchema(pair.id)}
+              onRemoveClicked={() => remove(pair.id)}
             />
           );
         })}
-        {hasMore && !loadingMore && (
-          <button onClick={loadMore}>[ more ]</button>
-        )}
+        {hasMore && <button onClick={loadMore}>[ more ]</button>}
       </List>
       <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
       <LoadingBackdrop isLoading={loading || createSchema.isLoading} />

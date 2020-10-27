@@ -21,12 +21,12 @@ import SchemaDetails from "../../components/schema/details/schemaDetails";
 import RawForm from "../../components/schema/forms/rawForm";
 import { useAuthUserInfo } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
+import useRouterCreate from "../../utils/common/useRouterCreate";
+import useRouterRemove from "../../utils/common/useRouterRemove";
 import {
   ResultSnackbarState,
   SchemaCollection,
 } from "../../utils/firestore/types";
-import useRouterCreate from "../../utils/firestore/useRouterCreate";
-import useRemoveDocument from "../../utils/firestore/useRemoveDocument";
 import { SchemaDocument } from "../../utils/schema/types";
 import useFetchSchema from "../../utils/schema/useFetchSchema";
 
@@ -59,8 +59,7 @@ function SchemaDetailsPage(): JSX.Element {
     isOpen: false,
   });
 
-  const db = firebase.firestore();
-  const collection = db.collection(SchemaCollection);
+  const collection = firebase.firestore().collection(SchemaCollection);
   const createSchema = useRouterCreate<SchemaDocument>({
     collection,
     setSnackbarState: setSnackbarState,
@@ -69,20 +68,11 @@ function SchemaDetailsPage(): JSX.Element {
       as: `/schema/${id}`,
     }),
   });
-
-  const { remove: removeSchema, state: removeSchemaState } = useRemoveDocument(
+  const { remove, isLoading: isRemoveLoading } = useRouterRemove({
     collection,
-  );
-  useEffect(() => {
-    if (removeSchemaState.success) {
-      router.back();
-    } else if (removeSchemaState.errors) {
-      setSnackbarState({
-        isOpen: true,
-        message: `${removeSchemaState.errors}`,
-      });
-    }
-  }, [removeSchemaState.errors, removeSchemaState.success, router]);
+    backOnSuccess: true,
+    setSnackbarState,
+  });
 
   if (!authUser) return <></>;
   const isSameUser = authUser.id === document?.user.id;
@@ -137,7 +127,7 @@ function SchemaDetailsPage(): JSX.Element {
                 color="inherit"
                 startIcon={<DeleteOutlineIcon />}
                 onClick={() => {
-                  removeSchema(documentId);
+                  remove(documentId);
                 }}
               >
                 Remove
@@ -161,9 +151,7 @@ function SchemaDetailsPage(): JSX.Element {
       {document ? <SchemaDetails schemaDocument={document} /> : <></>}
       <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
       <LoadingBackdrop
-        isLoading={
-          isLoading || removeSchemaState.isLoading || createSchema.isLoading
-        }
+        isLoading={isLoading || isRemoveLoading || createSchema.isLoading}
       />
       <Footer />
     </>

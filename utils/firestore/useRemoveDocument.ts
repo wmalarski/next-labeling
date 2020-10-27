@@ -16,6 +16,7 @@ export interface UseRemoveDocumentResult {
 
 export default function useRemoveDocument(
   collection: FirestoreCollection,
+  removeCallback?: (id: string, success: boolean) => void,
 ): UseRemoveDocumentResult {
   const [state, setState] = useState<UseRemoveDocumentState>({
     isLoading: false,
@@ -27,19 +28,21 @@ export default function useRemoveDocument(
       collection
         .doc(documentId)
         .delete()
-        .then(() =>
+        .then(() => {
           setState({
             success: true,
             isLoading: false,
-          }),
-        )
-        .catch(reason =>
+          });
+          removeCallback?.(documentId, true);
+        })
+        .catch(reason => {
           setState({
             success: false,
             errors: [`${reason.toString()}`],
             isLoading: false,
-          }),
-        );
+          });
+          removeCallback?.(documentId, false);
+        });
     },
     [collection],
   );

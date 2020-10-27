@@ -29,8 +29,7 @@ function ProjectCreate(): JSX.Element {
     }
   }, [authUser, router]);
 
-  const db = firebase.firestore();
-  const collection = db.collection(ProjectCollection);
+  const collection = firebase.firestore().collection(ProjectCollection);
   const { create, state } = useCreateDocument<ProjectDocument>(collection);
   const documentId = state?.id;
   useEffect(() => {

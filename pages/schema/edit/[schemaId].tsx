@@ -22,11 +22,11 @@ import withAuthUserInfo from "../../../components/pageWrappers/withAuthUserInfo"
 import SchemaForm from "../../../components/schema/forms/schemaForm";
 import { useAuthUserInfo } from "../../../utils/auth/hooks";
 import initFirebase from "../../../utils/auth/initFirebase";
+import useRouterRemove from "../../../utils/common/useRouterRemove";
 import {
   ResultSnackbarState,
   SchemaCollection,
 } from "../../../utils/firestore/types";
-import useRemoveDocument from "../../../utils/firestore/useRemoveDocument";
 import useFetchSchema from "../../../utils/schema/useFetchSchema";
 import useSchemaHistory from "../../../utils/schema/useSchemaHistory";
 import useUpdateSchema from "../../../utils/schema/useUpdateSchema";
@@ -59,8 +59,11 @@ function SchemaEdit(): JSX.Element {
     }
   }, [authUser, router]);
 
+  const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
+    isOpen: false,
+  });
+
   const { isLoading, document, exist } = useFetchSchema(documentId);
-  const { update: updateSchema, state: updateSchemaState } = useUpdateSchema();
 
   useEffect(() => {
     if (!isLoading && !exist) {
@@ -73,10 +76,7 @@ function SchemaEdit(): JSX.Element {
     resetHistory(document?.schema);
   }, [document, resetHistory]);
 
-  const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
-    isOpen: false,
-  });
-
+  const { update: updateSchema, state: updateSchemaState } = useUpdateSchema();
   useEffect(() => {
     if (updateSchemaState.document) {
       setSnackbarState({ isOpen: true, message: "Schema saved" });
@@ -88,22 +88,12 @@ function SchemaEdit(): JSX.Element {
     }
   }, [updateSchemaState.document, updateSchemaState.errors]);
 
-  const db = firebase.firestore();
-  const collection = db.collection(SchemaCollection);
-  const { remove: removeSchema, state: removeSchemaState } = useRemoveDocument(
+  const collection = firebase.firestore().collection(SchemaCollection);
+  const { remove, isLoading: isRemoveLoading } = useRouterRemove({
     collection,
-  );
-  useEffect(() => {
-    if (removeSchemaState.success) {
-      setSnackbarState({ isOpen: true, message: "Schema removed" });
-      router.back();
-    } else if (removeSchemaState.errors) {
-      setSnackbarState({
-        isOpen: true,
-        message: `${removeSchemaState.errors}`,
-      });
-    }
-  }, [removeSchemaState.errors, removeSchemaState.success, router]);
+    backOnSuccess: true,
+    setSnackbarState,
+  });
 
   if (!authUser) return <></>;
   const isSameUser = authUser?.id === document?.user.id;
@@ -148,7 +138,7 @@ function SchemaEdit(): JSX.Element {
           <Button
             startIcon={<DeleteOutlineIcon />}
             onClick={() => {
-              removeSchema(documentId);
+              remove(documentId);
               router.back();
             }}
           >
@@ -166,11 +156,7 @@ function SchemaEdit(): JSX.Element {
       )}
       <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
       <LoadingBackdrop
-        isLoading={
-          isLoading ||
-          removeSchemaState.isLoading ||
-          updateSchemaState.isLoading
-        }
+        isLoading={isLoading || isRemoveLoading || updateSchemaState.isLoading}
       />
       <Footer />
     </>

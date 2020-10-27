@@ -22,16 +22,17 @@ export interface CommentChatProps {
 export default function CommentChat(props: CommentChatProps): JSX.Element {
   const { documentId } = props;
 
-  const db = firebase.firestore();
-  const collection = db
+  const collection = firebase
+    .firestore()
     .collection(LabelingCollection)
     .doc(documentId)
     .collection(CommentsCollection);
 
   const { create, state } = useCreateDocument<CommentDocument>(collection);
 
-  const { loading, loadingMore, hasMore, items, loadMore } = useFetchDocuments({
-    query: collection.orderBy("createdAt"),
+  const query = collection.orderBy("createdAt");
+  const { loading, hasMore, items, loadMore } = useFetchDocuments({
+    query,
     type: CommentDocument,
     options: { limit: 10 },
   });
@@ -47,7 +48,7 @@ export default function CommentChat(props: CommentChatProps): JSX.Element {
             labelingId={documentId}
           />
         ))}
-        <ListItem>{(loading || loadingMore) && <CircularProgress />}</ListItem>
+        <ListItem>{loading && <CircularProgress />}</ListItem>
       </List>
       {hasMore && !state.isLoading && (
         <Button variant="outlined" onClick={loadMore}>

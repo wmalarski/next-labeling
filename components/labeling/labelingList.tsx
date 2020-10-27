@@ -1,57 +1,83 @@
 import "firebase/firestore";
 
-import Button from "@material-ui/core/Button";
 import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import { useRouter } from "next/router";
-import React from "react";
+import firebase from "firebase/app";
+import React, { useCallback, useEffect, useState } from "react";
 
-import LoadingBackdrop from "../../components/common/loadingBackdrop";
 import { AuthUser } from "../../utils/auth/user";
+import useRouterRemove from "../../utils/common/useRouterRemove";
 import {
-  FirestoreCollection,
   FirestoreQuery,
+  LabelingCollection,
+  ResultSnackbarState,
 } from "../../utils/firestore/types";
 import useFetchDocuments from "../../utils/firestore/useFetchDocuments";
 import { ExternalDocument } from "../../utils/labeling/types/database";
+import LabelingListItem from "./labelingListItem";
+import LoadingBackdrop from "../common/loadingBackdrop";
+import ResultSnackbar from "../common/resultSnackbar";
+
+type LabelingListState = {
+  id: string;
+  document: ExternalDocument;
+}[];
 
 export interface LabelingListProps {
-  collection: FirestoreCollection;
   authUser: AuthUser;
   query: FirestoreQuery;
 }
 
 export default function LabelingList(props: LabelingListProps): JSX.Element {
-  const { collection, query } = props;
+  const { query } = props;
 
-  const router = useRouter();
-
-  const { loading, loadingMore, hasMore, items, loadMore } = useFetchDocuments({
-    query: query ?? collection,
+  const { loading, hasMore, items, loadMore } = useFetchDocuments({
+    query,
     type: ExternalDocument,
     options: { limit: 10 },
+  });
+
+  const [visibleItems, setVisibleItems] = useState<LabelingListState>(items);
+
+  useEffect(() => {
+    setVisibleItems(items);
+  }, [items]);
+
+  const removeCallback = useCallback(
+    (id, success) =>
+      setVisibleItems(pairs => {
+        if (!success) return pairs;
+        return pairs.filter(pair => pair.id !== id);
+      }),
+    [],
+  );
+
+  const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
+    isOpen: false,
+  });
+
+  const collection = firebase.firestore().collection(LabelingCollection);
+  const { remove, isLoading } = useRouterRemove({
+    successMessage: "Labeling Removed",
+    backOnSuccess: false,
+    setSnackbarState,
+    collection,
+    removeCallback,
   });
 
   return (
     <>
       <List>
-        {items.map(pair => {
-          return (
-            <ListItem key={pair.id}>
-              {pair.document.name}
-              <Button
-                onClick={() =>
-                  router.push("/labeling/[labelingId]", `/labeling/${pair.id}`)
-                }
-              >
-                Edit
-              </Button>
-            </ListItem>
-          );
-        })}
+        {visibleItems.map(pair => (
+          <LabelingListItem
+            key={pair.id}
+            {...pair}
+            onRemoveClick={() => remove(pair.id)}
+          />
+        ))}
       </List>
-      {hasMore && !loadingMore && <button onClick={loadMore}>[ more ]</button>}
-      <LoadingBackdrop isLoading={loading} />
+      <LoadingBackdrop isLoading={loading || isLoading} />
+      <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
+      {hasMore && <button onClick={loadMore}>[ more ]</button>}
     </>
   );
 }

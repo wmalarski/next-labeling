@@ -1,8 +1,8 @@
+import firebase from "firebase/app";
 import * as t from "io-ts";
 import { get, has } from "lodash";
 
 // having trouble getting types from lodash/object
-
 export const AuthUser = t.type({
   id: t.string,
   email: t.union([t.string, t.null]),

@@ -27,7 +27,6 @@ This template app includes:
 - Sign up, log in, log out
 - Update display name
 - Add object to a Firestore collection
-- List objects in a Firestore collection (using [firestore-pagination-hook](https://github.com/bmcmahen/firestore-pagination-hook))
 - Fetch data with a simple Firebase function (server-side rendering using [getInitialProps](https://nextjs.org/docs/api-reference/data-fetching/getInitialProps))
 
 # ▲ Sign up for ZEIT
