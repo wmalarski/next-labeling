@@ -16,13 +16,20 @@ export interface UseRouterRemoveProps {
   successMessage?: string;
   collection: FirestoreCollection;
   setSnackbarState: (state: ResultSnackbarState) => void;
+  removeCallback?: (id: string, success: boolean) => void;
 }
 
 export default function useRouterRemove(
   props: UseRouterRemoveProps,
 ): UseRouterRemoveResult {
-  const { backOnSuccess, collection, successMessage, setSnackbarState } = props;
-  const { remove, state } = useRemoveDocument(collection);
+  const {
+    backOnSuccess,
+    collection,
+    successMessage,
+    setSnackbarState,
+    removeCallback,
+  } = props;
+  const { remove, state } = useRemoveDocument(collection, removeCallback);
   const router = useRouter();
 
   useEffect(() => {
@@ -37,6 +44,7 @@ export default function useRouterRemove(
     }
   }, [
     backOnSuccess,
+    removeCallback,
     router,
     setSnackbarState,
     state.errors,

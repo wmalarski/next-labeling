@@ -16,6 +16,7 @@ export interface UseFetchDocumentsResult<T> {
     document: T;
   }[];
   loadMore: () => void;
+  resetQuery: (query: FirestoreQuery) => void;
 }
 
 export type UseFetchDocumentsPair<T> = { id: string; document: T }[];
@@ -40,6 +41,7 @@ export default function useFetchDocuments<T>(
   const hasMore = snapshot && snapshot?.size === limit;
 
   useEffect(() => {
+    console.log("query", query);
     setRef(query);
     setItems([]);
   }, [query]);
@@ -85,5 +87,6 @@ export default function useFetchDocuments<T>(
       }),
     [snapshot?.docs, snapshot?.empty, snapshot?.size],
   );
-  return { hasMore, error, loading, items, loadMore };
+  const resetQuery = useCallback(query => setRef(query), []);
+  return { hasMore, error, loading, items, loadMore, resetQuery };
 }

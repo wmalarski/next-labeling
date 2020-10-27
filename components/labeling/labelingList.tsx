@@ -1,14 +1,26 @@
 import "firebase/firestore";
 
 import List from "@material-ui/core/List";
-import React from "react";
+import firebase from "firebase/app";
+import React, { useCallback, useEffect, useState } from "react";
 
-import LoadingBackdrop from "../../components/common/loadingBackdrop";
 import { AuthUser } from "../../utils/auth/user";
-import { FirestoreQuery } from "../../utils/firestore/types";
+import useRouterRemove from "../../utils/common/useRouterRemove";
+import {
+  FirestoreQuery,
+  LabelingCollection,
+  ResultSnackbarState,
+} from "../../utils/firestore/types";
 import useFetchDocuments from "../../utils/firestore/useFetchDocuments";
 import { ExternalDocument } from "../../utils/labeling/types/database";
 import LabelingListItem from "./labelingListItem";
+import LoadingBackdrop from "../common/loadingBackdrop";
+import ResultSnackbar from "../common/resultSnackbar";
+
+type LabelingListState = {
+  id: string;
+  document: ExternalDocument;
+}[];
 
 export interface LabelingListProps {
   authUser: AuthUser;
@@ -24,15 +36,48 @@ export default function LabelingList(props: LabelingListProps): JSX.Element {
     options: { limit: 10 },
   });
 
+  const [visibleItems, setVisibleItems] = useState<LabelingListState>(items);
+
+  useEffect(() => {
+    setVisibleItems(items);
+  }, [items]);
+
+  const removeCallback = useCallback(
+    (id, success) =>
+      setVisibleItems(pairs => {
+        if (!success) return pairs;
+        return pairs.filter(pair => pair.id !== id);
+      }),
+    [],
+  );
+
+  const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
+    isOpen: false,
+  });
+
+  const collection = firebase.firestore().collection(LabelingCollection);
+  const { remove, isLoading } = useRouterRemove({
+    successMessage: "Labeling Removed",
+    backOnSuccess: false,
+    setSnackbarState,
+    collection,
+    removeCallback,
+  });
+
   return (
     <>
       <List>
-        {items.map(pair => (
-          <LabelingListItem key={pair.id} {...pair} />
+        {visibleItems.map(pair => (
+          <LabelingListItem
+            key={pair.id}
+            {...pair}
+            onRemoveClick={() => remove(pair.id)}
+          />
         ))}
       </List>
+      <LoadingBackdrop isLoading={loading || isLoading} />
+      <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
       {hasMore && <button onClick={loadMore}>[ more ]</button>}
-      <LoadingBackdrop isLoading={loading} />
     </>
   );
 }
