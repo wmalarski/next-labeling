@@ -44,8 +44,7 @@ export default function LabelingProvider(
     ),
   });
 
-  const db = firebase.firestore();
-  const collection = db.collection(LabelingCollection);
+  const collection = firebase.firestore().collection(LabelingCollection);
 
   const { update: updateLabeling, state: updateState } = useUpdateLabeling();
   useEffect(() => {

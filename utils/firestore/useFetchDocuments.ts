@@ -7,19 +7,19 @@ import { useCollection } from "react-firebase-hooks/firestore";
 
 import { FirestoreQuery } from "./types";
 
+export interface UseFetchDocumentsPair<T> {
+  id: string;
+  document: T;
+}
+
 export interface UseFetchDocumentsResult<T> {
   loading: boolean;
   error?: Error;
   hasMore?: boolean;
-  items: {
-    id: string;
-    document: T;
-  }[];
+  items: UseFetchDocumentsPair<T>[];
   loadMore: () => void;
   resetQuery: (query: FirestoreQuery) => void;
 }
-
-export type UseFetchDocumentsPair<T> = { id: string; document: T }[];
 
 export interface UseFetchDocumentsProps<T> {
   query: FirestoreQuery;
@@ -36,26 +36,26 @@ export default function useFetchDocuments<T>(
   const { limit = 25 } = options ?? {};
 
   const [ref, setRef] = useState<FirestoreQuery>(query);
-  const [items, setItems] = useState<UseFetchDocumentsPair<T>>([]);
+  const [items, setItems] = useState<UseFetchDocumentsPair<T>[]>([]);
   const [snapshot, loading, error] = useCollection(ref.limit(limit));
   const hasMore = snapshot && snapshot?.size === limit;
 
   useEffect(() => {
-    console.log("query", query);
     setRef(query);
     setItems([]);
   }, [query]);
 
   useEffect(
     () =>
-      setItems(curr => {
+      setItems((curr): any => {
+        // TODO remove any fix this
         return !snapshot || loading
           ? curr
           : [
               ...curr,
               ...compact(
-                snapshot?.docs.map(item => {
-                  const data = item.data();
+                snapshot?.docs.map((item: any) => {
+                  const data: T = item.data();
                   if (!item.exists || !data) {
                     return;
                   }

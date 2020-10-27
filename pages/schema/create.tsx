@@ -57,8 +57,7 @@ function SchemaCreate(): JSX.Element {
     isOpen: false,
   });
 
-  const db = firebase.firestore();
-  const collection = db.collection(SchemaCollection);
+  const collection = firebase.firestore().collection(SchemaCollection);
   const { create: createSchema, state: createSchemaState } = useCreateDocument<
     SchemaDocument
   >(collection);

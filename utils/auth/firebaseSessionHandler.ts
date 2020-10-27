@@ -1,5 +1,6 @@
 // From:
 // https://github.com/zeit/next.js/blob/canary/examples/with-firebase-authentication/pages/index.js
+import firebase from "firebase/app";
 import fetch from "isomorphic-unfetch";
 
 export const setSession = (user: firebase.User | null): Promise<Response> => {

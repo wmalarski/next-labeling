@@ -1,3 +1,5 @@
+import firebase from "firebase/app";
+
 import { ExternalDocument } from "./types/database";
 
 const labelingConverter = {
