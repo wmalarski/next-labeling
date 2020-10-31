@@ -4,7 +4,11 @@
   "scripts": {
     "dev": "NODE_ENV=development next dev",
     "build": "NODE_ENV=production next build",
-    "start": "NODE_ENV=production next start"
+    "start": "NODE_ENV=production next start",
+    "prettier": "prettier --config .prettierrc '(components|utils|pages)/**/*.(ts|tsx)' --write",
+    "lint": "eslint . --fix --ext .tsx,.ts",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.0",
@@ -17,14 +21,14 @@
     "dotenv": "8.2.0",
     "firebase": "8.0.0",
     "firebase-admin": "9.3.0",
-    "fp-ts": "^2.8.4",
-    "io-ts": "^2.2.11",
+    "fp-ts": "^2.8.5",
+    "io-ts": "^2.2.12",
     "isomorphic-unfetch": "^3.1.0",
     "konva": "^7.1.4",
     "next": "^10.0.0",
     "react": "^16.14.0",
     "react-ace": "^9.2.0",
-    "react-color": "^2.18.1",
+    "react-color": "^2.19.3",
     "react-dom": "^16.14.0",
     "react-firebase-hooks": "^2.2.0",
     "react-hotkeys-hook": "^2.4.0",
@@ -35,16 +39,24 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.1",
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/react": "^11.1.0",
     "@types/cookie-session": "^2.0.41",
+    "@types/enzyme": "^3.10.8",
+    "@types/enzyme-adapter-react-16": "^1.0.6",
+    "@types/jest": "^26.0.15",
     "@types/lodash.get": "^4.4.6",
     "@types/lodash.set": "^4.3.6",
-    "@types/react": "^16.9.54",
+    "@types/react": "^16.9.55",
     "@types/react-color": "^3.0.4",
     "@types/react-resize-detector": "^5.0.0",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
     "autoprefixer": "^9.8.6",
+    "babel-jest": "^26.6.1",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.5",
     "eslint": "^7.12.1",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-import": "^2.22.1",
@@ -53,8 +65,39 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-react-hooks": "^4.2.0",
+    "husky": "^4.3.0",
+    "jest": "^26.6.1",
     "prettier": "^2.1.2",
+    "ts-jest": "^26.4.3",
     "typescript": "^4.0.5",
     "webpack": "^4.44.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prettier && npm run lint"
+    }
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
+    },
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "testMatch": [
+      "**/__tests__/**/*.(ts|tsx)"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest.setup.ts"
+    ],
+    "testPathIgnorePatterns": [
+      "./.next/",
+      "./node_modules/"
+    ],
+    "globals": {
+      "ts-jest": {
+        "tsconfig": "tsconfig.jest.json"
+      }
+    }
   }
 }

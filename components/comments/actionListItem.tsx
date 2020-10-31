@@ -1,3 +1,4 @@
+import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
@@ -18,15 +19,18 @@ export default function ActionListItem(
   const createdAtStr = convertToDate(createdAt)?.toLocaleString() ?? "-";
 
   return (
-    <ListItemText
-      primary={user.displayName}
-      secondary={
-        <>
-          <Typography variant="body2">{createdAtStr}</Typography>
-          <br />
-          {message}
-        </>
-      }
-    />
+    <ListItem>
+      <ListItemText
+        data-testid="list-item-text"
+        primary={user.displayName}
+        secondary={
+          <>
+            {createdAtStr}
+            <br />
+            {message}
+          </>
+        }
+      />
+    </ListItem>
   );
 }

@@ -12,7 +12,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
   },
   "exclude": ["node_modules"],
   "include": [
@@ -22,6 +22,6 @@
     "src/utils/auth/initFirebase.ts",
     "src/utils/auth/user.ts",
     "components/common/link.jsx",
-    "components/visualization/objects/pixiObject.tss"
+    "components/visualization/objects/pixiObject.tss", "__tests__/comments/ActionListItem.test.tsx"
   ]
 }
