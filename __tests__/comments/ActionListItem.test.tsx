@@ -1,8 +1,8 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { render } from "@testing-library/react";
 
-import ActionListItem from "../components/comments/actionListItem";
-import { CommentDocument } from "../utils/comments/types";
+import ActionListItem from "../../components/comments/actionListItem";
+import { CommentDocument } from "../../utils/comments/types";
 
 function renderActionListItem(comment: Partial<CommentDocument> = {}) {
   const defaultComment: CommentDocument = {
@@ -27,9 +27,8 @@ function renderActionListItem(comment: Partial<CommentDocument> = {}) {
 
 describe("<ActionListItem />", () => {
   test("should display a action list item with display name, message and date", async () => {
-    const { findByTestId } = renderActionListItem();
-    const listItemText = await findByTestId("list-item-text");
-    // console.log(listItemText)
-    // expect(listItemText).toBe;
+    const { findByText } = renderActionListItem();
+    const textComponent = await findByText("displayName");
+    expect(textComponent).toBeTruthy();
   });
 });

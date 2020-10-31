@@ -25,7 +25,7 @@ export default function ActionListItem(
         primary={user.displayName}
         secondary={
           <>
-            <Typography variant="body2">{createdAtStr}</Typography>
+            {createdAtStr}
             <br />
             {message}
           </>

@@ -21,14 +21,14 @@
     "dotenv": "8.2.0",
     "firebase": "8.0.0",
     "firebase-admin": "9.3.0",
-    "fp-ts": "^2.8.4",
-    "io-ts": "^2.2.11",
+    "fp-ts": "^2.8.5",
+    "io-ts": "^2.2.12",
     "isomorphic-unfetch": "^3.1.0",
     "konva": "^7.1.4",
     "next": "^10.0.0",
     "react": "^16.14.0",
     "react-ace": "^9.2.0",
-    "react-color": "^2.18.1",
+    "react-color": "^2.19.3",
     "react-dom": "^16.14.0",
     "react-firebase-hooks": "^2.2.0",
     "react-hotkeys-hook": "^2.4.0",
@@ -47,7 +47,7 @@
     "@types/jest": "^26.0.15",
     "@types/lodash.get": "^4.4.6",
     "@types/lodash.set": "^4.3.6",
-    "@types/react": "^16.9.54",
+    "@types/react": "^16.9.55",
     "@types/react-color": "^3.0.4",
     "@types/react-resize-detector": "^5.0.0",
     "@types/uuid": "^8.3.0",
@@ -85,7 +85,7 @@
       "^.+\\.(ts|tsx)$": "ts-jest"
     },
     "testMatch": [
-      "**/__tests__/*.(ts|tsx)"
+      "**/__tests__/**/*.(ts|tsx)"
     ],
     "setupFilesAfterEnv": [
       "<rootDir>/jest.setup.ts"
