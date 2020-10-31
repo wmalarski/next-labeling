@@ -16,13 +16,11 @@ export default function CommentListItem(
 ): JSX.Element {
   const { comment } = props;
 
-  return (
+  return !comment.isAction ? (
     <ListItem>
-      {!comment.isAction ? (
-        <CommentCard {...props} />
-      ) : (
-        <ActionListItem comment={comment} />
-      )}
+      <CommentCard {...props} />
     </ListItem>
+  ) : (
+    <ActionListItem comment={comment} />
   );
 }
