@@ -1,6 +1,12 @@
 import { LabelingField, LabelingObject } from "../labeling/types/client";
-import { UnpackedFrameValuePair, unpackValues } from "./functions";
+import {
+  areNumbersClose,
+  UnpackedFrameValuePair,
+  unpackValues,
+} from "./functions";
 import getValueIndex from "./indexes";
+
+export const TimelineVerticalLineWidth = 2;
 
 export interface ObjectBlock {
   firstFrame: number;
@@ -22,6 +28,7 @@ interface ReduceFieldBlocksState {
 export function calculateObjectBlocks(
   object: LabelingObject,
   duration: number,
+  step: number,
 ): ObjectBlock[] {
   if (object.objectSchema.singleton || !object.frames) {
     return [{ firstFrame: 0, lastFrame: duration }];
@@ -33,7 +40,9 @@ export function calculateObjectBlocks(
       (prev, curr, index, array) => {
         const next = array[index + 1];
         if (!next) return [...prev, curr];
-        return curr + 1 === next ? prev : [...prev, curr, next];
+        return areNumbersClose(curr + step, next)
+          ? prev
+          : [...prev, curr, next];
       },
       [first],
     )

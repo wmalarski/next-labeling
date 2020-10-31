@@ -2,7 +2,6 @@ import { useTheme } from "@material-ui/core";
 import { TextConfig } from "konva/types/shapes/Text";
 import React, { useState } from "react";
 import { Layer, Line, Rect, Stage, Text } from "react-konva";
-
 import {
   darkerTimelineColors,
   lighterColors,
@@ -10,6 +9,7 @@ import {
 import {
   calculateFieldBlocks,
   ObjectBlock,
+  TimelineVerticalLineWidth,
 } from "../../utils/editors/timeline";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import { LabelingField } from "../../utils/labeling/types/client";
@@ -24,7 +24,7 @@ export interface FieldCanvasProps {
   fontSize: number;
 }
 
-export function FieldCanvas(props: FieldCanvasProps): JSX.Element {
+export default function FieldCanvas(props: FieldCanvasProps): JSX.Element {
   const { field, blocks, isSelected, width, height, shiftX, fontSize } = props;
 
   const theme = useTheme();
@@ -72,7 +72,7 @@ export function FieldCanvas(props: FieldCanvasProps): JSX.Element {
               height,
             ]}
             stroke={errorColor}
-            strokeWidth={1 * scale}
+            strokeWidth={TimelineVerticalLineWidth}
           />
         </Layer>
         <Layer>

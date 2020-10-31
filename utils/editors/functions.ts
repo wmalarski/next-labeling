@@ -11,6 +11,12 @@ export interface UnpackedFrameValues {
   type: FieldType;
 }
 
+export const fractionDigits = 5;
+export const changeEps = 0.00001;
+export function areNumbersClose(a: number, b: number): boolean {
+  return Math.abs(a - b) <= changeEps;
+}
+
 export function unpackValues(
   values: LabelingFieldValues,
 ): UnpackedFrameValues | undefined {

@@ -8,6 +8,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import ChatIcon from "@material-ui/icons/Chat";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
@@ -15,11 +16,9 @@ import FirstPageIcon from "@material-ui/icons/FirstPage";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import ViewListIcon from "@material-ui/icons/ViewList";
-import ChatIcon from "@material-ui/icons/Chat";
 import clsx from "clsx";
 import React, { useCallback, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-
 import { getFirstFrame, getLastFrame } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
@@ -90,7 +89,8 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
   const { selected, currentFrame } = history.data;
   const { setTool } = useToolContext();
   const { preferences } = usePreferences();
-  const { shortcuts } = preferences;
+  const { shortcuts, frameChangeStep } = preferences;
+  const frameStep = frameChangeStep / document.fps;
 
   const selectedObjects = selected.filter(
     object => !object.singleton && object.objectSelected,
@@ -239,11 +239,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
               pushLabeling(data => {
                 const frame = getFirstFrame(history.data, selectedObjectsIds);
                 if (!frame) return;
-                return setCurrentFrameUpdate(
-                  data,
-                  frame,
-                  preferences.frameChangeStep,
-                );
+                return setCurrentFrameUpdate(data, frame, frameStep);
               })
             }
           >
@@ -259,11 +255,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
               pushLabeling(data => {
                 const frame = getLastFrame(history.data, selectedObjectsIds);
                 if (!frame) return;
-                return setCurrentFrameUpdate(
-                  data,
-                  frame,
-                  preferences.frameChangeStep,
-                );
+                return setCurrentFrameUpdate(data, frame, frameStep);
               })
             }
           >
