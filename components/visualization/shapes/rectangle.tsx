@@ -1,7 +1,6 @@
 import Konva from "konva";
 import React, { useEffect, useRef } from "react";
 import { Rect, Text, Transformer } from "react-konva";
-
 import { LabelingObject } from "../../../utils/labeling/types/client";
 import { FontSize } from "../../../utils/visualization/constanst";
 import { getShapeStyle } from "../../../utils/visualization/functions";
@@ -29,7 +28,7 @@ export interface RectangleProps {
   isSelected: boolean;
   object: LabelingObject;
   rectProps: RectangleShapeProps;
-  onSelect: () => void;
+  onSelect: (id: string, reset: boolean) => void;
   onChange: (value: RectangleShapeProps) => void;
   onMove?: (value: RectangleShapeProps) => void;
 }
@@ -66,8 +65,8 @@ export function Rectangle(props: RectangleProps): JSX.Element | null {
         {...rectProps}
         {...getShapeStyle(isSelected)}
         draggable={draggable}
-        onClick={onSelect}
-        onTap={onSelect}
+        onClick={event => onSelect(object.id, !event.evt.ctrlKey)}
+        onTap={() => onSelect(object.id, true)}
         onDragMove={e => {
           const newProps = {
             ...rectProps,

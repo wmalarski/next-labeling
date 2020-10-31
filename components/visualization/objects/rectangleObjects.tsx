@@ -1,6 +1,5 @@
 import React from "react";
 import { Rect } from "react-konva";
-
 import { getFieldValues } from "../../../utils/editors/functions";
 import {
   FieldType,

@@ -1,7 +1,7 @@
 import Konva from "konva";
+import { KonvaEventObject } from "konva/types/Node";
 import React, { useEffect, useRef } from "react";
 import { Circle, Text } from "react-konva";
-
 import { getFieldValues } from "../../../utils/editors/functions";
 import {
   FieldType,
@@ -79,26 +79,30 @@ export function PointFinished(props: FinishedObjectProps): JSX.Element | null {
   const pointProps = getPointProps(values, attributes);
   const draggable = !isDone && isSelected;
 
+  const commonProps = {
+    onClick: (event: KonvaEventObject<MouseEvent>): void =>
+      onSelect(object.id, !event.evt.ctrlKey),
+    onTap: () => onSelect(object.id, true),
+  };
+
   return (
     pointProps && (
       <>
         <Text
           ref={textRef}
+          {...commonProps}
           x={pointProps.x}
           y={pointProps.y}
           text={name}
           align="center"
           fill={pointProps.fill}
           fontSize={FontSize}
-          onClick={onSelect}
-          onTap={onSelect}
         />
         <Circle
           {...pointProps}
           {...getShapeStyle(isSelected)}
+          {...commonProps}
           draggable={draggable}
-          onClick={onSelect}
-          onTap={onSelect}
           onDragMove={e =>
             updateTextProps(textRef, {
               ...pointProps,

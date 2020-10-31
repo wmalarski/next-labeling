@@ -4,6 +4,7 @@ import { calculateNewValues } from "../../utils/editors/functions";
 import { inFrameFilter, labelingFilter } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
+import addSelectedObjectUpdate from "../../utils/labeling/updates/addSelectedObjectUpdate";
 import setAttributeUpdate from "../../utils/labeling/updates/setAttributeUpdate";
 import setSelectedObjectUpdate from "../../utils/labeling/updates/setSelectedObjectUpdate";
 import setSelectedUpdate from "../../utils/labeling/updates/setSelectedUpdate";
@@ -47,8 +48,12 @@ export default function KonvaStage(): JSX.Element {
   const drawingValue = builderState.currentValue?.value;
 
   const handleSelect = useCallback(
-    (selectedId: string | null) =>
-      pushLabeling(doc => setSelectedObjectUpdate(doc, selectedId)),
+    (id: string, reset: boolean) =>
+      pushLabeling(doc =>
+        reset
+          ? setSelectedObjectUpdate(doc, id)
+          : addSelectedObjectUpdate(doc, id),
+      ),
     [pushLabeling],
   );
 
@@ -112,7 +117,7 @@ export default function KonvaStage(): JSX.Element {
                 object={object}
                 field={field}
                 frame={currentFrame}
-                onSelect={() => handleSelect(object.id)}
+                onSelect={handleSelect}
                 onChange={newValue => {
                   pushLabeling(doc =>
                     setAttributeUpdate(

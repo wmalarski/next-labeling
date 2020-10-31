@@ -1,8 +1,8 @@
 import Konva from "konva";
+import { KonvaEventObject } from "konva/types/Node";
 import range from "lodash/range";
 import React, { useMemo, useRef, useState } from "react";
 import { Circle, Group, Line } from "react-konva";
-
 import { LabelingObject } from "../../../utils/labeling/types/client";
 import {
   HoverFill,
@@ -37,7 +37,7 @@ export interface GraphProps {
   isSelected: boolean;
   object: LabelingObject;
   shapeProps: GraphShapeProps;
-  onSelect: () => void;
+  onSelect: (id: string, reset: boolean) => void;
   onChange: (shapeProps: GraphShapeProps) => void;
 }
 
@@ -63,6 +63,13 @@ export default function Graph(props: GraphProps): JSX.Element | null {
     points.map(point => [point.n, { x: point.x, y: point.y }]),
   );
 
+  const commonProps = {
+    onClick: (event: KonvaEventObject<MouseEvent>): void =>
+      onSelect(object.id, !event.evt.ctrlKey),
+    onTap: () => onSelect(object.id, true),
+    draggable,
+  };
+
   return (
     <>
       {edges.map((edge, index) => {
@@ -75,11 +82,9 @@ export default function Graph(props: GraphProps): JSX.Element | null {
               key={index}
               ref={line => edgesRef.current.splice(index, 1, line)}
               {...shapeStyle}
+              {...commonProps}
               points={[from.x, from.y, to.x, to.y]}
               stroke={stroke}
-              onClick={onSelect}
-              onTap={onSelect}
-              draggable={draggable}
               onDragMove={e => {
                 setHoveredNode(null);
                 const { x, y } = e.target.position();
@@ -166,13 +171,11 @@ export default function Graph(props: GraphProps): JSX.Element | null {
           <Circle
             ref={circle => nodesRef.current.splice(index, 1, circle)}
             {...shapeStyle}
+            {...commonProps}
             x={x}
             y={y}
             fill={stroke}
             radius={PointRadius}
-            onClick={onSelect}
-            onTap={onSelect}
-            draggable={draggable}
             onDragMove={e => {
               setHoveredNode(null);
               const { x, y } = e.target.position();
