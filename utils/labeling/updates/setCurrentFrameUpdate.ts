@@ -1,25 +1,20 @@
 import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import {
-  areNumbersClose,
-  fractionDigits,
-  unpackValues,
-} from "../../editors/functions";
+import { unpackValues } from "../../editors/functions";
 import { LabelingState } from "../hooks/useLabelingHistory";
 import { LabelingDocument } from "../types/client";
 
 export default function setCurrentFrameUpdate(
   data: LabelingDocument,
-  next: number,
+  nextFrame: number,
   propagationStep: number,
 ): LabelingState {
   const { objects, currentFrame } = data;
-  const nextFrame = Number(next.toFixed(fractionDigits));
-  const changeStep = next - currentFrame;
+  const changeStep = nextFrame - currentFrame;
   const message = `Frame changed`;
   const icon = changeStep < 0 ? ArrowLeftIcon : ArrowRightIcon;
 
-  if (!areNumbersClose(Math.abs(changeStep), propagationStep))
+  if (Math.abs(changeStep) !== propagationStep)
     return {
       message,
       icon,

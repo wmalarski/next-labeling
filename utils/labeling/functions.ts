@@ -28,8 +28,8 @@ export function createObject(
       const [key, value] = Object.entries(fieldSchema.attributes)[0];
       return {
         id: uuidv4(),
+        fieldSchema,
         fieldSchemaId: fieldSchema.id,
-        fieldSchema: fieldSchema,
         values: { [key]: [{ frame: currentFrame, value: value?.default }] },
       };
     }),
@@ -234,6 +234,7 @@ export function labelingFilter(
       (isDone === IsDoneFilterValue.IS_DONE && object.isDone) ||
       (isDone === IsDoneFilterValue.WIP && !object.isDone));
 }
+
 export function inFrameFilter(
   currentFrame: number,
 ): (object: LabelingObject) => boolean {
@@ -249,11 +250,11 @@ export function filterSelectedFields(
   data: LabelingDocument,
 ): FilterFieldsResultPair[] {
   const { selected, objects, currentFrame } = data;
+  const frameFilter = inFrameFilter(currentFrame);
   return compact(
     selected.map(selection => {
       const object = objects.find(object => object.id === selection.objectId);
       if (!object) return null;
-      const isInFrame = object.frames?.includes(currentFrame) ?? true;
       return {
         object,
         fields: (selection.objectSelected
@@ -263,7 +264,7 @@ export function filterSelectedFields(
                 object.fields.find(f => f.id === fieldId),
               ),
             )
-        ).filter(field => !field.fieldSchema.perFrame || isInFrame),
+        ).filter(field => !field.fieldSchema.perFrame || frameFilter(object)),
       };
     }),
   );

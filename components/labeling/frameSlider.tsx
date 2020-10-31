@@ -33,12 +33,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function FrameSlider(): JSX.Element {
   const classes = useStyles();
-  const { history, duration, document } = useLabelingContext();
+  const { history, duration } = useLabelingContext();
   const { pushLabeling } = history;
   const { currentFrame } = history.data;
   const { preferences } = usePreferences();
-  const { frameChangeStep, shortcuts } = preferences;
-  const frameStep = frameChangeStep / document.fps;
+  const { frameChangeStep: frameStep, shortcuts } = preferences;
 
   const moveBy = useCallback(
     (value: number): void =>
@@ -103,9 +102,7 @@ export default function FrameSlider(): JSX.Element {
 
           <Grid item xs />
           <Grid item>
-            <Typography variant="subtitle2">{`Frame: ${currentFrame.toFixed(
-              3,
-            )}`}</Typography>
+            <Typography variant="subtitle2">{`Frame: ${currentFrame}`}</Typography>
           </Grid>
         </Grid>
       </div>

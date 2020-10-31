@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo } from "react";
 import { Layer, Stage } from "react-konva";
-
 import { calculateNewValues } from "../../utils/editors/functions";
 import { inFrameFilter, labelingFilter } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
@@ -25,7 +24,6 @@ export default function KonvaStage(): JSX.Element {
 
   const { toolType } = useToolContext();
   const zoomAndPaneSelected = toolType === ToolType.ZOOM_AND_PANE;
-  const drawingToolSelected = toolType === ToolType.DRAWING_TOOL;
 
   const { preferences } = usePreferences();
 

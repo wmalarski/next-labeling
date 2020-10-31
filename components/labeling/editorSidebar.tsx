@@ -23,6 +23,7 @@ import { getFirstFrame, getLastFrame } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 import addObjectCopyUpdate from "../../utils/labeling/updates/addObjectCopyUpdate";
+import addObjectMergeUpdate from "../../utils/labeling/updates/addObjectMergeUpdate";
 import addObjectSplitUpdate from "../../utils/labeling/updates/addObjectSplitUpdate";
 import addObjectUpdate from "../../utils/labeling/updates/addObjectUpdate";
 import deleteBackwardUpdate from "../../utils/labeling/updates/deleteBackwardUpdate";
@@ -90,8 +91,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
   const { selected, currentFrame } = history.data;
   const { setTool } = useToolContext();
   const { preferences } = usePreferences();
-  const { shortcuts, frameChangeStep } = preferences;
-  const frameStep = frameChangeStep / document.fps;
+  const { shortcuts, frameChangeStep: frameStep } = preferences;
 
   const selectedObjects = selected.filter(
     object => !object.singleton && object.objectSelected,
@@ -122,6 +122,11 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
 
   const splitObjects = useCallback(
     () => pushLabeling(data => addObjectSplitUpdate(data)),
+    [pushLabeling],
+  );
+
+  const mergeObjects = useCallback(
+    () => pushLabeling(data => addObjectMergeUpdate(data)),
     [pushLabeling],
   );
 
@@ -224,6 +229,12 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
               <HighlightOffIcon />
             </ListItemIcon>
             <ListItemText primary={"Split"} />
+          </ListItem>
+          <ListItem disabled={!isSelected} button onClick={mergeObjects}>
+            <ListItemIcon>
+              <HighlightOffIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Merge"} />
           </ListItem>
           <ListItem disabled={!isSelected} button onClick={deleteObjects}>
             <ListItemIcon>

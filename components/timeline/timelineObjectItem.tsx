@@ -24,9 +24,8 @@ export function TimelineObjectItem(
   const fieldOffset = 18;
   const fontSize = 14;
 
-  const { duration, document } = useLabelingContext();
-  const step = 1 / document.fps;
-  const blocks = calculateObjectBlocks(object, duration, step);
+  const { duration } = useLabelingContext();
+  const blocks = calculateObjectBlocks(object, duration);
 
   return (
     <TreeItem

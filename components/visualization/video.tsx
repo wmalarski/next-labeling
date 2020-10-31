@@ -13,7 +13,7 @@ export default function Video(props: VideoProps): JSX.Element {
 
   const { document: labelingDocument, history, setDuration } = context;
   const { currentFrame } = history.data;
-  const { filename: source } = labelingDocument;
+  const { filename: source, fps = 24 } = labelingDocument;
 
   const imageRef = useRef<Konva.Image | null>(null);
   const [size, setSize] = useState({ width: 50, height: 50 });
@@ -31,15 +31,17 @@ export default function Video(props: VideoProps): JSX.Element {
         width: videoElement.videoWidth,
         height: videoElement.videoHeight,
       });
-      const durationSeconds = videoElement.duration;
       videoElement.currentTime = 0;
-      setDuration(durationSeconds);
+
+      const durationSeconds = videoElement.duration;
+      const framesDuration = Math.floor(durationSeconds * fps);
+      setDuration(framesDuration);
     };
     videoElement.addEventListener("loadedmetadata", onload);
     return () => {
       videoElement.removeEventListener("loadedmetadata", onload);
     };
-  }, [setDuration, videoElement]);
+  }, [fps, setDuration, videoElement]);
 
   // use Konva.Animation to redraw a layer
   useEffect(() => {
@@ -55,8 +57,8 @@ export default function Video(props: VideoProps): JSX.Element {
   }, [videoElement]);
 
   useEffect(() => {
-    videoElement.currentTime = currentFrame;
-  }, [currentFrame, videoElement]);
+    videoElement.currentTime = currentFrame / fps;
+  }, [currentFrame, fps, videoElement]);
 
   return (
     <Image
