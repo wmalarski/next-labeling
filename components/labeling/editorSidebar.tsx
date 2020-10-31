@@ -23,6 +23,7 @@ import { getFirstFrame, getLastFrame } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 import addObjectCopyUpdate from "../../utils/labeling/updates/addObjectCopyUpdate";
+import addObjectSplitUpdate from "../../utils/labeling/updates/addObjectSplitUpdate";
 import addObjectUpdate from "../../utils/labeling/updates/addObjectUpdate";
 import deleteBackwardUpdate from "../../utils/labeling/updates/deleteBackwardUpdate";
 import deleteForwardUpdate from "../../utils/labeling/updates/deleteForwardUpdate";
@@ -119,6 +120,11 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
     [pushLabeling],
   );
 
+  const splitObjects = useCallback(
+    () => pushLabeling(data => addObjectSplitUpdate(data)),
+    [pushLabeling],
+  );
+
   const selectAll = useCallback(
     () => pushLabeling(data => setSelectedAllUpdate(data)),
     [pushLabeling],
@@ -212,6 +218,12 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
               <FileCopyIcon />
             </ListItemIcon>
             <ListItemText primary={"Copy"} />
+          </ListItem>
+          <ListItem disabled={!isSelected} button onClick={splitObjects}>
+            <ListItemIcon>
+              <HighlightOffIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Split"} />
           </ListItem>
           <ListItem disabled={!isSelected} button onClick={deleteObjects}>
             <ListItemIcon>

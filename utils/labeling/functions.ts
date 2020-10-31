@@ -1,7 +1,7 @@
-import uniqueId from "lodash/uniqueId";
 import compact from "lodash/compact";
+import uniqueId from "lodash/uniqueId";
 import { v4 as uuidv4 } from "uuid";
-
+import { unpackValues } from "../editors/functions";
 import { ObjectSchema, Schema } from "../schema/types";
 import {
   IsDoneFilterValue,
@@ -31,6 +31,82 @@ export function createObject(
         fieldSchemaId: fieldSchema.id,
         fieldSchema: fieldSchema,
         values: { [key]: [{ frame: currentFrame, value: value?.default }] },
+      };
+    }),
+  };
+}
+
+export function copyObject(
+  object: LabelingObject,
+  suffix?: string,
+): LabelingObject {
+  const copy = JSON.parse(JSON.stringify(object)) as LabelingObject;
+  return {
+    ...copy,
+    id: uuidv4(),
+    name: `${object.name}${suffix ?? " - Copy"}`,
+    fields: object.fields.map(field => ({
+      ...field,
+      id: uuidv4(),
+    })),
+  };
+}
+
+export function deleteObjectBackward(
+  object: LabelingObject,
+  currentFrame: number,
+): LabelingObject | null {
+  const frames = object.frames?.filter(frame => frame >= currentFrame) ?? null;
+  if (frames?.length === 0) return null;
+
+  return {
+    ...object,
+    frames,
+    fields: object.fields.map(field => {
+      const unpacked = unpackValues(field.values);
+      if (!unpacked) return field;
+
+      const newValues = [...unpacked.pairs];
+      const lower = newValues.filter(value => value.frame < currentFrame);
+      newValues.splice(0, lower.length);
+
+      const firstGreater = newValues[0];
+      if (
+        (firstGreater && firstGreater.frame !== currentFrame) ||
+        !firstGreater
+      ) {
+        newValues.splice(0, 0, {
+          frame: currentFrame,
+          value: lower[lower.length - 1].value,
+        });
+      }
+      return {
+        ...field,
+        values: { [unpacked.type]: newValues },
+      };
+    }),
+  };
+}
+
+export function deleteObjectForward(
+  object: LabelingObject,
+  currentFrame: number,
+): LabelingObject | null {
+  const frames = object.frames?.filter(frame => frame <= currentFrame) ?? null;
+  if (frames?.length === 0) return null;
+
+  return {
+    ...object,
+    frames,
+    fields: object.fields.map(field => {
+      const unpacked = unpackValues(field.values);
+      if (!unpacked) return field;
+      const { type, pairs } = unpacked;
+      return {
+        ...field,
+        values: {
+          [type]: pairs.filter(value => value.frame <= currentFrame),
+        },
       };
     }),
   };

@@ -1,8 +1,8 @@
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
-
-import { LabelingDocument } from "../types/client";
+import compact from "lodash/compact";
+import { deleteObjectForward } from "../functions";
 import { LabelingState } from "../hooks/useLabelingHistory";
-import { unpackValues } from "../../editors/functions";
+import { LabelingDocument } from "../types/client";
 
 export default function deleteForwardUpdate(
   data: LabelingDocument,
@@ -16,31 +16,13 @@ export default function deleteForwardUpdate(
     icon: ArrowForwardIcon,
     data: {
       ...data,
-      objects: data.objects.flatMap(object => {
-        if (!ids.includes(object.id)) return [object];
-
-        const frames =
-          object.frames?.filter(frame => frame <= currentFrame) ?? null;
-        if (frames?.length === 0) return [];
-
-        return [
-          {
-            ...object,
-            frames,
-            fields: object.fields.map(field => {
-              const unpacked = unpackValues(field.values);
-              if (!unpacked) return field;
-              const { type, pairs } = unpacked;
-              return {
-                ...field,
-                values: {
-                  [type]: pairs.filter(value => value.frame <= currentFrame),
-                },
-              };
-            }),
-          },
-        ];
-      }),
+      objects: compact(
+        data.objects.map(object =>
+          !ids.includes(object.id)
+            ? object
+            : deleteObjectForward(object, currentFrame),
+        ),
+      ),
     },
   };
 }

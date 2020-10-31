@@ -1,6 +1,5 @@
 import FileCopyIcon from "@material-ui/icons/FileCopy";
-import { v4 as uuidv4 } from "uuid";
-
+import { copyObject } from "../functions";
 import { LabelingState } from "../hooks/useLabelingHistory";
 import { LabelingDocument } from "../types/client";
 
@@ -17,15 +16,7 @@ export default function addObjectCopyUpdate(
         ...data.objects,
         ...data.objects
           .filter(object => ids.includes(object.id))
-          .map(object => ({
-            ...object,
-            id: uuidv4(),
-            name: `${object.name} - Copy`,
-            fields: object.fields.map(field => ({
-              ...field,
-              id: uuidv4(),
-            })),
-          })),
+          .map(object => copyObject(object)),
       ],
     },
   };
