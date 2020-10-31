@@ -22,6 +22,7 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { getFirstFrame, getLastFrame } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
+import addObjectCopyFrameUpdate from "../../utils/labeling/updates/addObjectCopyFrameUpdate";
 import addObjectCopyUpdate from "../../utils/labeling/updates/addObjectCopyUpdate";
 import addObjectMergeUpdate from "../../utils/labeling/updates/addObjectMergeUpdate";
 import addObjectSplitUpdate from "../../utils/labeling/updates/addObjectSplitUpdate";
@@ -102,6 +103,11 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
 
   const setObjectDone = useCallback(
     () => pushLabeling(data => setObjectsIsDoneUpdate(data)),
+    [pushLabeling],
+  );
+
+  const copyFrames = useCallback(
+    () => pushLabeling(data => addObjectCopyFrameUpdate(data)),
     [pushLabeling],
   );
 
@@ -223,6 +229,12 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
               <FileCopyIcon />
             </ListItemIcon>
             <ListItemText primary={"Copy"} />
+          </ListItem>
+          <ListItem disabled={!isSelected} button onClick={copyFrames}>
+            <ListItemIcon>
+              <FileCopyIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Copy frame"} />
           </ListItem>
           <ListItem disabled={!isSelected} button onClick={splitObjects}>
             <ListItemIcon>
