@@ -1,28 +1,22 @@
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { RemoveScrollBar } from "react-remove-scroll-bar";
-
-import CommentChat from "../../components/comments/commentChat";
+import Footer from "../../components/common/footer";
 import Header from "../../components/common/header";
 import LoadingBackdrop from "../../components/common/loadingBackdrop";
 import ResultSnackbar from "../../components/common/resultSnackbar";
-import EditorTable from "../../components/editors/editorTable";
 import EditorHeader from "../../components/labeling/editorHeader";
 import EditorSidebar from "../../components/labeling/editorSidebar";
-import FrameSlider from "../../components/labeling/frameSlider";
 import LabelingProvider from "../../components/labeling/labelingProvider";
 import LabelingWorkspace from "../../components/labeling/labelingWorkspace";
 import PreferencesProvider from "../../components/labeling/preferencesProvider";
 import withAuthUser from "../../components/pageWrappers/withAuthUser";
 import withAuthUserInfo from "../../components/pageWrappers/withAuthUserInfo";
-import TimelineView from "../../components/timeline/timelineView";
 import ToolProvider from "../../components/visualization/toolProvider";
 import { useAuthUserInfo } from "../../utils/auth/hooks";
 import initFirebase from "../../utils/auth/initFirebase";
 import { ResultSnackbarState } from "../../utils/firestore/types";
 import useFetchLabeling from "../../utils/labeling/hooks/useFetchLabeling";
-import { LabelingViewsState } from "../../utils/labeling/views";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -68,12 +62,6 @@ function LabelingEditor(): JSX.Element {
     isOpen: false,
   });
 
-  const [viewsState, setViewsState] = useState<LabelingViewsState>({
-    properties: false,
-    timeline: true,
-    comments: false,
-  });
-
   if (!authUser) return <></>;
 
   return (
@@ -86,50 +74,15 @@ function LabelingEditor(): JSX.Element {
             setSnackbarState={setSnackbarState}
           >
             <PreferencesProvider>
-              <RemoveScrollBar />
               <div className={classes.root}>
                 <Header>
                   <EditorHeader />
                 </Header>
-                <EditorSidebar
-                  viewsState={viewsState}
-                  setViewsState={setViewsState}
-                />
+                <EditorSidebar />
                 {!isLoading && (
                   <div className={classes.content}>
                     <div className={classes.toolbar} />
-                    <div
-                      style={{
-                        display: "flex",
-                        flexFlow: "column",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex", // TODO: fix sizes #3
-                          flexFlow: "row",
-                          flexGrow: 1,
-                        }}
-                      >
-                        <div style={{ flexGrow: 1 }}>
-                          <LabelingWorkspace />
-                        </div>
-                        <div style={{ overflow: "auto", height: 400 }}>
-                          {viewsState.properties && <EditorTable />}
-                        </div>
-                        <div style={{ overflow: "auto", height: 400 }}>
-                          {viewsState.comments && (
-                            <CommentChat documentId={documentId} />
-                          )}
-                        </div>
-                      </div>
-                      <div
-                        style={{ overflow: "auto", height: 200, flexGrow: 1 }}
-                      >
-                        {viewsState.timeline && <TimelineView />}
-                      </div>
-                      <FrameSlider />
-                    </div>
+                    <LabelingWorkspace documentId={documentId} />
                   </div>
                 )}
               </div>
@@ -139,8 +92,7 @@ function LabelingEditor(): JSX.Element {
                 setState={setSnackbarState}
               />
               <LoadingBackdrop isLoading={isLoading} />
-
-              {/* <Footer /> */}
+              <Footer />
             </PreferencesProvider>
           </LabelingProvider>
         </ToolProvider>

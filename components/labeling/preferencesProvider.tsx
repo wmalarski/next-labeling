@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect, useState } from "react";
-
 import PreferencesContext, {
   defaultPreferencesContextState,
   PreferencesContextState,
@@ -25,6 +24,11 @@ export default function PreferencesProvider(
     setState(preferences);
   }, []);
 
+  const setViews = useCallback(
+    provider => setState(state => ({ ...state, views: provider(state.views) })),
+    [],
+  );
+
   useEffect(
     () =>
       setState(() => {
@@ -47,6 +51,7 @@ export default function PreferencesProvider(
   return (
     <PreferencesContext.Provider
       value={{
+        setViews,
         setPreferences,
         preferences: state,
       }}

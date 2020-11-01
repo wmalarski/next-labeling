@@ -35,7 +35,12 @@ import setObjectsIsDoneUpdate from "../../utils/labeling/updates/setObjectsIsDon
 import setSelectedAllUpdate from "../../utils/labeling/updates/setSelectedAllUpdate";
 import setSelectedNextUpdate from "../../utils/labeling/updates/setSelectedNextUpdate";
 import setSelectedUpdate from "../../utils/labeling/updates/setSelectedUpdate";
-import { filterIcons, LabelingViewsState } from "../../utils/labeling/views";
+import {
+  filterIcons,
+  isViewVisible,
+  LabelingView,
+  toogleView,
+} from "../../utils/labeling/views";
 import useToolContext from "../../utils/visualization/hooks/useToolContext";
 import { ToolType } from "../../utils/visualization/types";
 import EditorSettingsDialog from "./editorSettingsDialog";
@@ -78,21 +83,15 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export interface EditorSidebarProps {
-  viewsState: LabelingViewsState;
-  setViewsState: (state: LabelingViewsState) => void;
-}
-
-export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
-  const { viewsState, setViewsState } = props;
+export default function EditorSidebar(): JSX.Element {
   const classes = useStyles();
 
   const { history, document } = useLabelingContext();
   const { pushLabeling } = history;
   const { selected, currentFrame } = history.data;
   const { setTool } = useToolContext();
-  const { preferences } = usePreferences();
-  const { shortcuts, frameChangeStep: frameStep } = preferences;
+  const { preferences, setPreferences } = usePreferences();
+  const { shortcuts, frameChangeStep: frameStep, views } = preferences;
 
   const selectedObjects = selected.filter(
     object => !object.singleton && object.objectSelected,
@@ -304,9 +303,12 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
         <List>
           <ListItem
             button
-            selected={viewsState.timeline}
+            selected={isViewVisible(views, LabelingView.TIMELINE)}
             onClick={() =>
-              setViewsState({ ...viewsState, timeline: !viewsState.timeline })
+              setPreferences({
+                ...preferences,
+                views: toogleView(views, LabelingView.TIMELINE),
+              })
             }
           >
             <ListItemIcon>
@@ -316,11 +318,11 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
           </ListItem>
           <ListItem
             button
-            selected={viewsState.properties}
+            selected={isViewVisible(views, LabelingView.PROPERTIES)}
             onClick={() =>
-              setViewsState({
-                ...viewsState,
-                properties: !viewsState.properties,
+              setPreferences({
+                ...preferences,
+                views: toogleView(views, LabelingView.PROPERTIES),
               })
             }
           >
@@ -331,9 +333,12 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
           </ListItem>
           <ListItem
             button
-            selected={viewsState.comments}
+            selected={isViewVisible(views, LabelingView.COMMENTS)}
             onClick={() =>
-              setViewsState({ ...viewsState, comments: !viewsState.comments })
+              setPreferences({
+                ...preferences,
+                views: toogleView(views, LabelingView.COMMENTS),
+              })
             }
           >
             <ListItemIcon>
