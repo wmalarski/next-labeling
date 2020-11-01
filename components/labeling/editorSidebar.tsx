@@ -8,6 +8,7 @@ import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import ChatIcon from "@material-ui/icons/Chat";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
@@ -15,15 +16,16 @@ import FirstPageIcon from "@material-ui/icons/FirstPage";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import ViewListIcon from "@material-ui/icons/ViewList";
-import ChatIcon from "@material-ui/icons/Chat";
 import clsx from "clsx";
 import React, { useCallback, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-
 import { getFirstFrame, getLastFrame } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
+import addObjectCopyFrameUpdate from "../../utils/labeling/updates/addObjectCopyFrameUpdate";
 import addObjectCopyUpdate from "../../utils/labeling/updates/addObjectCopyUpdate";
+import addObjectMergeUpdate from "../../utils/labeling/updates/addObjectMergeUpdate";
+import addObjectSplitUpdate from "../../utils/labeling/updates/addObjectSplitUpdate";
 import addObjectUpdate from "../../utils/labeling/updates/addObjectUpdate";
 import deleteBackwardUpdate from "../../utils/labeling/updates/deleteBackwardUpdate";
 import deleteForwardUpdate from "../../utils/labeling/updates/deleteForwardUpdate";
@@ -90,7 +92,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
   const { selected, currentFrame } = history.data;
   const { setTool } = useToolContext();
   const { preferences } = usePreferences();
-  const { shortcuts } = preferences;
+  const { shortcuts, frameChangeStep: frameStep } = preferences;
 
   const selectedObjects = selected.filter(
     object => !object.singleton && object.objectSelected,
@@ -101,6 +103,11 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
 
   const setObjectDone = useCallback(
     () => pushLabeling(data => setObjectsIsDoneUpdate(data)),
+    [pushLabeling],
+  );
+
+  const copyFrames = useCallback(
+    () => pushLabeling(data => addObjectCopyFrameUpdate(data)),
     [pushLabeling],
   );
 
@@ -116,6 +123,16 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
 
   const deleteBackward = useCallback(
     () => pushLabeling(data => deleteBackwardUpdate(data)),
+    [pushLabeling],
+  );
+
+  const splitObjects = useCallback(
+    () => pushLabeling(data => addObjectSplitUpdate(data)),
+    [pushLabeling],
+  );
+
+  const mergeObjects = useCallback(
+    () => pushLabeling(data => addObjectMergeUpdate(data)),
     [pushLabeling],
   );
 
@@ -213,6 +230,24 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
             </ListItemIcon>
             <ListItemText primary={"Copy"} />
           </ListItem>
+          <ListItem disabled={!isSelected} button onClick={copyFrames}>
+            <ListItemIcon>
+              <FileCopyIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Copy frame"} />
+          </ListItem>
+          <ListItem disabled={!isSelected} button onClick={splitObjects}>
+            <ListItemIcon>
+              <HighlightOffIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Split"} />
+          </ListItem>
+          <ListItem disabled={!isSelected} button onClick={mergeObjects}>
+            <ListItemIcon>
+              <HighlightOffIcon />
+            </ListItemIcon>
+            <ListItemText primary={"Merge"} />
+          </ListItem>
           <ListItem disabled={!isSelected} button onClick={deleteObjects}>
             <ListItemIcon>
               <HighlightOffIcon />
@@ -239,11 +274,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
               pushLabeling(data => {
                 const frame = getFirstFrame(history.data, selectedObjectsIds);
                 if (!frame) return;
-                return setCurrentFrameUpdate(
-                  data,
-                  frame,
-                  preferences.frameChangeStep,
-                );
+                return setCurrentFrameUpdate(data, frame, frameStep);
               })
             }
           >
@@ -259,11 +290,7 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
               pushLabeling(data => {
                 const frame = getLastFrame(history.data, selectedObjectsIds);
                 if (!frame) return;
-                return setCurrentFrameUpdate(
-                  data,
-                  frame,
-                  preferences.frameChangeStep,
-                );
+                return setCurrentFrameUpdate(data, frame, frameStep);
               })
             }
           >

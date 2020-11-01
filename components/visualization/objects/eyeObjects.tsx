@@ -1,8 +1,8 @@
 import Konva from "konva";
+import { KonvaEventObject } from "konva/types/Node";
 import range from "lodash/range";
 import React, { useRef } from "react";
 import { Circle, Line } from "react-konva";
-
 import { getFieldValues } from "../../../utils/editors/functions";
 import {
   FieldType,
@@ -113,8 +113,9 @@ export function EyeFinished(props: FinishedObjectProps): JSX.Element | null {
     stroke,
     tension,
     draggable,
-    onClick: onSelect,
-    onTap: onSelect,
+    onClick: (event: KonvaEventObject<MouseEvent>): void =>
+      onSelect(object.id, !event.evt.ctrlKey),
+    onTap: () => onSelect(object.id, true),
   };
 
   return (
@@ -209,8 +210,8 @@ export function EyeFinished(props: FinishedObjectProps): JSX.Element | null {
           y={points[index + 1]}
           radius={PointRadius}
           strokeWidth={lineCommonProps.strokeWidth}
-          onClick={onSelect}
-          onTap={onSelect}
+          onClick={lineCommonProps.onClick}
+          onTap={lineCommonProps.onTap}
           draggable={draggable}
           onDragMove={e => {
             const firstLine = firstLineRef.current;

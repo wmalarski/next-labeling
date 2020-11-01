@@ -1,7 +1,6 @@
 import Konva from "konva";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Image } from "react-konva";
-
 import { LabelingContextValue } from "../../utils/labeling/contexts/labelingContext";
 
 export interface VideoProps {
@@ -14,8 +13,7 @@ export default function Video(props: VideoProps): JSX.Element {
 
   const { document: labelingDocument, history, setDuration } = context;
   const { currentFrame } = history.data;
-  const source = labelingDocument.filename;
-  const fps = labelingDocument.fps ?? 24;
+  const { filename: source, fps = 24 } = labelingDocument;
 
   const imageRef = useRef<Konva.Image | null>(null);
   const [size, setSize] = useState({ width: 50, height: 50 });
@@ -33,6 +31,8 @@ export default function Video(props: VideoProps): JSX.Element {
         width: videoElement.videoWidth,
         height: videoElement.videoHeight,
       });
+      videoElement.currentTime = 0;
+
       const durationSeconds = videoElement.duration;
       const framesDuration = Math.floor(durationSeconds * fps);
       setDuration(framesDuration);
@@ -51,7 +51,6 @@ export default function Video(props: VideoProps): JSX.Element {
     const anim = new Konva.Animation(() => void 0, layer);
 
     anim.start();
-    videoElement.currentTime = 0;
     return () => {
       anim.stop();
     };

@@ -7,3 +7,4 @@ export const HoverFill = "white";
 export const HoverOpacity = 0.3;
 export const BoxLeafWidth = 10;
 export const BoxNewSideWidth = 40;
+export const VideoFps = 24;

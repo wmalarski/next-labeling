@@ -1,8 +1,8 @@
 import Konva from "konva";
+import { KonvaEventObject } from "konva/types/Node";
 import range from "lodash/range";
 import React, { useRef } from "react";
 import { Circle, Line } from "react-konva";
-
 import { LabelingObject } from "../../../utils/labeling/types/client";
 import { PointRadius } from "../../../utils/visualization/constanst";
 import {
@@ -32,7 +32,7 @@ export interface SectionsProps {
   isSelected: boolean;
   object: LabelingObject;
   sectionsProps: SectionsShapeProps;
-  onSelect: () => void;
+  onSelect: (id: string, reset: boolean) => void;
   onChange: (sectionsProps: SectionsShapeProps) => void;
 }
 
@@ -48,15 +48,20 @@ export default function Sections(props: SectionsProps): JSX.Element | null {
     range(points.length).map(() => null),
   );
 
+  const commonProps = {
+    onClick: (event: KonvaEventObject<MouseEvent>): void =>
+      onSelect(object.id, !event.evt.ctrlKey),
+    onTap: () => onSelect(object.id, true),
+    draggable,
+  };
+
   return (
     <>
       <Line
         ref={lineRef}
         {...sectionsProps}
         {...shapeStyle}
-        onClick={onSelect}
-        onTap={onSelect}
-        draggable={draggable}
+        {...commonProps}
         onDragMove={e => {
           const line = lineRef.current;
           if (!line) return;
@@ -80,8 +85,9 @@ export default function Sections(props: SectionsProps): JSX.Element | null {
       />
       {getPoints2D(points).map(({ x, y }, index) => (
         <Circle
-          {...shapeStyle}
           key={index}
+          {...shapeStyle}
+          {...commonProps}
           fill={stroke}
           ref={circle => {
             pointsRef.current[index] = circle;
@@ -89,9 +95,6 @@ export default function Sections(props: SectionsProps): JSX.Element | null {
           x={x}
           y={y}
           radius={PointRadius}
-          onClick={onSelect}
-          onTap={onSelect}
-          draggable={draggable}
           onDragMove={e => {
             const line = lineRef.current;
             if (!line) return;

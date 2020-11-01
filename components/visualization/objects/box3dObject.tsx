@@ -1,8 +1,6 @@
-import { Box } from "@material-ui/core";
 import Konva from "konva";
 import React, { useRef, useState } from "react";
 import { Rect } from "react-konva";
-
 import { getFieldValues } from "../../../utils/editors/functions";
 import {
   FieldType,

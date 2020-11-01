@@ -1,7 +1,7 @@
-import uniqueId from "lodash/uniqueId";
 import compact from "lodash/compact";
+import uniqueId from "lodash/uniqueId";
 import { v4 as uuidv4 } from "uuid";
-
+import { unpackValues } from "../editors/functions";
 import { ObjectSchema, Schema } from "../schema/types";
 import {
   IsDoneFilterValue,
@@ -28,9 +28,85 @@ export function createObject(
       const [key, value] = Object.entries(fieldSchema.attributes)[0];
       return {
         id: uuidv4(),
+        fieldSchema,
         fieldSchemaId: fieldSchema.id,
-        fieldSchema: fieldSchema,
         values: { [key]: [{ frame: currentFrame, value: value?.default }] },
+      };
+    }),
+  };
+}
+
+export function copyObject(
+  object: LabelingObject,
+  suffix?: string,
+): LabelingObject {
+  const copy = JSON.parse(JSON.stringify(object)) as LabelingObject;
+  return {
+    ...copy,
+    id: uuidv4(),
+    name: `${object.name}${suffix ?? " - Copy"}`,
+    fields: object.fields.map(field => ({
+      ...field,
+      id: uuidv4(),
+    })),
+  };
+}
+
+export function deleteObjectBackward(
+  object: LabelingObject,
+  currentFrame: number,
+): LabelingObject | null {
+  const frames = object.frames?.filter(frame => frame >= currentFrame) ?? null;
+  if (frames?.length === 0) return null;
+
+  return {
+    ...object,
+    frames,
+    fields: object.fields.map(field => {
+      const unpacked = unpackValues(field.values);
+      if (!unpacked) return field;
+
+      const newValues = [...unpacked.pairs];
+      const lower = newValues.filter(value => value.frame < currentFrame);
+      newValues.splice(0, lower.length);
+
+      const firstGreater = newValues[0];
+      if (
+        (firstGreater && firstGreater.frame !== currentFrame) ||
+        !firstGreater
+      ) {
+        newValues.splice(0, 0, {
+          frame: currentFrame,
+          value: lower[lower.length - 1].value,
+        });
+      }
+      return {
+        ...field,
+        values: { [unpacked.type]: newValues },
+      };
+    }),
+  };
+}
+
+export function deleteObjectForward(
+  object: LabelingObject,
+  currentFrame: number,
+): LabelingObject | null {
+  const frames = object.frames?.filter(frame => frame <= currentFrame) ?? null;
+  if (frames?.length === 0) return null;
+
+  return {
+    ...object,
+    frames,
+    fields: object.fields.map(field => {
+      const unpacked = unpackValues(field.values);
+      if (!unpacked) return field;
+      const { type, pairs } = unpacked;
+      return {
+        ...field,
+        values: {
+          [type]: pairs.filter(value => value.frame <= currentFrame),
+        },
       };
     }),
   };
@@ -69,17 +145,15 @@ export function createLabelingObjects(
 ): LabelingObject[] {
   return pairObjectsToSchema(objects, schema).map(
     ({ object, objectSchema }) => {
-      const fields = object.fields.flatMap(field => {
-        const fieldSchema = objectSchema.fields.find(
-          f => f.id === field.fieldSchemaId,
-        );
-        return !fieldSchema ? [] : [{ ...field, fieldSchema }];
-      });
-      return {
-        ...object,
-        fields,
-        objectSchema,
-      };
+      const fields = compact(
+        object.fields.map(field => {
+          const fieldSchema = objectSchema.fields.find(
+            f => f.id === field.fieldSchemaId,
+          );
+          return fieldSchema && { ...field, fieldSchema };
+        }),
+      );
+      return { ...object, fields, objectSchema };
     },
   );
 }
@@ -99,10 +173,9 @@ export function pairObjectsToIds(
   data: LabelingDocument,
   ids: string[],
 ): LabelingObject[] {
-  return ids.flatMap(objectId => {
-    const object = data.objects.find(object => object.id === objectId);
-    return object ? [object] : [];
-  });
+  return compact(
+    ids.map(objectId => data.objects.find(object => object.id === objectId)),
+  );
 }
 
 export function getFrames(data: LabelingDocument, ids: string[]): number[] {
@@ -158,6 +231,7 @@ export function labelingFilter(
       (isDone === IsDoneFilterValue.IS_DONE && object.isDone) ||
       (isDone === IsDoneFilterValue.WIP && !object.isDone));
 }
+
 export function inFrameFilter(
   currentFrame: number,
 ): (object: LabelingObject) => boolean {
@@ -173,11 +247,11 @@ export function filterSelectedFields(
   data: LabelingDocument,
 ): FilterFieldsResultPair[] {
   const { selected, objects, currentFrame } = data;
+  const frameFilter = inFrameFilter(currentFrame);
   return compact(
     selected.map(selection => {
       const object = objects.find(object => object.id === selection.objectId);
       if (!object) return null;
-      const isInFrame = object.frames?.includes(currentFrame) ?? true;
       return {
         object,
         fields: (selection.objectSelected
@@ -187,7 +261,7 @@ export function filterSelectedFields(
                 object.fields.find(f => f.id === fieldId),
               ),
             )
-        ).filter(field => !field.fieldSchema.perFrame || isInFrame),
+        ).filter(field => !field.fieldSchema.perFrame || frameFilter(object)),
       };
     }),
   );

@@ -1,8 +1,7 @@
 import Konva from "konva";
 import { KonvaEventObject } from "konva/types/Node";
-import React, { useRef } from "react";
+import React from "react";
 import { Circle, Line } from "react-konva";
-
 import { LabelingObject } from "../../../utils/labeling/types/client";
 import { PointRadius } from "../../../utils/visualization/constanst";
 import { getShapeStyle } from "../../../utils/visualization/functions";
@@ -19,7 +18,7 @@ export interface BoxSideProps {
   isSelected: boolean;
   object: LabelingObject;
   shapeProps: BoxSideShapeProps;
-  onSelect: () => void;
+  onSelect: (id: string, reset: boolean) => void;
   onChange: (value: BoxSideShapeProps) => void;
   onMove?: (value: BoxSideShapeProps) => void;
 }
@@ -71,11 +70,13 @@ export function BoxSide(props: BoxSideProps): JSX.Element | null {
   const shapeStyle = getShapeStyle(isSelected);
   const { points } = shapeProps;
   const [x1, y1, x2, y2] = points.slice(2, 6);
+
   const commonProps = {
     ...shapeStyle,
     draggable,
-    onClick: onSelect,
-    onTap: onSelect,
+    onClick: (event: KonvaEventObject<MouseEvent>): void =>
+      onSelect(object.id, !event.evt.ctrlKey),
+    onTap: () => onSelect(object.id, true),
   };
 
   // const lineRef = useRef<Konva.Line>(null);

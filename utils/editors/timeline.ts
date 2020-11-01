@@ -2,6 +2,8 @@ import { LabelingField, LabelingObject } from "../labeling/types/client";
 import { UnpackedFrameValuePair, unpackValues } from "./functions";
 import getValueIndex from "./indexes";
 
+export const TimelineVerticalLineWidth = 2;
+
 export interface ObjectBlock {
   firstFrame: number;
   lastFrame: number;

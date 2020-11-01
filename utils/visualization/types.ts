@@ -32,7 +32,7 @@ export interface FinishedObjectProps {
   field: LabelingField;
   frame: number;
   object: LabelingObject;
-  onSelect: () => void;
+  onSelect: (id: string, reset: boolean) => void;
   onChange: (value: LabelingFieldValues) => void;
 }
 

@@ -1,10 +1,12 @@
 import { useTheme } from "@material-ui/core";
 import React from "react";
 import { Layer, Line, Rect, Stage, Text } from "react-konva";
-
-import { LabelingObject } from "../../utils/labeling/types/client";
+import {
+  ObjectBlock,
+  TimelineVerticalLineWidth,
+} from "../../utils/editors/timeline";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
-import { ObjectBlock } from "../../utils/editors/timeline";
+import { LabelingObject } from "../../utils/labeling/types/client";
 
 export interface ObjectCanvasProps {
   object: LabelingObject;
@@ -16,7 +18,7 @@ export interface ObjectCanvasProps {
   fontSize: number;
 }
 
-export function ObjectCanvas(props: ObjectCanvasProps): JSX.Element {
+export default function ObjectCanvas(props: ObjectCanvasProps): JSX.Element {
   const { object, blocks, isSelected, width, height, shiftX, fontSize } = props;
 
   const theme = useTheme();
@@ -49,7 +51,7 @@ export function ObjectCanvas(props: ObjectCanvasProps): JSX.Element {
             height,
           ]}
           stroke={errorColor}
-          strokeWidth={1 * scale}
+          strokeWidth={TimelineVerticalLineWidth}
         />
         <Text
           text={object.name}

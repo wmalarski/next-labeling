@@ -10,11 +10,10 @@ import Forward5Icon from "@material-ui/icons/Forward5";
 import Replay5Icon from "@material-ui/icons/Replay5";
 import React, { useCallback } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-
 import { frameToRange } from "../../utils/labeling/functions";
-import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
+import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,6 +64,7 @@ export default function FrameSlider(): JSX.Element {
           value={currentFrame}
           min={0}
           max={duration}
+          step={frameStep}
           onChange={(_event, value) =>
             pushLabeling(data =>
               setCurrentFrameUpdate(
@@ -102,9 +102,7 @@ export default function FrameSlider(): JSX.Element {
 
           <Grid item xs />
           <Grid item>
-            <Typography variant="subtitle2">{`Frame: ${
-              currentFrame + 1
-            }`}</Typography>
+            <Typography variant="subtitle2">{`Frame: ${currentFrame}`}</Typography>
           </Grid>
         </Grid>
       </div>
