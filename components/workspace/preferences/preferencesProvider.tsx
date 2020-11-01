@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import PreferencesContext, {
   defaultPreferencesContextState,
   PreferencesContextState,
-} from "../../utils/labeling/contexts/preferencesContext";
+} from "../../../utils/labeling/contexts/preferencesContext";
 
 export const preferencesStorageKey = "preferences";
 

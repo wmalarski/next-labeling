@@ -6,7 +6,7 @@ import "../../node_modules/react-resizable/css/styles.css";
 import { LabelingView } from "../../utils/labeling/views";
 import EditorTable from "../editors/editorTable";
 import TimelineView from "../timeline/timelineView";
-import FrameSlider from "./frameSlider";
+import FrameSlider from "../workspace/frameSlider";
 import LabelingViewCard from "./labelingViewCard";
 
 const KonvaStageNoSSR = dynamic(() => import("../visualization/konvaStage"), {

@@ -19,31 +19,31 @@ import ViewListIcon from "@material-ui/icons/ViewList";
 import clsx from "clsx";
 import React, { useCallback, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { getFirstFrame, getLastFrame } from "../../utils/labeling/functions";
-import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
-import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
-import addObjectCopyFrameUpdate from "../../utils/labeling/updates/addObjectCopyFrameUpdate";
-import addObjectCopyUpdate from "../../utils/labeling/updates/addObjectCopyUpdate";
-import addObjectMergeUpdate from "../../utils/labeling/updates/addObjectMergeUpdate";
-import addObjectSplitUpdate from "../../utils/labeling/updates/addObjectSplitUpdate";
-import addObjectUpdate from "../../utils/labeling/updates/addObjectUpdate";
-import deleteBackwardUpdate from "../../utils/labeling/updates/deleteBackwardUpdate";
-import deleteForwardUpdate from "../../utils/labeling/updates/deleteForwardUpdate";
-import deleteObjectsUpdate from "../../utils/labeling/updates/deleteObjectsUpdate";
-import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
-import setObjectsIsDoneUpdate from "../../utils/labeling/updates/setObjectsIsDoneUpdate";
-import setSelectedAllUpdate from "../../utils/labeling/updates/setSelectedAllUpdate";
-import setSelectedNextUpdate from "../../utils/labeling/updates/setSelectedNextUpdate";
-import setSelectedUpdate from "../../utils/labeling/updates/setSelectedUpdate";
+import { getFirstFrame, getLastFrame } from "../../../utils/labeling/functions";
+import useLabelingContext from "../../../utils/labeling/hooks/useLabelingContext";
+import usePreferences from "../../../utils/labeling/hooks/usePreferencesContext";
+import addObjectCopyFrameUpdate from "../../../utils/labeling/updates/addObjectCopyFrameUpdate";
+import addObjectCopyUpdate from "../../../utils/labeling/updates/addObjectCopyUpdate";
+import addObjectMergeUpdate from "../../../utils/labeling/updates/addObjectMergeUpdate";
+import addObjectSplitUpdate from "../../../utils/labeling/updates/addObjectSplitUpdate";
+import addObjectUpdate from "../../../utils/labeling/updates/addObjectUpdate";
+import deleteBackwardUpdate from "../../../utils/labeling/updates/deleteBackwardUpdate";
+import deleteForwardUpdate from "../../../utils/labeling/updates/deleteForwardUpdate";
+import deleteObjectsUpdate from "../../../utils/labeling/updates/deleteObjectsUpdate";
+import setCurrentFrameUpdate from "../../../utils/labeling/updates/setCurrentFrameUpdate";
+import setObjectsIsDoneUpdate from "../../../utils/labeling/updates/setObjectsIsDoneUpdate";
+import setSelectedAllUpdate from "../../../utils/labeling/updates/setSelectedAllUpdate";
+import setSelectedNextUpdate from "../../../utils/labeling/updates/setSelectedNextUpdate";
+import setSelectedUpdate from "../../../utils/labeling/updates/setSelectedUpdate";
 import {
   filterIcons,
   isViewVisible,
   LabelingView,
   toogleView,
-} from "../../utils/labeling/views";
-import useToolContext from "../../utils/visualization/hooks/useToolContext";
-import { ToolType } from "../../utils/visualization/types";
-import EditorSettingsDialog from "./editorSettingsDialog";
+} from "../../../utils/labeling/views";
+import useToolContext from "../../../utils/visualization/hooks/useToolContext";
+import { ToolType } from "../../../utils/visualization/types";
+import EditorSettingsDialog from "../preferences/editorSettingsDialog";
 
 const drawerWidth = 240;
 
