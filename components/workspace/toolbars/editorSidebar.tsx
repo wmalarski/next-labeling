@@ -19,26 +19,31 @@ import ViewListIcon from "@material-ui/icons/ViewList";
 import clsx from "clsx";
 import React, { useCallback, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { getFirstFrame, getLastFrame } from "../../utils/labeling/functions";
-import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
-import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
-import addObjectCopyFrameUpdate from "../../utils/labeling/updates/addObjectCopyFrameUpdate";
-import addObjectCopyUpdate from "../../utils/labeling/updates/addObjectCopyUpdate";
-import addObjectMergeUpdate from "../../utils/labeling/updates/addObjectMergeUpdate";
-import addObjectSplitUpdate from "../../utils/labeling/updates/addObjectSplitUpdate";
-import addObjectUpdate from "../../utils/labeling/updates/addObjectUpdate";
-import deleteBackwardUpdate from "../../utils/labeling/updates/deleteBackwardUpdate";
-import deleteForwardUpdate from "../../utils/labeling/updates/deleteForwardUpdate";
-import deleteObjectsUpdate from "../../utils/labeling/updates/deleteObjectsUpdate";
-import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
-import setObjectsIsDoneUpdate from "../../utils/labeling/updates/setObjectsIsDoneUpdate";
-import setSelectedAllUpdate from "../../utils/labeling/updates/setSelectedAllUpdate";
-import setSelectedNextUpdate from "../../utils/labeling/updates/setSelectedNextUpdate";
-import setSelectedUpdate from "../../utils/labeling/updates/setSelectedUpdate";
-import { filterIcons, LabelingViewsState } from "../../utils/labeling/views";
-import useToolContext from "../../utils/visualization/hooks/useToolContext";
-import { ToolType } from "../../utils/visualization/types";
-import EditorSettingsDialog from "./editorSettingsDialog";
+import { getFirstFrame, getLastFrame } from "../../../utils/labeling/functions";
+import useLabelingContext from "../../../utils/labeling/hooks/useLabelingContext";
+import usePreferences from "../../../utils/labeling/hooks/usePreferencesContext";
+import addObjectCopyFrameUpdate from "../../../utils/labeling/updates/addObjectCopyFrameUpdate";
+import addObjectCopyUpdate from "../../../utils/labeling/updates/addObjectCopyUpdate";
+import addObjectMergeUpdate from "../../../utils/labeling/updates/addObjectMergeUpdate";
+import addObjectSplitUpdate from "../../../utils/labeling/updates/addObjectSplitUpdate";
+import addObjectUpdate from "../../../utils/labeling/updates/addObjectUpdate";
+import deleteBackwardUpdate from "../../../utils/labeling/updates/deleteBackwardUpdate";
+import deleteForwardUpdate from "../../../utils/labeling/updates/deleteForwardUpdate";
+import deleteObjectsUpdate from "../../../utils/labeling/updates/deleteObjectsUpdate";
+import setCurrentFrameUpdate from "../../../utils/labeling/updates/setCurrentFrameUpdate";
+import setObjectsIsDoneUpdate from "../../../utils/labeling/updates/setObjectsIsDoneUpdate";
+import setSelectedAllUpdate from "../../../utils/labeling/updates/setSelectedAllUpdate";
+import setSelectedNextUpdate from "../../../utils/labeling/updates/setSelectedNextUpdate";
+import setSelectedUpdate from "../../../utils/labeling/updates/setSelectedUpdate";
+import {
+  filterIcons,
+  isViewVisible,
+  LabelingView,
+  toogleView,
+} from "../../../utils/labeling/views";
+import useToolContext from "../../../utils/visualization/hooks/useToolContext";
+import { ToolType } from "../../../utils/visualization/types";
+import EditorSettingsDialog from "../preferences/editorSettingsDialog";
 
 const drawerWidth = 240;
 
@@ -78,21 +83,15 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export interface EditorSidebarProps {
-  viewsState: LabelingViewsState;
-  setViewsState: (state: LabelingViewsState) => void;
-}
-
-export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
-  const { viewsState, setViewsState } = props;
+export default function EditorSidebar(): JSX.Element {
   const classes = useStyles();
 
   const { history, document } = useLabelingContext();
   const { pushLabeling } = history;
   const { selected, currentFrame } = history.data;
   const { setTool } = useToolContext();
-  const { preferences } = usePreferences();
-  const { shortcuts, frameChangeStep: frameStep } = preferences;
+  const { preferences, setPreferences } = usePreferences();
+  const { shortcuts, frameChangeStep: frameStep, views } = preferences;
 
   const selectedObjects = selected.filter(
     object => !object.singleton && object.objectSelected,
@@ -304,9 +303,12 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
         <List>
           <ListItem
             button
-            selected={viewsState.timeline}
+            selected={isViewVisible(views, LabelingView.TIMELINE)}
             onClick={() =>
-              setViewsState({ ...viewsState, timeline: !viewsState.timeline })
+              setPreferences({
+                ...preferences,
+                views: toogleView(views, LabelingView.TIMELINE),
+              })
             }
           >
             <ListItemIcon>
@@ -316,11 +318,11 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
           </ListItem>
           <ListItem
             button
-            selected={viewsState.properties}
+            selected={isViewVisible(views, LabelingView.PROPERTIES)}
             onClick={() =>
-              setViewsState({
-                ...viewsState,
-                properties: !viewsState.properties,
+              setPreferences({
+                ...preferences,
+                views: toogleView(views, LabelingView.PROPERTIES),
               })
             }
           >
@@ -331,9 +333,12 @@ export default function EditorSidebar(props: EditorSidebarProps): JSX.Element {
           </ListItem>
           <ListItem
             button
-            selected={viewsState.comments}
+            selected={isViewVisible(views, LabelingView.COMMENTS)}
             onClick={() =>
-              setViewsState({ ...viewsState, comments: !viewsState.comments })
+              setPreferences({
+                ...preferences,
+                views: toogleView(views, LabelingView.COMMENTS),
+              })
             }
           >
             <ListItemIcon>

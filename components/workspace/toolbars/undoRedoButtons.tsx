@@ -14,9 +14,8 @@ import RedoIcon from "@material-ui/icons/Redo";
 import UndoIcon from "@material-ui/icons/Undo";
 import React, { useCallback, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-
-import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
-import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
+import useLabelingContext from "../../../utils/labeling/hooks/useLabelingContext";
+import usePreferences from "../../../utils/labeling/hooks/usePreferencesContext";
 
 export default function UndoRedoButtons(): JSX.Element {
   const { preferences } = usePreferences();

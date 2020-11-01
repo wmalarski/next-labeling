@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from "react";
-
 import PreferencesContext, {
   defaultPreferencesContextState,
   PreferencesContextState,
-} from "../../utils/labeling/contexts/preferencesContext";
+} from "../../../utils/labeling/contexts/preferencesContext";
 
 export const preferencesStorageKey = "preferences";
 
@@ -24,6 +23,11 @@ export default function PreferencesProvider(
     localStorage.setItem(preferencesStorageKey, JSON.stringify(preferences));
     setState(preferences);
   }, []);
+
+  const setViews = useCallback(
+    provider => setState(state => ({ ...state, views: provider(state.views) })),
+    [],
+  );
 
   useEffect(
     () =>
@@ -47,6 +51,7 @@ export default function PreferencesProvider(
   return (
     <PreferencesContext.Provider
       value={{
+        setViews,
         setPreferences,
         preferences: state,
       }}

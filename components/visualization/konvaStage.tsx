@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from "react";
 import { Layer, Stage } from "react-konva";
+import { withResizeDetector } from "react-resize-detector";
 import { calculateNewValues } from "../../utils/editors/functions";
 import { inFrameFilter, labelingFilter } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
@@ -17,7 +18,14 @@ import { FinishedObject, InProgressObject } from "./konvaObject";
 import ToolsHeader from "./toolsHeader";
 import Video from "./video";
 
-export default function KonvaStage(): JSX.Element {
+export interface Dimensions {
+  width: number;
+  height: number;
+}
+
+function KonvaStage(props: Dimensions): JSX.Element {
+  const { width, height } = props;
+
   const context = useLabelingContext();
   const { filters, history } = context;
   const { data, pushLabeling } = history;
@@ -37,9 +45,6 @@ export default function KonvaStage(): JSX.Element {
     stageX,
     stageY,
   } = useZoom({ scaleBy: 1.1 });
-
-  const width = 600;
-  const height = 400;
 
   const drawingTool = useDrawingTool();
   const { acceptPoint, pushPoint, builderState } = drawingTool.builderResult;
@@ -152,3 +157,7 @@ export default function KonvaStage(): JSX.Element {
     </div>
   );
 }
+
+export default withResizeDetector(KonvaStage, {
+  refreshRate: 10000,
+});
