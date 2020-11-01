@@ -145,17 +145,15 @@ export function createLabelingObjects(
 ): LabelingObject[] {
   return pairObjectsToSchema(objects, schema).map(
     ({ object, objectSchema }) => {
-      const fields = object.fields.flatMap(field => {
-        const fieldSchema = objectSchema.fields.find(
-          f => f.id === field.fieldSchemaId,
-        );
-        return !fieldSchema ? [] : [{ ...field, fieldSchema }];
-      });
-      return {
-        ...object,
-        fields,
-        objectSchema,
-      };
+      const fields = compact(
+        object.fields.map(field => {
+          const fieldSchema = objectSchema.fields.find(
+            f => f.id === field.fieldSchemaId,
+          );
+          return fieldSchema && { ...field, fieldSchema };
+        }),
+      );
+      return { ...object, fields, objectSchema };
     },
   );
 }
@@ -175,10 +173,9 @@ export function pairObjectsToIds(
   data: LabelingDocument,
   ids: string[],
 ): LabelingObject[] {
-  return ids.flatMap(objectId => {
-    const object = data.objects.find(object => object.id === objectId);
-    return object ? [object] : [];
-  });
+  return compact(
+    ids.map(objectId => data.objects.find(object => object.id === objectId)),
+  );
 }
 
 export function getFrames(data: LabelingDocument, ids: string[]): number[] {
