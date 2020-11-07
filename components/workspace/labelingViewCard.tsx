@@ -15,6 +15,12 @@ import { toogleView, updateView } from "../../utils/labeling/views";
 const useStyles = makeStyles(() => ({
   card: {
     height: "100%",
+    display: "flex",
+    flexDirection: "column",
+  },
+  question: {
+    overflow: "auto",
+    maxHeight: "100%",
   },
 }));
 
@@ -23,7 +29,9 @@ export interface LabelingViewCardProps {
   title?: string;
   subheader?: string;
   isClosable?: boolean;
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[] | null;
+  actions?: JSX.Element | JSX.Element[] | null;
+  toolbar?: JSX.Element | JSX.Element[] | null;
 }
 
 export default function LabelingViewCard(
@@ -31,7 +39,15 @@ export default function LabelingViewCard(
 ): JSX.Element | null {
   const classes = useStyles();
 
-  const { view, title, isClosable, subheader, children } = props;
+  const {
+    view,
+    title,
+    isClosable,
+    subheader,
+    children,
+    actions,
+    toolbar,
+  } = props;
   const { i: key, static: isStatic } = view;
 
   const { setViews } = usePreferences();
@@ -41,6 +57,7 @@ export default function LabelingViewCard(
       <CardHeader
         action={
           <>
+            {actions}
             <IconButton
               aria-label="pin"
               onClick={() =>
@@ -62,7 +79,10 @@ export default function LabelingViewCard(
         title={title}
         subheader={subheader}
       />
-      <CardContent>{children}</CardContent>
+      <div>{toolbar}</div>
+      <div className={classes.question}>
+        <CardContent>{children}</CardContent>
+      </div>
     </Card>
   );
 }

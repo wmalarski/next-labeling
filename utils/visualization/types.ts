@@ -7,6 +7,11 @@ export interface Point2D {
   y: number;
 }
 
+export interface Dimensions {
+  width: number;
+  height: number;
+}
+
 export interface CoordsBuilderResult {
   stage: number;
   value?: LabelingFieldValues;
