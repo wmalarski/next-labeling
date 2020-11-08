@@ -1,9 +1,10 @@
 import { useTheme } from "@material-ui/core";
 import Konva from "konva";
-import React, { useRef } from "react";
+import React, { useMemo, useRef } from "react";
 import { Group, Rect } from "react-konva";
 import { ObjectSelection } from "../../utils/labeling/types/client";
 import { TimelineHoverStroke } from "../../utils/timeline/constansts";
+import useMouseHover from "../../utils/timeline/hooks/useMouseHover";
 import { TimelineObjectShapeConfig } from "../../utils/timeline/types";
 import { getEventRelativePosition } from "../../utils/visualization/functions";
 import TimelineFieldShape from "./timelineFieldShape";
@@ -13,7 +14,6 @@ export interface TimelineObjectShapeProps extends TimelineObjectShapeConfig {
   rowHeight: number;
   selection?: ObjectSelection;
   onSelect: (selection: ObjectSelection, reset: boolean) => void;
-  onToggle: (id: string) => void;
   onFrameSelected: (index: number) => void;
 }
 
@@ -29,7 +29,6 @@ export default function TimelineObjectShape(
     objectBlocks,
     fieldBlocks,
     onSelect,
-    onToggle,
     onFrameSelected,
   } = props;
   const { id, objectSchema } = object;
@@ -38,14 +37,20 @@ export default function TimelineObjectShape(
   const theme = useTheme();
   const selectionColor = theme.palette.primary.light;
   const deselectionColor = theme.palette.primary.dark;
+  const hoverStrokeColor = theme.palette.text.primary;
 
   const rectRef = useRef<Konva.Rect>(null);
   const fillRef = useRef<Konva.Rect>(null);
+
+  const hoverProps = useMemo(() => ({ strokeWidth: TimelineHoverStroke }), []);
+  const outProps = useMemo(() => ({ strokeWidth: 0 }), []);
+  const hoverCallbacks = useMouseHover(rectRef, hoverProps, outProps);
 
   return (
     <>
       <Group
         x={0}
+        {...hoverCallbacks}
         onClick={event => {
           if (isSelected) {
             const position = getEventRelativePosition(event);
@@ -61,19 +66,6 @@ export default function TimelineObjectShape(
               !event.evt.ctrlKey,
             );
           }
-        }}
-        onDblClick={() => onToggle(id)}
-        onMouseEnter={() => {
-          rectRef.current?.strokeWidth(TimelineHoverStroke);
-          rectRef.current?.getLayer()?.batchDraw();
-        }}
-        onMouseLeave={() => {
-          rectRef.current?.strokeWidth(0);
-          rectRef.current?.getLayer()?.batchDraw();
-        }}
-        onMouseOut={() => {
-          rectRef.current?.strokeWidth(0);
-          rectRef.current?.getLayer()?.batchDraw();
         }}
       >
         {objectBlocks.map(block => (
@@ -93,7 +85,7 @@ export default function TimelineObjectShape(
           y={row * rowHeight}
           height={rowHeight - 3}
           width={duration}
-          stroke="black"
+          stroke={hoverStrokeColor}
           strokeWidth={0}
           dash={[2, 2]}
         />

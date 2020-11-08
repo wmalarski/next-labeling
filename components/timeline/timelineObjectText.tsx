@@ -8,7 +8,6 @@ export interface TimelineObjectTextProps extends TimelineObjectShapeConfig {
   rowHeight: number;
   selection?: ObjectSelection;
   onSelect: (selection: ObjectSelection, reset: boolean) => void;
-  onToggle: (id: string) => void;
 }
 
 export default function TimelineObjectText(
@@ -22,7 +21,6 @@ export default function TimelineObjectText(
     object,
     objectBlocks,
     onSelect,
-    onToggle,
   } = props;
   const { id, objectSchema, name } = object;
 
@@ -41,7 +39,6 @@ export default function TimelineObjectText(
           !event.evt.ctrlKey,
         )
       }
-      onDblClick={() => onToggle(id)}
     >
       <Tag fill="black" opacity={0.3} />
       <Text

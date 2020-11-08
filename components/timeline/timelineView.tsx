@@ -15,6 +15,7 @@ import {
 import { getTimelineObjectShapeConfigs } from "../../utils/timeline/functions";
 import TimelineObjectShape from "./timelineObjectShape";
 import TimelineObjectText from "./timelineObjectText";
+import TimelineToggleButton from "./timelineToggleButton";
 
 export interface TimelineViewProps {
   width: number;
@@ -96,9 +97,10 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
     [duration, frameStep, pushLabeling],
   );
 
+  const toggleButtonsWidth = 30;
   return (
     <Stage width={width} height={height}>
-      <Layer scaleX={scaleX}>
+      <Layer x={toggleButtonsWidth} scaleX={scaleX}>
         {configs.map(config => (
           <TimelineObjectShape
             key={config.object.id}
@@ -107,12 +109,11 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
             duration={duration}
             {...config}
             onSelect={handleSelect}
-            onToggle={handleToggle}
             onFrameSelected={handleFrameSelected}
           />
         ))}
       </Layer>
-      <Layer>
+      <Layer x={toggleButtonsWidth}>
         <Line
           points={[
             (currentFrame + 0.5) * scaleX,
@@ -131,6 +132,18 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
             rowHeight={TimelineRowHeight}
             {...config}
             onSelect={handleSelect}
+          />
+        ))}
+      </Layer>
+      <Layer>
+        {configs.map(config => (
+          <TimelineToggleButton
+            key={config.object.id}
+            rowHeight={TimelineRowHeight}
+            width={toggleButtonsWidth}
+            horPadding={8}
+            verPadding={14}
+            {...config}
             onToggle={handleToggle}
           />
         ))}
