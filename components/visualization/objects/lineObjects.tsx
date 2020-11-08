@@ -1,17 +1,18 @@
 import React from "react";
 import { Line } from "react-konva";
-
 import { getFieldValues } from "../../../utils/editors/functions";
 import {
   FieldType,
   LabelingFieldAttributes,
   LabelingFieldValues,
 } from "../../../utils/editors/types";
+import { getLabelText } from "../../../utils/visualization/functions";
 import { LineBuilderStage } from "../../../utils/visualization/objects/lineBuilder";
 import {
   FinishedObjectProps,
   InProgressObjectProps,
 } from "../../../utils/visualization/types";
+import { HoverTooltip } from "../shapes/hoverTooltip";
 import Sections, { SectionsShapeProps } from "../shapes/sections";
 
 export function getSectionsProps(
@@ -48,15 +49,17 @@ export function LineFinished(props: FinishedObjectProps): JSX.Element | null {
 
   return (
     lineProps && (
-      <Sections
-        sectionsProps={lineProps}
-        object={object}
-        onSelect={onSelect}
-        isSelected={isSelected}
-        onChange={value => {
-          onChange({ [FieldType.LINE]: [{ frame, value: value.points }] });
-        }}
-      />
+      <HoverTooltip text={getLabelText(object)}>
+        <Sections
+          sectionsProps={lineProps}
+          object={object}
+          onSelect={onSelect}
+          isSelected={isSelected}
+          onChange={value => {
+            onChange({ [FieldType.LINE]: [{ frame, value: value.points }] });
+          }}
+        />
+      </HoverTooltip>
     )
   );
 }

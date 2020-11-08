@@ -1,18 +1,19 @@
 import React from "react";
 import { Line } from "react-konva";
-
 import { getFieldValues } from "../../../utils/editors/functions";
 import {
   FieldType,
   LabelingFieldAttributes,
   LabelingFieldValues,
 } from "../../../utils/editors/types";
+import { getLabelText } from "../../../utils/visualization/functions";
 import { PointBuilderStage } from "../../../utils/visualization/objects/pointBuilder";
 import {
   FinishedObjectProps,
   InProgressObjectProps,
 } from "../../../utils/visualization/types";
 import Graph, { GraphShapeProps } from "../shapes/graph";
+import { HoverTooltip } from "../shapes/hoverTooltip";
 
 export function getGraphProps(
   values?: LabelingFieldValues,
@@ -49,15 +50,17 @@ export function GraphFinished(props: FinishedObjectProps): JSX.Element | null {
 
   return (
     graphProps && (
-      <Graph
-        shapeProps={graphProps}
-        object={object}
-        onSelect={onSelect}
-        isSelected={isSelected}
-        onChange={value => {
-          onChange({ [FieldType.GRAPH]: [{ frame, value }] });
-        }}
-      />
+      <HoverTooltip text={getLabelText(object)}>
+        <Graph
+          shapeProps={graphProps}
+          object={object}
+          onSelect={onSelect}
+          isSelected={isSelected}
+          onChange={value => {
+            onChange({ [FieldType.GRAPH]: [{ frame, value }] });
+          }}
+        />
+      </HoverTooltip>
     )
   );
 }

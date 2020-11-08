@@ -1,83 +1,85 @@
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import TreeView from "@material-ui/lab/TreeView/TreeView";
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
+import { Layer, Stage } from "react-konva";
 import { labelingFilter } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import { ObjectSelection } from "../../utils/labeling/types/client";
 import setSelectedUpdate from "../../utils/labeling/updates/setSelectedUpdate";
 import setToggledUpdate from "../../utils/labeling/updates/setToggledUpdate";
-import { TimelineObjectItem } from "./timelineObjectItem";
+import { TimelineRowHeight } from "../../utils/timeline/constansts";
+import { getTimelineObjectShapeConfigs } from "../../utils/timeline/functions";
+import TimelineObjectShape from "./timelineObjectShape";
 
 export default function TimelineView(): JSX.Element {
-  const { history, filters } = useLabelingContext();
+  const { history, filters, duration } = useLabelingContext();
   const { pushLabeling } = history;
 
-  const { objects, selected: selectedObjects, toggled } = history.data;
+  const { objects, selected, toggled } = history.data;
 
-  const filteredObjects = useMemo(
-    () => objects.filter(labelingFilter(filters)),
-    [filters, objects],
-  );
-
-  const selected = useMemo(
+  const configs = useMemo(
     () =>
-      selectedObjects.flatMap(object => [
-        ...(object.objectSelected ? [object.objectId] : []),
-        ...object.fieldIds.map(field => `${object.objectId}|${field}`),
-      ]),
-    [selectedObjects],
+      getTimelineObjectShapeConfigs(
+        objects.filter(labelingFilter(filters)),
+        toggled,
+        duration,
+      ),
+    [duration, filters, objects, toggled],
   );
 
-  const handleToggle = (_event: any, nodeIds: string[]) =>
-    pushLabeling(data => setToggledUpdate(data, nodeIds));
+  const rowCount = useMemo(
+    () =>
+      configs
+        .map(config => config.fieldBlocks.length + 1)
+        .reduce<number>((a, b) => a + b, 0),
+    [configs],
+  );
 
-  const handleSelect = (_event: any, nodeIds: string[]) => {
-    const result = Object.values(
-      nodeIds.reduce<{ [objectId: string]: ObjectSelection }>((prev, curr) => {
-        const [objectId, fieldId] = curr.split("|");
-        const prevFields = prev[objectId] ?? {
-          objectId,
-          fieldIds: [],
-          objectSelected: !fieldId,
-          singleton:
-            objects.find(object => object.id === objectId)?.objectSchema
-              .singleton ?? true,
-        };
-        return {
-          ...prev,
-          [objectId]: {
-            ...prevFields,
-            fieldIds: fieldId
-              ? [...prevFields.fieldIds, fieldId]
-              : prevFields.fieldIds,
-            objectSelected: prevFields.objectSelected || !fieldId,
-          },
-        };
-      }, {}),
-    );
-    pushLabeling(data => setSelectedUpdate(data, result));
-  };
+  const handleToggle = useCallback(
+    (id: string): void =>
+      pushLabeling(doc =>
+        setToggledUpdate(
+          doc,
+          doc.toggled.includes(id)
+            ? doc.toggled.filter(t => t !== id)
+            : [...doc.toggled, id],
+        ),
+      ),
+    [pushLabeling],
+  );
 
+  const handleSelect = useCallback(
+    (selection: ObjectSelection, reset: boolean): void =>
+      pushLabeling(doc =>
+        setSelectedUpdate(
+          doc,
+          reset
+            ? [selection]
+            : [
+                ...doc.selected.filter(
+                  sel => sel.objectId !== selection.objectId,
+                ),
+                selection,
+              ],
+        ),
+      ),
+    [pushLabeling],
+  );
+
+  const width = 600;
   return (
-    <TreeView
-      defaultCollapseIcon={<ArrowDropDownIcon />}
-      defaultExpandIcon={<ArrowRightIcon />}
-      defaultEndIcon={<div style={{ width: 24 }} />}
-      expanded={toggled}
-      selected={selected}
-      onNodeToggle={handleToggle}
-      onNodeSelect={handleSelect}
-      multiSelect
-    >
-      {filteredObjects.map(object => (
-        <TimelineObjectItem
-          nodeId={object.id}
-          key={object.id}
-          object={object}
-          selected={selected}
-        />
-      ))}
-    </TreeView>
+    <Stage width={width} height={rowCount * TimelineRowHeight}>
+      <Layer scaleX={0.5}>
+        {configs.map(config => (
+          <TimelineObjectShape
+            key={config.object.id}
+            selection={selected.find(sel => sel.objectId === config.object.id)}
+            rowHeight={TimelineRowHeight}
+            duration={duration}
+            {...config}
+            onSelect={handleSelect}
+            onToggle={handleToggle}
+          />
+        ))}
+      </Layer>
+    </Stage>
   );
 }

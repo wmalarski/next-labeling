@@ -10,12 +10,16 @@ import {
   LabelingFieldValues,
 } from "../../../utils/editors/types";
 import { PointRadius } from "../../../utils/visualization/constanst";
-import { getShapeStyle } from "../../../utils/visualization/functions";
+import {
+  getLabelText,
+  getShapeStyle,
+} from "../../../utils/visualization/functions";
 import { EyeBuilderStage } from "../../../utils/visualization/objects/eyeBuilder";
 import {
   FinishedObjectProps,
   InProgressObjectProps,
 } from "../../../utils/visualization/types";
+import { HoverTooltip } from "../shapes/hoverTooltip";
 
 export interface EyeShapeProps {
   points: number[];
@@ -119,122 +123,124 @@ export function EyeFinished(props: FinishedObjectProps): JSX.Element | null {
   };
 
   return (
-    <>
-      <Line
-        ref={firstLineRef}
-        points={firstPoints}
-        {...lineCommonProps}
-        onDragMove={e => {
-          const firstLine = firstLineRef.current;
-          const secondLine = secondLineRef.current;
-          if (!firstLine || !secondLine) return;
-          const { x, y } = e.target.position();
-          const newPoints = [
-            ...firstLine.points(),
-            ...secondPoints.slice(2, 4),
-          ].map((v, i) => v + (i % 2 ? y : x));
-
-          pointsRef.current.forEach((point, index) => {
-            if (!point) return;
-            point.x(newPoints[2 * index]);
-            point.y(newPoints[2 * index + 1]);
-          });
-          const splited = splitPoints(newPoints);
-          secondLine.points(splited.secondPoints);
-          firstLine.getLayer()?.batchDraw();
-        }}
-        onDragEnd={e => {
-          const firstLine = firstLineRef.current;
-          if (!firstLine) return;
-          const { x, y } = e.target.position();
-          const newPoints = [
-            ...firstLine.points(),
-            ...secondPoints.slice(2, 4),
-          ].map((v, i) => v + (i % 2 ? y : x));
-
-          firstLine.position({ x: 0, y: 0 });
-          onChange({
-            [FieldType.EYE]: [{ frame, value: newPoints }],
-          });
-        }}
-      />
-      <Line
-        ref={secondLineRef}
-        points={secondPoints}
-        {...lineCommonProps}
-        onDragMove={e => {
-          const firstLine = firstLineRef.current;
-          const secondLine = secondLineRef.current;
-          if (!firstLine || !secondLine) return;
-          const { x, y } = e.target.position();
-
-          const newPoints = [
-            ...secondLine.points().slice(4, 6),
-            ...firstPoints.slice(2, 4),
-            ...secondLine.points().slice(0, 4),
-          ].map((v, i) => v + (i % 2 ? y : x));
-
-          pointsRef.current.forEach((point, index) => {
-            if (!point) return;
-            point.x(newPoints[2 * index]);
-            point.y(newPoints[2 * index + 1]);
-          });
-          const splited = splitPoints(newPoints);
-          firstLine.points(splited.firstPoints);
-          secondLine.getLayer()?.batchDraw();
-        }}
-        onDragEnd={e => {
-          const secondLine = secondLineRef.current;
-          if (!secondLine) return;
-          const { x, y } = e.target.position();
-          const newPoints = [
-            ...secondLine.points().slice(4, 6),
-            ...firstPoints.slice(2, 4),
-            ...secondLine.points().slice(0, 4),
-          ].map((v, i) => v + (i % 2 ? y : x));
-
-          secondLine.position({ x: 0, y: 0 });
-          onChange({
-            [FieldType.EYE]: [{ frame, value: newPoints }],
-          });
-        }}
-      />
-      {range(0, points.length, 2).map(index => (
-        <Circle
-          key={index}
-          fill={stroke}
-          ref={circle => {
-            pointsRef.current[index / 2] = circle;
-          }}
-          x={points[index]}
-          y={points[index + 1]}
-          radius={PointRadius}
-          strokeWidth={lineCommonProps.strokeWidth}
-          onClick={lineCommonProps.onClick}
-          onTap={lineCommonProps.onTap}
-          draggable={draggable}
+    <HoverTooltip text={getLabelText(object)}>
+      <>
+        <Line
+          ref={firstLineRef}
+          points={firstPoints}
+          {...lineCommonProps}
           onDragMove={e => {
             const firstLine = firstLineRef.current;
             const secondLine = secondLineRef.current;
             if (!firstLine || !secondLine) return;
+            const { x, y } = e.target.position();
+            const newPoints = [
+              ...firstLine.points(),
+              ...secondPoints.slice(2, 4),
+            ].map((v, i) => v + (i % 2 ? y : x));
 
-            const newProps = getNewEyeShape(firstLine, secondLine, index, e);
-            firstLine.points(newProps.firstPoints);
-            secondLine.points(newProps.secondPoints);
+            pointsRef.current.forEach((point, index) => {
+              if (!point) return;
+              point.x(newPoints[2 * index]);
+              point.y(newPoints[2 * index + 1]);
+            });
+            const splited = splitPoints(newPoints);
+            secondLine.points(splited.secondPoints);
             firstLine.getLayer()?.batchDraw();
           }}
           onDragEnd={e => {
             const firstLine = firstLineRef.current;
-            const secondLine = secondLineRef.current;
-            if (!firstLine || !secondLine) return;
+            if (!firstLine) return;
+            const { x, y } = e.target.position();
+            const newPoints = [
+              ...firstLine.points(),
+              ...secondPoints.slice(2, 4),
+            ].map((v, i) => v + (i % 2 ? y : x));
 
-            const newProps = getNewEyeShape(firstLine, secondLine, index, e);
+            firstLine.position({ x: 0, y: 0 });
             onChange({
-              [FieldType.EYE]: [{ frame, value: newProps.points }],
+              [FieldType.EYE]: [{ frame, value: newPoints }],
             });
           }}
         />
-      ))}
-    </>
+        <Line
+          ref={secondLineRef}
+          points={secondPoints}
+          {...lineCommonProps}
+          onDragMove={e => {
+            const firstLine = firstLineRef.current;
+            const secondLine = secondLineRef.current;
+            if (!firstLine || !secondLine) return;
+            const { x, y } = e.target.position();
+
+            const newPoints = [
+              ...secondLine.points().slice(4, 6),
+              ...firstPoints.slice(2, 4),
+              ...secondLine.points().slice(0, 4),
+            ].map((v, i) => v + (i % 2 ? y : x));
+
+            pointsRef.current.forEach((point, index) => {
+              if (!point) return;
+              point.x(newPoints[2 * index]);
+              point.y(newPoints[2 * index + 1]);
+            });
+            const splited = splitPoints(newPoints);
+            firstLine.points(splited.firstPoints);
+            secondLine.getLayer()?.batchDraw();
+          }}
+          onDragEnd={e => {
+            const secondLine = secondLineRef.current;
+            if (!secondLine) return;
+            const { x, y } = e.target.position();
+            const newPoints = [
+              ...secondLine.points().slice(4, 6),
+              ...firstPoints.slice(2, 4),
+              ...secondLine.points().slice(0, 4),
+            ].map((v, i) => v + (i % 2 ? y : x));
+
+            secondLine.position({ x: 0, y: 0 });
+            onChange({
+              [FieldType.EYE]: [{ frame, value: newPoints }],
+            });
+          }}
+        />
+        {range(0, points.length, 2).map(index => (
+          <Circle
+            key={index}
+            fill={stroke}
+            ref={circle => {
+              pointsRef.current[index / 2] = circle;
+            }}
+            x={points[index]}
+            y={points[index + 1]}
+            radius={PointRadius}
+            strokeWidth={lineCommonProps.strokeWidth}
+            onClick={lineCommonProps.onClick}
+            onTap={lineCommonProps.onTap}
+            draggable={draggable}
+            onDragMove={e => {
+              const firstLine = firstLineRef.current;
+              const secondLine = secondLineRef.current;
+              if (!firstLine || !secondLine) return;
+
+              const newProps = getNewEyeShape(firstLine, secondLine, index, e);
+              firstLine.points(newProps.firstPoints);
+              secondLine.points(newProps.secondPoints);
+              firstLine.getLayer()?.batchDraw();
+            }}
+            onDragEnd={e => {
+              const firstLine = firstLineRef.current;
+              const secondLine = secondLineRef.current;
+              if (!firstLine || !secondLine) return;
+
+              const newProps = getNewEyeShape(firstLine, secondLine, index, e);
+              onChange({
+                [FieldType.EYE]: [{ frame, value: newProps.points }],
+              });
+            }}
+          />
+        ))}
+      </>
+    </HoverTooltip>
   );
 }

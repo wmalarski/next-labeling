@@ -1,12 +1,10 @@
 import { useTheme } from "@material-ui/core";
 import React from "react";
 import { Layer, Line, Rect, Stage, Text } from "react-konva";
-import {
-  ObjectBlock,
-  TimelineVerticalLineWidth,
-} from "../../utils/editors/timeline";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import { LabelingObject } from "../../utils/labeling/types/client";
+import { TimelineVerticalLineWidth } from "../../utils/timeline/constansts";
+import { ObjectBlock } from "../../utils/timeline/types";
 
 export interface ObjectCanvasProps {
   object: LabelingObject;

@@ -9,6 +9,7 @@ import {
 } from "../../../utils/editors/types";
 import { Box3dValue } from "../../../utils/editors/types/box3d";
 import { BoxNewSideWidth } from "../../../utils/visualization/constanst";
+import { getLabelText } from "../../../utils/visualization/functions";
 import { Box3dBuilderStage } from "../../../utils/visualization/objects/box3dBuilder";
 import {
   FinishedObjectProps,
@@ -16,6 +17,7 @@ import {
 } from "../../../utils/visualization/types";
 import { BoxLeaf } from "../shapes/boxLeaf";
 import { BoxSide, BoxSideShapeProps } from "../shapes/boxSide";
+import { HoverTooltip } from "../shapes/hoverTooltip";
 import { Rectangle, RectangleShapeProps } from "../shapes/rectangle";
 
 export enum Box3dShapeType {
@@ -112,115 +114,81 @@ export function Box3dFinished(props: FinishedObjectProps): JSX.Element | null {
   const { front, type, side } = shapeProps;
 
   return (
-    <>
-      {!isDragged && isSelected && (
-        <BoxLeaf
-          x={front.x - 1}
-          y={front.y}
-          height={front.height}
-          isLeft={true}
-          onClick={() =>
-            onChange({
-              [FieldType.BOX3D]: [
-                {
-                  frame,
-                  value:
-                    type === Box3dShapeType.LEFT
-                      ? {
-                          ...value,
-                          sideType: null,
-                          side: null,
-                        }
-                      : {
-                          ...value,
-                          sideType: Box3dShapeType.LEFT,
-                          side: [
-                            front.x - BoxNewSideWidth,
-                            front.y,
-                            front.y + front.height,
-                          ],
-                        },
-                },
-              ],
-            })
-          }
-        />
-      )}
-      {!isDragged && isSelected && (
-        <BoxLeaf
-          x={front.x + front.width}
-          y={front.y}
-          height={front.height}
-          isLeft={false}
-          onClick={() =>
-            onChange({
-              [FieldType.BOX3D]: [
-                {
-                  frame,
-                  value:
-                    type === Box3dShapeType.RIGHT
-                      ? {
-                          ...value,
-                          sideType: null,
-                          side: null,
-                        }
-                      : {
-                          ...value,
-                          sideType: Box3dShapeType.RIGHT,
-                          side: [
-                            front.x + front.width + BoxNewSideWidth,
-                            front.y,
-                            front.y + front.height,
-                          ],
-                        },
-                },
-              ],
-            })
-          }
-        />
-      )}
-      <Rectangle
-        isSelected={isSelected}
-        object={object}
-        rectProps={front}
-        onSelect={onSelect}
-        onChange={newFront => {
-          const { x, y, width, height } = newFront;
-          setIsDragged(false);
-          onChange({
-            [FieldType.BOX3D]: [
-              {
-                frame,
-                value: {
-                  ...value,
-                  front: [x, y, x + width, y + height],
-                },
-              },
-            ],
-          });
-        }}
-        onMove={newFront => {
-          if (!side) return;
-          const { x, y, width, height } = newFront;
-          const newPoints = [...side.points];
-          const newX = x + (type === Box3dShapeType.LEFT ? 0 : width);
-          newPoints.splice(0, 2, newX, y);
-          newPoints.splice(6, 2, newX, y + height);
-          lineRef.current?.points(newPoints);
-          setIsDragged(true);
-        }}
-      />
-      {side && (
-        <BoxSide
-          lineRef={lineRef}
-          topRef={topRef}
-          bottomRef={bottomRef}
+    <HoverTooltip text={getLabelText(object)}>
+      <>
+        {!isDragged && isSelected && (
+          <BoxLeaf
+            x={front.x - 1}
+            y={front.y}
+            height={front.height}
+            isLeft={true}
+            onClick={() =>
+              onChange({
+                [FieldType.BOX3D]: [
+                  {
+                    frame,
+                    value:
+                      type === Box3dShapeType.LEFT
+                        ? {
+                            ...value,
+                            sideType: null,
+                            side: null,
+                          }
+                        : {
+                            ...value,
+                            sideType: Box3dShapeType.LEFT,
+                            side: [
+                              front.x - BoxNewSideWidth,
+                              front.y,
+                              front.y + front.height,
+                            ],
+                          },
+                  },
+                ],
+              })
+            }
+          />
+        )}
+        {!isDragged && isSelected && (
+          <BoxLeaf
+            x={front.x + front.width}
+            y={front.y}
+            height={front.height}
+            isLeft={false}
+            onClick={() =>
+              onChange({
+                [FieldType.BOX3D]: [
+                  {
+                    frame,
+                    value:
+                      type === Box3dShapeType.RIGHT
+                        ? {
+                            ...value,
+                            sideType: null,
+                            side: null,
+                          }
+                        : {
+                            ...value,
+                            sideType: Box3dShapeType.RIGHT,
+                            side: [
+                              front.x + front.width + BoxNewSideWidth,
+                              front.y,
+                              front.y + front.height,
+                            ],
+                          },
+                  },
+                ],
+              })
+            }
+          />
+        )}
+        <Rectangle
           isSelected={isSelected}
           object={object}
-          shapeProps={side}
+          rectProps={front}
           onSelect={onSelect}
-          onChange={newSide => {
-            const { points } = newSide;
+          onChange={newFront => {
+            const { x, y, width, height } = newFront;
             setIsDragged(false);
             onChange({
               [FieldType.BOX3D]: [
@@ -228,17 +196,53 @@ export function Box3dFinished(props: FinishedObjectProps): JSX.Element | null {
                   frame,
                   value: {
                     ...value,
-                    side: [points[2], points[3], points[5]],
+                    front: [x, y, x + width, y + height],
                   },
                 },
               ],
             });
           }}
-          onMove={() => {
+          onMove={newFront => {
+            if (!side) return;
+            const { x, y, width, height } = newFront;
+            const newPoints = [...side.points];
+            const newX = x + (type === Box3dShapeType.LEFT ? 0 : width);
+            newPoints.splice(0, 2, newX, y);
+            newPoints.splice(6, 2, newX, y + height);
+            lineRef.current?.points(newPoints);
             setIsDragged(true);
           }}
         />
-      )}
-    </>
+        {side && (
+          <BoxSide
+            lineRef={lineRef}
+            topRef={topRef}
+            bottomRef={bottomRef}
+            isSelected={isSelected}
+            object={object}
+            shapeProps={side}
+            onSelect={onSelect}
+            onChange={newSide => {
+              const { points } = newSide;
+              setIsDragged(false);
+              onChange({
+                [FieldType.BOX3D]: [
+                  {
+                    frame,
+                    value: {
+                      ...value,
+                      side: [points[2], points[3], points[5]],
+                    },
+                  },
+                ],
+              });
+            }}
+            onMove={() => {
+              setIsDragged(true);
+            }}
+          />
+        )}
+      </>
+    </HoverTooltip>
   );
 }

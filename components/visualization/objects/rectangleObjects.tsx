@@ -6,11 +6,13 @@ import {
   LabelingFieldAttributes,
   LabelingFieldValues,
 } from "../../../utils/editors/types";
+import { getLabelText } from "../../../utils/visualization/functions";
 import { RectangleBuilderStage } from "../../../utils/visualization/objects/rectangleBuilder";
 import {
   FinishedObjectProps,
   InProgressObjectProps,
 } from "../../../utils/visualization/types";
+import { HoverTooltip } from "../shapes/hoverTooltip";
 import { Rectangle, RectangleShapeProps } from "../shapes/rectangle";
 
 export function getRectProps(
@@ -54,27 +56,29 @@ export function RectangleFinished(
 
   return (
     rectProps && (
-      <Rectangle
-        isSelected={isSelected}
-        object={object}
-        onSelect={onSelect}
-        rectProps={rectProps}
-        onChange={rect =>
-          onChange({
-            [FieldType.RECTANGLE]: [
-              {
-                frame,
-                value: [
-                  rect.x,
-                  rect.y,
-                  rect.x + rect.width,
-                  rect.y + rect.height,
-                ],
-              },
-            ],
-          })
-        }
-      />
+      <HoverTooltip text={getLabelText(object)}>
+        <Rectangle
+          isSelected={isSelected}
+          object={object}
+          onSelect={onSelect}
+          rectProps={rectProps}
+          onChange={rect =>
+            onChange({
+              [FieldType.RECTANGLE]: [
+                {
+                  frame,
+                  value: [
+                    rect.x,
+                    rect.y,
+                    rect.x + rect.width,
+                    rect.y + rect.height,
+                  ],
+                },
+              ],
+            })
+          }
+        />
+      </HoverTooltip>
     )
   );
 }

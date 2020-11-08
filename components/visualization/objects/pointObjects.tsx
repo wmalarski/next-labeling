@@ -9,12 +9,16 @@ import {
   LabelingFieldValues,
 } from "../../../utils/editors/types";
 import { FontSize } from "../../../utils/visualization/constanst";
-import { getShapeStyle } from "../../../utils/visualization/functions";
+import {
+  getLabelText,
+  getShapeStyle,
+} from "../../../utils/visualization/functions";
 import { PointBuilderStage } from "../../../utils/visualization/objects/pointBuilder";
 import {
   FinishedObjectProps,
   InProgressObjectProps,
 } from "../../../utils/visualization/types";
+import { HoverTooltip } from "../shapes/hoverTooltip";
 
 export interface PointProps {
   x: number;
@@ -87,7 +91,7 @@ export function PointFinished(props: FinishedObjectProps): JSX.Element | null {
 
   return (
     pointProps && (
-      <>
+      <HoverTooltip text={getLabelText(object)}>
         <Text
           ref={textRef}
           {...commonProps}
@@ -117,7 +121,7 @@ export function PointFinished(props: FinishedObjectProps): JSX.Element | null {
             });
           }}
         />
-      </>
+      </HoverTooltip>
     )
   );
 }

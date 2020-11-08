@@ -3,7 +3,6 @@ import { KonvaEventObject } from "konva/types/Node";
 import range from "lodash/range";
 import { LabelingObject } from "../labeling/types/client";
 import { SelectedStrokeWidth, UnselectedStrokeWidth } from "./constanst";
-
 import { Point2D } from "./types";
 
 export function getEventRelativePosition(
@@ -33,4 +32,8 @@ export function getShapeStyle(isSelected: boolean): Konva.ShapeConfig {
     strokeScaleEnabled: false,
     strokeWidth: isSelected ? SelectedStrokeWidth : UnselectedStrokeWidth,
   };
+}
+
+export function getLabelText(object: LabelingObject): string {
+  return object.name;
 }

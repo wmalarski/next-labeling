@@ -1,20 +1,7 @@
+import { UnpackedFrameValuePair, unpackValues } from "../editors/functions";
+import getValueIndex from "../editors/indexes";
 import { LabelingField, LabelingObject } from "../labeling/types/client";
-import { UnpackedFrameValuePair, unpackValues } from "./functions";
-import getValueIndex from "./indexes";
-
-export const TimelineVerticalLineWidth = 2;
-
-export interface ObjectBlock {
-  firstFrame: number;
-  lastFrame: number;
-}
-
-export interface FieldBlock {
-  firstFrame: number;
-  lastFrame: number;
-  value: string;
-  index: number;
-}
+import { FieldBlock, ObjectBlock, TimelineObjectShapeConfig } from "./types";
 
 interface ReduceFieldBlocksState {
   fieldBlocks: FieldBlock[];
@@ -114,4 +101,23 @@ export function calculateFieldBlocks(
   );
 
   return [...result.fieldBlocks];
+}
+
+export function getTimelineObjectShapeConfigs(
+  objects: LabelingObject[],
+  toggled: string[],
+  duration: number,
+): TimelineObjectShapeConfig[] {
+  return objects.reduce<TimelineObjectShapeConfig[]>((prev, object) => {
+    const last = prev[prev.length - 1] ?? { row: 0, fieldBlocks: [] };
+    const row = last.row + last.fieldBlocks.length + 1;
+    const objectBlocks = calculateObjectBlocks(object, duration);
+    const isToggled = toggled.includes(object.id);
+    const visibleFields = isToggled ? object.fields : [];
+    const fieldBlocks = visibleFields.map(field => ({
+      field,
+      fieldBlocks: calculateFieldBlocks(field, objectBlocks, duration),
+    }));
+    return [...prev, { row, object, objectBlocks, fieldBlocks, isToggled }];
+  }, []);
 }

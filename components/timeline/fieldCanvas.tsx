@@ -1,18 +1,16 @@
 import { useTheme } from "@material-ui/core";
-import { TextConfig } from "konva/types/shapes/Text";
-import React, { useState } from "react";
+import React from "react";
 import { Layer, Line, Rect, Stage, Text } from "react-konva";
 import {
   darkerTimelineColors,
   lighterColors,
 } from "../../themes/timelineColors";
-import {
-  calculateFieldBlocks,
-  ObjectBlock,
-  TimelineVerticalLineWidth,
-} from "../../utils/editors/timeline";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import { LabelingField } from "../../utils/labeling/types/client";
+import { TimelineVerticalLineWidth } from "../../utils/timeline/constansts";
+import { calculateFieldBlocks } from "../../utils/timeline/functions";
+import { ObjectBlock } from "../../utils/timeline/types";
+import { HoverTooltip } from "../visualization/shapes/hoverTooltip";
 
 export interface FieldCanvasProps {
   field: LabelingField;
@@ -37,32 +35,28 @@ export default function FieldCanvas(props: FieldCanvasProps): JSX.Element {
   const scale = width / duration;
   const fieldBlocks = calculateFieldBlocks(field, blocks, duration);
 
-  const [tooltip, setTooltip] = useState<TextConfig>({});
-
   return (
     <>
       <Stage width={shiftX + width} height={height}>
         <Layer>
           {fieldBlocks.map(block => (
-            <Rect
+            <HoverTooltip
               key={block.firstFrame}
-              x={shiftX + block.firstFrame * scale}
-              y={0}
-              width={(block.lastFrame + 1 - block.firstFrame) * scale}
-              height={height}
-              fill={
-                isSelected
-                  ? lighterColors[block.index]
-                  : darkerTimelineColors[block.index]
-              }
-              onMouseEnter={() =>
-                setTooltip({
-                  text: block.value,
-                  visible: true,
-                })
-              }
-              onMouseLeave={() => setTooltip({ visible: false })}
-            />
+              opacity={1}
+              text={`${field.fieldSchema.name}: ${block.value}`}
+            >
+              <Rect
+                x={shiftX + block.firstFrame * scale}
+                y={0}
+                width={(block.lastFrame + 1 - block.firstFrame) * scale}
+                height={height}
+                fill={
+                  isSelected
+                    ? lighterColors[block.index]
+                    : darkerTimelineColors[block.index]
+                }
+              />
+            </HoverTooltip>
           ))}
           <Line
             points={[
@@ -77,7 +71,6 @@ export default function FieldCanvas(props: FieldCanvasProps): JSX.Element {
         </Layer>
         <Layer>
           <Text text={field.fieldSchema.name} fontSize={fontSize} />
-          <Text y={height / 2} fontSize={fontSize} {...tooltip} />
         </Layer>
       </Stage>
     </>
