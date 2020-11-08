@@ -7,39 +7,17 @@ export interface TimelineObjectTextProps extends TimelineObjectShapeConfig {
   scaleX: number;
   rowHeight: number;
   selection?: ObjectSelection;
-  onSelect: (selection: ObjectSelection, reset: boolean) => void;
+  onSelect: (id: string, selection: ObjectSelection, reset: boolean) => void;
 }
 
 export default function TimelineObjectText(
   props: TimelineObjectTextProps,
 ): JSX.Element {
-  const {
-    scaleX,
-    selection,
-    rowHeight,
-    row,
-    object,
-    objectBlocks,
-    onSelect,
-  } = props;
-  const { id, objectSchema, name } = object;
+  const { scaleX, rowHeight, row, object, objectBlocks } = props;
+  const { name } = object;
 
   return (
-    <Label
-      x={objectBlocks[0]?.firstFrame * scaleX}
-      y={row * rowHeight}
-      onClick={event =>
-        onSelect(
-          selection ?? {
-            fieldIds: [],
-            objectId: id,
-            objectSelected: true,
-            singleton: objectSchema.singleton,
-          },
-          !event.evt.ctrlKey,
-        )
-      }
-    >
+    <Label x={objectBlocks[0]?.firstFrame * scaleX} y={row * rowHeight}>
       <Tag fill="black" opacity={0.3} />
       <Text
         text={name}

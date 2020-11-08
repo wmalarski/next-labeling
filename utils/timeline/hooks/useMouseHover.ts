@@ -5,7 +5,6 @@ import { useCallback } from "react";
 export interface UseMouseHoverResult {
   onMouseEnter: (evt: KonvaEventObject<MouseEvent>) => void;
   onMouseLeave: (evt: KonvaEventObject<MouseEvent>) => void;
-  onMouseOut: (evt: KonvaEventObject<MouseEvent>) => void;
 }
 
 export default function useMouseHover<T extends ShapeConfig>(
@@ -23,5 +22,8 @@ export default function useMouseHover<T extends ShapeConfig>(
     ref.current?.getLayer()?.batchDraw();
   }, [out, ref]);
 
-  return { onMouseEnter, onMouseLeave, onMouseOut: onMouseLeave };
+  return {
+    onMouseEnter,
+    onMouseLeave,
+  };
 }

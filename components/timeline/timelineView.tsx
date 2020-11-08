@@ -68,19 +68,14 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
   );
 
   const handleSelect = useCallback(
-    (selection: ObjectSelection, reset: boolean): void =>
+    (id: string, selection: ObjectSelection | null, reset: boolean): void =>
       pushLabeling(doc =>
-        setSelectedUpdate(
-          doc,
-          reset
-            ? [selection]
-            : [
-                ...doc.selected.filter(
-                  sel => sel.objectId !== selection.objectId,
-                ),
-                selection,
-              ],
-        ),
+        setSelectedUpdate(doc, [
+          ...(reset
+            ? []
+            : [...doc.selected.filter(sel => sel.objectId !== id)]),
+          ...(selection ? [selection] : []),
+        ]),
       ),
     [pushLabeling],
   );
