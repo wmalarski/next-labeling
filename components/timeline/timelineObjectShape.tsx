@@ -1,10 +1,11 @@
 import { useTheme } from "@material-ui/core";
 import Konva from "konva";
 import React, { useRef } from "react";
-import { Group, Label, Rect, Tag, Text } from "react-konva";
+import { Group, Rect } from "react-konva";
 import { ObjectSelection } from "../../utils/labeling/types/client";
 import { TimelineHoverStroke } from "../../utils/timeline/constansts";
 import { TimelineObjectShapeConfig } from "../../utils/timeline/types";
+import { getEventRelativePosition } from "../../utils/visualization/functions";
 import TimelineFieldShape from "./timelineFieldShape";
 
 export interface TimelineObjectShapeProps extends TimelineObjectShapeConfig {
@@ -13,6 +14,7 @@ export interface TimelineObjectShapeProps extends TimelineObjectShapeConfig {
   selection?: ObjectSelection;
   onSelect: (selection: ObjectSelection, reset: boolean) => void;
   onToggle: (id: string) => void;
+  onFrameSelected: (index: number) => void;
 }
 
 export default function TimelineObjectShape(
@@ -28,8 +30,9 @@ export default function TimelineObjectShape(
     fieldBlocks,
     onSelect,
     onToggle,
+    onFrameSelected,
   } = props;
-  const { id, objectSchema, name } = object;
+  const { id, objectSchema } = object;
   const isSelected = selection?.objectSelected ?? false;
 
   const theme = useTheme();
@@ -43,17 +46,22 @@ export default function TimelineObjectShape(
     <>
       <Group
         x={0}
-        onClick={event =>
-          onSelect(
-            selection ?? {
-              fieldIds: [],
-              objectId: id,
-              objectSelected: true,
-              singleton: objectSchema.singleton,
-            },
-            !event.evt.ctrlKey,
-          )
-        }
+        onClick={event => {
+          if (isSelected) {
+            const position = getEventRelativePosition(event);
+            if (position) onFrameSelected(position.x);
+          } else {
+            onSelect(
+              selection ?? {
+                fieldIds: [],
+                objectId: id,
+                objectSelected: true,
+                singleton: objectSchema.singleton,
+              },
+              !event.evt.ctrlKey,
+            );
+          }
+        }}
         onDblClick={() => onToggle(id)}
         onMouseEnter={() => {
           rectRef.current?.strokeWidth(TimelineHoverStroke);
@@ -98,16 +106,6 @@ export default function TimelineObjectShape(
           fill={isSelected ? selectionColor : deselectionColor}
           opacity={0.1}
         />
-        <Label x={objectBlocks[0]?.firstFrame} y={row * rowHeight}>
-          <Tag fill="black" opacity={0.3} />
-          <Text
-            text={name}
-            fontSize={rowHeight / 2}
-            height={rowHeight - 4}
-            fill="white"
-            padding={2}
-          />
-        </Label>
       </Group>
       {fieldBlocks.map((pair, index) => (
         <TimelineFieldShape
@@ -121,42 +119,4 @@ export default function TimelineObjectShape(
       ))}
     </>
   );
-  // return (
-  //   <TreeItem
-  //     onLabelClick={event => event.preventDefault()}
-  //     label={
-  //       <ObjectCanvas
-  //         object={object}
-  //         blocks={blocks}
-  //         width={width}
-  //         height={height}
-  //         shiftX={shiftX}
-  //         fontSize={fontSize}
-  //         isSelected={isObjectSelected}
-  //       />
-  //     }
-  //   >
-  //     {fields.map(field => {
-  //       const nodeId = `${object.id}|${field.id}`;
-  //       const isFieldSelected = selected.includes(nodeId);
-  //       return (
-  //         <TreeItem
-  //           nodeId={nodeId}
-  //           key={field.id}
-  //           label={
-  //             <FieldCanvas
-  //               field={field}
-  //               blocks={blocks}
-  //               width={width}
-  //               height={height}
-  //               shiftX={shiftX - fieldOffset}
-  //               isSelected={isFieldSelected}
-  //               fontSize={fontSize}
-  //             />
-  //           }
-  //         />
-  //       );
-  //     })}
-  //   </TreeItem>
-  // );
 }

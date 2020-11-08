@@ -1,19 +1,38 @@
+import { useTheme } from "@material-ui/core";
 import React, { useCallback, useMemo } from "react";
-import { Layer, Stage } from "react-konva";
-import { labelingFilter } from "../../utils/labeling/functions";
+import { Layer, Line, Stage } from "react-konva";
+import { frameToRange, labelingFilter } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
 import { ObjectSelection } from "../../utils/labeling/types/client";
+import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
 import setSelectedUpdate from "../../utils/labeling/updates/setSelectedUpdate";
 import setToggledUpdate from "../../utils/labeling/updates/setToggledUpdate";
-import { TimelineRowHeight } from "../../utils/timeline/constansts";
+import {
+  TimelineRowHeight,
+  TimelineVerticalLineWidth,
+} from "../../utils/timeline/constansts";
 import { getTimelineObjectShapeConfigs } from "../../utils/timeline/functions";
 import TimelineObjectShape from "./timelineObjectShape";
+import TimelineObjectText from "./timelineObjectText";
 
-export default function TimelineView(): JSX.Element {
+export interface TimelineViewProps {
+  width: number;
+  scaleX: number;
+}
+
+export default function TimelineView(props: TimelineViewProps): JSX.Element {
+  const { width, scaleX } = props;
+
   const { history, filters, duration } = useLabelingContext();
-  const { pushLabeling } = history;
+  const { pushLabeling, data } = history;
+  const { objects, selected, toggled, currentFrame } = data;
 
-  const { objects, selected, toggled } = history.data;
+  const { preferences } = usePreferences();
+  const { frameChangeStep: frameStep } = preferences;
+
+  const theme = useTheme();
+  const errorColor = theme.palette.error.light;
 
   const configs = useMemo(
     () =>
@@ -25,8 +44,9 @@ export default function TimelineView(): JSX.Element {
     [duration, filters, objects, toggled],
   );
 
-  const rowCount = useMemo(
+  const height = useMemo(
     () =>
+      TimelineRowHeight *
       configs
         .map(config => config.fieldBlocks.length + 1)
         .reduce<number>((a, b) => a + b, 0),
@@ -64,16 +84,51 @@ export default function TimelineView(): JSX.Element {
     [pushLabeling],
   );
 
-  const width = 600;
+  const handleFrameSelected = useCallback(
+    (index: number): void =>
+      pushLabeling(doc =>
+        setCurrentFrameUpdate(
+          doc,
+          frameToRange(Number(index), duration),
+          frameStep,
+        ),
+      ),
+    [duration, frameStep, pushLabeling],
+  );
+
   return (
-    <Stage width={width} height={rowCount * TimelineRowHeight}>
-      <Layer scaleX={0.5}>
+    <Stage width={width} height={height}>
+      <Layer scaleX={scaleX}>
         {configs.map(config => (
           <TimelineObjectShape
             key={config.object.id}
             selection={selected.find(sel => sel.objectId === config.object.id)}
             rowHeight={TimelineRowHeight}
             duration={duration}
+            {...config}
+            onSelect={handleSelect}
+            onToggle={handleToggle}
+            onFrameSelected={handleFrameSelected}
+          />
+        ))}
+      </Layer>
+      <Layer>
+        <Line
+          points={[
+            (currentFrame + 0.5) * scaleX,
+            0,
+            (currentFrame + 0.5) * scaleX,
+            height,
+          ]}
+          stroke={errorColor}
+          strokeWidth={TimelineVerticalLineWidth}
+        />
+        {configs.map(config => (
+          <TimelineObjectText
+            key={config.object.id}
+            scaleX={scaleX}
+            selection={selected.find(sel => sel.objectId === config.object.id)}
+            rowHeight={TimelineRowHeight}
             {...config}
             onSelect={handleSelect}
             onToggle={handleToggle}

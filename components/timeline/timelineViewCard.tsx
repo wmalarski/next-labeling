@@ -22,7 +22,7 @@ export default function TimelineViewCard(
       isClosable
       toolbar={<TimelineFilterControls />}
     >
-      <TimelineView />
+      <TimelineView width={1000} scaleX={1} />
     </LabelingViewCard>
   );
 }
