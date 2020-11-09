@@ -12,7 +12,7 @@ import { FieldBlock } from "../../utils/timeline/types";
 import { getEventRelativePosition } from "../../utils/visualization/functions";
 import TimelineRow from "./timelineRow";
 
-export interface TimelineFieldShapeProps {
+export interface TimelineFieldProps {
   row: number;
   object: LabelingObject;
   field: LabelingField;
@@ -25,9 +25,7 @@ export interface TimelineFieldShapeProps {
   onFrameSelected: (index: number) => void;
 }
 
-export default function TimelineFieldShape(
-  props: TimelineFieldShapeProps,
-): JSX.Element {
+export default function TimelineField(props: TimelineFieldProps): JSX.Element {
   const {
     object,
     row,

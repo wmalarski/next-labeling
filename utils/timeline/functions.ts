@@ -1,7 +1,7 @@
 import { UnpackedFrameValuePair, unpackValues } from "../editors/functions";
 import getValueIndex from "../editors/indexes";
 import { LabelingField, LabelingObject } from "../labeling/types/client";
-import { FieldBlock, ObjectBlock, TimelineObjectShapeConfig } from "./types";
+import { FieldBlock, ObjectBlock, TimelineObjectConfig } from "./types";
 
 interface ReduceFieldBlocksState {
   fieldBlocks: FieldBlock[];
@@ -103,12 +103,12 @@ export function calculateFieldBlocks(
   return [...result.fieldBlocks];
 }
 
-export function getTimelineObjectShapeConfigs(
+export function getTimelineObjectConfigs(
   objects: LabelingObject[],
   toggled: string[],
   duration: number,
-): TimelineObjectShapeConfig[] {
-  return objects.reduce<TimelineObjectShapeConfig[]>((prev, object) => {
+): TimelineObjectConfig[] {
+  return objects.reduce<TimelineObjectConfig[]>((prev, object) => {
     const last = prev[prev.length - 1] ?? { row: 0, fieldBlocks: [] };
     const row = last.row + last.fieldBlocks.length + 1;
     const objectBlocks = calculateObjectBlocks(object, duration);

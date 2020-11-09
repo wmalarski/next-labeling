@@ -12,7 +12,7 @@ export interface FieldBlock {
   index: number;
 }
 
-export interface TimelineObjectShapeConfig {
+export interface TimelineObjectConfig {
   row: number;
   isToggled: boolean;
   object: LabelingObject;

@@ -13,8 +13,8 @@ import {
   TimelineRowHeight,
   TimelineVerticalLineWidth,
 } from "../../utils/timeline/constansts";
-import { getTimelineObjectShapeConfigs } from "../../utils/timeline/functions";
-import TimelineObjectShape from "./timelineObjectShape";
+import { getTimelineObjectConfigs } from "../../utils/timeline/functions";
+import TimelineObject from "./timelineObject";
 import TimelineObjectText from "./timelineObjectText";
 import TimelineToggleButton from "./timelineToggleButton";
 
@@ -38,7 +38,7 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
 
   const configs = useMemo(
     () =>
-      getTimelineObjectShapeConfigs(
+      getTimelineObjectConfigs(
         objects.filter(labelingFilter(filters)),
         toggled,
         duration,
@@ -154,7 +154,7 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
     <Stage width={width} height={height}>
       <Layer x={toggleButtonsWidth} scaleX={scaleX}>
         {configs.map(config => (
-          <TimelineObjectShape
+          <TimelineObject
             key={config.object.id}
             rowHeight={TimelineRowHeight}
             duration={duration}

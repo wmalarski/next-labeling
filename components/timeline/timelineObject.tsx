@@ -2,12 +2,12 @@ import { useTheme } from "@material-ui/core";
 import React from "react";
 import { Rect } from "react-konva";
 import { LabelingObject } from "../../utils/labeling/types/client";
-import { TimelineObjectShapeConfig } from "../../utils/timeline/types";
+import { TimelineObjectConfig } from "../../utils/timeline/types";
 import { getEventRelativePosition } from "../../utils/visualization/functions";
-import TimelineFieldShape from "./timelineFieldShape";
+import TimelineField from "./timelineField";
 import TimelineRow from "./timelineRow";
 
-export interface TimelineObjectShapeProps extends TimelineObjectShapeConfig {
+export interface TimelineObjectProps extends TimelineObjectConfig {
   duration: number;
   rowHeight: number;
   selectedNodes: string[];
@@ -16,8 +16,8 @@ export interface TimelineObjectShapeProps extends TimelineObjectShapeConfig {
   onFrameSelected: (index: number) => void;
 }
 
-export default function TimelineObjectShape(
-  props: TimelineObjectShapeProps,
+export default function TimelineObject(
+  props: TimelineObjectProps,
 ): JSX.Element {
   const {
     duration,
@@ -66,7 +66,7 @@ export default function TimelineObjectShape(
         ))}
       </TimelineRow>
       {fieldBlocks.map((pair, index) => (
-        <TimelineFieldShape
+        <TimelineField
           key={pair.field.id}
           {...pair}
           row={row + index + 1}

@@ -1,8 +1,8 @@
 import React from "react";
 import { Label, Tag, Text } from "react-konva";
-import { TimelineObjectShapeConfig } from "../../utils/timeline/types";
+import { TimelineObjectConfig } from "../../utils/timeline/types";
 
-export interface TimelineObjectTextProps extends TimelineObjectShapeConfig {
+export interface TimelineObjectTextProps extends TimelineObjectConfig {
   scaleX: number;
   rowHeight: number;
 }

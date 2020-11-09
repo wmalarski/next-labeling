@@ -3,9 +3,9 @@ import Konva from "konva";
 import React, { useMemo, useRef } from "react";
 import { Line, Rect } from "react-konva";
 import useMouseHover from "../../utils/timeline/hooks/useMouseHover";
-import { TimelineObjectShapeConfig } from "../../utils/timeline/types";
+import { TimelineObjectConfig } from "../../utils/timeline/types";
 
-export interface TimelineToggleButtonProps extends TimelineObjectShapeConfig {
+export interface TimelineToggleButtonProps extends TimelineObjectConfig {
   width: number;
   rowHeight: number;
   horPadding: number;
