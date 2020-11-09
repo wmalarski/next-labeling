@@ -14,9 +14,8 @@ import {
   TimelineVerticalLineWidth,
 } from "../../utils/timeline/constansts";
 import { getTimelineObjectConfigs } from "../../utils/timeline/functions";
+import TimelineLabel from "./timelineLabel";
 import TimelineObject from "./timelineObject";
-import TimelineObjectText from "./timelineObjectText";
-import TimelineToggleButton from "./timelineToggleButton";
 
 export interface TimelineViewProps {
   width: number;
@@ -148,11 +147,24 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
       ),
     [duration, frameStep, pushLabeling],
   );
-
-  const toggleButtonsWidth = 30;
+  const arrowWidth = 30;
+  const labelsWidth = 160;
   return (
     <Stage width={width} height={height}>
-      <Layer x={toggleButtonsWidth} scaleX={scaleX}>
+      <Layer>
+        {configs.map(config => (
+          <TimelineLabel
+            key={config.object.id}
+            rowHeight={TimelineRowHeight}
+            arrowWidth={arrowWidth}
+            horPadding={8}
+            verPadding={14}
+            {...config}
+            onToggle={handleToggle}
+          />
+        ))}
+      </Layer>
+      <Layer x={labelsWidth} scaleX={scaleX}>
         {configs.map(config => (
           <TimelineObject
             key={config.object.id}
@@ -166,7 +178,7 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
           />
         ))}
       </Layer>
-      <Layer x={toggleButtonsWidth}>
+      <Layer x={labelsWidth}>
         <Line
           points={[
             (currentFrame + 0.5) * scaleX,
@@ -177,27 +189,6 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
           stroke={errorColor}
           strokeWidth={TimelineVerticalLineWidth}
         />
-        {configs.map(config => (
-          <TimelineObjectText
-            key={config.object.id}
-            scaleX={scaleX}
-            rowHeight={TimelineRowHeight}
-            {...config}
-          />
-        ))}
-      </Layer>
-      <Layer>
-        {configs.map(config => (
-          <TimelineToggleButton
-            key={config.object.id}
-            rowHeight={TimelineRowHeight}
-            width={toggleButtonsWidth}
-            horPadding={8}
-            verPadding={14}
-            {...config}
-            onToggle={handleToggle}
-          />
-        ))}
       </Layer>
     </Stage>
   );
