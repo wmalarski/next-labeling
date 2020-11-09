@@ -1,7 +1,7 @@
 import { useTheme } from "@material-ui/core";
 import React from "react";
 import { Rect } from "react-konva";
-import { ObjectSelection } from "../../utils/labeling/types/client";
+import { LabelingObject } from "../../utils/labeling/types/client";
 import { TimelineObjectShapeConfig } from "../../utils/timeline/types";
 import { getEventRelativePosition } from "../../utils/visualization/functions";
 import TimelineFieldShape from "./timelineFieldShape";
@@ -10,12 +10,9 @@ import TimelineRow from "./timelineRow";
 export interface TimelineObjectShapeProps extends TimelineObjectShapeConfig {
   duration: number;
   rowHeight: number;
-  selection?: ObjectSelection;
-  onSelect: (
-    id: string,
-    selection: ObjectSelection | null,
-    reset: boolean,
-  ) => void;
+  selectedNodes: string[];
+  onSelect: (object: LabelingObject, reset: boolean, field?: string) => void;
+  onDeselect: (object: LabelingObject, reset: boolean, field?: string) => void;
   onFrameSelected: (index: number) => void;
 }
 
@@ -23,18 +20,18 @@ export default function TimelineObjectShape(
   props: TimelineObjectShapeProps,
 ): JSX.Element {
   const {
-    selection,
     duration,
     rowHeight,
     row,
     object,
     objectBlocks,
     fieldBlocks,
+    selectedNodes,
     onSelect,
+    onDeselect,
     onFrameSelected,
   } = props;
-  const { id, objectSchema } = object;
-  const isSelected = selection?.objectSelected ?? false;
+  const isSelected = selectedNodes.includes(object.id);
 
   const theme = useTheme();
   const selectionColor = theme.palette.primary.light;
@@ -53,26 +50,9 @@ export default function TimelineObjectShape(
             if (position) onFrameSelected(position.x);
             return;
           }
-
           const isReset = !event.evt.ctrlKey;
-          if (isSelected) {
-            onSelect(id, null, isReset);
-            return;
-          }
-
-          const newSelection = {
-            fieldIds: [],
-            objectId: id,
-            objectSelected: true,
-            singleton: objectSchema.singleton,
-          };
-          onSelect(
-            id,
-            isReset
-              ? newSelection
-              : { ...newSelection, ...selection, objectSelected: true },
-            isReset,
-          );
+          if (!isSelected) onSelect(object, isReset);
+          else onDeselect(object, isReset);
         }}
       >
         {objectBlocks.map(block => (
@@ -93,8 +73,9 @@ export default function TimelineObjectShape(
           duration={duration}
           rowHeight={rowHeight}
           object={object}
-          selection={selection}
+          selectedNodes={selectedNodes}
           onSelect={onSelect}
+          onDeselect={onDeselect}
           onFrameSelected={onFrameSelected}
         />
       ))}

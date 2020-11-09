@@ -7,7 +7,6 @@ import {
 import {
   LabelingField,
   LabelingObject,
-  ObjectSelection,
 } from "../../utils/labeling/types/client";
 import { FieldBlock } from "../../utils/timeline/types";
 import { getEventRelativePosition } from "../../utils/visualization/functions";
@@ -20,12 +19,9 @@ export interface TimelineFieldShapeProps {
   fieldBlocks: FieldBlock[];
   duration: number;
   rowHeight: number;
-  selection?: ObjectSelection;
-  onSelect: (
-    id: string,
-    selection: ObjectSelection | null,
-    reset: boolean,
-  ) => void;
+  selectedNodes: string[];
+  onSelect: (object: LabelingObject, reset: boolean, field?: string) => void;
+  onDeselect: (object: LabelingObject, reset: boolean, field?: string) => void;
   onFrameSelected: (index: number) => void;
 }
 
@@ -38,13 +34,15 @@ export default function TimelineFieldShape(
     rowHeight,
     fieldBlocks,
     duration,
-    selection,
     field,
+    selectedNodes,
     onSelect,
+    onDeselect,
     onFrameSelected,
   } = props;
   const { id } = field;
-  const isFieldSelected = selection?.fieldIds.includes(id) ?? false;
+  const nodeId = `${object.id}|${id}`;
+  const isFieldSelected = selectedNodes.includes(nodeId);
 
   return (
     <TimelineRow
@@ -59,32 +57,8 @@ export default function TimelineFieldShape(
           return;
         }
         const isReset = !event.evt.ctrlKey;
-        if (isFieldSelected && selection) {
-          onSelect(
-            object.id,
-            isReset
-              ? null
-              : {
-                  ...selection,
-                  fieldIds: selection.fieldIds.filter(f => f !== id),
-                },
-            isReset,
-          );
-          return;
-        }
-
-        onSelect(
-          object.id,
-          {
-            objectId: object.id,
-            singleton: object.objectSchema.singleton,
-            objectSelected:
-              isReset || !selection ? false : selection.objectSelected,
-            fieldIds:
-              isReset || !selection ? [id] : [...selection.fieldIds, id],
-          },
-          isReset,
-        );
+        if (!isFieldSelected) onSelect(object, isReset, id);
+        else onDeselect(object, isReset, id);
       }}
     >
       {fieldBlocks.map(block => (

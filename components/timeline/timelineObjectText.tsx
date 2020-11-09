@@ -1,13 +1,10 @@
 import React from "react";
 import { Label, Tag, Text } from "react-konva";
-import { ObjectSelection } from "../../utils/labeling/types/client";
 import { TimelineObjectShapeConfig } from "../../utils/timeline/types";
 
 export interface TimelineObjectTextProps extends TimelineObjectShapeConfig {
   scaleX: number;
   rowHeight: number;
-  selection?: ObjectSelection;
-  onSelect: (id: string, selection: ObjectSelection, reset: boolean) => void;
 }
 
 export default function TimelineObjectText(

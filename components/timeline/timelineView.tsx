@@ -1,10 +1,11 @@
 import { useTheme } from "@material-ui/core";
+import compact from "lodash/compact";
 import React, { useCallback, useMemo } from "react";
 import { Layer, Line, Stage } from "react-konva";
 import { frameToRange, labelingFilter } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
-import { ObjectSelection } from "../../utils/labeling/types/client";
+import { LabelingObject } from "../../utils/labeling/types/client";
 import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
 import setSelectedUpdate from "../../utils/labeling/updates/setSelectedUpdate";
 import setToggledUpdate from "../../utils/labeling/updates/setToggledUpdate";
@@ -67,15 +68,71 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
     [pushLabeling],
   );
 
+  const selectedNodes = useMemo(
+    () =>
+      selected.flatMap(object => [
+        ...(object.objectSelected ? [object.objectId] : []),
+        ...object.fieldIds.map(field => `${object.objectId}|${field}`),
+      ]),
+    [selected],
+  );
+
   const handleSelect = useCallback(
-    (id: string, selection: ObjectSelection | null, reset: boolean): void =>
+    (object: LabelingObject, reset: boolean, fieldId?: string) =>
+      pushLabeling(doc => {
+        const index = doc.selected.findIndex(sel => sel.objectId === object.id);
+        if (index === -1)
+          return setSelectedUpdate(doc, [
+            ...(reset ? [] : doc.selected),
+            {
+              fieldIds: fieldId ? [fieldId] : [],
+              objectId: object.id,
+              objectSelected: !fieldId,
+              singleton: object.objectSchema.singleton,
+            },
+          ]);
+
+        const selection = doc.selected[index];
+        const newSelection = {
+          ...selection,
+          ...(!fieldId
+            ? {
+                objectSelected: true,
+                fieldIds: reset ? [] : selection.fieldIds,
+              }
+            : {
+                objectSelected: reset ? false : selection.objectSelected,
+                fieldIds: reset ? [fieldId] : [...selection.fieldIds, fieldId],
+              }),
+        };
+        if (reset) return setSelectedUpdate(doc, [newSelection]);
+        const newSelected = [...doc.selected];
+        newSelected.splice(index, 1, newSelection);
+        return setSelectedUpdate(doc, newSelected);
+      }),
+    [pushLabeling],
+  );
+
+  const handleDeselect = useCallback(
+    (object: LabelingObject, reset: boolean, fieldId?: string) =>
       pushLabeling(doc =>
-        setSelectedUpdate(doc, [
-          ...(reset
+        setSelectedUpdate(
+          doc,
+          reset && !fieldId
             ? []
-            : [...doc.selected.filter(sel => sel.objectId !== id)]),
-          ...(selection ? [selection] : []),
-        ]),
+            : compact(
+                doc.selected.map(sel => {
+                  if (sel.objectId !== object.id) return sel;
+                  if (!fieldId) return null;
+                  return {
+                    ...sel,
+                    fieldIds: reset
+                      ? []
+                      : sel.fieldIds.filter(f => f !== fieldId),
+                  };
+                }),
+              ),
+        ),
       ),
     [pushLabeling],
   );
@@ -99,11 +156,12 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
         {configs.map(config => (
           <TimelineObjectShape
             key={config.object.id}
-            selection={selected.find(sel => sel.objectId === config.object.id)}
             rowHeight={TimelineRowHeight}
             duration={duration}
+            selectedNodes={selectedNodes}
             {...config}
             onSelect={handleSelect}
+            onDeselect={handleDeselect}
             onFrameSelected={handleFrameSelected}
           />
         ))}
@@ -123,10 +181,8 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
           <TimelineObjectText
             key={config.object.id}
             scaleX={scaleX}
-            selection={selected.find(sel => sel.objectId === config.object.id)}
             rowHeight={TimelineRowHeight}
             {...config}
-            onSelect={handleSelect}
           />
         ))}
       </Layer>
