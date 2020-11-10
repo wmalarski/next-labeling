@@ -22,6 +22,8 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { getFirstFrame, getLastFrame } from "../../../utils/labeling/functions";
 import useLabelingContext from "../../../utils/labeling/hooks/useLabelingContext";
 import usePreferences from "../../../utils/labeling/hooks/usePreferencesContext";
+import useToolContext from "../../../utils/labeling/hooks/useToolContext";
+import { ToolType } from "../../../utils/labeling/types/client";
 import addObjectCopyFrameUpdate from "../../../utils/labeling/updates/addObjectCopyFrameUpdate";
 import addObjectCopyUpdate from "../../../utils/labeling/updates/addObjectCopyUpdate";
 import addObjectMergeUpdate from "../../../utils/labeling/updates/addObjectMergeUpdate";
@@ -41,8 +43,6 @@ import {
   LabelingView,
   toogleView,
 } from "../../../utils/labeling/views";
-import useToolContext from "../../../utils/visualization/hooks/useToolContext";
-import { ToolType } from "../../../utils/visualization/types";
 import EditorSettingsDialog from "../preferences/editorSettingsDialog";
 
 const drawerWidth = 240;

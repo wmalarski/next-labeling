@@ -1,4 +1,7 @@
 import * as t from "io-ts";
+import { LabelingField, LabelingObject } from "../labeling/types/client";
+import { FieldSchema } from "../schema/types";
+import { Point2D } from "../visualization/types";
 import { Box3dAttributes, Box3dValues } from "./types/box3d";
 import { CheckBoxAttributes, CheckBoxValues } from "./types/checkBox";
 import { ComboBoxAttributes, ComboBoxValues } from "./types/comboBox";
@@ -81,4 +84,33 @@ export interface FieldEditorProps {
   values: LabelingFieldValues;
   attributes: LabelingFieldAttributes;
   onChange: OnValueChangeHandler;
+}
+
+export interface CoordsBuilderResult {
+  stage: number;
+  value?: LabelingFieldValues;
+  isFinished: boolean;
+  canBeFinished: boolean;
+}
+
+export type CoordsBuilder = (
+  point: Point2D,
+  frame: number,
+  value?: LabelingFieldValues,
+) => CoordsBuilderResult | undefined;
+
+export interface InProgressObjectProps {
+  stage: number;
+  fieldSchema: FieldSchema;
+  value: LabelingFieldValues;
+  object: LabelingObject;
+}
+
+export interface FinishedObjectProps {
+  isSelected: boolean;
+  field: LabelingField;
+  frame: number;
+  object: LabelingObject;
+  onSelect: (id: string, reset: boolean) => void;
+  onChange: (value: LabelingFieldValues) => void;
 }

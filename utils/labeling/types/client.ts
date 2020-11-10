@@ -1,5 +1,4 @@
 import * as t from "io-ts";
-
 import { FieldSchema, ObjectSchema } from "../../schema/types";
 import { FieldBase, ObjectBase } from "./base";
 
@@ -36,6 +35,12 @@ export enum IsDoneFilterValue {
   ALL,
   IS_DONE,
   WIP,
+}
+
+export enum ToolType {
+  SELECTOR,
+  ZOOM_AND_PANE,
+  DRAWING_TOOL,
 }
 
 export interface LabelingDisplayFilters {

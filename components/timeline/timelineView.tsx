@@ -14,8 +14,8 @@ import {
   TimelineVerticalLineWidth,
 } from "../../utils/timeline/constansts";
 import { getTimelineObjectConfigs } from "../../utils/timeline/functions";
-import TimelineLabel from "./timelineLabel";
-import TimelineObject from "./timelineObject";
+import TimelineLabel from "./shapes/timelineLabel";
+import TimelineObject from "./shapes/timelineObject";
 
 export interface TimelineViewProps {
   width: number;
@@ -147,6 +147,15 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
       ),
     [duration, frameStep, pushLabeling],
   );
+
+  const onTooltipEnter = useCallback(() => {
+    //
+  }, []);
+
+  const onTooltipLeave = useCallback(() => {
+    //
+  }, []);
+
   const arrowWidth = 30;
   const labelsWidth = 160;
   return (
@@ -175,6 +184,8 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
             onSelect={handleSelect}
             onDeselect={handleDeselect}
             onFrameSelected={handleFrameSelected}
+            onTooltipEnter={onTooltipEnter}
+            onTooltipLeave={onTooltipLeave}
           />
         ))}
       </Layer>

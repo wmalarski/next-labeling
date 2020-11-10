@@ -5,7 +5,7 @@ import "../../node_modules/react-resizable/css/styles.css";
 import { LabelingView } from "../../utils/labeling/views";
 import EditorTable from "../editors/editorTable";
 import TimelineViewCard from "../timeline/timelineViewCard";
-import VisualizationViewCard from "../visualization/visualizationViewCard";
+import VisualizationViewCard from "../video/videoViewCard";
 import FrameSlider from "../workspace/frameSlider";
 import LabelingViewCard from "./labelingViewCard";
 
