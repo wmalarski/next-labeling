@@ -3,13 +3,23 @@ import Grid from "@material-ui/core/Grid";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import React from "react";
-
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import { IsDoneFilterValue } from "../../utils/labeling/types/client";
+import { UseXZoomResult } from "../../utils/timeline/hooks/useXZoom";
 import SearchInput from "../common/searchInput";
+import { TimelineZoomControls } from "./timelineZoomControls";
 
-export function TimelineFilterControls(): JSX.Element {
-  const { document, filters, setFilters } = useLabelingContext();
+export interface TimelineFilterControlsProps {
+  zoom: UseXZoomResult;
+}
+
+export function TimelineFilterControls(
+  props: TimelineFilterControlsProps,
+): JSX.Element {
+  const { zoom } = props;
+
+  const { document, filters, setFilters, history } = useLabelingContext();
+  const index = history.data.currentFrame;
   const isDoneValue =
     filters.isDone === IsDoneFilterValue.ALL ? null : filters.isDone;
 
@@ -42,7 +52,7 @@ export function TimelineFilterControls(): JSX.Element {
           </ToggleButton>
         </ToggleButtonGroup>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={2}>
         {document.schema.objects.map(objectSchema => {
           const isSelected = filters.objectSchemaIds.includes(objectSchema.id);
           return (
@@ -62,6 +72,9 @@ export function TimelineFilterControls(): JSX.Element {
             />
           );
         })}
+      </Grid>
+      <Grid item xs={2}>
+        <TimelineZoomControls zoom={zoom} index={index} />
       </Grid>
     </Grid>
   );

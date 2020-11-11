@@ -1,17 +1,13 @@
-import dynamic from "next/dynamic";
 import React from "react";
 import GridLayout from "react-grid-layout";
 import "../../node_modules/react-grid-layout/css/styles.css";
 import "../../node_modules/react-resizable/css/styles.css";
 import { LabelingView } from "../../utils/labeling/views";
 import EditorTable from "../editors/editorTable";
-import TimelineView from "../timeline/timelineView";
+import TimelineViewCard from "../timeline/timelineViewCard";
+import VisualizationViewCard from "../video/videoViewCard";
 import FrameSlider from "../workspace/frameSlider";
 import LabelingViewCard from "./labelingViewCard";
-
-const KonvaStageNoSSR = dynamic(() => import("../visualization/konvaStage"), {
-  ssr: false,
-});
 
 export interface LabelingViewItemProps {
   documentId: string;
@@ -24,11 +20,7 @@ export default function LabelingViewItem(
   const { view } = props;
   switch (view.i) {
     case LabelingView.VIDEO:
-      return (
-        <LabelingViewCard view={view} title="Video">
-          <KonvaStageNoSSR />
-        </LabelingViewCard>
-      );
+      return <VisualizationViewCard width={1000} height={1000} view={view} />;
     // case LabelingView.COMMENTS:
     //   return (
     //     <LabelingViewCard view={view} title="Video">
@@ -42,11 +34,7 @@ export default function LabelingViewItem(
         </LabelingViewCard>
       );
     case LabelingView.TIMELINE:
-      return (
-        <LabelingViewCard view={view} title="Timeline" isClosable>
-          <TimelineView />
-        </LabelingViewCard>
-      );
+      return <TimelineViewCard view={view} />;
     case LabelingView.SLIDER:
       return (
         <LabelingViewCard view={view} title="Frames">

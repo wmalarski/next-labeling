@@ -1,88 +1,208 @@
-import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
-import TreeView from "@material-ui/lab/TreeView/TreeView";
-import React, { useMemo } from "react";
-
-import { labelingFilter } from "../../utils/labeling/functions";
+import { useTheme } from "@material-ui/core";
+import compact from "lodash/compact";
+import React, { useCallback, useMemo } from "react";
+import { Layer, Line, Rect, Stage } from "react-konva";
+import { frameToRange, labelingFilter } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
-import { ObjectSelection } from "../../utils/labeling/types/client";
+import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
+import { LabelingObject } from "../../utils/labeling/types/client";
+import setCurrentFrameUpdate from "../../utils/labeling/updates/setCurrentFrameUpdate";
 import setSelectedUpdate from "../../utils/labeling/updates/setSelectedUpdate";
 import setToggledUpdate from "../../utils/labeling/updates/setToggledUpdate";
-import { TimelineFilterControls } from "./timelineFilterControls";
-import { TimelineObjectItem } from "./timelineObjectItem";
+import {
+  TimelineRowHeight,
+  TimelineVerticalLineWidth,
+} from "../../utils/timeline/constansts";
+import { getTimelineObjectConfigs } from "../../utils/timeline/functions";
+import { useTooltipLabel } from "../../utils/visualization/hooks/useTooltipLabel";
+import { TooltipLabel } from "../visualization/tooltipLabel";
+import TimelineLabel from "./shapes/timelineLabel";
+import TimelineObject from "./shapes/timelineObject";
 
-export default function TimelineView(): JSX.Element {
-  const { history, filters } = useLabelingContext();
-  const { pushLabeling } = history;
+export interface TimelineViewProps {
+  width: number;
+  scaleX: number;
+  stageX: number;
+}
 
-  const { objects, selected: selectedObjects, toggled } = history.data;
+export default function TimelineView(props: TimelineViewProps): JSX.Element {
+  const { width, scaleX, stageX } = props;
 
-  const filteredObjects = useMemo(
-    () => objects.filter(labelingFilter(filters)),
-    [filters, objects],
+  const { history, filters, duration } = useLabelingContext();
+  const { pushLabeling, data } = history;
+  const { objects, selected, toggled, currentFrame } = data;
+
+  const { preferences } = usePreferences();
+  const { frameChangeStep: frameStep } = preferences;
+
+  const theme = useTheme();
+  const errorColor = theme.palette.error.light;
+  const backgroundColor = theme.palette.background.default;
+
+  const configs = useMemo(
+    () =>
+      getTimelineObjectConfigs(
+        objects.filter(labelingFilter(filters)),
+        toggled,
+        duration,
+      ),
+    [duration, filters, objects, toggled],
   );
 
-  const selected = useMemo(
+  const height = useMemo(
     () =>
-      selectedObjects.flatMap(object => [
+      TimelineRowHeight *
+      configs
+        .map(config => config.fieldBlocks.length + 1)
+        .reduce<number>((a, b) => a + b, 0),
+    [configs],
+  );
+
+  const handleToggle = useCallback(
+    (id: string): void =>
+      pushLabeling(doc =>
+        setToggledUpdate(
+          doc,
+          doc.toggled.includes(id)
+            ? doc.toggled.filter(t => t !== id)
+            : [...doc.toggled, id],
+        ),
+      ),
+    [pushLabeling],
+  );
+
+  const selectedNodes = useMemo(
+    () =>
+      selected.flatMap(object => [
         ...(object.objectSelected ? [object.objectId] : []),
         ...object.fieldIds.map(field => `${object.objectId}|${field}`),
       ]),
-    [selectedObjects],
+    [selected],
   );
 
-  const handleToggle = (_event: any, nodeIds: string[]) =>
-    pushLabeling(data => setToggledUpdate(data, nodeIds));
+  const handleSelect = useCallback(
+    (object: LabelingObject, reset: boolean, fieldId?: string) =>
+      pushLabeling(doc => {
+        const index = doc.selected.findIndex(sel => sel.objectId === object.id);
+        if (index === -1)
+          return setSelectedUpdate(doc, [
+            ...(reset ? [] : doc.selected),
+            {
+              fieldIds: fieldId ? [fieldId] : [],
+              objectId: object.id,
+              objectSelected: !fieldId,
+              singleton: object.objectSchema.singleton,
+            },
+          ]);
 
-  const handleSelect = (_event: any, nodeIds: string[]) => {
-    const result = Object.values(
-      nodeIds.reduce<{ [objectId: string]: ObjectSelection }>((prev, curr) => {
-        const [objectId, fieldId] = curr.split("|");
-        const prevFields = prev[objectId] ?? {
-          objectId,
-          fieldIds: [],
-          objectSelected: !fieldId,
-          singleton:
-            objects.find(object => object.id === objectId)?.objectSchema
-              .singleton ?? true,
+        const selection = doc.selected[index];
+        const newSelection = {
+          ...selection,
+          ...(!fieldId
+            ? {
+                objectSelected: true,
+                fieldIds: reset ? [] : selection.fieldIds,
+              }
+            : {
+                objectSelected: reset ? false : selection.objectSelected,
+                fieldIds: reset ? [fieldId] : [...selection.fieldIds, fieldId],
+              }),
         };
-        return {
-          ...prev,
-          [objectId]: {
-            ...prevFields,
-            fieldIds: fieldId
-              ? [...prevFields.fieldIds, fieldId]
-              : prevFields.fieldIds,
-            objectSelected: prevFields.objectSelected || !fieldId,
-          },
-        };
-      }, {}),
-    );
-    pushLabeling(data => setSelectedUpdate(data, result));
-  };
+        if (reset) return setSelectedUpdate(doc, [newSelection]);
+        const newSelected = [...doc.selected];
+        newSelected.splice(index, 1, newSelection);
+        return setSelectedUpdate(doc, newSelected);
+      }),
+    [pushLabeling],
+  );
 
+  const handleDeselect = useCallback(
+    (object: LabelingObject, reset: boolean, fieldId?: string) =>
+      pushLabeling(doc =>
+        setSelectedUpdate(
+          doc,
+          reset && !fieldId
+            ? []
+            : compact(
+                doc.selected.map(sel => {
+                  if (sel.objectId !== object.id) return sel;
+                  if (!fieldId) return null;
+                  return {
+                    ...sel,
+                    fieldIds: reset
+                      ? []
+                      : sel.fieldIds.filter(f => f !== fieldId),
+                  };
+                }),
+              ),
+        ),
+      ),
+    [pushLabeling],
+  );
+
+  const handleFrameSelected = useCallback(
+    (index: number): void =>
+      pushLabeling(doc =>
+        setCurrentFrameUpdate(
+          doc,
+          frameToRange(Number(index), duration),
+          frameStep,
+        ),
+      ),
+    [duration, frameStep, pushLabeling],
+  );
+
+  const { refs, onMouseLeave, onPointMove } = useTooltipLabel({
+    scaleX,
+  });
+
+  const arrowWidth = 30;
+  const labelsWidth = 160;
   return (
-    <>
-      <TimelineFilterControls />
-      <TreeView
-        defaultCollapseIcon={<ArrowDropDownIcon />}
-        defaultExpandIcon={<ArrowRightIcon />}
-        defaultEndIcon={<div style={{ width: 24 }} />}
-        expanded={toggled}
-        selected={selected}
-        onNodeToggle={handleToggle}
-        onNodeSelect={handleSelect}
-        multiSelect
-      >
-        {filteredObjects.map(object => (
-          <TimelineObjectItem
-            nodeId={object.id}
-            key={object.id}
-            object={object}
-            selected={selected}
+    <Stage width={width} height={height}>
+      <Layer x={labelsWidth + stageX} scaleX={scaleX}>
+        {configs.map(config => (
+          <TimelineObject
+            key={config.object.id}
+            rowHeight={TimelineRowHeight}
+            duration={duration}
+            selectedNodes={selectedNodes}
+            {...config}
+            onSelect={handleSelect}
+            onDeselect={handleDeselect}
+            onFrameSelected={handleFrameSelected}
+            onTooltipEnter={onPointMove}
+            onTooltipLeave={onMouseLeave}
           />
         ))}
-      </TreeView>
-    </>
+      </Layer>
+      <Layer x={labelsWidth + stageX}>
+        <Line
+          points={[
+            (currentFrame + 0.5) * scaleX,
+            0,
+            (currentFrame + 0.5) * scaleX,
+            height,
+          ]}
+          stroke={errorColor}
+          strokeWidth={TimelineVerticalLineWidth}
+        />
+        <TooltipLabel refs={refs} />
+      </Layer>
+      <Layer>
+        <Rect width={labelsWidth} height={height} fill={backgroundColor} />
+        {configs.map(config => (
+          <TimelineLabel
+            key={config.object.id}
+            rowHeight={TimelineRowHeight}
+            arrowWidth={arrowWidth}
+            horPadding={8}
+            verPadding={14}
+            {...config}
+            onToggle={handleToggle}
+          />
+        ))}
+      </Layer>
+    </Stage>
   );
 }

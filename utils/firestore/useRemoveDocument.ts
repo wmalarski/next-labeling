@@ -1,5 +1,4 @@
 import "firebase/firestore";
-
 import { useCallback, useState } from "react";
 import { FirestoreCollection } from "./types";
 
@@ -44,7 +43,7 @@ export default function useRemoveDocument(
           removeCallback?.(documentId, false);
         });
     },
-    [collection],
+    [collection, removeCallback],
   );
 
   return { remove, state };

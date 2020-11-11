@@ -1,16 +1,14 @@
-import Konva from "konva";
 import { KonvaEventObject } from "konva/types/Node";
 import range from "lodash/range";
-import { LabelingObject } from "../labeling/types/client";
-import { SelectedStrokeWidth, UnselectedStrokeWidth } from "./constanst";
-
 import { Point2D } from "./types";
 
 export function getEventRelativePosition(
   e: KonvaEventObject<MouseEvent>,
 ): Point2D | null {
   const stage = e.currentTarget.getStage();
-  const transform = e.currentTarget.getAbsoluteTransform().copy();
+  const layer = e.currentTarget.getLayer();
+  const transform = layer?.getAbsoluteTransform().copy();
+  if (!transform) return null;
   transform.invert();
   const pos = stage?.getPointerPosition();
   if (!pos) return null;
@@ -28,9 +26,11 @@ export function getPointDistance(a: Point2D, b: Point2D): number {
   return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 }
 
-export function getShapeStyle(isSelected: boolean): Konva.ShapeConfig {
-  return {
-    strokeScaleEnabled: false,
-    strokeWidth: isSelected ? SelectedStrokeWidth : UnselectedStrokeWidth,
-  };
+export function optionalClamp(
+  value: number,
+  min?: number,
+  max?: number,
+): number {
+  const valueMin = min ? Math.max(min, value) : value;
+  return max ? Math.min(max, valueMin) : valueMin;
 }

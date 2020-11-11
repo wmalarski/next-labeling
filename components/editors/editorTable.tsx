@@ -3,7 +3,6 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import React, { useMemo } from "react";
-
 import { filterSelectedFields } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import setAttributeUpdate from "../../utils/labeling/updates/setAttributeUpdate";

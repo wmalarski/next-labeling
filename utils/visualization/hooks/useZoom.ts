@@ -13,37 +13,42 @@ export interface UseZoomResult extends UseZoomState {
   handleReset: () => void;
   handleZoomIn: (center: Point2D) => void;
   handleZoomOut: (center: Point2D) => void;
+  handleSetScale: (scale: number, center: Point2D) => void;
 }
 
 export interface UseZoomProps {
   scaleBy: number;
 }
 
+function getNewZoomState(
+  newScale: number,
+  point: Point2D,
+  old: UseZoomState,
+): UseZoomState {
+  const { stageX, stageY, stageScale } = old;
+  const mouseX = point.x / stageScale - stageX / stageScale;
+  const mouseY = point.y / stageScale - stageY / stageScale;
+  const newStageX = -(mouseX - point.x / newScale) * newScale;
+  const newStageY = -(mouseY - point.y / newScale) * newScale;
+  return { stageScale: newScale, stageX: newStageX, stageY: newStageY };
+}
+
+const defaultZoomState: UseZoomState = { stageScale: 1, stageX: 0, stageY: 0 };
+
 export default function useZoom(props: UseZoomProps): UseZoomResult {
   const { scaleBy } = props;
 
-  const [state, setState] = useState<UseZoomState>({
-    stageScale: 1,
-    stageX: 0,
-    stageY: 0,
-  });
+  const [state, setState] = useState<UseZoomState>(defaultZoomState);
 
   const changeZoom = useCallback(
     (isZoomIn: boolean, point: Point2D): void => {
-      setState(value => {
-        const { stageScale, stageX, stageY } = value;
-        const mousePointTo = {
-          x: point.x / stageScale - stageX / stageScale,
-          y: point.y / stageScale - stageY / stageScale,
-        };
-        const newScale = isZoomIn ? stageScale * scaleBy : stageScale / scaleBy;
-
-        return {
-          stageScale: newScale,
-          stageX: -(mousePointTo.x - point.x / newScale) * newScale,
-          stageY: -(mousePointTo.y - point.y / newScale) * newScale,
-        };
-      });
+      setState(value =>
+        getNewZoomState(
+          isZoomIn ? value.stageScale * scaleBy : value.stageScale / scaleBy,
+          point,
+          value,
+        ),
+      );
     },
     [scaleBy],
   );
@@ -78,11 +83,18 @@ export default function useZoom(props: UseZoomProps): UseZoomResult {
     [changeZoom],
   );
 
+  const handleSetScale = useCallback(
+    (newScale: number, center: Point2D): void =>
+      setState(value => getNewZoomState(newScale, center, value)),
+    [],
+  );
+
   return {
     handleWheel,
     handleReset,
     handleZoomIn,
     handleZoomOut,
+    handleSetScale,
     ...state,
   };
 }
