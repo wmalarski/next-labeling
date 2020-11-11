@@ -16,20 +16,34 @@ export interface UseTooltipLabelResult {
   onMouseLeave: () => void;
 }
 
-export function useTooltipLabel(): UseTooltipLabelResult {
+export interface UseTooltipLabelProps {
+  scaleX?: number;
+}
+
+export function useTooltipLabel(
+  props?: UseTooltipLabelProps,
+): UseTooltipLabelResult {
+  const { scaleX = 1 } = props ?? {};
+
   const labelRef = useRef<Konva.Label>(null);
   const textRef = useRef<Konva.Text>(null);
 
-  const onPointMove = useCallback((point: Point2D, newText?: string): void => {
-    const label = labelRef.current;
-    const text = textRef.current;
-    if (!label || !text) return;
+  const onPointMove = useCallback(
+    (point: Point2D, newText?: string): void => {
+      const label = labelRef.current;
+      const text = textRef.current;
+      if (!label || !text) return;
 
-    label.position(point);
-    if (newText) text.text(newText);
-    label.show();
-    label.getLayer()?.batchDraw();
-  }, []);
+      label.position({
+        x: point.x * scaleX,
+        y: point.y,
+      });
+      if (newText) text.text(newText);
+      label.show();
+      label.getLayer()?.batchDraw();
+    },
+    [scaleX],
+  );
 
   const onMouseMove = useCallback(
     (event: KonvaEventObject<MouseEvent>, newText?: string): void => {

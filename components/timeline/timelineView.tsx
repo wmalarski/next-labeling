@@ -152,7 +152,9 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
     [duration, frameStep, pushLabeling],
   );
 
-  const { refs, onMouseLeave, onPointMove } = useTooltipLabel();
+  const { refs, onMouseLeave, onPointMove } = useTooltipLabel({
+    scaleX,
+  });
 
   const arrowWidth = 30;
   const labelsWidth = 160;
