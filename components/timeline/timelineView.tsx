@@ -14,6 +14,8 @@ import {
   TimelineVerticalLineWidth,
 } from "../../utils/timeline/constansts";
 import { getTimelineObjectConfigs } from "../../utils/timeline/functions";
+import { useTooltipLabel } from "../../utils/visualization/hooks/useTooltipLabel";
+import { TooltipLabel } from "../visualization/tooltipLabel";
 import TimelineLabel from "./shapes/timelineLabel";
 import TimelineObject from "./shapes/timelineObject";
 
@@ -148,13 +150,7 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
     [duration, frameStep, pushLabeling],
   );
 
-  const onTooltipEnter = useCallback(() => {
-    //
-  }, []);
-
-  const onTooltipLeave = useCallback(() => {
-    //
-  }, []);
+  const { refs, onMouseLeave, onPointMove } = useTooltipLabel();
 
   const arrowWidth = 30;
   const labelsWidth = 160;
@@ -184,8 +180,8 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
             onSelect={handleSelect}
             onDeselect={handleDeselect}
             onFrameSelected={handleFrameSelected}
-            onTooltipEnter={onTooltipEnter}
-            onTooltipLeave={onTooltipLeave}
+            onTooltipEnter={onPointMove}
+            onTooltipLeave={onMouseLeave}
           />
         ))}
       </Layer>
@@ -200,6 +196,7 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
           stroke={errorColor}
           strokeWidth={TimelineVerticalLineWidth}
         />
+        <TooltipLabel refs={refs} />
       </Layer>
     </Stage>
   );

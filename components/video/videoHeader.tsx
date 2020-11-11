@@ -19,13 +19,13 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export interface ToolsHeaderProps {
+export interface VideoHeaderProps {
   onResetClicked: () => void;
   onZoomInClicked: () => void;
   onZoomOutlicked: () => void;
 }
 
-export default function ToolsHeader(props: ToolsHeaderProps): JSX.Element {
+export default function VideoHeader(props: VideoHeaderProps): JSX.Element {
   const { onResetClicked, onZoomInClicked, onZoomOutlicked } = props;
   const classes = useStyles();
 

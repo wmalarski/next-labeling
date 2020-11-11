@@ -3,12 +3,12 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Image } from "react-konva";
 import { LabelingContextValue } from "../../utils/labeling/contexts/labelingContext";
 
-export interface VideoProps {
+export interface VideoViewProps {
   context: LabelingContextValue;
   onClick: () => void;
 }
 
-export default function Video(props: VideoProps): JSX.Element {
+export default function VideoView(props: VideoViewProps): JSX.Element {
   const { context, onClick } = props;
 
   const { document: labelingDocument, history, setDuration } = context;

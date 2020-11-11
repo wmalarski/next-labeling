@@ -15,7 +15,7 @@ export interface TimelineObjectProps extends TimelineObjectConfig {
   onSelect: (object: LabelingObject, reset: boolean, field?: string) => void;
   onDeselect: (object: LabelingObject, reset: boolean, field?: string) => void;
   onFrameSelected: (index: number) => void;
-  onTooltipEnter: (pos: Point2D, text: string) => void;
+  onTooltipEnter: (point: Point2D, text: string) => void;
   onTooltipLeave: () => void;
 }
 
@@ -64,6 +64,7 @@ export default function TimelineObject(
           <Rect
             key={block.firstFrame}
             x={block.firstFrame}
+            y={row * rowHeight}
             width={block.lastFrame + 1 - block.firstFrame}
             height={rowHeight - 3}
             fill={isSelected ? selectionColor : deselectionColor}

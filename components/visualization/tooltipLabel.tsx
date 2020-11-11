@@ -1,18 +1,18 @@
-import Konva from "konva";
-import React, { RefObject } from "react";
+import React from "react";
 import { Label, Tag, Text } from "react-konva";
 import { FontSize } from "../../utils/video/constansts";
+import { UseTooltipLabelRefs } from "../../utils/visualization/hooks/useTooltipLabel";
 
 export interface TooltipLabelProps {
-  labelRef: RefObject<Konva.Label>;
-  textRef: RefObject<Konva.Text>;
+  refs: UseTooltipLabelRefs;
   text?: string;
   opacity?: number;
   fontSize?: number;
 }
 
 export function TooltipLabel(props: TooltipLabelProps): JSX.Element | null {
-  const { labelRef, textRef, text, opacity = 0.5, fontSize = FontSize } = props;
+  const { refs, text, opacity = 0.5, fontSize = FontSize } = props;
+  const { labelRef, textRef } = refs;
 
   return (
     <Label ref={labelRef} visible={false} opacity={opacity}>

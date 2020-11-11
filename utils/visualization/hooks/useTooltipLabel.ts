@@ -2,43 +2,54 @@ import Konva from "konva";
 import { KonvaEventObject } from "konva/types/Node";
 import { RefObject, useCallback, useRef } from "react";
 import { getEventRelativePosition } from "../functions";
+import { Point2D } from "../types";
 
-export interface UseTooltipLabelResult {
+export interface UseTooltipLabelRefs {
   labelRef: RefObject<Konva.Label>;
   textRef: RefObject<Konva.Text>;
+}
+
+export interface UseTooltipLabelResult {
+  refs: UseTooltipLabelRefs;
+  onPointMove: (point: Point2D, text?: string) => void;
   onMouseMove: (evt: KonvaEventObject<MouseEvent>, text?: string) => void;
-  onMouseOut: (evt: KonvaEventObject<MouseEvent>) => void;
-  onMouseLeave: (evt: KonvaEventObject<MouseEvent>) => void;
+  onMouseLeave: () => void;
 }
 
 export function useTooltipLabel(): UseTooltipLabelResult {
   const labelRef = useRef<Konva.Label>(null);
   const textRef = useRef<Konva.Text>(null);
 
+  const onPointMove = useCallback((point: Point2D, newText?: string): void => {
+    const label = labelRef.current;
+    const text = textRef.current;
+    if (!label || !text) return;
+
+    label.position(point);
+    if (newText) text.text(newText);
+    label.show();
+    label.getLayer()?.batchDraw();
+  }, []);
+
   const onMouseMove = useCallback(
     (event: KonvaEventObject<MouseEvent>, newText?: string): void => {
-      const label = labelRef.current;
-      const text = textRef.current;
       const mousePos = getEventRelativePosition(event);
-      if (!label || !mousePos || !text) return;
-
-      label.position(mousePos);
-      if (newText) text.text(newText);
-      label.show();
-      label.getLayer()?.batchDraw();
+      if (mousePos) onPointMove(mousePos, newText);
     },
-    [],
+    [onPointMove],
   );
-  const onMouseOut = useCallback(() => {
+  const onMouseLeave = useCallback(() => {
     labelRef.current?.hide();
     labelRef.current?.getLayer()?.draw();
   }, []);
 
   return {
-    labelRef,
-    textRef,
+    refs: {
+      labelRef,
+      textRef,
+    },
+    onPointMove,
     onMouseMove,
-    onMouseOut,
-    onMouseLeave: onMouseOut,
+    onMouseLeave,
   };
 }

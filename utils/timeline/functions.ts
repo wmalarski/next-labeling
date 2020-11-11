@@ -109,7 +109,7 @@ export function getTimelineObjectConfigs(
   duration: number,
 ): TimelineObjectConfig[] {
   return objects.reduce<TimelineObjectConfig[]>((prev, object) => {
-    const last = prev[prev.length - 1] ?? { row: 0, fieldBlocks: [] };
+    const last = prev[prev.length - 1] ?? { row: -1, fieldBlocks: [] };
     const row = last.row + last.fieldBlocks.length + 1;
     const objectBlocks = calculateObjectBlocks(object, duration);
     const isToggled = toggled.includes(object.id);

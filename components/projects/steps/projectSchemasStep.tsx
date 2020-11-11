@@ -1,7 +1,6 @@
 import StepContent from "@material-ui/core/StepContent";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
-
 import { UseProjectHistoryFnc } from "../../../utils/projects/hooks/useProjectHistory";
 import { ProjectDocument } from "../../../utils/projects/types";
 import StepActions from "./stepActions";
@@ -17,14 +16,7 @@ export interface ProjectSchemasStepProps {
 export default function ProjectSchemasStep(
   props: ProjectSchemasStepProps,
 ): JSX.Element {
-  const {
-    push,
-    project,
-    onPreviousClicked,
-    onNextClicked,
-    onSkipClicked,
-    ...other
-  } = props;
+  const { onPreviousClicked, onNextClicked, onSkipClicked, ...other } = props;
 
   return (
     <StepContent {...other}>

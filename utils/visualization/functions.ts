@@ -6,7 +6,9 @@ export function getEventRelativePosition(
   e: KonvaEventObject<MouseEvent>,
 ): Point2D | null {
   const stage = e.currentTarget.getStage();
-  const transform = e.currentTarget.getAbsoluteTransform().copy();
+  const layer = e.currentTarget.getLayer();
+  const transform = layer?.getAbsoluteTransform().copy();
+  if (!transform) return null;
   transform.invert();
   const pos = stage?.getPointerPosition();
   if (!pos) return null;

@@ -33,7 +33,6 @@ export default function TimelineRow(props: TimelineRowProps): JSX.Element {
   return (
     <Group
       x={0}
-      y={row * rowHeight}
       height={rowHeight}
       width={duration}
       {...hoverCallbacks}
@@ -41,6 +40,7 @@ export default function TimelineRow(props: TimelineRowProps): JSX.Element {
     >
       <Rect
         ref={fillRef}
+        y={row * rowHeight}
         height={rowHeight - 3}
         width={duration}
         fill={isSelected ? selectionColor : deselectionColor}
@@ -48,6 +48,7 @@ export default function TimelineRow(props: TimelineRowProps): JSX.Element {
       />
       <Rect
         ref={rectRef}
+        y={row * rowHeight}
         height={rowHeight - 3}
         width={duration}
         stroke={hoverStrokeColor}

@@ -20,7 +20,7 @@ export interface TimelineFieldProps {
   onSelect: (object: LabelingObject, reset: boolean, field?: string) => void;
   onDeselect: (object: LabelingObject, reset: boolean, field?: string) => void;
   onFrameSelected: (index: number) => void;
-  onTooltipEnter: (pos: Point2D, text: string) => void;
+  onTooltipEnter: (point: Point2D, text: string) => void;
   onTooltipLeave: () => void;
 }
 
@@ -66,6 +66,7 @@ export default function TimelineField(props: TimelineFieldProps): JSX.Element {
           block={block}
           field={field}
           isSelected={isFieldSelected}
+          row={row}
           rowHeight={rowHeight}
           onTooltipEnter={onTooltipEnter}
           onTooltipLeave={onTooltipLeave}

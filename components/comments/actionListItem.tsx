@@ -1,8 +1,6 @@
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import Typography from "@material-ui/core/Typography";
 import React from "react";
-
 import { CommentDocument } from "../../utils/comments/types";
 import { convertToDate } from "../../utils/firestore/functions";
 

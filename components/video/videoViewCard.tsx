@@ -5,7 +5,7 @@ import "../../node_modules/react-grid-layout/css/styles.css";
 import "../../node_modules/react-resizable/css/styles.css";
 import useZoom from "../../utils/visualization/hooks/useZoom";
 import LabelingViewCard from "../workspace/labelingViewCard";
-import ToolsHeader from "./toolsHeader";
+import ToolsHeader from "./videoHeader";
 
 const VisualizationStageNoSSR = dynamic(() => import("./videoStage"), {
   ssr: false,

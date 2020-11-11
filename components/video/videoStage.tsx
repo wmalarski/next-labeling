@@ -18,7 +18,7 @@ import {
   FinishedObject,
   InProgressObject,
 } from "./objects/visualizationObject";
-import Video from "./video";
+import VideoView from "./videoView";
 
 export interface VideoStageProps {
   width: number;
@@ -96,7 +96,7 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
           acceptPoint(point, e.evt.button === MouseButton.RIGHT, currentFrame);
         }}
       >
-        <Video context={context} onClick={handleDeselect} />
+        <VideoView context={context} onClick={handleDeselect} />
         {filteredObjects.flatMap(object => {
           const isSelected = selected.some(sel => sel.objectId === object.id);
           return object.fields.map(field => (

@@ -14,9 +14,10 @@ import { Point2D } from "../../../utils/visualization/types";
 export interface TimelineFieldRectProps {
   isSelected: boolean;
   field: LabelingField;
+  row: number;
   rowHeight: number;
   block: FieldBlock;
-  onTooltipEnter: (pos: Point2D, text: string) => void;
+  onTooltipEnter: (point: Point2D, text: string) => void;
   onTooltipLeave: () => void;
 }
 
@@ -31,6 +32,7 @@ export default function TimelineFieldRect(
     rowHeight,
     block,
     field,
+    row,
     onTooltipEnter,
     onTooltipLeave,
   } = props;
@@ -50,15 +52,24 @@ export default function TimelineFieldRect(
       ref={rectRef}
       key={firstFrame}
       x={firstFrame}
+      y={row * rowHeight}
       width={lastFrame + 1 - firstFrame}
       height={rowHeight - 3}
       fill={fill}
       stroke={darker}
-      onMouseEnter={event => {
-        onMouseEnter(event);
-        const position = getEventRelativePosition(event);
-        if (!position) return;
-        onTooltipEnter(position, `${field.fieldSchema.name}: ${block.value}`);
+      onMouseEnter={onMouseEnter}
+      onMouseMove={event => {
+        const mousePos = getEventRelativePosition(event);
+        // console.table([
+        //   mousePos?.x,
+        //   event.evt.x,
+        //   event.evt.pageX,
+        //   event.evt.clientX,
+        //   event.evt.offsetX,
+        //   event.evt.screenX,
+        // ]);
+        if (!mousePos) return;
+        onTooltipEnter(mousePos, `${field.fieldSchema.name}: ${block.value}`);
       }}
       onMouseLeave={event => {
         onMouseLeave(event);

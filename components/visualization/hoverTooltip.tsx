@@ -12,29 +12,18 @@ export interface BoxLeafProps {
 export function HoverTooltip(props: BoxLeafProps): JSX.Element | null {
   const { text, opacity = 0.5, children } = props;
 
-  const {
-    labelRef,
-    textRef,
-    onMouseLeave,
-    onMouseMove,
-    onMouseOut,
-  } = useTooltipLabel();
+  const { refs, onMouseLeave, onMouseMove } = useTooltipLabel();
 
   return (
     <>
       <Group
         onMouseMove={onMouseMove}
-        onMouseOut={onMouseOut}
+        onMouseOut={onMouseLeave}
         onMouseLeave={onMouseLeave}
       >
         {children}
       </Group>
-      <TooltipLabel
-        labelRef={labelRef}
-        textRef={textRef}
-        opacity={opacity}
-        text={text}
-      />
+      <TooltipLabel refs={refs} opacity={opacity} text={text} />
     </>
   );
 }
