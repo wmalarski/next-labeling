@@ -1,7 +1,7 @@
 import { useTheme } from "@material-ui/core";
 import compact from "lodash/compact";
 import React, { useCallback, useMemo } from "react";
-import { Layer, Line, Stage } from "react-konva";
+import { Layer, Line, Rect, Stage } from "react-konva";
 import { frameToRange, labelingFilter } from "../../utils/labeling/functions";
 import useLabelingContext from "../../utils/labeling/hooks/useLabelingContext";
 import usePreferences from "../../utils/labeling/hooks/usePreferencesContext";
@@ -22,10 +22,11 @@ import TimelineObject from "./shapes/timelineObject";
 export interface TimelineViewProps {
   width: number;
   scaleX: number;
+  stageX: number;
 }
 
 export default function TimelineView(props: TimelineViewProps): JSX.Element {
-  const { width, scaleX } = props;
+  const { width, scaleX, stageX } = props;
 
   const { history, filters, duration } = useLabelingContext();
   const { pushLabeling, data } = history;
@@ -36,6 +37,7 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
 
   const theme = useTheme();
   const errorColor = theme.palette.error.light;
+  const backgroundColor = theme.palette.background.default;
 
   const configs = useMemo(
     () =>
@@ -156,20 +158,7 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
   const labelsWidth = 160;
   return (
     <Stage width={width} height={height}>
-      <Layer>
-        {configs.map(config => (
-          <TimelineLabel
-            key={config.object.id}
-            rowHeight={TimelineRowHeight}
-            arrowWidth={arrowWidth}
-            horPadding={8}
-            verPadding={14}
-            {...config}
-            onToggle={handleToggle}
-          />
-        ))}
-      </Layer>
-      <Layer x={labelsWidth} scaleX={scaleX}>
+      <Layer x={labelsWidth + stageX} scaleX={scaleX}>
         {configs.map(config => (
           <TimelineObject
             key={config.object.id}
@@ -185,7 +174,7 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
           />
         ))}
       </Layer>
-      <Layer x={labelsWidth}>
+      <Layer x={labelsWidth + stageX}>
         <Line
           points={[
             (currentFrame + 0.5) * scaleX,
@@ -197,6 +186,20 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
           strokeWidth={TimelineVerticalLineWidth}
         />
         <TooltipLabel refs={refs} />
+      </Layer>
+      <Layer>
+        <Rect width={labelsWidth} height={height} fill={backgroundColor} />
+        {configs.map(config => (
+          <TimelineLabel
+            key={config.object.id}
+            rowHeight={TimelineRowHeight}
+            arrowWidth={arrowWidth}
+            horPadding={8}
+            verPadding={14}
+            {...config}
+            onToggle={handleToggle}
+          />
+        ))}
       </Layer>
     </Stage>
   );

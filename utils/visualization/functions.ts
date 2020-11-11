@@ -25,3 +25,12 @@ export function getPoints2D(points: number[]): Point2D[] {
 export function getPointDistance(a: Point2D, b: Point2D): number {
   return Math.sqrt(Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
 }
+
+export function optionalClamp(
+  value: number,
+  min?: number,
+  max?: number,
+): number {
+  const valueMin = min ? Math.max(min, value) : value;
+  return max ? Math.min(max, valueMin) : valueMin;
+}
