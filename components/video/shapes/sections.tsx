@@ -4,7 +4,7 @@ import range from "lodash/range";
 import React, { useRef } from "react";
 import { Circle, Line } from "react-konva";
 import { LabelingObject } from "../../../utils/labeling/types/client";
-import { PointRadius } from "../../../utils/video/constansts";
+import { PointRadius } from "../../../utils/video/constants";
 import { getShapeStyle } from "../../../utils/video/functions";
 import { getPoints2D } from "../../../utils/visualization/functions";
 

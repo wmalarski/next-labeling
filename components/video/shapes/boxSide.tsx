@@ -3,7 +3,7 @@ import { KonvaEventObject } from "konva/types/Node";
 import React from "react";
 import { Circle, Line } from "react-konva";
 import { LabelingObject } from "../../../utils/labeling/types/client";
-import { PointRadius } from "../../../utils/video/constansts";
+import { PointRadius } from "../../../utils/video/constants";
 import { getShapeStyle } from "../../../utils/video/functions";
 
 export interface BoxSideShapeProps {

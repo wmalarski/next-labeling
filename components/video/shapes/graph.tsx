@@ -9,7 +9,7 @@ import {
   HoverOpacity,
   PointBoundaryRadius,
   PointRadius,
-} from "../../../utils/video/constansts";
+} from "../../../utils/video/constants";
 import { getShapeStyle } from "../../../utils/video/functions";
 import {
   getEventRelativePosition,

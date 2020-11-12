@@ -1,6 +1,6 @@
 import React from "react";
 import { Label, Tag, Text } from "react-konva";
-import { FontSize } from "../../utils/video/constansts";
+import { FontSize } from "../../utils/video/constants";
 import { UseTooltipLabelRefs } from "../../utils/visualization/hooks/useTooltipLabel";
 
 export interface TooltipLabelProps {

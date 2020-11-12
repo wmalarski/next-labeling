@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import { FieldVisualization } from "../../video/types";
 import { defaultShortcutActions, ShortcutActions } from "../shortcuts";
 import { defaultLabelingViews, LabelingViews } from "../views";
 
@@ -13,6 +14,7 @@ export interface PreferencesContextState {
   shortcuts: ShortcutActions;
   autoSaveDelayMinutes: number | null;
   views: LabelingViews;
+  fieldVisualization: FieldVisualization;
 }
 
 export const defaultPreferencesContextState: PreferencesContextState = {
@@ -21,6 +23,7 @@ export const defaultPreferencesContextState: PreferencesContextState = {
   shortcuts: defaultShortcutActions,
   autoSaveDelayMinutes: 1,
   views: defaultLabelingViews,
+  fieldVisualization: {},
 };
 
 export interface PreferencesContextValue {

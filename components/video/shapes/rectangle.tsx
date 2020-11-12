@@ -2,7 +2,7 @@ import Konva from "konva";
 import React, { useEffect, useRef } from "react";
 import { Rect, Text, Transformer } from "react-konva";
 import { LabelingObject } from "../../../utils/labeling/types/client";
-import { FontSize } from "../../../utils/video/constansts";
+import { FontSize } from "../../../utils/video/constants";
 import { getShapeStyle } from "../../../utils/video/functions";
 
 export interface RectangleShapeProps {

@@ -14,6 +14,13 @@ export const Box3dAttributes = t.strict({
   default: Box3dValue,
   color: t.string,
 });
+export const Box3dPositions = t.union([
+  t.literal("TOP"),
+  t.literal("BOTTOM"),
+  t.literal("LEFT"),
+  t.literal("RIGHT"),
+]);
 export type Box3dValue = t.TypeOf<typeof Box3dValue>;
 export type Box3dValues = t.TypeOf<typeof Box3dValues>;
 export type Box3dAttributes = t.TypeOf<typeof Box3dAttributes>;
+export type Box3dPositions = t.TypeOf<typeof Box3dPositions>;

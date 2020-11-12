@@ -12,7 +12,7 @@ import {
   LabelingFieldAttributes,
   LabelingFieldValues,
 } from "../../../utils/editors/types";
-import { PointRadius } from "../../../utils/video/constansts";
+import { PointRadius } from "../../../utils/video/constants";
 import { getLabelText, getShapeStyle } from "../../../utils/video/functions";
 import { HoverTooltip } from "../../visualization/hoverTooltip";
 

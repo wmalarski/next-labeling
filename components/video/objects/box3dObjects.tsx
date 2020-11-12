@@ -11,7 +11,7 @@ import {
   LabelingFieldValues,
 } from "../../../utils/editors/types";
 import { Box3dValue } from "../../../utils/editors/types/box3d";
-import { BoxNewSideWidth } from "../../../utils/video/constansts";
+import { BoxNewSideWidth } from "../../../utils/video/constants";
 import { getLabelText } from "../../../utils/video/functions";
 import { HoverTooltip } from "../../visualization/hoverTooltip";
 import { BoxLeaf } from "../shapes/boxLeaf";

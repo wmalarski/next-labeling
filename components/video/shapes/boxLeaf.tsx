@@ -4,7 +4,7 @@ import {
   BoxLeafWidth,
   HoverFill,
   HoverOpacity,
-} from "../../../utils/video/constansts";
+} from "../../../utils/video/constants";
 
 export interface BoxLeafProps {
   x: number;
