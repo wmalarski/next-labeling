@@ -1,13 +1,11 @@
-// https://github.com/zeit/next.js/issues/7320#issuecomment-491906055
-const withCSS = require("@zeit/next-css");
 require("dotenv").config();
 
-module.exports = withCSS({
+module.exports = {
   webpack: (config, { isServer }) => {
     // Fixes npm packages that depend on `fs` module
     if (!isServer) {
       config.node = {
-        fs: "empty"
+        fs: "empty",
       };
     }
     return config;
@@ -22,6 +20,6 @@ module.exports = withCSS({
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID,
     FIREBASE_MEASUREMENT_ID: process.env.FIREBASE_MEASUREMENT_ID,
     FIREBASE_CLIENT_EMAIL: process.env.FIREBASE_CLIENT_EMAIL,
-    FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY
-  }
-});
+    FIREBASE_PRIVATE_KEY: process.env.FIREBASE_PRIVATE_KEY,
+  },
+};
