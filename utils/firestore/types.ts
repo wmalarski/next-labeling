@@ -16,9 +16,7 @@ export interface DocumentWithId {
   id?: string;
 }
 
-export type FirestoreCollection = firebase.firestore.CollectionReference<
-  firebase.firestore.DocumentData
->;
+export type FirestoreCollection = firebase.firestore.CollectionReference<firebase.firestore.DocumentData>;
 
 export type FirestoreQuery<
   T = firebase.firestore.DocumentData

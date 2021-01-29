@@ -9,9 +9,7 @@ import useUpdateDocument, {
 } from "../firestore/useUpdateDocument";
 import { SchemaDocument } from "./types";
 
-export default function useUpdateSchema(): UseUpdateDocumentResult<
-  SchemaDocument
-> {
+export default function useUpdateSchema(): UseUpdateDocumentResult<SchemaDocument> {
   const db = firebase.firestore();
   const result = useUpdateDocument<SchemaDocument>(
     db.collection(SchemaCollection),

@@ -58,9 +58,10 @@ function SchemaCreate(): JSX.Element {
   });
 
   const collection = firebase.firestore().collection(SchemaCollection);
-  const { create: createSchema, state: createSchemaState } = useCreateDocument<
-    SchemaDocument
-  >(collection);
+  const {
+    create: createSchema,
+    state: createSchemaState,
+  } = useCreateDocument<SchemaDocument>(collection);
   const documentId = createSchemaState?.id;
   useEffect(() => {
     if (createSchemaState.document) {

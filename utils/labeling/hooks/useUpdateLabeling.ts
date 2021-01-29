@@ -10,9 +10,7 @@ import useUpdateDocument, {
 } from "../../firestore/useUpdateDocument";
 import { ExternalDocument } from "../types/database";
 
-export default function useUpdateLabeling(): UseUpdateDocumentResult<
-  ExternalDocument
-> {
+export default function useUpdateLabeling(): UseUpdateDocumentResult<ExternalDocument> {
   const { authUser } = useAuthUserInfo();
 
   const db = firebase.firestore();
