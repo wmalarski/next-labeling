@@ -49,5 +49,13 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
     "source.fixAll": true
-  }
+  },
+  "cSpell.words": [
+    "MULSELECT",
+    "clsx",
+    "firestore",
+    "konva",
+    "mixins",
+    "uuidv"
+  ]
 }

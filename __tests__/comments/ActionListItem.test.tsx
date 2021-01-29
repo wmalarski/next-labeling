@@ -1,8 +1,7 @@
-import React from "react";
 import { render } from "@testing-library/react";
-
-import ActionListItem from "../../components/comments/actionListItem";
-import { CommentDocument } from "../../utils/comments/types";
+import React from "react";
+import ActionListItem from "../../src/comments/components/actionListItem";
+import { CommentDocument } from "../../src/comments/types";
 
 function renderActionListItem(comment: Partial<CommentDocument> = {}) {
   const defaultComment: CommentDocument = {

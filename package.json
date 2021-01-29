@@ -5,8 +5,8 @@
     "dev": "NODE_ENV=development next dev",
     "build": "NODE_ENV=production next build",
     "start": "NODE_ENV=production next start",
-    "prettier": "prettier --config .prettierrc '(components|utils|pages)/**/*.(ts|tsx)' --write",
-    "lint": "eslint . --fix --ext .tsx,.ts",
+    "prettier": "prettier --config .prettierrc 'src/**/*.(ts|tsx)' --write",
+    "lint": "eslint src --fix --ext .tsx,.ts",
     "test": "jest",
     "test:watch": "jest --watch"
   },

@@ -1,7 +1,7 @@
 import { shallow } from "enzyme";
 import React from "react";
-import CheckBoxEditor from "../../components/editors/checkBoxEditor";
-import { FieldEditorProps, FieldType } from "../../utils/editors/types";
+import CheckBoxEditor from "../../src/editors/components/checkBoxEditor";
+import { FieldEditorProps, FieldType } from "../../src/editors/types";
 
 function shallowCheckBoxEditor(props: Partial<FieldEditorProps> = {}) {
   const defaultProps: FieldEditorProps = {
