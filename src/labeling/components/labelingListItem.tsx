@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { useAuthUserInfo } from "../../auth/hooks";
 import { convertToDate } from "../../firestore/functions";
-import { ExternalDocument } from "../types/database";
+import { ExternalDocument } from "../../workspace/types/database";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

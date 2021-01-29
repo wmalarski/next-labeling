@@ -11,13 +11,13 @@ import ResultSnackbar from "../../common/components/resultSnackbar";
 import withAuthUser from "../../common/wrappers/withAuthUser";
 import withAuthUserInfo from "../../common/wrappers/withAuthUserInfo";
 import { ResultSnackbarState } from "../../firestore/types";
-import useFetchLabeling from "../../labeling/hooks/useFetchLabeling";
 import LabelingProvider from "../../workspace/components/labelingProvider";
 import LabelingWorkspace from "../../workspace/components/labelingWorkspace";
 import PreferencesProvider from "../../workspace/components/preferences/preferencesProvider";
 import EditorHeader from "../../workspace/components/toolbars/editorHeader";
 import EditorSidebar from "../../workspace/components/toolbars/editorSidebar";
 import ToolProvider from "../../workspace/components/toolbars/toolProvider";
+import useFetchLabeling from "../../workspace/hooks/useFetchLabeling";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -3,12 +3,12 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import React, { useMemo } from "react";
-import { filterSelectedFields } from "../../labeling/functions";
-import useLabelingContext from "../../labeling/hooks/useLabelingContext";
-import setAttributeUpdate from "../../labeling/updates/setAttributeUpdate";
-import setIsDoneUpdate from "../../labeling/updates/setIsDoneUpdate";
-import setIsTrackedUpdate from "../../labeling/updates/setIsTrackedUpdate";
-import setNameUpdate from "../../labeling/updates/setNameUpdate";
+import { filterSelectedFields } from "../../workspace/functions";
+import useLabelingContext from "../../workspace/hooks/useLabelingContext";
+import setAttributeUpdate from "../../workspace/updates/setAttributeUpdate";
+import setIsDoneUpdate from "../../workspace/updates/setIsDoneUpdate";
+import setIsTrackedUpdate from "../../workspace/updates/setIsTrackedUpdate";
+import setNameUpdate from "../../workspace/updates/setNameUpdate";
 import FieldEditor from "./fieldEditor";
 
 export default function EditorTable(): JSX.Element {

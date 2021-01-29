@@ -1,7 +1,6 @@
 import Konva from "konva";
 import React, { useRef } from "react";
 import { Rect } from "react-konva";
-import { LabelingField } from "../../../labeling/types/client";
 import {
   darkerTimelineColors,
   lighterColors,
@@ -9,6 +8,7 @@ import {
 import { getEventRelativePosition } from "../../../visualization/functions";
 import useMouseHover from "../../../visualization/hooks/useMouseHover";
 import { Point2D } from "../../../visualization/types";
+import { LabelingField } from "../../../workspace/types/client";
 import { FieldBlock } from "../../types";
 
 export interface TimelineFieldRectProps {

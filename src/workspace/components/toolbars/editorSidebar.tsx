@@ -19,30 +19,30 @@ import ViewListIcon from "@material-ui/icons/ViewList";
 import clsx from "clsx";
 import React, { useCallback, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { getFirstFrame, getLastFrame } from "../../../labeling/functions";
-import useLabelingContext from "../../../labeling/hooks/useLabelingContext";
-import usePreferences from "../../../labeling/hooks/usePreferencesContext";
-import useToolContext from "../../../labeling/hooks/useToolContext";
-import { ToolType } from "../../../labeling/types/client";
-import addObjectCopyFrameUpdate from "../../../labeling/updates/addObjectCopyFrameUpdate";
-import addObjectCopyUpdate from "../../../labeling/updates/addObjectCopyUpdate";
-import addObjectMergeUpdate from "../../../labeling/updates/addObjectMergeUpdate";
-import addObjectSplitUpdate from "../../../labeling/updates/addObjectSplitUpdate";
-import addObjectUpdate from "../../../labeling/updates/addObjectUpdate";
-import deleteBackwardUpdate from "../../../labeling/updates/deleteBackwardUpdate";
-import deleteForwardUpdate from "../../../labeling/updates/deleteForwardUpdate";
-import deleteObjectsUpdate from "../../../labeling/updates/deleteObjectsUpdate";
-import setCurrentFrameUpdate from "../../../labeling/updates/setCurrentFrameUpdate";
-import setObjectsIsDoneUpdate from "../../../labeling/updates/setObjectsIsDoneUpdate";
-import setSelectedAllUpdate from "../../../labeling/updates/setSelectedAllUpdate";
-import setSelectedNextUpdate from "../../../labeling/updates/setSelectedNextUpdate";
-import setSelectedUpdate from "../../../labeling/updates/setSelectedUpdate";
+import { getFirstFrame, getLastFrame } from "../../functions";
+import useLabelingContext from "../../hooks/useLabelingContext";
+import usePreferences from "../../hooks/usePreferencesContext";
+import useToolContext from "../../hooks/useToolContext";
+import { ToolType } from "../../types/client";
+import addObjectCopyFrameUpdate from "../../updates/addObjectCopyFrameUpdate";
+import addObjectCopyUpdate from "../../updates/addObjectCopyUpdate";
+import addObjectMergeUpdate from "../../updates/addObjectMergeUpdate";
+import addObjectSplitUpdate from "../../updates/addObjectSplitUpdate";
+import addObjectUpdate from "../../updates/addObjectUpdate";
+import deleteBackwardUpdate from "../../updates/deleteBackwardUpdate";
+import deleteForwardUpdate from "../../updates/deleteForwardUpdate";
+import deleteObjectsUpdate from "../../updates/deleteObjectsUpdate";
+import setCurrentFrameUpdate from "../../updates/setCurrentFrameUpdate";
+import setObjectsIsDoneUpdate from "../../updates/setObjectsIsDoneUpdate";
+import setSelectedAllUpdate from "../../updates/setSelectedAllUpdate";
+import setSelectedNextUpdate from "../../updates/setSelectedNextUpdate";
+import setSelectedUpdate from "../../updates/setSelectedUpdate";
 import {
   filterIcons,
   isViewVisible,
   LabelingView,
   toggleView,
-} from "../../../labeling/views";
+} from "../../views";
 import EditorSettingsDialog from "../preferences/editorSettingsDialog";
 
 const drawerWidth = 240;

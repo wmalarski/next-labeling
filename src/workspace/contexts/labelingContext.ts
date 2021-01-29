@@ -1,8 +1,7 @@
 import { createContext } from "react";
-
-import { ExternalDocument } from "../types/database";
 import { UseLabelingHistoryResult } from "../hooks/useLabelingHistory";
 import { IsDoneFilterValue, LabelingDisplayFilters } from "../types/client";
+import { ExternalDocument } from "../types/database";
 
 export interface LabelingContextValue {
   saveLabeling: (doc: ExternalDocument) => void;

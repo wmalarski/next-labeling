@@ -1,7 +1,7 @@
 import * as t from "io-ts";
-import { LabelingField, LabelingObject } from "../labeling/types/client";
 import { FieldSchema } from "../schema/types";
 import { Point2D } from "../visualization/types";
+import { LabelingField, LabelingObject } from "../workspace/types/client";
 import { Box3dAttributes, Box3dValues } from "./types/box3d";
 import { CheckBoxAttributes, CheckBoxValues } from "./types/checkBox";
 import { ComboBoxAttributes, ComboBoxValues } from "./types/comboBox";

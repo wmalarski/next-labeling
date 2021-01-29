@@ -7,9 +7,9 @@ import ZoomOutIcon from "@material-ui/icons/ZoomOut";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import React, { useCallback } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import usePreferences from "../../labeling/hooks/usePreferencesContext";
-import useToolContext from "../../labeling/hooks/useToolContext";
-import { ToolType } from "../../labeling/types/client";
+import usePreferences from "../../workspace/hooks/usePreferencesContext";
+import useToolContext from "../../workspace/hooks/useToolContext";
+import { ToolType } from "../../workspace/types/client";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

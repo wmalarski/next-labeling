@@ -4,8 +4,8 @@ import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import React from "react";
 import SearchInput from "../../common/components/searchInput";
-import useLabelingContext from "../../labeling/hooks/useLabelingContext";
-import { IsDoneFilterValue } from "../../labeling/types/client";
+import useLabelingContext from "../../workspace/hooks/useLabelingContext";
+import { IsDoneFilterValue } from "../../workspace/types/client";
 import { UseXZoomResult } from "../hooks/useXZoom";
 import { TimelineZoomControls } from "./timelineZoomControls";
 

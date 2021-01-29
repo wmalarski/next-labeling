@@ -1,7 +1,7 @@
 import Konva from "konva";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Image } from "react-konva";
-import { LabelingContextValue } from "../../labeling/contexts/labelingContext";
+import { LabelingContextValue } from "../../workspace/contexts/labelingContext";
 
 export interface VideoViewProps {
   context: LabelingContextValue;

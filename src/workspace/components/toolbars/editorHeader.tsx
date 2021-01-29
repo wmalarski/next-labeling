@@ -6,10 +6,10 @@ import SaveIcon from "@material-ui/icons/Save";
 import { useRouter } from "next/router";
 import React from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import useLabelingAutoSave from "../../../labeling/hooks/useLabelingAutoSave";
-import useLabelingContext from "../../../labeling/hooks/useLabelingContext";
-import usePreferences from "../../../labeling/hooks/usePreferencesContext";
-import { ExternalDocument } from "../../../labeling/types/database";
+import useLabelingAutoSave from "../../hooks/useLabelingAutoSave";
+import useLabelingContext from "../../hooks/useLabelingContext";
+import usePreferences from "../../hooks/usePreferencesContext";
+import { ExternalDocument } from "../../types/database";
 import UndoRedoButtons from "./undoRedoButtons";
 
 export default function EditorHeader(): JSX.Element {

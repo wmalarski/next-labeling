@@ -1,5 +1,4 @@
 import { useContext } from "react";
-
 import LabelingContext, {
   LabelingContextValue,
 } from "../contexts/labelingContext";

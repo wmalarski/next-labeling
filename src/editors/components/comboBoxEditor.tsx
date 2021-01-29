@@ -3,7 +3,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import React from "react";
-import usePreferences from "../../labeling/hooks/usePreferencesContext";
+import usePreferences from "../../workspace/hooks/usePreferencesContext";
 import { calculateNewValues, getFieldValues } from "../functions";
 import { FieldEditorProps, FieldType } from "../types";
 

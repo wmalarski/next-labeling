@@ -1,6 +1,6 @@
 import { UnpackedFrameValuePair, unpackValues } from "../editors/functions";
 import getValueIndex from "../editors/indexes";
-import { LabelingField, LabelingObject } from "../labeling/types/client";
+import { LabelingField, LabelingObject } from "../workspace/types/client";
 import { FieldBlock, ObjectBlock, TimelineObjectConfig } from "./types";
 
 interface ReduceFieldBlocksState {

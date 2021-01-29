@@ -12,7 +12,7 @@ import {
   LabelingCollection,
   ResultSnackbarState,
 } from "../../firestore/types";
-import { ExternalDocument } from "../types/database";
+import { ExternalDocument } from "../../workspace/types/database";
 import LabelingListItem from "./labelingListItem";
 
 type LabelingListState = {

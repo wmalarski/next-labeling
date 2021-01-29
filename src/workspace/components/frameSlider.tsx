@@ -10,10 +10,10 @@ import Forward5Icon from "@material-ui/icons/Forward5";
 import Replay5Icon from "@material-ui/icons/Replay5";
 import React, { useCallback } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { frameToRange } from "../../labeling/functions";
-import useLabelingContext from "../../labeling/hooks/useLabelingContext";
-import usePreferences from "../../labeling/hooks/usePreferencesContext";
-import setCurrentFrameUpdate from "../../labeling/updates/setCurrentFrameUpdate";
+import { frameToRange } from "../functions";
+import useLabelingContext from "../hooks/useLabelingContext";
+import usePreferences from "../hooks/usePreferencesContext";
+import setCurrentFrameUpdate from "../updates/setCurrentFrameUpdate";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

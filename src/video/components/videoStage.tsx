@@ -1,19 +1,19 @@
 import React, { useCallback, useMemo } from "react";
 import { Layer, Stage } from "react-konva";
 import { calculateNewValues } from "../../editors/functions";
-import { inFrameFilter, labelingFilter } from "../../labeling/functions";
-import useDrawingTool from "../../labeling/hooks/useDrawingTool";
-import useLabelingContext from "../../labeling/hooks/useLabelingContext";
-import usePreferences from "../../labeling/hooks/usePreferencesContext";
-import useToolContext from "../../labeling/hooks/useToolContext";
-import { ToolType } from "../../labeling/types/client";
-import addSelectedObjectUpdate from "../../labeling/updates/addSelectedObjectUpdate";
-import setAttributeUpdate from "../../labeling/updates/setAttributeUpdate";
-import setSelectedObjectUpdate from "../../labeling/updates/setSelectedObjectUpdate";
-import setSelectedUpdate from "../../labeling/updates/setSelectedUpdate";
 import { getEventRelativePosition } from "../../visualization/functions";
 import { UseZoomResult } from "../../visualization/hooks/useZoom";
 import { MouseButton } from "../../visualization/types";
+import { inFrameFilter, labelingFilter } from "../../workspace/functions";
+import useDrawingTool from "../../workspace/hooks/useDrawingTool";
+import useLabelingContext from "../../workspace/hooks/useLabelingContext";
+import usePreferences from "../../workspace/hooks/usePreferencesContext";
+import useToolContext from "../../workspace/hooks/useToolContext";
+import { ToolType } from "../../workspace/types/client";
+import addSelectedObjectUpdate from "../../workspace/updates/addSelectedObjectUpdate";
+import setAttributeUpdate from "../../workspace/updates/setAttributeUpdate";
+import setSelectedObjectUpdate from "../../workspace/updates/setSelectedObjectUpdate";
+import setSelectedUpdate from "../../workspace/updates/setSelectedUpdate";
 import {
   FinishedObject,
   InProgressObject,

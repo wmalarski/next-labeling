@@ -4,7 +4,7 @@ import { GridSize } from "@material-ui/core/Grid/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import React from "react";
-import usePreferences from "../../labeling/hooks/usePreferencesContext";
+import usePreferences from "../../workspace/hooks/usePreferencesContext";
 import { calculateNewValues, getFieldValues } from "../functions";
 import { FieldEditorProps, FieldType } from "../types";
 

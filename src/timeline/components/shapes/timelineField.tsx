@@ -1,7 +1,7 @@
 import React from "react";
-import { LabelingField, LabelingObject } from "../../../labeling/types/client";
 import { getEventRelativePosition } from "../../../visualization/functions";
 import { Point2D } from "../../../visualization/types";
+import { LabelingField, LabelingObject } from "../../../workspace/types/client";
 import { FieldBlock } from "../../types";
 import TimelineFieldRect from "./timelineFieldRect";
 import TimelineRow from "./timelineRow";

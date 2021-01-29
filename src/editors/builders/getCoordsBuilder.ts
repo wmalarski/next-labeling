@@ -1,5 +1,5 @@
 import compact from "lodash/compact";
-import { LabelingField, LabelingObject } from "../../labeling/types/client";
+import { LabelingField, LabelingObject } from "../../workspace/types/client";
 import { CoordsBuilder, FieldType } from "../types";
 import Box3dBuilder from "./box3dBuilder";
 import EyeBuilder from "./eyeBuilder";

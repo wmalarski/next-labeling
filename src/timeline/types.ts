@@ -1,4 +1,4 @@
-import { LabelingField, LabelingObject } from "../labeling/types/client";
+import { LabelingField, LabelingObject } from "../workspace/types/client";
 
 export interface ObjectBlock {
   firstFrame: number;

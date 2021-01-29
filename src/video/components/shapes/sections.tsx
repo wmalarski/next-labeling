@@ -3,8 +3,8 @@ import { KonvaEventObject } from "konva/types/Node";
 import range from "lodash/range";
 import React, { useRef } from "react";
 import { Circle, Line } from "react-konva";
-import { LabelingObject } from "../../../labeling/types/client";
 import { getPoints2D } from "../../../visualization/functions";
+import { LabelingObject } from "../../../workspace/types/client";
 import { PointRadius } from "../../constants";
 import { getShapeStyle } from "../../functions";
 

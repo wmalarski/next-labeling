@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import ToolContext, {
-  ToolContextState,
-} from "../../../labeling/contexts/toolContext";
-import { ToolType } from "../../../labeling/types/client";
+import ToolContext, { ToolContextState } from "../../contexts/toolContext";
+import { ToolType } from "../../types/client";
 
 export interface ToolProviderProps {
   children: React.ReactNode | React.ReactNode[] | null;
