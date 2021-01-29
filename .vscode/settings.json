@@ -49,5 +49,8 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": true,
     "source.fixAll": true
-  }
+  },
+  "cSpell.words": [
+    "konva"
+  ]
 }
