@@ -59,7 +59,7 @@ export default function Graph(props: GraphProps): JSX.Element | null {
   const maxNode = useMemo(() => Math.max(...points.map(point => point.n)), [
     points,
   ]);
-  const nnodes = Object.fromEntries(
+  const nodesRecords = Object.fromEntries(
     points.map(point => [point.n, { x: point.x, y: point.y }]),
   );
 
@@ -73,8 +73,8 @@ export default function Graph(props: GraphProps): JSX.Element | null {
   return (
     <>
       {edges.map((edge, index) => {
-        const from = nnodes[edge.from];
-        const to = nnodes[edge.to];
+        const from = nodesRecords[edge.from];
+        const to = nodesRecords[edge.to];
         return (
           from &&
           to && (
@@ -97,8 +97,8 @@ export default function Graph(props: GraphProps): JSX.Element | null {
                 edgesRef.current.forEach((edgeRef, ind) => {
                   if (!edgeRef || index === ind) return;
                   const edgeInitial = edges[ind];
-                  const { x: fromX, y: fromY } = nnodes[edgeInitial.from];
-                  const { x: toX, y: toY } = nnodes[edgeInitial.to];
+                  const { x: fromX, y: fromY } = nodesRecords[edgeInitial.from];
+                  const { x: toX, y: toY } = nodesRecords[edgeInitial.to];
                   edgeRef.points([fromX + x, fromY + y, toX + x, toY + y]);
                 });
                 nodesRef.current.some(nodeRef =>
@@ -183,11 +183,11 @@ export default function Graph(props: GraphProps): JSX.Element | null {
                 const edgeRef = edgesRef.current[index];
                 if (!edgeRef) return;
                 if (edge.from === n) {
-                  const to = nnodes[edge.to];
+                  const to = nodesRecords[edge.to];
                   edgeRef.points([x, y, to.x, to.y]);
                 }
                 if (edge.to === n) {
-                  const from = nnodes[edge.from];
+                  const from = nodesRecords[edge.from];
                   edgeRef.points([from.x, from.y, x, y]);
                 }
               });

@@ -164,10 +164,6 @@ function SchemaEdit(props: SchemaEditProps): JSX.Element {
   );
 }
 
-// Use `withAuthUser` to get the authed user server-side, which
-// disables static rendering.
-// Use `withAuthUserInfo` to include the authed user as a prop
-// to your component.
 export default withAuthUser(withAuthUserInfo(SchemaEdit));
 
 export const getStaticProps: GetStaticProps<SchemaEditProps> = async ({

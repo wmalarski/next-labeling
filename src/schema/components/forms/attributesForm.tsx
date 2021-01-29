@@ -106,9 +106,9 @@ function AttributesFormPrivate(props: AttributesFormProps): JSX.Element {
       );
     }
     case FieldType.MULSELECT: {
-      const multiselectAttributes = attributesObject[type];
-      return multiselectAttributes ? (
-        <MulSelectForm attributes={multiselectAttributes} onChange={onChange} />
+      const multiSelectAttributes = attributesObject[type];
+      return multiSelectAttributes ? (
+        <MulSelectForm attributes={multiSelectAttributes} onChange={onChange} />
       ) : (
         <></>
       );

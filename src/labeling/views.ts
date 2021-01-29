@@ -84,7 +84,7 @@ export function getDefaultView(key: string): GridLayout.Layout | undefined {
   return defaultLabelingViews.find(layout => layout.i === key);
 }
 
-export function toogleView(views: LabelingViews, key: string): LabelingViews {
+export function toggleView(views: LabelingViews, key: string): LabelingViews {
   const index = views.findIndex(layout => layout.i === key);
   if (index === -1) return addNewView(views, key, getDefaultView(key) ?? {});
   return reject(views, { i: key });

@@ -51,6 +51,11 @@
     "source.fixAll": true
   },
   "cSpell.words": [
-    "konva"
+    "MULSELECT",
+    "clsx",
+    "firestore",
+    "konva",
+    "mixins",
+    "uuidv"
   ]
 }

@@ -1,6 +1,6 @@
 import { CoordsBuilder, FieldType } from "../types";
 
-export enum PolgonBuilderStage {
+export enum PolygonBuilderStage {
   NO_POINTS = 0,
   ONE_POINT = 1,
   MANY_POINTS = 2,
@@ -13,7 +13,7 @@ const PolygonBuilder: CoordsBuilder = (point, frame, values) => {
       canBeFinished: false,
       isFinished: false,
       value: { [FieldType.POLYGON]: [{ frame, value: [point.x, point.y] }] },
-      stage: PolgonBuilderStage.ONE_POINT,
+      stage: PolygonBuilderStage.ONE_POINT,
     };
   const points = polygon[0].value;
   return {
@@ -22,7 +22,7 @@ const PolygonBuilder: CoordsBuilder = (point, frame, values) => {
     value: {
       [FieldType.POLYGON]: [{ frame, value: [...points, point.x, point.y] }],
     },
-    stage: PolgonBuilderStage.MANY_POINTS,
+    stage: PolygonBuilderStage.MANY_POINTS,
   };
 };
 

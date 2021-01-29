@@ -139,8 +139,8 @@ export function EyeFinished(props: FinishedObjectProps): JSX.Element | null {
               point.x(newPoints[2 * index]);
               point.y(newPoints[2 * index + 1]);
             });
-            const splited = splitPoints(newPoints);
-            secondLine.points(splited.secondPoints);
+            const split = splitPoints(newPoints);
+            secondLine.points(split.secondPoints);
             firstLine.getLayer()?.batchDraw();
           }}
           onDragEnd={e => {
@@ -179,8 +179,8 @@ export function EyeFinished(props: FinishedObjectProps): JSX.Element | null {
               point.x(newPoints[2 * index]);
               point.y(newPoints[2 * index + 1]);
             });
-            const splited = splitPoints(newPoints);
-            firstLine.points(splited.firstPoints);
+            const split = splitPoints(newPoints);
+            firstLine.points(split.firstPoints);
             secondLine.getLayer()?.batchDraw();
           }}
           onDragEnd={e => {

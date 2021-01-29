@@ -7,10 +7,10 @@ import CloseIcon from "@material-ui/icons/Close";
 import DragIndicatorIcon from "@material-ui/icons/DragIndicator";
 import React from "react";
 import GridLayout from "react-grid-layout";
+import usePreferences from "../../labeling/hooks/usePreferencesContext";
+import { toggleView, updateView } from "../../labeling/views";
 import "../../node_modules/react-grid-layout/css/styles.css";
 import "../../node_modules/react-resizable/css/styles.css";
-import usePreferences from "../../labeling/hooks/usePreferencesContext";
-import { toogleView, updateView } from "../../labeling/views";
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -69,7 +69,7 @@ export default function LabelingViewCard(
             {isClosable && (
               <IconButton
                 aria-label="close"
-                onClick={() => setViews(views => toogleView(views, key))}
+                onClick={() => setViews(views => toggleView(views, key))}
               >
                 <CloseIcon />
               </IconButton>

@@ -41,7 +41,7 @@ import {
   filterIcons,
   isViewVisible,
   LabelingView,
-  toogleView,
+  toggleView,
 } from "../../../labeling/views";
 import EditorSettingsDialog from "../preferences/editorSettingsDialog";
 
@@ -307,7 +307,7 @@ export default function EditorSidebar(): JSX.Element {
             onClick={() =>
               setPreferences({
                 ...preferences,
-                views: toogleView(views, LabelingView.TIMELINE),
+                views: toggleView(views, LabelingView.TIMELINE),
               })
             }
           >
@@ -322,7 +322,7 @@ export default function EditorSidebar(): JSX.Element {
             onClick={() =>
               setPreferences({
                 ...preferences,
-                views: toogleView(views, LabelingView.PROPERTIES),
+                views: toggleView(views, LabelingView.PROPERTIES),
               })
             }
           >
@@ -337,7 +337,7 @@ export default function EditorSidebar(): JSX.Element {
             onClick={() =>
               setPreferences({
                 ...preferences,
-                views: toogleView(views, LabelingView.COMMENTS),
+                views: toggleView(views, LabelingView.COMMENTS),
               })
             }
           >
