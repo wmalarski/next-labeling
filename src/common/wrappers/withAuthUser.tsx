@@ -2,7 +2,6 @@
 import { get, set } from "lodash";
 import { NextPageContext } from "next";
 import React from "react";
-
 import { AuthUserInfoContext, useFirebaseAuth } from "../../auth/hooks";
 import {
   AuthUserInfo,
@@ -22,7 +21,7 @@ export function getAuthUserInfo(ctx: NextPageContext): AuthUserInfo {
     // Don't include server middleware in the client JS bundle. See:
     // https://arunoda.me/blog/ssr-and-server-only-modules
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { addSession } = require("../../utils/middleware/cookieSession");
+    const { addSession } = require("../../middleware/cookieSession");
     addSession(req, res);
     return createAuthUserInfo({
       firebaseUser: get(req, "session.decodedToken", null),
