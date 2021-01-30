@@ -1,4 +1,3 @@
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -11,26 +10,14 @@ import ResultSnackbar from "../../common/components/resultSnackbar";
 import withAuthUser from "../../common/wrappers/withAuthUser";
 import withAuthUserInfo from "../../common/wrappers/withAuthUserInfo";
 import { ResultSnackbarState } from "../../firestore/types";
-import useFetchLabeling from "../../labeling/hooks/useFetchLabeling";
 import LabelingProvider from "../../workspace/components/labelingProvider";
 import LabelingWorkspace from "../../workspace/components/labelingWorkspace";
 import PreferencesProvider from "../../workspace/components/preferences/preferencesProvider";
 import EditorHeader from "../../workspace/components/toolbars/editorHeader";
 import EditorSidebar from "../../workspace/components/toolbars/editorSidebar";
 import ToolProvider from "../../workspace/components/toolbars/toolProvider";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: "flex",
-    },
-    toolbar: theme.mixins.toolbar,
-    content: {
-      flexGrow: 1,
-      padding: theme.spacing(3),
-    },
-  }),
-);
+import useFetchLabeling from "../../workspace/hooks/useFetchLabeling";
+import { useLabelingEditorStyles } from "../../workspace/styles";
 
 initFirebase();
 
@@ -40,7 +27,7 @@ export interface LabelingEditorProps {
 
 function LabelingEditor(props: LabelingEditorProps): JSX.Element {
   const { documentId } = props;
-  const classes = useStyles();
+  const classes = useLabelingEditorStyles();
 
   const { authUser } = useAuthUserInfo();
 

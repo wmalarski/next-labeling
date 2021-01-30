@@ -4,23 +4,11 @@ import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Paper from "@material-ui/core/Paper";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React from "react";
+import { useSchemaDetailsStyles } from "../../styles";
 import { SchemaDocument } from "../../types";
 import FieldDetails from "./fieldDetails";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      margin: theme.spacing(2),
-      padding: theme.spacing(2),
-    },
-    grid: {
-      marginTop: theme.spacing(1),
-    },
-  }),
-);
 
 interface SchemaDetailsProps {
   schemaDocument: SchemaDocument;
@@ -28,7 +16,7 @@ interface SchemaDetailsProps {
 
 export default function SchemaDetails(props: SchemaDetailsProps): JSX.Element {
   const { schema, user } = props.schemaDocument;
-  const classes = useStyles();
+  const classes = useSchemaDetailsStyles();
 
   return (
     <Container>

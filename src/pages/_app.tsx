@@ -1,26 +1,14 @@
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { makeStyles, Theme, ThemeProvider } from "@material-ui/core/styles";
+import { ThemeProvider } from "@material-ui/core/styles";
+import type { AppProps /*, AppContext */ } from "next/app";
 import Head from "next/head";
 import React from "react";
-
-import theme from "../themes/theme";
-
-import type { AppProps /*, AppContext */ } from "next/app";
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: "flex",
-    flexDirection: "column",
-    minHeight: "100vh",
-  },
-  main: {
-    marginTop: theme.spacing(8),
-    marginBottom: theme.spacing(2),
-  },
-}));
+import { useAppStyles } from "../common/styles";
+import theme from "../common/theme";
 
 export default function MyApp(props: AppProps): JSX.Element {
   const { Component, pageProps } = props;
-  const classes = useStyles();
+  const classes = useAppStyles();
 
   React.useEffect(() => {
     // Remove the server-side injected CSS.

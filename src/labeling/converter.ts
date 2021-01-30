@@ -1,6 +1,5 @@
 import firebase from "firebase/app";
-
-import { ExternalDocument } from "./types/database";
+import { ExternalDocument } from "../workspace/types/database";
 
 const labelingConverter = {
   toFirestore(doc: ExternalDocument): firebase.firestore.DocumentData {

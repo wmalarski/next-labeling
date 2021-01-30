@@ -2,7 +2,7 @@ import Button from "@material-ui/core/Button";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import React, { useState } from "react";
-import { useSearchBarStyle } from "../../themes/styles";
+import { useSearchBarStyle } from "../styles";
 
 export interface SearchInputProps {
   onSubmit: (value: string) => void;

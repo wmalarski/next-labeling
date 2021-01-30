@@ -1,6 +1,5 @@
 import { Typography } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Tab from "@material-ui/core/Tab";
 import Tabs from "@material-ui/core/Tabs";
 import CodeIcon from "@material-ui/icons/Code";
@@ -27,17 +26,9 @@ import ProjectSmallDetails from "../../projects/components/details/projectSmallD
 import ProjectUsersDetails from "../../projects/components/details/projectUsersDetails";
 import ProjectWorkflowDetails from "../../projects/components/details/projectWorkflowDetails";
 import useFetchProject from "../../projects/hooks/useFetchProject";
+import { useProjectDetailsPageStyles } from "../../projects/styles";
 
 initFirebase();
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      width: "100%",
-      padding: theme.spacing(3),
-    },
-  }),
-);
 
 enum ProjectDetailsPages {
   General,
@@ -54,7 +45,7 @@ export interface ProjectDetailsPageProps {
 function ProjectDetailsPage(props: ProjectDetailsPageProps): JSX.Element {
   const { documentId } = props;
 
-  const classes = useStyles();
+  const classes = useProjectDetailsPageStyles();
   const { authUser } = useAuthUserInfo();
 
   const router = useRouter();

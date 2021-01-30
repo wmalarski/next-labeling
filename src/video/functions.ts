@@ -1,5 +1,5 @@
 import Konva from "konva";
-import { LabelingObject } from "../labeling/types/client";
+import { LabelingObject } from "../workspace/types/client";
 import { SelectedStrokeWidth, UnselectedStrokeWidth } from "./constants";
 
 export function getShapeStyle(isSelected: boolean): Konva.ShapeConfig {

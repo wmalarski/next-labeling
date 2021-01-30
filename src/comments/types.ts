@@ -1,7 +1,7 @@
 import * as t from "io-ts";
 import { AuthUser } from "../auth/user";
-import { ObjectSelection } from "../labeling/types/client";
-import { ExternalObject } from "../labeling/types/database";
+import { ObjectSelection } from "../workspace/types/client";
+import { ExternalObject } from "../workspace/types/database";
 
 export const ReactionsArray = t.array(
   t.strict({

@@ -7,8 +7,8 @@ import ReplayIcon from "@material-ui/icons/Replay";
 import TreeItem from "@material-ui/lab/TreeItem";
 import TreeView from "@material-ui/lab/TreeView";
 import React from "react";
-import usePreferences from "../../../labeling/hooks/usePreferencesContext";
-import { shortcutCategories } from "../../../labeling/shortcuts";
+import usePreferences from "../../hooks/usePreferencesContext";
+import { shortcutCategories } from "../../shortcuts";
 
 export default function ShortcutsSettingsTreeView(): JSX.Element {
   const { preferences, setPreferences } = usePreferences();

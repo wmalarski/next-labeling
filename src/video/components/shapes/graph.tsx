@@ -3,11 +3,11 @@ import { KonvaEventObject } from "konva/types/Node";
 import range from "lodash/range";
 import React, { useMemo, useRef, useState } from "react";
 import { Circle, Group, Line } from "react-konva";
-import { LabelingObject } from "../../../labeling/types/client";
 import {
   getEventRelativePosition,
   getPointDistance,
 } from "../../../visualization/functions";
+import { LabelingObject } from "../../../workspace/types/client";
 import {
   HoverFill,
   HoverOpacity,

@@ -5,25 +5,39 @@ import {
   Theme,
 } from "@material-ui/core/styles";
 
-export const useUserFormStyles = makeStyles((theme: Theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
+export const useFooterStyles = makeStyles((theme: Theme) => ({
+  footer: {
+    padding: theme.spacing(3, 2),
+    marginTop: "auto",
+    backgroundColor: theme.palette.background.paper,
   },
 }));
+
+export const useHeaderStyles = makeStyles((theme: Theme) => ({
+  title: {
+    flexGrow: 1,
+    display: "none",
+    [theme.breakpoints.up("sm")]: {
+      display: "block",
+    },
+  },
+  grow: {
+    flexGrow: 1,
+  },
+  offset: theme.mixins.toolbar,
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+  },
+}));
+
+export const useLoadingBackdropStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    backdrop: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: "#fff",
+    },
+  }),
+);
 
 export const useSearchBarStyle = makeStyles((theme: Theme) =>
   createStyles({
@@ -66,3 +80,15 @@ export const useSearchBarStyle = makeStyles((theme: Theme) =>
     },
   }),
 );
+
+export const useAppStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: "flex",
+    flexDirection: "column",
+    minHeight: "100vh",
+  },
+  main: {
+    marginTop: theme.spacing(8),
+    marginBottom: theme.spacing(2),
+  },
+}));

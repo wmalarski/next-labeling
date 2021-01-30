@@ -1,5 +1,4 @@
 import { useContext } from "react";
-
 import PreferencesContext, {
   PreferencesContextValue,
 } from "../contexts/preferencesContext";

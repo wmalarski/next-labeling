@@ -1,11 +1,11 @@
 import React from "react";
 import GridLayout from "react-grid-layout";
 import EditorTable from "../../editors/components/editorTable";
-import { LabelingView } from "../../labeling/views";
 import "../../node_modules/react-grid-layout/css/styles.css";
 import "../../node_modules/react-resizable/css/styles.css";
 import TimelineViewCard from "../../timeline/components/timelineViewCard";
 import VisualizationViewCard from "../../video/components/videoViewCard";
+import { LabelingView } from "../views";
 import FrameSlider from "./frameSlider";
 import LabelingViewCard from "./labelingViewCard";
 

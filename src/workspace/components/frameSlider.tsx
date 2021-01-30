@@ -2,7 +2,6 @@ import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import Slider from "@material-ui/core/Slider/Slider";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
 import ArrowRightIcon from "@material-ui/icons/ArrowRight";
@@ -10,29 +9,14 @@ import Forward5Icon from "@material-ui/icons/Forward5";
 import Replay5Icon from "@material-ui/icons/Replay5";
 import React, { useCallback } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { frameToRange } from "../../labeling/functions";
-import useLabelingContext from "../../labeling/hooks/useLabelingContext";
-import usePreferences from "../../labeling/hooks/usePreferencesContext";
-import setCurrentFrameUpdate from "../../labeling/updates/setCurrentFrameUpdate";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    frameSlider: {
-      // position: "fixed",
-      // bottom: 0,
-      // right: 0,
-      // left: 0,
-      zIndex: theme.zIndex.drawer + 1,
-      backgroundColor: theme.palette.background.default,
-    },
-    padding: {
-      padding: theme.spacing(3),
-    },
-  }),
-);
+import { frameToRange } from "../functions";
+import useLabelingContext from "../hooks/useLabelingContext";
+import usePreferences from "../hooks/usePreferencesContext";
+import { useFrameSliderStyles } from "../styles";
+import setCurrentFrameUpdate from "../updates/setCurrentFrameUpdate";
 
 export default function FrameSlider(): JSX.Element {
-  const classes = useStyles();
+  const classes = useFrameSliderStyles();
   const { history, duration } = useLabelingContext();
   const { pushLabeling } = history;
   const { currentFrame } = history.data;

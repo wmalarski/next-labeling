@@ -1,19 +1,9 @@
 import { Typography } from "@material-ui/core";
 import Chip from "@material-ui/core/Chip/Chip";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
 import Link from "next/link";
 import React from "react";
-
+import { useProjectSmallDetailsStyles } from "../../styles";
 import { ProjectDocument } from "../../types";
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    column: {
-      display: "flex",
-      flexDirection: "column",
-    },
-  }),
-);
 
 export interface ProjectSmallDetailsProps {
   id: string;
@@ -23,7 +13,7 @@ export interface ProjectSmallDetailsProps {
 export default function ProjectSmallDetails(
   props: ProjectSmallDetailsProps,
 ): JSX.Element {
-  const classes = useStyles();
+  const classes = useProjectSmallDetailsStyles();
 
   const { project, id } = props;
   const { isPublic, name, description, tags } = project;

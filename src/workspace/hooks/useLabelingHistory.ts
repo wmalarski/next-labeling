@@ -1,10 +1,9 @@
-import { v4 as uuidv4 } from "uuid";
-
-import { useCallback, useMemo, useRef, useState } from "react";
-import { createLabelingDocument } from "../functions";
-import { LabelingDocument } from "../types/client";
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core/SvgIcon";
+import { useCallback, useMemo, useRef, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { createLabelingDocument } from "../functions";
+import { LabelingDocument } from "../types/client";
 import { ExternalDocument } from "../types/database";
 
 export interface LabelingState {

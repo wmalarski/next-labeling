@@ -1,7 +1,7 @@
 import Konva from "konva";
 import React, { useEffect, useRef } from "react";
 import { Rect, Text, Transformer } from "react-konva";
-import { LabelingObject } from "../../../labeling/types/client";
+import { LabelingObject } from "../../../workspace/types/client";
 import { FontSize } from "../../constants";
 import { getShapeStyle } from "../../functions";
 

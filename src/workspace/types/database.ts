@@ -1,6 +1,5 @@
 import * as t from "io-ts";
-
-import { AuthUser } from "../../../src/auth/user";
+import { AuthUser } from "../../auth/user";
 import { Schema } from "../../schema/types";
 import { FieldBase, ObjectBase } from "./base";
 

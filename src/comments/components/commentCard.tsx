@@ -12,13 +12,12 @@ import ClearIcon from "@material-ui/icons/Clear";
 import DoneIcon from "@material-ui/icons/Done";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useState } from "react";
-
 import { useAuthUserInfo } from "../../auth/hooks";
+import { convertToDate } from "../../firestore/functions";
+import useLabelingContext from "../../workspace/hooks/useLabelingContext";
+import setSnapshotUpdate from "../../workspace/updates/setSnapshotUpdate";
 import useUpdateComment from "../hooks/useUpdateComment";
 import { CommentDocument } from "../types";
-import { convertToDate } from "../../firestore/functions";
-import useLabelingContext from "../../labeling/hooks/useLabelingContext";
-import setSnapshotUpdate from "../../labeling/updates/setSnapshotUpdate";
 
 export interface CommentCardProps {
   commentId: string;

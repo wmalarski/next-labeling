@@ -3,33 +3,17 @@ import Paper from "@material-ui/core/Paper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import React, { useCallback } from "react";
-
 import { AuthUser } from "../../../auth/user";
 import { defaultProjectDocument } from "../../constants";
 import useProjectHistory, { ProjectStep } from "../../hooks/useProjectHistory";
+import { useProjectStepsStyles } from "../../styles";
 import { ProjectDocument } from "../../types";
 import ProjectGeneralStep from "./projectGeneralStep";
 import ProjectSchemasStep from "./projectSchemasStep";
 import ProjectUsersStep from "./projectUsersStep";
 import ProjectWorkflowStep from "./projectWorkflowStep";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: "100%",
-    },
-    button: {
-      marginTop: theme.spacing(1),
-      marginRight: theme.spacing(1),
-    },
-    resetContainer: {
-      padding: theme.spacing(3),
-    },
-  }),
-);
 
 export interface ProjectFormProps {
   authUser: AuthUser;
@@ -37,7 +21,7 @@ export interface ProjectFormProps {
 }
 
 export default function ProjectSteps(props: ProjectFormProps): JSX.Element {
-  const classes = useStyles();
+  const classes = useProjectStepsStyles();
 
   const { authUser, onSubmit } = props;
   const stepsCount = ProjectStep.SCHEMAS + 1;

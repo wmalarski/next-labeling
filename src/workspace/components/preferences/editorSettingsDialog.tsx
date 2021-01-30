@@ -15,10 +15,10 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup/ToggleButtonGroup";
 import React, { useState } from "react";
-import { LabelingDirection } from "../../../labeling/contexts/preferencesContext";
-import useLabelingContext from "../../../labeling/hooks/useLabelingContext";
-import usePreferences from "../../../labeling/hooks/usePreferencesContext";
 import NumberInput from "../../../common/components/numberInput";
+import { LabelingDirection } from "../../contexts/preferencesContext";
+import useLabelingContext from "../../hooks/useLabelingContext";
+import usePreferences from "../../hooks/usePreferencesContext";
 import ShortcutsSettingsTreeView from "./shortcutsSettingsTreeView";
 
 export default function EditorSettingsDialog(): JSX.Element {

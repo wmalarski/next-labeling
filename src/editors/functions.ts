@@ -1,4 +1,4 @@
-import { LabelingDirection } from "../labeling/contexts/preferencesContext";
+import { LabelingDirection } from "../workspace/contexts/preferencesContext";
 import { FieldType, LabelingFieldValues } from "./types";
 
 export interface UnpackedFrameValuePair {

@@ -10,9 +10,9 @@ import "firebase/firestore";
 import React, { useCallback, useState } from "react";
 import { useAuthUserInfo } from "../../auth/hooks";
 import { AuthUser } from "../../auth/user";
-import useLabelingContext from "../../labeling/hooks/useLabelingContext";
-import { LabelingDocument } from "../../labeling/types/client";
-import { ExternalObject } from "../../labeling/types/database";
+import useLabelingContext from "../../workspace/hooks/useLabelingContext";
+import { LabelingDocument } from "../../workspace/types/client";
+import { ExternalObject } from "../../workspace/types/database";
 import { CommentDocument, CommentSnapshot } from "../types";
 
 enum SnapshotType {

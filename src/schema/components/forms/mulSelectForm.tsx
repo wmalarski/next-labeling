@@ -4,7 +4,6 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Grid, { GridSize } from "@material-ui/core/Grid/Grid";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import Paper from "@material-ui/core/Paper/Paper";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import AddIcon from "@material-ui/icons/Add";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
@@ -13,17 +12,7 @@ import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import React, { useState } from "react";
 import { FieldType, OnAttributeChangeHandler } from "../../../editors/types";
 import { MultiSelectAttributes } from "../../../editors/types/multiSelect";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      display: "flex",
-      width: "100%",
-      flexWrap: "wrap",
-      padding: theme.spacing(1),
-    },
-  }),
-);
+import { useMulSelectFormStyles } from "../../styles";
 
 export interface MulSelectFormProps {
   attributes: MultiSelectAttributes;
@@ -36,7 +25,7 @@ export default function MulSelectForm(props: MulSelectFormProps): JSX.Element {
     onChange,
   } = props;
   const optionTexts = options.map(option => option.text);
-  const classes = useStyles();
+  const classes = useMulSelectFormStyles();
 
   const [inputText, setInputText] = useState("");
   const [inputSize, setInputSize] = useState(4);

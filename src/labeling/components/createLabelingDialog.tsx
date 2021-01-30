@@ -13,8 +13,8 @@ import { useAuthUserInfo } from "../../auth/hooks";
 import useRouterCreate from "../../common/hooks/useRouterCreate";
 import { LabelingCollection } from "../../firestore/types";
 import { SchemaDocument } from "../../schema/types";
-import { createObject } from "../functions";
-import { ExternalDocument } from "../types/database";
+import { createObject } from "../../workspace/functions";
+import { ExternalDocument } from "../../workspace/types/database";
 
 const defaultDocument: Partial<ExternalDocument> = {
   filename: "",

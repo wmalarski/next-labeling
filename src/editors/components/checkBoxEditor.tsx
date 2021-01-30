@@ -1,7 +1,7 @@
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import React from "react";
-import usePreferences from "../../labeling/hooks/usePreferencesContext";
+import usePreferences from "../../workspace/hooks/usePreferencesContext";
 import { calculateNewValues, getFieldValues } from "../functions";
 import { FieldEditorProps, FieldType } from "../types";
 

@@ -3,9 +3,9 @@ import React from "react";
 import RGL, { WidthProvider } from "react-grid-layout";
 import "../../node_modules/react-grid-layout/css/styles.css";
 import "../../node_modules/react-resizable/css/styles.css";
-import useLabelingContext from "../../labeling/hooks/useLabelingContext";
-import usePreferences from "../../labeling/hooks/usePreferencesContext";
-import { updateViews } from "../../labeling/views";
+import useLabelingContext from "../hooks/useLabelingContext";
+import usePreferences from "../hooks/usePreferencesContext";
+import { updateViews } from "../views";
 import LabelingViewItem from "./labelingViewItem";
 
 const ReactGridLayout = WidthProvider(RGL);

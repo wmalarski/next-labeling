@@ -1,6 +1,6 @@
 import TextField from "@material-ui/core/TextField";
 import React from "react";
-import usePreferences from "../../labeling/hooks/usePreferencesContext";
+import usePreferences from "../../workspace/hooks/usePreferencesContext";
 import { calculateNewValues, getFieldValues } from "../functions";
 import { FieldEditorProps, FieldType } from "../types";
 
