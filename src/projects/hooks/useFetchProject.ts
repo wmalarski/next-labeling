@@ -1,8 +1,8 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { useCallback } from "react";
-import useFetchDocument from "../../firestore/hooks/useFetchDocument";
-import { ProjectCollection } from "../../firestore/types";
+import useFetchDocument from "../../firebase/hooks/useFetchDocument";
+import { ProjectCollection } from "../../firebase/types";
 import { ProjectDocument } from "../types";
 
 export interface UseFetchProjectResult {

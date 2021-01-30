@@ -3,10 +3,10 @@ import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import AppsIcon from "@material-ui/icons/Apps";
+import firebase from "firebase/app";
+import "firebase/auth";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-
-import logout from "../../auth/logout";
 
 export default function UserHeader(): JSX.Element {
   const router = useRouter();
@@ -31,8 +31,8 @@ export default function UserHeader(): JSX.Element {
       <MenuItem
         onClick={async () => {
           try {
-            await logout();
-            router.push("/login");
+            await firebase.auth().signOut();
+            router.push("/");
           } catch (e) {
             console.error(e);
           }

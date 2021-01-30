@@ -1,5 +1,5 @@
 import * as t from "io-ts";
-import { AuthUser } from "../auth/user";
+import { AuthUser } from "../auth/types";
 import { ObjectSelection } from "../workspace/types/client";
 import { ExternalObject } from "../workspace/types/database";
 

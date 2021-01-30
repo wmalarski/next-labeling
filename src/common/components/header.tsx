@@ -5,7 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import CodeIcon from "@material-ui/icons/Code";
 import Link from "next/link";
 import React, { PropsWithChildren } from "react";
-import { useAuthUserInfo } from "../../auth/hooks";
+import useAuth from "../../auth/hooks/useAuth";
 import { useHeaderStyles } from "../styles";
 import SignUpHeader from "./signUpHeader";
 import UserHeader from "./userHeader";
@@ -19,7 +19,7 @@ export default function Header(
 ): JSX.Element {
   const { siteTitle = "Next Labeling", children } = props;
   const classes = useHeaderStyles();
-  const { authUser } = useAuthUserInfo();
+  const { authUser } = useAuth();
 
   return (
     <>

@@ -4,25 +4,22 @@ import List from "@material-ui/core/List";
 import AddIcon from "@material-ui/icons/Add";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useAuthUserInfo } from "../../auth/hooks";
-import initFirebase from "../../auth/initFirebase";
+import withToken from "../../auth/functions/withToken";
+import useAuth from "../../auth/hooks/useAuth";
 import Footer from "../../common/components/footer";
 import Header from "../../common/components/header";
 import LoadingBackdrop from "../../common/components/loadingBackdrop";
 import SearchInput from "../../common/components/searchInput";
-import withAuthUser from "../../common/wrappers/withAuthUser";
-import withAuthUserInfo from "../../common/wrappers/withAuthUserInfo";
-import useFetchDocuments from "../../firestore/hooks/useFetchDocuments";
-import { ProjectCollection } from "../../firestore/types";
+import useFetchDocuments from "../../firebase/hooks/useFetchDocuments";
+import { ProjectCollection } from "../../firebase/types";
 import ProjectListItem from "../../projects/components/details/projectListItem";
 import { ProjectDocument } from "../../projects/types";
 
-initFirebase();
-
-function ProjectListPage(): JSX.Element {
-  const { authUser } = useAuthUserInfo();
+export default function ProjectListPage(): JSX.Element {
+  const { authUser } = useAuth();
   const router = useRouter();
 
   const [searchText, setSearchText] = useState<string | null>(null);
@@ -81,4 +78,6 @@ function ProjectListPage(): JSX.Element {
   );
 }
 
-export default withAuthUser(withAuthUserInfo(ProjectListPage));
+export const getServerSideProps: GetServerSideProps = withToken({
+  redirect: true,
+});

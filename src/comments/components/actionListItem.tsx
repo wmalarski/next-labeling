@@ -1,7 +1,7 @@
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import React from "react";
-import { convertToDate } from "../../firestore/functions";
+import { convertToDate } from "../../firebase/functions";
 import { CommentDocument } from "../types";
 
 export interface ActionListItemProps {

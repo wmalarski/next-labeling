@@ -1,24 +1,16 @@
 import "firebase/auth";
+import { GetServerSideProps } from "next";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import initFirebase from "../auth/initFirebase";
-import { AuthUserInfo } from "../auth/user";
+import withToken from "../auth/functions/withToken";
+import useAuth from "../auth/hooks/useAuth";
 import Footer from "../common/components/footer";
 import Header from "../common/components/header";
-import withAuthUser from "../common/wrappers/withAuthUser";
-import withAuthUserInfo from "../common/wrappers/withAuthUserInfo";
 
-initFirebase();
-
-export interface AccountProps {
-  authUserInfo: AuthUserInfo;
-}
-
-function Account(props: AccountProps): JSX.Element {
-  const { authUserInfo } = props;
+export default function Account(): JSX.Element {
   const router = useRouter();
-  const authUser = authUserInfo.authUser;
+  const { authUser } = useAuth();
 
   useEffect(() => {
     if (!authUser) {
@@ -50,4 +42,6 @@ function Account(props: AccountProps): JSX.Element {
   );
 }
 
-export default withAuthUser(withAuthUserInfo(Account));
+export const getServerSideProps: GetServerSideProps = withToken({
+  redirect: true,
+});

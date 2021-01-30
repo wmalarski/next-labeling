@@ -1,8 +1,8 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 import { useCallback } from "react";
-import useFetchDocument from "../../firestore/hooks/useFetchDocument";
-import { LabelingCollection } from "../../firestore/types";
+import useFetchDocument from "../../firebase/hooks/useFetchDocument";
+import { LabelingCollection } from "../../firebase/types";
 import { ExternalDocument } from "../types/database";
 
 export interface UseFetchLabelingResult {

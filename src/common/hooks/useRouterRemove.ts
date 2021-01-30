@@ -1,11 +1,8 @@
 import "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
-import useRemoveDocument from "../../firestore/hooks/useRemoveDocument";
-import {
-  FirestoreCollection,
-  ResultSnackbarState,
-} from "../../firestore/types";
+import useRemoveDocument from "../../firebase/hooks/useRemoveDocument";
+import { FirestoreCollection, ResultSnackbarState } from "../../firebase/types";
 
 export interface UseRouterRemoveResult {
   remove: (id: string) => void;

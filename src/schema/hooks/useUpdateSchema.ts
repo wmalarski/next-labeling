@@ -1,12 +1,10 @@
-import "firebase/firestore";
-
 import firebase from "firebase/app";
+import "firebase/firestore";
 import { useCallback } from "react";
-
-import { SchemaCollection } from "../../firestore/types";
 import useUpdateDocument, {
   UseUpdateDocumentResult,
-} from "../../firestore/hooks/useUpdateDocument";
+} from "../../firebase/hooks/useUpdateDocument";
+import { SchemaCollection } from "../../firebase/types";
 import { SchemaDocument } from "../types";
 
 export default function useUpdateSchema(): UseUpdateDocumentResult<SchemaDocument> {

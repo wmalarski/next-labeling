@@ -2,8 +2,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
 import React from "react";
-
-import { ResultSnackbarState } from "../../firestore/types";
+import { ResultSnackbarState } from "../../firebase/types";
 
 export interface ResultSnackbarProps {
   state: ResultSnackbarState;

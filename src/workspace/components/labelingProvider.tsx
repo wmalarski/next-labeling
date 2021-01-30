@@ -2,7 +2,7 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import useRouterRemove from "../../common/hooks/useRouterRemove";
-import { LabelingCollection, ResultSnackbarState } from "../../firestore/types";
+import { LabelingCollection, ResultSnackbarState } from "../../firebase/types";
 import LabelingContext from "../contexts/labelingContext";
 import useLabelingHistory from "../hooks/useLabelingHistory";
 import useUpdateLabeling from "../hooks/useUpdateLabeling";

@@ -3,22 +3,19 @@ import Container from "@material-ui/core/Container";
 import AddIcon from "@material-ui/icons/Add";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useAuthUserInfo } from "../../auth/hooks";
-import initFirebase from "../../auth/initFirebase";
+import withToken from "../../auth/functions/withToken";
+import useAuth from "../../auth/hooks/useAuth";
 import Footer from "../../common/components/footer";
 import Header from "../../common/components/header";
 import SearchInput from "../../common/components/searchInput";
-import withAuthUser from "../../common/wrappers/withAuthUser";
-import withAuthUserInfo from "../../common/wrappers/withAuthUserInfo";
-import { SchemaCollection } from "../../firestore/types";
+import { SchemaCollection } from "../../firebase/types";
 import { SchemaList } from "../../schema/components/details/schemaList";
 
-initFirebase();
-
-function SchemaListPage(): JSX.Element {
-  const { authUser } = useAuthUserInfo();
+export default function SchemaListPage(): JSX.Element {
+  const { authUser } = useAuth();
   const router = useRouter();
 
   const [searchText, setSearchText] = useState<string | null>(null);
@@ -61,4 +58,6 @@ function SchemaListPage(): JSX.Element {
   );
 }
 
-export default withAuthUser(withAuthUserInfo(SchemaListPage));
+export const getServerSideProps: GetServerSideProps = withToken({
+  redirect: true,
+});

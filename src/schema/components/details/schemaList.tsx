@@ -1,17 +1,17 @@
 import List from "@material-ui/core/List";
 import firebase from "firebase/app";
 import React, { useState } from "react";
-import { AuthUser } from "../../../auth/user";
+import { AuthUser } from "../../../auth/types";
 import LoadingBackdrop from "../../../common/components/loadingBackdrop";
 import ResultSnackbar from "../../../common/components/resultSnackbar";
 import useRouterCreate from "../../../common/hooks/useRouterCreate";
 import useRouterRemove from "../../../common/hooks/useRouterRemove";
-import useFetchDocuments from "../../../firestore/hooks/useFetchDocuments";
+import useFetchDocuments from "../../../firebase/hooks/useFetchDocuments";
 import {
   FirestoreQuery,
   ResultSnackbarState,
   SchemaCollection,
-} from "../../../firestore/types";
+} from "../../../firebase/types";
 import { SchemaDocument } from "../../types";
 import SchemaListItem from "./schemaListItem";
 

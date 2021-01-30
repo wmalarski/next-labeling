@@ -8,8 +8,8 @@ import TextField from "@material-ui/core/TextField";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import React, { useCallback, useState } from "react";
-import { useAuthUserInfo } from "../../auth/hooks";
-import { AuthUser } from "../../auth/user";
+import useAuth from "../../auth/hooks/useAuth";
+import { AuthUser } from "../../auth/types";
 import useLabelingContext from "../../workspace/hooks/useLabelingContext";
 import { LabelingDocument } from "../../workspace/types/client";
 import { ExternalObject } from "../../workspace/types/database";
@@ -48,7 +48,7 @@ export interface CommentInputProps {
 export default function CommentInput(props: CommentInputProps): JSX.Element {
   const { onSave } = props;
 
-  const { authUser } = useAuthUserInfo();
+  const { authUser } = useAuth();
   const { history } = useLabelingContext();
   const [message, setMessage] = useState("");
   const [snapType, setSnapType] = useState<SnapshotType>(SnapshotType.NO);
