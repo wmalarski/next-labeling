@@ -28,6 +28,7 @@ export default function AuthProvider(props: AuthProviderProps): JSX.Element {
   const { children } = props;
 
   const [user, setUser] = useState<firebase.User | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   // listen for token changes
   // call setUser and write new token as a cookie
@@ -42,9 +43,10 @@ export default function AuthProvider(props: AuthProviderProps): JSX.Element {
         nookies.set(null, "token", "", {});
         return;
       }
-
+      setLoading(true);
       const token = await user.getIdToken();
       setUser(user);
+      setLoading(false);
       nookies.destroy(null, "token");
       nookies.set(null, "token", token, {});
     });
@@ -54,7 +56,11 @@ export default function AuthProvider(props: AuthProviderProps): JSX.Element {
   useEffect(() => {
     const handle = setInterval(async () => {
       const user = firebaseClient.auth().currentUser;
-      if (user) await user.getIdToken(true);
+      if (user) {
+        setLoading(true);
+        await user.getIdToken(true);
+        setLoading(false);
+      }
     }, 10 * 60 * 1000);
     return () => clearInterval(handle);
   }, []);
@@ -62,7 +68,9 @@ export default function AuthProvider(props: AuthProviderProps): JSX.Element {
   const authUser = useMemo(() => createAuthUser(user), [user]);
 
   return (
-    <AuthContext.Provider value={{ userDetails: user, authUser }}>
+    <AuthContext.Provider
+      value={{ userDetails: user, authUser, isLoading: loading, error: null }}
+    >
       {children}
     </AuthContext.Provider>
   );

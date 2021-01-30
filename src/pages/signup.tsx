@@ -11,6 +11,9 @@ import Router from "next/router";
 import React from "react";
 import { useUserFormStyles } from "../auth/styles";
 import Footer from "../common/components/footer";
+import { initializeFirebase } from "../firebase/firebaseClient";
+
+initializeFirebase();
 
 export default function SignUp(): JSX.Element {
   const classes = useUserFormStyles();

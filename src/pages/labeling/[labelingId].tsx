@@ -6,6 +6,7 @@ import Footer from "../../common/components/footer";
 import Header from "../../common/components/header";
 import LoadingBackdrop from "../../common/components/loadingBackdrop";
 import useSnackbar from "../../common/hooks/useSnackbar";
+import { initializeFirebase } from "../../firebase/firebaseClient";
 import LabelingProvider from "../../workspace/components/labelingProvider";
 import LabelingWorkspace from "../../workspace/components/labelingWorkspace";
 import PreferencesProvider from "../../workspace/components/preferences/preferencesProvider";
@@ -14,6 +15,8 @@ import EditorSidebar from "../../workspace/components/toolbars/editorSidebar";
 import ToolProvider from "../../workspace/components/toolbars/toolProvider";
 import useFetchLabeling from "../../workspace/hooks/useFetchLabeling";
 import { useLabelingEditorStyles } from "../../workspace/styles";
+
+initializeFirebase();
 
 export interface LabelingEditorProps {
   documentId: string;

@@ -18,11 +18,14 @@ import Header from "../../../common/components/header";
 import LoadingBackdrop from "../../../common/components/loadingBackdrop";
 import useRouterRemove from "../../../common/hooks/useRouterRemove";
 import useSnackbar from "../../../common/hooks/useSnackbar";
+import { initializeFirebase } from "../../../firebase/firebaseClient";
 import { SchemaCollection } from "../../../firebase/types";
 import SchemaForm from "../../../schema/components/forms/schemaForm";
 import useFetchSchema from "../../../schema/hooks/useFetchSchema";
 import useSchemaHistory from "../../../schema/hooks/useSchemaHistory";
 import useUpdateSchema from "../../../schema/hooks/useUpdateSchema";
+
+initializeFirebase();
 
 export interface SchemaEditProps {
   userId: string;

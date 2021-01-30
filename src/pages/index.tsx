@@ -4,6 +4,9 @@ import withToken from "../auth/functions/withToken";
 import useAuth from "../auth/hooks/useAuth";
 import Footer from "../common/components/footer";
 import Header from "../common/components/header";
+import { initializeFirebase } from "../firebase/firebaseClient";
+
+initializeFirebase();
 
 export default function Index(): JSX.Element {
   const { authUser } = useAuth();

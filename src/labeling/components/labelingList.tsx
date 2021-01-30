@@ -24,7 +24,7 @@ export interface LabelingListProps {
 export default function LabelingList(props: LabelingListProps): JSX.Element {
   const { query } = props;
 
-  const { loading, hasMore, items, loadMore } = useFetchDocuments({
+  const { loading, items, fetchMore } = useFetchDocuments({
     query,
     type: ExternalDocument,
     options: { limit: 10 },
@@ -68,7 +68,7 @@ export default function LabelingList(props: LabelingListProps): JSX.Element {
         ))}
       </List>
       <LoadingBackdrop isLoading={loading || isLoading} />
-      {hasMore && <button onClick={loadMore}>[ more ]</button>}
+      <button onClick={fetchMore}>[ more ]</button>
     </>
   );
 }

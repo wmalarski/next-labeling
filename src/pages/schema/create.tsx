@@ -19,11 +19,14 @@ import Header from "../../common/components/header";
 import LoadingBackdrop from "../../common/components/loadingBackdrop";
 import useRouterRemove from "../../common/hooks/useRouterRemove";
 import useSnackbar from "../../common/hooks/useSnackbar";
+import { initializeFirebase } from "../../firebase/firebaseClient";
 import useCreateDocument from "../../firebase/hooks/useCreateDocument";
 import { SchemaCollection } from "../../firebase/types";
 import SchemaForm from "../../schema/components/forms/schemaForm";
 import useSchemaHistory from "../../schema/hooks/useSchemaHistory";
 import { SchemaDocument } from "../../schema/types";
+
+initializeFirebase();
 
 export default function SchemaCreate(): JSX.Element {
   const { authUser } = useAuth();

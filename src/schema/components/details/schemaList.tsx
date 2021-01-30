@@ -19,7 +19,7 @@ export interface SchemaListProps {
 export function SchemaList(props: SchemaListProps): JSX.Element {
   const { query, authUser } = props;
 
-  const { loading, hasMore, items, loadMore } = useFetchDocuments({
+  const { loading, items, fetchMore } = useFetchDocuments({
     query,
     type: SchemaDocument,
     options: { limit: 10 },
@@ -64,7 +64,7 @@ export function SchemaList(props: SchemaListProps): JSX.Element {
             />
           );
         })}
-        {hasMore && <button onClick={loadMore}>[ more ]</button>}
+        <button onClick={fetchMore}>[ next ]</button>
       </List>
       <LoadingBackdrop isLoading={loading || createSchema.isLoading} />
     </>

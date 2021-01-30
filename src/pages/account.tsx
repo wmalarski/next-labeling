@@ -7,6 +7,9 @@ import withToken from "../auth/functions/withToken";
 import useAuth from "../auth/hooks/useAuth";
 import Footer from "../common/components/footer";
 import Header from "../common/components/header";
+import { initializeFirebase } from "../firebase/firebaseClient";
+
+initializeFirebase();
 
 export default function Account(): JSX.Element {
   const router = useRouter();

@@ -1,10 +1,9 @@
-import "firebase/firestore";
-
+import firebase from "firebase/app";
 import * as t from "io-ts";
 import compact from "lodash/compact";
-import { useCallback, useEffect, useState } from "react";
+import last from "lodash/last";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useCollection } from "react-firebase-hooks/firestore";
-
 import { FirestoreQuery } from "../types";
 
 export interface UseFetchDocumentsPair<T> {
@@ -15,10 +14,8 @@ export interface UseFetchDocumentsPair<T> {
 export interface UseFetchDocumentsResult<T> {
   loading: boolean;
   error?: Error;
-  hasMore?: boolean;
   items: UseFetchDocumentsPair<T>[];
-  loadMore: () => void;
-  resetQuery: (query: FirestoreQuery) => void;
+  fetchMore: () => void;
 }
 
 export interface UseFetchDocumentsProps<T> {
@@ -32,61 +29,62 @@ export interface UseFetchDocumentsProps<T> {
 export default function useFetchDocuments<T>(
   props: UseFetchDocumentsProps<T>,
 ): UseFetchDocumentsResult<T> {
-  const { query, type, options } = props;
-  const { limit = 25 } = options ?? {};
+  const { query, options } = props;
+  const { limit = 5 } = options ?? {};
 
-  const [ref, setRef] = useState<FirestoreQuery>(query);
-  const [items, setItems] = useState<UseFetchDocumentsPair<T>[]>([]);
-  const [snapshot, loading, error] = useCollection(ref.limit(limit));
-  const hasMore = snapshot && snapshot?.size === limit;
+  const [page, setPage] = useState<number>(0);
+  const [documents, setDocuments] = useState<
+    firebase.firestore.DocumentSnapshot[]
+  >([]);
 
-  useEffect(() => {
-    setRef(query);
-    setItems([]);
-  }, [query]);
+  const cursor = useMemo(
+    () => (page === 0 ? null : documents[page * limit] ?? last(documents)),
+    [documents, limit, page],
+  );
+
+  const collection = useMemo(
+    () => (!cursor ? query : query.startAfter(cursor)).limit(limit),
+    [cursor, limit, query],
+  );
+
+  const [snapshot, loading, error] = useCollection(collection);
+
+  const fetchMore = useCallback(() => setPage(value => value + 1), []);
 
   useEffect(
     () =>
-      setItems((curr): any => {
-        // TODO remove any fix this
-        return !snapshot || loading
-          ? curr
-          : [
-              ...curr,
-              ...compact(
-                snapshot?.docs.map((item: any) => {
-                  const data: T = item.data();
-                  if (!item.exists || !data) {
-                    return;
-                  }
-                  // const decoded = type.decode(data);
-                  // if (decoded._tag === "Left") {
-                  //   console.log("Error", decoded.left);
-                  //   return;
-                  // }
-                  return {
-                    id: item.id,
-                    document: type.encode(data as T),
-                  };
-                }) ?? [],
-              ),
-            ];
+      setDocuments(currentDocuments => {
+        if (!snapshot?.docs) return currentDocuments;
+
+        const currentIds = currentDocuments.map(doc => doc.id);
+        const newDocs = snapshot.docs.filter(
+          (doc: firebase.firestore.QueryDocumentSnapshot) =>
+            !currentIds.includes(doc.id),
+        );
+
+        return newDocs.length === 0
+          ? currentDocuments
+          : [...currentDocuments, ...snapshot.docs];
       }),
-    // snapshot?.docs is always changing
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [loading, type],
+    [snapshot?.docs],
   );
 
-  const loadMore = useCallback(
+  const items = useMemo(
     () =>
-      setRef(curr => {
-        const lastDocument = !snapshot?.empty
-          ? snapshot?.docs[snapshot?.size - 1]
-          : undefined;
-        return !lastDocument ? curr : curr.startAfter(lastDocument);
-      }),
-    [snapshot?.docs, snapshot?.empty, snapshot?.size],
+      compact(
+        documents.map(doc => {
+          const data = doc.data() as T;
+          if (!data) return null;
+          return { id: doc.id, document: data };
+        }),
+      ),
+    [documents],
   );
-  const resetQuery = useCallback(query => setRef(query), []);
-  return { hasMore, error, loading, items, loadMore, resetQuery };
+
+  return {
+    fetchMore,
+    error,
+    loading,
+    items,
+  };
 }

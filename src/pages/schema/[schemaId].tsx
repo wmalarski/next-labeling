@@ -17,12 +17,15 @@ import LoadingBackdrop from "../../common/components/loadingBackdrop";
 import useRouterCreate from "../../common/hooks/useRouterCreate";
 import useRouterRemove from "../../common/hooks/useRouterRemove";
 import useSnackbar from "../../common/hooks/useSnackbar";
+import { initializeFirebase } from "../../firebase/firebaseClient";
 import { SchemaCollection } from "../../firebase/types";
 import CreateLabelingDialog from "../../labeling/components/createLabelingDialog";
 import SchemaDetails from "../../schema/components/details/schemaDetails";
 import RawForm from "../../schema/components/forms/rawForm";
 import useFetchSchema from "../../schema/hooks/useFetchSchema";
 import { SchemaDocument } from "../../schema/types";
+
+initializeFirebase();
 
 export interface SchemaDetailsPageProps {
   documentId: string;

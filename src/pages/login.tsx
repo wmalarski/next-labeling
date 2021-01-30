@@ -12,6 +12,9 @@ import React, { ChangeEvent } from "react";
 import { googleAuthProvider } from "../auth/authProviders";
 import { useUserFormStyles } from "../auth/styles";
 import Footer from "../common/components/footer";
+import { initializeFirebase } from "../firebase/firebaseClient";
+
+initializeFirebase();
 
 export default function Login(): JSX.Element {
   const classes = useUserFormStyles();

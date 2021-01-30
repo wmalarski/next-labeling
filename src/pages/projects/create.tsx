@@ -9,10 +9,13 @@ import useAuth from "../../auth/hooks/useAuth";
 import Footer from "../../common/components/footer";
 import Header from "../../common/components/header";
 import LoadingBackdrop from "../../common/components/loadingBackdrop";
+import { initializeFirebase } from "../../firebase/firebaseClient";
 import useCreateDocument from "../../firebase/hooks/useCreateDocument";
 import { ProjectCollection } from "../../firebase/types";
 import ProjectSteps from "../../projects/components/steps/projectSteps";
 import { ProjectDocument } from "../../projects/types";
+
+initializeFirebase();
 
 export default function ProjectCreate(): JSX.Element {
   const { authUser } = useAuth();
