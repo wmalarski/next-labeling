@@ -1,5 +1,3 @@
-import "firebase/auth";
-
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
@@ -7,14 +5,14 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import firebase from "firebase/app";
+import "firebase/auth";
 import Link from "next/link";
 import Router from "next/router";
 import React, { ChangeEvent } from "react";
-
-import Footer from "../common/components/footer";
-import { useUserFormStyles } from "../themes/styles";
 import { googleAuthProvider } from "../auth/authProviders";
 import initFirebase from "../auth/initFirebase";
+import { useUserFormStyles } from "../auth/styles";
+import Footer from "../common/components/footer";
 
 initFirebase();
 

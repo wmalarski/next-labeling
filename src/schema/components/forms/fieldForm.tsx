@@ -7,7 +7,6 @@ import Grid from "@material-ui/core/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import ArrowDownwardIcon from "@material-ui/icons/ArrowDownward";
 import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
@@ -16,20 +15,9 @@ import RemoveIcon from "@material-ui/icons/Remove";
 import React, { memo } from "react";
 import { FieldType } from "../../../editors/types";
 import { labelingFieldAttributesDefaults } from "../../defaults";
+import { useFieldFormStyles } from "../../styles";
 import { FieldSchema } from "../../types";
 import AttributesForm from "./attributesForm";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      paddingTop: theme.spacing(1),
-    },
-    column: {
-      display: "flex",
-      flexDirection: "column",
-    },
-  }),
-);
 
 export interface FieldFormProps {
   fieldSchema: FieldSchema;
@@ -49,7 +37,7 @@ function FieldFormPrivate(props: FieldFormProps): JSX.Element {
   const { name, perFrame, attributes, id: fieldId } = fieldSchema;
   const type = Object.keys(attributes)[0];
 
-  const classes = useStyles();
+  const classes = useFieldFormStyles();
 
   return (
     <>

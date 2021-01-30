@@ -1,18 +1,10 @@
-import { Container, Theme, Typography } from "@material-ui/core";
-import { makeStyles } from "@material-ui/styles";
+import { Container, Typography } from "@material-ui/core";
 import Link from "next/link";
 import React from "react";
-
-const useStyles = makeStyles((theme: Theme) => ({
-  footer: {
-    padding: theme.spacing(3, 2),
-    marginTop: "auto",
-    backgroundColor: theme.palette.background.paper,
-  },
-}));
+import { useFooterStyles } from "../styles";
 
 export default function Footer(): JSX.Element {
-  const classes = useStyles();
+  const classes = useFooterStyles();
   return (
     <footer className={classes.footer}>
       <Container maxWidth="md">

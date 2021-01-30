@@ -1,4 +1,3 @@
-import { makeStyles } from "@material-ui/core";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import CardHeader from "@material-ui/core/CardHeader";
@@ -10,19 +9,8 @@ import GridLayout from "react-grid-layout";
 import "../../node_modules/react-grid-layout/css/styles.css";
 import "../../node_modules/react-resizable/css/styles.css";
 import usePreferences from "../hooks/usePreferencesContext";
+import { useLabelingViewCardStyles } from "../styles";
 import { toggleView, updateView } from "../views";
-
-const useStyles = makeStyles(() => ({
-  card: {
-    height: "100%",
-    display: "flex",
-    flexDirection: "column",
-  },
-  question: {
-    overflow: "auto",
-    maxHeight: "100%",
-  },
-}));
 
 export interface LabelingViewCardProps {
   view: GridLayout.Layout;
@@ -37,7 +25,7 @@ export interface LabelingViewCardProps {
 export default function LabelingViewCard(
   props: LabelingViewCardProps,
 ): JSX.Element | null {
-  const classes = useStyles();
+  const classes = useLabelingViewCardStyles();
 
   const {
     view,

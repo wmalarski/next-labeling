@@ -10,9 +10,8 @@ import Document, {
   NextScript,
 } from "next/document";
 import React from "react";
-
-import theme from "../themes/theme";
 import { AuthUserInfo } from "../auth/user";
+import theme from "../common/theme";
 
 export interface CustomDocumentProps extends DocumentProps {
   authUserInfo: AuthUserInfo;

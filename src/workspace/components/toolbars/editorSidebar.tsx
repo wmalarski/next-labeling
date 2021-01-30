@@ -4,7 +4,6 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AccountTreeIcon from "@material-ui/icons/AccountTree";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
@@ -23,6 +22,7 @@ import { getFirstFrame, getLastFrame } from "../../functions";
 import useLabelingContext from "../../hooks/useLabelingContext";
 import usePreferences from "../../hooks/usePreferencesContext";
 import useToolContext from "../../hooks/useToolContext";
+import { useEditorSidebarStyles } from "../../styles";
 import { ToolType } from "../../types/client";
 import addObjectCopyFrameUpdate from "../../updates/addObjectCopyFrameUpdate";
 import addObjectCopyUpdate from "../../updates/addObjectCopyUpdate";
@@ -45,46 +45,8 @@ import {
 } from "../../views";
 import EditorSettingsDialog from "../preferences/editorSettingsDialog";
 
-const drawerWidth = 240;
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    drawer: {
-      width: drawerWidth,
-      flexShrink: 0,
-      whiteSpace: "nowrap",
-    },
-    drawerOpen: {
-      width: drawerWidth,
-      transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen,
-      }),
-    },
-    drawerClose: {
-      transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen,
-      }),
-      overflowX: "hidden",
-      width: theme.spacing(7) + 1,
-      [theme.breakpoints.up("sm")]: {
-        width: theme.spacing(9) + 1,
-      },
-    },
-    toolbar: theme.mixins.toolbar,
-    lists: {
-      display: "flex",
-      flexDirection: "column",
-    },
-    spacer: {
-      flexGrow: 1,
-    },
-  }),
-);
-
 export default function EditorSidebar(): JSX.Element {
-  const classes = useStyles();
+  const classes = useEditorSidebarStyles();
 
   const { history, document } = useLabelingContext();
   const { pushLabeling } = history;

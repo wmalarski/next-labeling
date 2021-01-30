@@ -1,4 +1,3 @@
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import { GetStaticProps } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
@@ -18,19 +17,7 @@ import EditorHeader from "../../workspace/components/toolbars/editorHeader";
 import EditorSidebar from "../../workspace/components/toolbars/editorSidebar";
 import ToolProvider from "../../workspace/components/toolbars/toolProvider";
 import useFetchLabeling from "../../workspace/hooks/useFetchLabeling";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      display: "flex",
-    },
-    toolbar: theme.mixins.toolbar,
-    content: {
-      flexGrow: 1,
-      padding: theme.spacing(3),
-    },
-  }),
-);
+import { useLabelingEditorStyles } from "../../workspace/styles";
 
 initFirebase();
 
@@ -40,7 +27,7 @@ export interface LabelingEditorProps {
 
 function LabelingEditor(props: LabelingEditorProps): JSX.Element {
   const { documentId } = props;
-  const classes = useStyles();
+  const classes = useLabelingEditorStyles();
 
   const { authUser } = useAuthUserInfo();
 

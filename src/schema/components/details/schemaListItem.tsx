@@ -4,7 +4,6 @@ import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import Paper from "@material-ui/core/Paper";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
@@ -15,21 +14,10 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useAuthUserInfo } from "../../../auth/hooks";
 import CreateLabelingDialog from "../../../labeling/components/createLabelingDialog";
+import { useSchemaListItemStyles } from "../../styles";
 import { FieldSchema, ObjectSchema, SchemaDocument } from "../../types";
 import RawForm from "../forms/rawForm";
 import FieldDetails from "./fieldDetails";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      margin: theme.spacing(2),
-      padding: theme.spacing(2),
-    },
-    grid: {
-      marginTop: theme.spacing(1),
-    },
-  }),
-);
 
 export interface SelectedState {
   object?: ObjectSchema;
@@ -48,7 +36,7 @@ export default function SchemaListItem(
 ): JSX.Element {
   const { schemaId, document, onRemoveClicked, onCopyClicked } = props;
   const { schema, user } = document;
-  const classes = useStyles();
+  const classes = useSchemaListItemStyles();
 
   const { authUser } = useAuthUserInfo();
   const isSameUser = user.id === authUser?.id;

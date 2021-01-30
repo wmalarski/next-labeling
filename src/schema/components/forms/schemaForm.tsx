@@ -1,6 +1,5 @@
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
@@ -8,19 +7,10 @@ import EditIcon from "@material-ui/icons/Edit";
 import React, { useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { SchemaState } from "../../hooks/useSchemaHistory";
+import { useSchemaFormStyles } from "../../styles";
 import { Schema } from "../../types";
 import ObjectForm from "./objectForm";
 import RawForm from "./rawForm";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      margin: theme.spacing(2),
-      padding: theme.spacing(2),
-    },
-  }),
-);
 
 export interface SchemaFormProps {
   schema: Schema;
@@ -29,7 +19,7 @@ export interface SchemaFormProps {
 
 export default function SchemaForm(props: SchemaFormProps): JSX.Element {
   const { schema, setSchema } = props;
-  const classes = useStyles();
+  const classes = useSchemaFormStyles();
 
   const onFieldChange = useCallback(
     (provider, id) => {

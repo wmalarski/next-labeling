@@ -1,7 +1,6 @@
 import { Typography } from "@material-ui/core";
 import Checkbox from "@material-ui/core/Checkbox";
 import IconButton from "@material-ui/core/IconButton";
-import { createStyles, makeStyles } from "@material-ui/core/styles";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell, { TableCellProps } from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
@@ -11,18 +10,9 @@ import AddIcon from "@material-ui/icons/Add";
 import ClearIcon from "@material-ui/icons/Clear";
 import range from "lodash/range";
 import React, { useState } from "react";
-
 import { normalizeWorkflowRoles } from "../../functions";
+import { useWorkflowNodeTableEditorFormStyles } from "../../styles";
 import { WorkflowDocument, WorkflowNode } from "../../types";
-
-const useStyles = makeStyles(() =>
-  createStyles({
-    editor: {
-      display: "flex",
-      flexDirection: "column",
-    },
-  }),
-);
 
 export interface WorkflowNodeTableEditorProps {
   workflow: WorkflowDocument;
@@ -36,7 +26,7 @@ function renderTableSpace(size: number, props: TableCellProps): JSX.Element[] {
 export default function WorkflowNodeTableEditorForm(
   props: WorkflowNodeTableEditorProps,
 ): JSX.Element {
-  const classes = useStyles();
+  const classes = useWorkflowNodeTableEditorFormStyles();
 
   const { workflow, push } = props;
   const { roles, nodes } = workflow;

@@ -6,7 +6,6 @@ import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
 import Divider from "@material-ui/core/Divider";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
@@ -19,29 +18,9 @@ import React, { memo, useCallback } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { FieldType } from "../../../editors/types";
 import { labelingFieldAttributesDefaults } from "../../defaults";
+import { useObjectFormStyles } from "../../styles";
 import { ObjectSchema } from "../../types";
 import FieldForm from "./fieldForm";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      display: "flex",
-      flexDirection: "column",
-      width: "100%",
-    },
-    column: {
-      flexBasis: "33.33%",
-    },
-    heading: {
-      fontSize: theme.typography.pxToRem(15),
-      fontWeight: theme.typography.fontWeightRegular,
-    },
-    secondaryHeading: {
-      fontSize: theme.typography.pxToRem(15),
-      color: theme.palette.text.secondary,
-    },
-  }),
-);
 
 export interface OnChangeProviderResult {
   objectSchema: ObjectSchema;
@@ -64,7 +43,7 @@ export interface ObjectFormProps {
 function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
   const { objectSchema, onChange, onRemove, onCopy, onMove } = props;
   const { name, description, fields, singleton, id: objectId } = objectSchema;
-  const classes = useStyles();
+  const classes = useObjectFormStyles();
 
   const onFieldChange = useCallback(
     (provider, fieldId) =>

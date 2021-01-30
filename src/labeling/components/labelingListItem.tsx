@@ -1,7 +1,6 @@
 import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import Paper from "@material-ui/core/Paper";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
@@ -11,18 +10,7 @@ import React from "react";
 import { useAuthUserInfo } from "../../auth/hooks";
 import { convertToDate } from "../../firestore/functions";
 import { ExternalDocument } from "../../workspace/types/database";
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    paper: {
-      margin: theme.spacing(2),
-      padding: theme.spacing(2),
-    },
-    grid: {
-      marginTop: theme.spacing(1),
-    },
-  }),
-);
+import { useLabelingListItemStyles } from "../styles";
 
 export interface LabelingListItemProps {
   id: string;
@@ -33,7 +21,7 @@ export interface LabelingListItemProps {
 export default function LabelingListItem(
   props: LabelingListItemProps,
 ): JSX.Element {
-  const classes = useStyles();
+  const classes = useLabelingListItemStyles();
 
   const { id, document, onRemoveClick } = props;
   const { user, name, filename, schemaId, project, createdAt } = document;
