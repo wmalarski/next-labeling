@@ -1,11 +1,9 @@
-import "firebase/firestore";
-
 import firebase from "firebase/app";
-
-import { SchemaCollection } from "../../firestore/types";
-import useFetchDocument from "../../firestore/hooks/useFetchDocument";
-import { SchemaDocument } from "../types";
+import "firebase/firestore";
 import { useCallback } from "react";
+import useFetchDocument from "../../firebase/hooks/useFetchDocument";
+import { SchemaCollection } from "../../firebase/types";
+import { SchemaDocument } from "../types";
 
 export interface UseFetchSchemaResult {
   isLoading: boolean;

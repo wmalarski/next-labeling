@@ -1,8 +1,8 @@
 import dynamic from "next/dynamic";
 import React from "react";
 import GridLayout from "react-grid-layout";
-import "../../node_modules/react-grid-layout/css/styles.css";
-import "../../node_modules/react-resizable/css/styles.css";
+import "../../../node_modules/react-grid-layout/css/styles.css";
+import "../../../node_modules/react-resizable/css/styles.css";
 import useZoom from "../../visualization/hooks/useZoom";
 import LabelingViewCard from "../../workspace/components/labelingViewCard";
 import ToolsHeader from "./videoHeader";

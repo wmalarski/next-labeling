@@ -1,17 +1,15 @@
-import "firebase/firestore";
-
 import firebase from "firebase/app";
+import "firebase/firestore";
 import { useCallback } from "react";
-
-import { useAuthUserInfo } from "../../auth/hooks";
-import { LabelingCollection } from "../../firestore/types";
+import useAuth from "../../auth/hooks/useAuth";
 import useUpdateDocument, {
   UseUpdateDocumentResult,
-} from "../../firestore/hooks/useUpdateDocument";
+} from "../../firebase/hooks/useUpdateDocument";
+import { LabelingCollection } from "../../firebase/types";
 import { ExternalDocument } from "../types/database";
 
 export default function useUpdateLabeling(): UseUpdateDocumentResult<ExternalDocument> {
-  const { authUser } = useAuthUserInfo();
+  const { authUser } = useAuth();
 
   const db = firebase.firestore();
   const result = useUpdateDocument<ExternalDocument>(

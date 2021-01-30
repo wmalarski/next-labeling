@@ -12,7 +12,7 @@ import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import ViewListIcon from "@material-ui/icons/ViewList";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useAuthUserInfo } from "../../../auth/hooks";
+import useAuth from "../../../auth/hooks/useAuth";
 import CreateLabelingDialog from "../../../labeling/components/createLabelingDialog";
 import { useSchemaListItemStyles } from "../../styles";
 import { FieldSchema, ObjectSchema, SchemaDocument } from "../../types";
@@ -38,7 +38,7 @@ export default function SchemaListItem(
   const { schema, user } = document;
   const classes = useSchemaListItemStyles();
 
-  const { authUser } = useAuthUserInfo();
+  const { authUser } = useAuth();
   const isSameUser = user.id === authUser?.id;
 
   const router = useRouter();

@@ -1,16 +1,19 @@
+import { GetServerSideProps } from "next";
 import React from "react";
+import withToken from "../auth/functions/withToken";
+import useAuth from "../auth/hooks/useAuth";
 import Footer from "../common/components/footer";
 import Header from "../common/components/header";
-import withAuthUser from "../common/wrappers/withAuthUser";
-import withAuthUserInfo from "../common/wrappers/withAuthUserInfo";
 
-function Index(): JSX.Element {
+export default function Index(): JSX.Element {
+  const { authUser } = useAuth();
   return (
     <>
       <Header />
+      <pre>{JSON.stringify(authUser, null, 2)}</pre>
       <Footer />
     </>
   );
 }
 
-export default withAuthUser(withAuthUserInfo(Index));
+export const getServerSideProps: GetServerSideProps = withToken();

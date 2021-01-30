@@ -1,30 +1,22 @@
 /* eslint react/no-danger: 0 */
 import { ServerStyleSheets } from "@material-ui/core/styles";
-import { get } from "lodash";
 import Document, {
   DocumentContext,
-  DocumentProps,
   Head,
   Html,
   Main,
   NextScript,
 } from "next/document";
 import React from "react";
-import { AuthUserInfo } from "../auth/user";
 import theme from "../common/theme";
 
-export interface CustomDocumentProps extends DocumentProps {
-  authUserInfo: AuthUserInfo;
-}
-
-export default class CustomDocument extends Document<CustomDocumentProps> {
+export default class CustomDocument extends Document {
   render(): JSX.Element {
     // Store initial props from request data that we need to use again on
     // the client. See:
     // https://github.com/zeit/next.js/issues/3043#issuecomment-334521241
     // https://github.com/zeit/next.js/issues/2252#issuecomment-353992669
     // Alternatively, you could use a store, like Redux.
-    const { authUserInfo } = this.props;
     return (
       <Html>
         <Head>
@@ -33,13 +25,6 @@ export default class CustomDocument extends Document<CustomDocumentProps> {
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-          />
-          <script
-            id="__MY_AUTH_USER_INFO"
-            type="application/json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify(authUserInfo, null, 2),
-            }}
           />
         </Head>
         <body>
@@ -62,11 +47,9 @@ export default class CustomDocument extends Document<CustomDocumentProps> {
 
     // Get the AuthUserInfo object. This is set if the server-rendered page
     // is wrapped in the `withAuthUser` higher-order component.
-    const authUserInfo = get(ctx, "myCustomData.authUserInfo", null);
     const initialProps = await Document.getInitialProps(ctx);
     return {
       ...initialProps,
-      authUserInfo,
       styles: [
         ...React.Children.toArray(initialProps.styles),
         sheets.getStyleElement(),

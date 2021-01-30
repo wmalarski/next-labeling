@@ -1,6 +1,5 @@
 import * as t from "io-ts";
-
-import { AuthUser } from "../../src/auth/user";
+import { AuthUser } from "../auth/types";
 import { LabelingFieldAttributes } from "../editors/types";
 
 export const FieldSchema = t.strict({

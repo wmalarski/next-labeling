@@ -12,8 +12,8 @@ import ClearIcon from "@material-ui/icons/Clear";
 import DoneIcon from "@material-ui/icons/Done";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useState } from "react";
-import { useAuthUserInfo } from "../../auth/hooks";
-import { convertToDate } from "../../firestore/functions";
+import useAuth from "../../auth/hooks/useAuth";
+import { convertToDate } from "../../firebase/functions";
 import useLabelingContext from "../../workspace/hooks/useLabelingContext";
 import setSnapshotUpdate from "../../workspace/updates/setSnapshotUpdate";
 import useUpdateComment from "../hooks/useUpdateComment";
@@ -38,7 +38,7 @@ export default function CommentCard(props: CommentCardProps): JSX.Element {
   } = comment;
 
   const { history, document } = useLabelingContext();
-  const { authUser } = useAuthUserInfo();
+  const { authUser } = useAuth();
   const { pushLabeling } = history;
   const { update } = useUpdateComment(labelingId);
 

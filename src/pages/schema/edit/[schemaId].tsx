@@ -9,37 +9,28 @@ import SaveIcon from "@material-ui/icons/Save";
 import UndoIcon from "@material-ui/icons/Undo";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useAuthUserInfo } from "../../../auth/hooks";
-import initFirebase from "../../../auth/initFirebase";
+import withToken from "../../../auth/functions/withToken";
 import Footer from "../../../common/components/footer";
 import Header from "../../../common/components/header";
 import LoadingBackdrop from "../../../common/components/loadingBackdrop";
 import ResultSnackbar from "../../../common/components/resultSnackbar";
 import useRouterRemove from "../../../common/hooks/useRouterRemove";
-import withAuthUser from "../../../common/wrappers/withAuthUser";
-import withAuthUserInfo from "../../../common/wrappers/withAuthUserInfo";
-import {
-  ResultSnackbarState,
-  SchemaCollection,
-} from "../../../firestore/types";
+import { ResultSnackbarState, SchemaCollection } from "../../../firebase/types";
 import SchemaForm from "../../../schema/components/forms/schemaForm";
 import useFetchSchema from "../../../schema/hooks/useFetchSchema";
 import useSchemaHistory from "../../../schema/hooks/useSchemaHistory";
 import useUpdateSchema from "../../../schema/hooks/useUpdateSchema";
 
-initFirebase();
-
 export interface SchemaEditProps {
+  userId: string;
   documentId: string;
 }
 
-function SchemaEdit(props: SchemaEditProps): JSX.Element {
-  const { documentId } = props;
-
-  const { authUser } = useAuthUserInfo();
+export default function SchemaEdit(props: SchemaEditProps): JSX.Element {
+  const { documentId, userId } = props;
 
   const router = useRouter();
 
@@ -53,12 +44,6 @@ function SchemaEdit(props: SchemaEditProps): JSX.Element {
     redoSchema,
     resetHistory,
   } = useSchemaHistory();
-
-  useEffect(() => {
-    if (!authUser) {
-      router.push("/");
-    }
-  }, [authUser, router]);
 
   const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
     isOpen: false,
@@ -96,8 +81,7 @@ function SchemaEdit(props: SchemaEditProps): JSX.Element {
     setSnackbarState,
   });
 
-  if (!authUser) return <></>;
-  const isSameUser = authUser?.id === document?.user.id;
+  const isSameUser = userId === document?.user.id;
 
   return (
     <>
@@ -164,16 +148,16 @@ function SchemaEdit(props: SchemaEditProps): JSX.Element {
   );
 }
 
-export default withAuthUser(withAuthUserInfo(SchemaEdit));
+export const getServerSideProps: GetServerSideProps = withToken({
+  redirect: true,
+  getter: async ({ params, token }) => {
+    const userId = token?.uid;
+    const documentId = Array.isArray(params?.schemaId)
+      ? undefined
+      : params?.schemaId;
 
-export const getStaticProps: GetStaticProps<SchemaEditProps> = async ({
-  params,
-}) => {
-  const documentId = Array.isArray(params?.projectId)
-    ? undefined
-    : params?.projectId;
+    if (!documentId || !userId) return { notFound: true };
 
-  if (!documentId) return { notFound: true };
-
-  return { props: { documentId } };
-};
+    return { props: { documentId, userId } };
+  },
+});

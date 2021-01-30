@@ -9,13 +9,10 @@ import "firebase/auth";
 import Link from "next/link";
 import Router from "next/router";
 import React from "react";
-import initFirebase from "../auth/initFirebase";
 import { useUserFormStyles } from "../auth/styles";
 import Footer from "../common/components/footer";
 
-initFirebase();
-
-export default function Signup(): JSX.Element {
+export default function SignUp(): JSX.Element {
   const classes = useUserFormStyles();
 
   const handleSubmit = async (e: React.ChangeEvent<any>) => {

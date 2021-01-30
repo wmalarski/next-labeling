@@ -9,9 +9,9 @@ import PictureInPictureIcon from "@material-ui/icons/PictureInPicture";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import React, { useState } from "react";
-import { useAuthUserInfo } from "../../auth/hooks";
+import useAuth from "../../auth/hooks/useAuth";
 import useRouterCreate from "../../common/hooks/useRouterCreate";
-import { LabelingCollection } from "../../firestore/types";
+import { LabelingCollection } from "../../firebase/types";
 import { SchemaDocument } from "../../schema/types";
 import { createObject } from "../../workspace/functions";
 import { ExternalDocument } from "../../workspace/types/database";
@@ -33,7 +33,7 @@ export default function CreateLabelingDialog(
 ): JSX.Element {
   const { schema, schemaId, ...other } = props;
 
-  const { authUser } = useAuthUserInfo();
+  const { authUser } = useAuth();
   const [document, setDocument] = useState<Partial<ExternalDocument>>({
     ...defaultDocument,
     schema: schema.schema,

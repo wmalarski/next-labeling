@@ -1,8 +1,8 @@
 import React from "react";
 import GridLayout from "react-grid-layout";
+import "../../../node_modules/react-grid-layout/css/styles.css";
+import "../../../node_modules/react-resizable/css/styles.css";
 import EditorTable from "../../editors/components/editorTable";
-import "../../node_modules/react-grid-layout/css/styles.css";
-import "../../node_modules/react-resizable/css/styles.css";
 import TimelineViewCard from "../../timeline/components/timelineViewCard";
 import VisualizationViewCard from "../../video/components/videoViewCard";
 import { LabelingView } from "../views";

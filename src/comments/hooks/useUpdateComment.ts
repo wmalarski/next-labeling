@@ -2,8 +2,8 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import useUpdateDocument, {
   UseUpdateDocumentResult,
-} from "../../firestore/hooks/useUpdateDocument";
-import { CommentsCollection, LabelingCollection } from "../../firestore/types";
+} from "../../firebase/hooks/useUpdateDocument";
+import { CommentsCollection, LabelingCollection } from "../../firebase/types";
 import { CommentDocument } from "../types";
 
 export default function useUpdateComment(

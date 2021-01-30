@@ -1,8 +1,8 @@
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 import RGL, { WidthProvider } from "react-grid-layout";
-import "../../node_modules/react-grid-layout/css/styles.css";
-import "../../node_modules/react-resizable/css/styles.css";
+import "../../../node_modules/react-grid-layout/css/styles.css";
+import "../../../node_modules/react-resizable/css/styles.css";
 import useLabelingContext from "../hooks/useLabelingContext";
 import usePreferences from "../hooks/usePreferencesContext";
 import { updateViews } from "../views";

@@ -1,10 +1,10 @@
 import * as dotenv from "dotenv";
-import firebase from "firebase/app";
+import firebaseClient from "firebase/app";
+import "firebase/auth";
 
-// import "firebase/auth";
 dotenv.config();
 
-const config = {
+const CLIENT_CONFIG = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
   databaseURL: process.env.FIREBASE_DATABASE_URL,
@@ -15,8 +15,12 @@ const config = {
   measurementId: process.env.FIREBASE_MEASUREMENT_ID,
 };
 
-export default function initFirebase(): void {
-  if (!firebase.apps.length) {
-    firebase.initializeApp(config);
-  }
+if (typeof window !== "undefined" && !firebaseClient.apps.length) {
+  firebaseClient.initializeApp(CLIENT_CONFIG);
+  firebaseClient
+    .auth()
+    .setPersistence(firebaseClient.auth.Auth.Persistence.SESSION);
+  (window as any).firebase = firebaseClient;
 }
+
+export { firebaseClient };

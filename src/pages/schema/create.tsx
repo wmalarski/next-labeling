@@ -9,27 +9,24 @@ import SaveIcon from "@material-ui/icons/Save";
 import UndoIcon from "@material-ui/icons/Undo";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useAuthUserInfo } from "../../auth/hooks";
-import initFirebase from "../../auth/initFirebase";
+import withToken from "../../auth/functions/withToken";
+import useAuth from "../../auth/hooks/useAuth";
 import Footer from "../../common/components/footer";
 import Header from "../../common/components/header";
 import LoadingBackdrop from "../../common/components/loadingBackdrop";
 import ResultSnackbar from "../../common/components/resultSnackbar";
 import useRouterRemove from "../../common/hooks/useRouterRemove";
-import withAuthUser from "../../common/wrappers/withAuthUser";
-import withAuthUserInfo from "../../common/wrappers/withAuthUserInfo";
-import useCreateDocument from "../../firestore/hooks/useCreateDocument";
-import { ResultSnackbarState, SchemaCollection } from "../../firestore/types";
+import useCreateDocument from "../../firebase/hooks/useCreateDocument";
+import { ResultSnackbarState, SchemaCollection } from "../../firebase/types";
 import SchemaForm from "../../schema/components/forms/schemaForm";
 import useSchemaHistory from "../../schema/hooks/useSchemaHistory";
 import { SchemaDocument } from "../../schema/types";
 
-initFirebase();
-
-function SchemaCreate(): JSX.Element {
-  const { authUser } = useAuthUserInfo();
+export default function SchemaCreate(): JSX.Element {
+  const { authUser } = useAuth();
   const router = useRouter();
 
   const {
@@ -145,4 +142,6 @@ function SchemaCreate(): JSX.Element {
   );
 }
 
-export default withAuthUser(withAuthUserInfo(SchemaCreate));
+export const getServerSideProps: GetServerSideProps = withToken({
+  redirect: true,
+});

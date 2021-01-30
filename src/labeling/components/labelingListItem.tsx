@@ -7,8 +7,8 @@ import EditIcon from "@material-ui/icons/Edit";
 import ViewListIcon from "@material-ui/icons/ViewList";
 import { useRouter } from "next/router";
 import React from "react";
-import { useAuthUserInfo } from "../../auth/hooks";
-import { convertToDate } from "../../firestore/functions";
+import useAuth from "../../auth/hooks/useAuth";
+import { convertToDate } from "../../firebase/functions";
 import { ExternalDocument } from "../../workspace/types/database";
 import { useLabelingListItemStyles } from "../styles";
 
@@ -28,7 +28,7 @@ export default function LabelingListItem(
   const { displayName } = user;
 
   const router = useRouter();
-  const { authUser } = useAuthUserInfo();
+  const { authUser } = useAuth();
   const isSameUser = user.id === authUser?.id;
 
   const createdAtStr = convertToDate(createdAt)?.toLocaleString() ?? "-";

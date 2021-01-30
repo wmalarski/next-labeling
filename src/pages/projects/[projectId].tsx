@@ -8,17 +8,14 @@ import GroupIcon from "@material-ui/icons/Group";
 import SettingsIcon from "@material-ui/icons/Settings";
 import TrendingUpIcon from "@material-ui/icons/TrendingUp";
 import "firebase/firestore";
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useAuthUserInfo } from "../../auth/hooks";
-import initFirebase from "../../auth/initFirebase";
+import withToken from "../../auth/functions/withToken";
 import Footer from "../../common/components/footer";
 import Header from "../../common/components/header";
 import LoadingBackdrop from "../../common/components/loadingBackdrop";
 import TabPanel from "../../common/components/tabPanel";
-import withAuthUser from "../../common/wrappers/withAuthUser";
-import withAuthUserInfo from "../../common/wrappers/withAuthUserInfo";
 import ProjectGeneralDetails from "../../projects/components/details/projectGeneralDetails";
 import ProjectLabelingDetails from "../../projects/components/details/projectLabelingDetails";
 import ProjectSettingsDetails from "../../projects/components/details/projectSettingsDetails";
@@ -27,8 +24,6 @@ import ProjectUsersDetails from "../../projects/components/details/projectUsersD
 import ProjectWorkflowDetails from "../../projects/components/details/projectWorkflowDetails";
 import useFetchProject from "../../projects/hooks/useFetchProject";
 import { useProjectDetailsPageStyles } from "../../projects/styles";
-
-initFirebase();
 
 enum ProjectDetailsPages {
   General,
@@ -42,19 +37,14 @@ export interface ProjectDetailsPageProps {
   documentId: string;
 }
 
-function ProjectDetailsPage(props: ProjectDetailsPageProps): JSX.Element {
+export default function ProjectDetailsPage(
+  props: ProjectDetailsPageProps,
+): JSX.Element {
   const { documentId } = props;
 
   const classes = useProjectDetailsPageStyles();
-  const { authUser } = useAuthUserInfo();
 
   const router = useRouter();
-
-  useEffect(() => {
-    if (authUser) return;
-    router.push("/");
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const { isLoading, exist, document } = useFetchProject(documentId);
 
@@ -67,8 +57,6 @@ function ProjectDetailsPage(props: ProjectDetailsPageProps): JSX.Element {
   const [tabsIndex, setTabsIndex] = useState<ProjectDetailsPages>(
     ProjectDetailsPages.Labeling,
   );
-
-  if (!authUser) return <></>;
 
   return (
     <>
@@ -119,16 +107,15 @@ function ProjectDetailsPage(props: ProjectDetailsPageProps): JSX.Element {
   );
 }
 
-export default withAuthUser(withAuthUserInfo(ProjectDetailsPage));
+export const getServerSideProps: GetServerSideProps = withToken({
+  redirect: true,
+  getter: async ({ params }) => {
+    const documentId = Array.isArray(params?.projectId)
+      ? undefined
+      : params?.projectId;
 
-export const getStaticProps: GetStaticProps<ProjectDetailsPageProps> = async ({
-  params,
-}) => {
-  const documentId = Array.isArray(params?.projectId)
-    ? undefined
-    : params?.projectId;
+    if (!documentId) return { notFound: true };
 
-  if (!documentId) return { notFound: true };
-
-  return { props: { documentId } };
-};
+    return { props: { documentId } };
+  },
+});

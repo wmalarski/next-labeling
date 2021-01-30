@@ -10,11 +10,8 @@ import Link from "next/link";
 import Router from "next/router";
 import React, { ChangeEvent } from "react";
 import { googleAuthProvider } from "../auth/authProviders";
-import initFirebase from "../auth/initFirebase";
 import { useUserFormStyles } from "../auth/styles";
 import Footer from "../common/components/footer";
-
-initFirebase();
 
 export default function Login(): JSX.Element {
   const classes = useUserFormStyles();

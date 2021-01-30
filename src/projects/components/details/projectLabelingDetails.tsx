@@ -1,9 +1,9 @@
 import Box from "@material-ui/core/Box/Box";
 import firebase from "firebase/app";
 import React, { useState } from "react";
-import { useAuthUserInfo } from "../../../auth/hooks";
+import useAuth from "../../../auth/hooks/useAuth";
 import SearchInput from "../../../common/components/searchInput";
-import { LabelingCollection } from "../../../firestore/types";
+import { LabelingCollection } from "../../../firebase/types";
 import LabelingList from "../../../labeling/components/labelingList";
 import { ProjectDocument } from "../../types";
 
@@ -16,7 +16,7 @@ export default function ProjectLabelingDetails(
   props: ProjectLabelingDetailsProps,
 ): JSX.Element {
   const { id } = props;
-  const { authUser } = useAuthUserInfo();
+  const { authUser } = useAuth();
 
   const [searchText, setSearchText] = useState<string | null>(null);
 

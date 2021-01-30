@@ -1,24 +1,21 @@
 import Container from "@material-ui/core/Container";
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
-import { useAuthUserInfo } from "../../auth/hooks";
-import initFirebase from "../../auth/initFirebase";
+import withToken from "../../auth/functions/withToken";
+import useAuth from "../../auth/hooks/useAuth";
 import Footer from "../../common/components/footer";
 import Header from "../../common/components/header";
 import LoadingBackdrop from "../../common/components/loadingBackdrop";
-import withAuthUser from "../../common/wrappers/withAuthUser";
-import withAuthUserInfo from "../../common/wrappers/withAuthUserInfo";
-import useCreateDocument from "../../firestore/hooks/useCreateDocument";
-import { ProjectCollection } from "../../firestore/types";
+import useCreateDocument from "../../firebase/hooks/useCreateDocument";
+import { ProjectCollection } from "../../firebase/types";
 import ProjectSteps from "../../projects/components/steps/projectSteps";
 import { ProjectDocument } from "../../projects/types";
 
-initFirebase();
-
-function ProjectCreate(): JSX.Element {
-  const { authUser } = useAuthUserInfo();
+export default function ProjectCreate(): JSX.Element {
+  const { authUser } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -57,4 +54,6 @@ function ProjectCreate(): JSX.Element {
   );
 }
 
-export default withAuthUser(withAuthUserInfo(ProjectCreate));
+export const getServerSideProps: GetServerSideProps = withToken({
+  redirect: true,
+});

@@ -5,7 +5,7 @@ import StepLabel from "@material-ui/core/StepLabel";
 import Stepper from "@material-ui/core/Stepper";
 import Typography from "@material-ui/core/Typography";
 import React, { useCallback } from "react";
-import { AuthUser } from "../../../auth/user";
+import { AuthUser } from "../../../auth/types";
 import { defaultProjectDocument } from "../../constants";
 import useProjectHistory, { ProjectStep } from "../../hooks/useProjectHistory";
 import { useProjectStepsStyles } from "../../styles";

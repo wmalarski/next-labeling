@@ -3,6 +3,7 @@ import { ThemeProvider } from "@material-ui/core/styles";
 import type { AppProps /*, AppContext */ } from "next/app";
 import Head from "next/head";
 import React from "react";
+import AuthProvider from "../auth/components/authProvider";
 import { useAppStyles } from "../common/styles";
 import theme from "../common/theme";
 
@@ -31,7 +32,9 @@ export default function MyApp(props: AppProps): JSX.Element {
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <div className={classes.root}>
-          <Component {...pageProps} />
+          <AuthProvider>
+            <Component {...pageProps} />
+          </AuthProvider>
         </div>
       </ThemeProvider>
     </React.Fragment>

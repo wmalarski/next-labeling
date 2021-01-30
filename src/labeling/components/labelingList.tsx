@@ -2,16 +2,16 @@ import List from "@material-ui/core/List";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
-import { AuthUser } from "../../auth/user";
+import { AuthUser } from "../../auth/types";
 import LoadingBackdrop from "../../common/components/loadingBackdrop";
 import ResultSnackbar from "../../common/components/resultSnackbar";
 import useRouterRemove from "../../common/hooks/useRouterRemove";
-import useFetchDocuments from "../../firestore/hooks/useFetchDocuments";
+import useFetchDocuments from "../../firebase/hooks/useFetchDocuments";
 import {
   FirestoreQuery,
   LabelingCollection,
   ResultSnackbarState,
-} from "../../firestore/types";
+} from "../../firebase/types";
 import { ExternalDocument } from "../../workspace/types/database";
 import LabelingListItem from "./labelingListItem";
 

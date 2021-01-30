@@ -6,44 +6,37 @@ import FileCopyIcon from "@material-ui/icons/FileCopy";
 import SaveAltIcon from "@material-ui/icons/SaveAlt";
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { GetStaticProps } from "next";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { useAuthUserInfo } from "../../auth/hooks";
-import initFirebase from "../../auth/initFirebase";
+import withToken from "../../auth/functions/withToken";
+import useAuth from "../../auth/hooks/useAuth";
 import Footer from "../../common/components/footer";
 import Header from "../../common/components/header";
 import LoadingBackdrop from "../../common/components/loadingBackdrop";
 import ResultSnackbar from "../../common/components/resultSnackbar";
 import useRouterCreate from "../../common/hooks/useRouterCreate";
 import useRouterRemove from "../../common/hooks/useRouterRemove";
-import withAuthUser from "../../common/wrappers/withAuthUser";
-import withAuthUserInfo from "../../common/wrappers/withAuthUserInfo";
-import { ResultSnackbarState, SchemaCollection } from "../../firestore/types";
+import { ResultSnackbarState, SchemaCollection } from "../../firebase/types";
 import CreateLabelingDialog from "../../labeling/components/createLabelingDialog";
 import SchemaDetails from "../../schema/components/details/schemaDetails";
 import RawForm from "../../schema/components/forms/rawForm";
 import useFetchSchema from "../../schema/hooks/useFetchSchema";
 import { SchemaDocument } from "../../schema/types";
 
-initFirebase();
-
 export interface SchemaDetailsPageProps {
   documentId: string;
+  userId: string;
 }
 
-function SchemaDetailsPage(props: SchemaDetailsPageProps): JSX.Element {
-  const { documentId } = props;
+export default function SchemaDetailsPage(
+  props: SchemaDetailsPageProps,
+): JSX.Element {
+  const { documentId, userId } = props;
 
-  const { authUser } = useAuthUserInfo();
+  const { authUser } = useAuth();
 
   const router = useRouter();
-
-  useEffect(() => {
-    if (!authUser) {
-      router.push("/");
-    }
-  }, [authUser, router]);
 
   const { isLoading, document, exist } = useFetchSchema(documentId);
 
@@ -73,7 +66,7 @@ function SchemaDetailsPage(props: SchemaDetailsPageProps): JSX.Element {
   });
 
   if (!authUser) return <></>;
-  const isSameUser = authUser.id === document?.user.id;
+  const isSameUser = userId === document?.user.id;
 
   return (
     <>
@@ -156,16 +149,16 @@ function SchemaDetailsPage(props: SchemaDetailsPageProps): JSX.Element {
   );
 }
 
-export default withAuthUser(withAuthUserInfo(SchemaDetailsPage));
+export const getServerSideProps: GetServerSideProps = withToken({
+  redirect: true,
+  getter: async ({ params, token }) => {
+    const userId = token?.uid;
+    const documentId = Array.isArray(params?.schemaId)
+      ? undefined
+      : params?.schemaId;
 
-export const getStaticProps: GetStaticProps<SchemaDetailsPageProps> = async ({
-  params,
-}) => {
-  const documentId = Array.isArray(params?.projectId)
-    ? undefined
-    : params?.projectId;
+    if (!documentId || !userId) return { notFound: true };
 
-  if (!documentId) return { notFound: true };
-
-  return { props: { documentId } };
-};
+    return { props: { documentId, userId } };
+  },
+});
