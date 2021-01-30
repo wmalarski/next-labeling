@@ -4,14 +4,10 @@ import "firebase/firestore";
 import React, { useCallback, useEffect, useState } from "react";
 import { AuthUser } from "../../auth/types";
 import LoadingBackdrop from "../../common/components/loadingBackdrop";
-import ResultSnackbar from "../../common/components/resultSnackbar";
 import useRouterRemove from "../../common/hooks/useRouterRemove";
+import useSnackbar from "../../common/hooks/useSnackbar";
 import useFetchDocuments from "../../firebase/hooks/useFetchDocuments";
-import {
-  FirestoreQuery,
-  LabelingCollection,
-  ResultSnackbarState,
-} from "../../firebase/types";
+import { FirestoreQuery, LabelingCollection } from "../../firebase/types";
 import { ExternalDocument } from "../../workspace/types/database";
 import LabelingListItem from "./labelingListItem";
 
@@ -49,15 +45,13 @@ export default function LabelingList(props: LabelingListProps): JSX.Element {
     [],
   );
 
-  const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
-    isOpen: false,
-  });
+  const { showSnackbar } = useSnackbar();
 
   const collection = firebase.firestore().collection(LabelingCollection);
   const { remove, isLoading } = useRouterRemove({
     successMessage: "Labeling Removed",
     backOnSuccess: false,
-    setSnackbarState,
+    setSnackbarState: showSnackbar,
     collection,
     removeCallback,
   });
@@ -74,7 +68,6 @@ export default function LabelingList(props: LabelingListProps): JSX.Element {
         ))}
       </List>
       <LoadingBackdrop isLoading={loading || isLoading} />
-      <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
       {hasMore && <button onClick={loadMore}>[ more ]</button>}
     </>
   );

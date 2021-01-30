@@ -8,16 +8,16 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import withToken from "../../auth/functions/withToken";
 import useAuth from "../../auth/hooks/useAuth";
 import Footer from "../../common/components/footer";
 import Header from "../../common/components/header";
 import LoadingBackdrop from "../../common/components/loadingBackdrop";
-import ResultSnackbar from "../../common/components/resultSnackbar";
 import useRouterCreate from "../../common/hooks/useRouterCreate";
 import useRouterRemove from "../../common/hooks/useRouterRemove";
-import { ResultSnackbarState, SchemaCollection } from "../../firebase/types";
+import useSnackbar from "../../common/hooks/useSnackbar";
+import { SchemaCollection } from "../../firebase/types";
 import CreateLabelingDialog from "../../labeling/components/createLabelingDialog";
 import SchemaDetails from "../../schema/components/details/schemaDetails";
 import RawForm from "../../schema/components/forms/rawForm";
@@ -46,14 +46,12 @@ export default function SchemaDetailsPage(
     }
   }, [exist, isLoading, router]);
 
-  const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
-    isOpen: false,
-  });
+  const { showSnackbar } = useSnackbar();
 
   const collection = firebase.firestore().collection(SchemaCollection);
   const createSchema = useRouterCreate<SchemaDocument>({
     collection,
-    setSnackbarState: setSnackbarState,
+    setSnackbarState: showSnackbar,
     routerOptions: (_schema, id) => ({
       url: "/schema/[schemaId]",
       as: `/schema/${id}`,
@@ -62,7 +60,7 @@ export default function SchemaDetailsPage(
   const { remove, isLoading: isRemoveLoading } = useRouterRemove({
     collection,
     backOnSuccess: true,
-    setSnackbarState,
+    setSnackbarState: showSnackbar,
   });
 
   if (!authUser) return <></>;
@@ -140,7 +138,6 @@ export default function SchemaDetailsPage(
         )}
       </Header>
       {document ? <SchemaDetails schemaDocument={document} /> : <></>}
-      <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
       <LoadingBackdrop
         isLoading={isLoading || isRemoveLoading || createSchema.isLoading}
       />

@@ -1,12 +1,11 @@
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import withToken from "../../auth/functions/withToken";
 import Footer from "../../common/components/footer";
 import Header from "../../common/components/header";
 import LoadingBackdrop from "../../common/components/loadingBackdrop";
-import ResultSnackbar from "../../common/components/resultSnackbar";
-import { ResultSnackbarState } from "../../firebase/types";
+import useSnackbar from "../../common/hooks/useSnackbar";
 import LabelingProvider from "../../workspace/components/labelingProvider";
 import LabelingWorkspace from "../../workspace/components/labelingWorkspace";
 import PreferencesProvider from "../../workspace/components/preferences/preferencesProvider";
@@ -34,9 +33,7 @@ export default function LabelingEditor(
     if (!isLoading && !exist) router.push("/404");
   }, [exist, isLoading, router]);
 
-  const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
-    isOpen: false,
-  });
+  const { showSnackbar } = useSnackbar();
 
   return (
     <>
@@ -45,7 +42,7 @@ export default function LabelingEditor(
           <LabelingProvider
             documentId={documentId}
             document={document}
-            setSnackbarState={setSnackbarState}
+            setSnackbarState={showSnackbar}
           >
             <PreferencesProvider>
               <div className={classes.root}>
@@ -60,11 +57,6 @@ export default function LabelingEditor(
                   </div>
                 )}
               </div>
-
-              <ResultSnackbar
-                state={snackbarState}
-                setState={setSnackbarState}
-              />
               <LoadingBackdrop isLoading={isLoading} />
               <Footer />
             </PreferencesProvider>

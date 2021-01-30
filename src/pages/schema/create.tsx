@@ -11,16 +11,16 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import withToken from "../../auth/functions/withToken";
 import useAuth from "../../auth/hooks/useAuth";
 import Footer from "../../common/components/footer";
 import Header from "../../common/components/header";
 import LoadingBackdrop from "../../common/components/loadingBackdrop";
-import ResultSnackbar from "../../common/components/resultSnackbar";
 import useRouterRemove from "../../common/hooks/useRouterRemove";
+import useSnackbar from "../../common/hooks/useSnackbar";
 import useCreateDocument from "../../firebase/hooks/useCreateDocument";
-import { ResultSnackbarState, SchemaCollection } from "../../firebase/types";
+import { SchemaCollection } from "../../firebase/types";
 import SchemaForm from "../../schema/components/forms/schemaForm";
 import useSchemaHistory from "../../schema/hooks/useSchemaHistory";
 import { SchemaDocument } from "../../schema/types";
@@ -43,11 +43,9 @@ export default function SchemaCreate(): JSX.Element {
     if (!authUser) {
       router.push("/");
     }
-  }, [authUser, router]); // [] = run once
+  }, [authUser, router]);
 
-  const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
-    isOpen: false,
-  });
+  const { showSnackbar } = useSnackbar();
 
   const collection = firebase.firestore().collection(SchemaCollection);
   const {
@@ -57,19 +55,19 @@ export default function SchemaCreate(): JSX.Element {
   const documentId = createSchemaState?.id;
   useEffect(() => {
     if (createSchemaState.document) {
-      setSnackbarState({ isOpen: true, message: "Schema saved" });
+      showSnackbar({ isOpen: true, message: "Schema saved" });
     } else if (createSchemaState.errors) {
-      setSnackbarState({
+      showSnackbar({
         isOpen: true,
         message: `${createSchemaState.errors}`,
       });
     }
-  }, [createSchemaState.document, createSchemaState.errors]);
+  }, [showSnackbar, createSchemaState.document, createSchemaState.errors]);
 
   const { remove, isLoading: isRemoveLoading } = useRouterRemove({
     collection,
     backOnSuccess: true,
-    setSnackbarState,
+    setSnackbarState: showSnackbar,
   });
 
   if (!authUser) return <></>;
@@ -133,7 +131,6 @@ export default function SchemaCreate(): JSX.Element {
       <Container>
         <SchemaForm schema={schema} setSchema={setSchema} />
       </Container>
-      <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
       <LoadingBackdrop
         isLoading={isRemoveLoading || createSchemaState.isLoading}
       />

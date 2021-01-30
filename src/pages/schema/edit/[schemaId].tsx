@@ -11,14 +11,14 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import withToken from "../../../auth/functions/withToken";
 import Footer from "../../../common/components/footer";
 import Header from "../../../common/components/header";
 import LoadingBackdrop from "../../../common/components/loadingBackdrop";
-import ResultSnackbar from "../../../common/components/resultSnackbar";
 import useRouterRemove from "../../../common/hooks/useRouterRemove";
-import { ResultSnackbarState, SchemaCollection } from "../../../firebase/types";
+import useSnackbar from "../../../common/hooks/useSnackbar";
+import { SchemaCollection } from "../../../firebase/types";
 import SchemaForm from "../../../schema/components/forms/schemaForm";
 import useFetchSchema from "../../../schema/hooks/useFetchSchema";
 import useSchemaHistory from "../../../schema/hooks/useSchemaHistory";
@@ -45,9 +45,7 @@ export default function SchemaEdit(props: SchemaEditProps): JSX.Element {
     resetHistory,
   } = useSchemaHistory();
 
-  const [snackbarState, setSnackbarState] = useState<ResultSnackbarState>({
-    isOpen: false,
-  });
+  const { showSnackbar } = useSnackbar();
 
   const { isLoading, document, exist } = useFetchSchema(documentId);
 
@@ -65,20 +63,20 @@ export default function SchemaEdit(props: SchemaEditProps): JSX.Element {
   const { update: updateSchema, state: updateSchemaState } = useUpdateSchema();
   useEffect(() => {
     if (updateSchemaState.document) {
-      setSnackbarState({ isOpen: true, message: "Schema saved" });
+      showSnackbar({ isOpen: true, message: "Schema saved" });
     } else if (updateSchemaState.errors) {
-      setSnackbarState({
+      showSnackbar({
         isOpen: true,
         message: `${updateSchemaState.errors}`,
       });
     }
-  }, [updateSchemaState.document, updateSchemaState.errors]);
+  }, [showSnackbar, updateSchemaState.document, updateSchemaState.errors]);
 
   const collection = firebase.firestore().collection(SchemaCollection);
   const { remove, isLoading: isRemoveLoading } = useRouterRemove({
     collection,
     backOnSuccess: true,
-    setSnackbarState,
+    setSnackbarState: showSnackbar,
   });
 
   const isSameUser = userId === document?.user.id;
@@ -139,7 +137,6 @@ export default function SchemaEdit(props: SchemaEditProps): JSX.Element {
           <SchemaForm schema={schema} setSchema={setSchema} />
         </Container>
       )}
-      <ResultSnackbar state={snackbarState} setState={setSnackbarState} />
       <LoadingBackdrop
         isLoading={isLoading || isRemoveLoading || updateSchemaState.isLoading}
       />
