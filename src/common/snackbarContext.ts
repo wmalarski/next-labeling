@@ -1,5 +1,9 @@
 import { createContext } from "react";
-import { ResultSnackbarState } from "../firebase/types";
+
+export interface ResultSnackbarState {
+  isOpen: boolean;
+  message?: string;
+}
 
 export interface SnackbarContextState {
   showSnackbar: (snackbar: ResultSnackbarState) => void;

@@ -1,7 +1,8 @@
 import firebase from "firebase/app";
 import nookies from "nookies";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { firebaseClient } from "../../firebase/firebaseClient";
+import { UsersCollection } from "../../firebase/types";
 import AuthContext from "../authContext";
 import { AuthUser } from "../types";
 
@@ -28,7 +29,26 @@ export default function AuthProvider(props: AuthProviderProps): JSX.Element {
   const { children } = props;
 
   const [user, setUser] = useState<firebase.User | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+
+  const setCollectionUser = useCallback((user: firebase.User): void => {
+    firebase
+      .firestore()
+      .collection(UsersCollection)
+      .doc(user.uid)
+      .set(
+        {
+          uid: user.uid,
+          email: user.email,
+          displayName: user.displayName,
+          projects: [],
+        },
+        {
+          mergeFields: [],
+        },
+      )
+      .then(() => console.log("success"))
+      .catch(err => console.log("Failure", err));
+  }, []);
 
   // listen for token changes
   // call setUser and write new token as a cookie
@@ -43,23 +63,20 @@ export default function AuthProvider(props: AuthProviderProps): JSX.Element {
         nookies.set(null, "token", "", {});
         return;
       }
-      setLoading(true);
       const token = await user.getIdToken();
       setUser(user);
-      setLoading(false);
       nookies.destroy(null, "token");
       nookies.set(null, "token", token, {});
+      setCollectionUser(user);
     });
-  }, []);
+  }, [setCollectionUser]);
 
   // force refresh the token every 10 minutes
   useEffect(() => {
     const handle = setInterval(async () => {
       const user = firebaseClient.auth().currentUser;
       if (user) {
-        setLoading(true);
         await user.getIdToken(true);
-        setLoading(false);
       }
     }, 10 * 60 * 1000);
     return () => clearInterval(handle);
@@ -69,7 +86,7 @@ export default function AuthProvider(props: AuthProviderProps): JSX.Element {
 
   return (
     <AuthContext.Provider
-      value={{ userDetails: user, authUser, isLoading: loading, error: null }}
+      value={{ userDetails: user, authUser, isLoading: false, error: null }}
     >
       {children}
     </AuthContext.Provider>

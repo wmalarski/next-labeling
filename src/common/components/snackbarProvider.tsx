@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { ResultSnackbarState } from "../../firebase/types";
-import SnackbarContext from "../snackbarContext";
+import SnackbarContext, { ResultSnackbarState } from "../snackbarContext";
 import ResultSnackbar from "./resultSnackbar";
 
 export interface SnackbarProviderProps {

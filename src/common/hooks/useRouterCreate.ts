@@ -2,7 +2,8 @@ import "firebase/firestore";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import useCreateDocument from "../../firebase/hooks/useCreateDocument";
-import { FirestoreCollection, ResultSnackbarState } from "../../firebase/types";
+import { FirestoreCollection } from "../../firebase/types";
+import { ResultSnackbarState } from "../snackbarContext";
 
 export interface UseCreateDocumentResult<T> {
   create: (document: Partial<T>) => void;
