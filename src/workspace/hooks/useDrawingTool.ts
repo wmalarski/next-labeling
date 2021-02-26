@@ -6,7 +6,6 @@ import useCoordsBuilder, {
 } from "../../editors/hooks/useCoordsBuilder";
 import { LabelingField, LabelingObject, ToolType } from "../types/client";
 import setAttributeUpdate from "../updates/setAttributeUpdate";
-import useLabelingContext from "./useLabelingContext";
 import usePreferences from "./usePreferencesContext";
 import useToolContext from "./useToolContext";
 
@@ -17,9 +16,6 @@ export interface UseDrawingToolResult {
 }
 
 export default function useDrawingTool(): UseDrawingToolResult {
-  const { history } = useLabelingContext();
-  const { pushLabeling } = history;
-  const { objects, currentFrame } = history.data;
   const { preferences } = usePreferences();
   const { objectId, setTool } = useToolContext();
 

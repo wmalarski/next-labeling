@@ -1,16 +1,15 @@
 import { useTheme } from "@material-ui/core";
-import compact from "lodash/compact";
-import React, { useCallback, useMemo } from "react";
+import React, { useMemo } from "react";
 import { Layer, Line, Rect, Stage } from "react-konva";
+import { useSelector } from "react-redux";
 import { TooltipLabel } from "../../visualization/components/tooltipLabel";
 import { useTooltipLabel } from "../../visualization/hooks/useTooltipLabel";
-import { frameToRange, labelingFilter } from "../../workspace/functions";
-import useLabelingContext from "../../workspace/hooks/useLabelingContext";
-import usePreferences from "../../workspace/hooks/usePreferencesContext";
-import { LabelingObject } from "../../workspace/types/client";
-import setCurrentFrameUpdate from "../../workspace/updates/setCurrentFrameUpdate";
-import setSelectedUpdate from "../../workspace/updates/setSelectedUpdate";
-import setToggledUpdate from "../../workspace/updates/setToggledUpdate";
+import { labelingFilter } from "../../workspace/functions";
+import {
+  currentDocumentSelector,
+  durationSelector,
+  filtersSelector,
+} from "../../workspace/redux/selectors";
 import { TimelineRowHeight, TimelineVerticalLineWidth } from "../constants";
 import { getTimelineObjectConfigs } from "../functions";
 import TimelineLabel from "./shapes/timelineLabel";
@@ -25,12 +24,10 @@ export interface TimelineViewProps {
 export default function TimelineView(props: TimelineViewProps): JSX.Element {
   const { width, scaleX, stageX } = props;
 
-  const { history, filters, duration } = useLabelingContext();
-  const { pushLabeling, data } = history;
+  const duration = useSelector(durationSelector);
+  const filters = useSelector(filtersSelector);
+  const data = useSelector(currentDocumentSelector);
   const { objects, selected, toggled, currentFrame } = data;
-
-  const { preferences } = usePreferences();
-  const { frameChangeStep: frameStep } = preferences;
 
   const theme = useTheme();
   const errorColor = theme.palette.error.light;
@@ -55,19 +52,6 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
     [configs],
   );
 
-  const handleToggle = useCallback(
-    (id: string): void =>
-      pushLabeling(doc =>
-        setToggledUpdate(
-          doc,
-          doc.toggled.includes(id)
-            ? doc.toggled.filter(t => t !== id)
-            : [...doc.toggled, id],
-        ),
-      ),
-    [pushLabeling],
-  );
-
   const selectedNodes = useMemo(
     () =>
       selected.flatMap(object => [
@@ -75,78 +59,6 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
         ...object.fieldIds.map(field => `${object.objectId}|${field}`),
       ]),
     [selected],
-  );
-
-  const handleSelect = useCallback(
-    (object: LabelingObject, reset: boolean, fieldId?: string) =>
-      pushLabeling(doc => {
-        const index = doc.selected.findIndex(sel => sel.objectId === object.id);
-        if (index === -1)
-          return setSelectedUpdate(doc, [
-            ...(reset ? [] : doc.selected),
-            {
-              fieldIds: fieldId ? [fieldId] : [],
-              objectId: object.id,
-              objectSelected: !fieldId,
-              singleton: object.objectSchema.singleton,
-            },
-          ]);
-
-        const selection = doc.selected[index];
-        const newSelection = {
-          ...selection,
-          ...(!fieldId
-            ? {
-                objectSelected: true,
-                fieldIds: reset ? [] : selection.fieldIds,
-              }
-            : {
-                objectSelected: reset ? false : selection.objectSelected,
-                fieldIds: reset ? [fieldId] : [...selection.fieldIds, fieldId],
-              }),
-        };
-        if (reset) return setSelectedUpdate(doc, [newSelection]);
-        const newSelected = [...doc.selected];
-        newSelected.splice(index, 1, newSelection);
-        return setSelectedUpdate(doc, newSelected);
-      }),
-    [pushLabeling],
-  );
-
-  const handleDeselect = useCallback(
-    (object: LabelingObject, reset: boolean, fieldId?: string) =>
-      pushLabeling(doc =>
-        setSelectedUpdate(
-          doc,
-          reset && !fieldId
-            ? []
-            : compact(
-                doc.selected.map(sel => {
-                  if (sel.objectId !== object.id) return sel;
-                  if (!fieldId) return null;
-                  return {
-                    ...sel,
-                    fieldIds: reset
-                      ? []
-                      : sel.fieldIds.filter(f => f !== fieldId),
-                  };
-                }),
-              ),
-        ),
-      ),
-    [pushLabeling],
-  );
-
-  const handleFrameSelected = useCallback(
-    (index: number): void =>
-      pushLabeling(doc =>
-        setCurrentFrameUpdate(
-          doc,
-          frameToRange(Number(index), duration),
-          frameStep,
-        ),
-      ),
-    [duration, frameStep, pushLabeling],
   );
 
   const { refs, onMouseLeave, onPointMove } = useTooltipLabel({
@@ -165,9 +77,6 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
             duration={duration}
             selectedNodes={selectedNodes}
             {...config}
-            onSelect={handleSelect}
-            onDeselect={handleDeselect}
-            onFrameSelected={handleFrameSelected}
             onTooltipEnter={onPointMove}
             onTooltipLeave={onMouseLeave}
           />
@@ -196,7 +105,6 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
             horPadding={8}
             verPadding={14}
             {...config}
-            onToggle={handleToggle}
           />
         ))}
       </Layer>

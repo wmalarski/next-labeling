@@ -14,23 +14,29 @@ import TextField from "@material-ui/core/TextField";
 import SettingsIcon from "@material-ui/icons/Settings";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup/ToggleButtonGroup";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import NumberInput from "../../../common/components/numberInput";
 import { LabelingDirection } from "../../contexts/preferencesContext";
 import useLabelingContext from "../../hooks/useLabelingContext";
 import usePreferences from "../../hooks/usePreferencesContext";
+import { initialDocumentSelector } from "../../redux/selectors";
 import ShortcutsSettingsTreeView from "./shortcutsSettingsTreeView";
 
 export default function EditorSettingsDialog(): JSX.Element {
-  const { document, saveLabeling } = useLabelingContext();
+  const { saveLabeling } = useLabelingContext();
+  const initialDoc = useSelector(initialDocumentSelector);
   const { preferences, setPreferences } = usePreferences();
 
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const [name, setName] = useState(document.name);
-  const [filename, setFilename] = useState(document.filename);
+  const [name, setName] = useState(initialDoc.name);
+  useEffect(() => setName(initialDoc.name), [initialDoc.name]);
+
+  const [filename, setFilename] = useState(initialDoc.filename);
+  useEffect(() => setFilename(initialDoc.filename), [initialDoc.filename]);
 
   // TODO: https://github.com/wmalarski/next-labeling/issues/14
   return (
@@ -71,11 +77,15 @@ export default function EditorSettingsDialog(): JSX.Element {
             </Button>
             <Button
               disabled={
-                document.name?.length === 0 || document.filename?.length === 0
+                initialDoc.name?.length === 0 ||
+                initialDoc.filename?.length === 0
               }
               onClick={() => {
-                if (name !== document.name || filename !== document.filename) {
-                  saveLabeling({ ...document, name, filename });
+                if (
+                  name !== initialDoc.name ||
+                  filename !== initialDoc.filename
+                ) {
+                  saveLabeling({ ...initialDoc, name, filename });
                 }
                 handleClose();
               }}

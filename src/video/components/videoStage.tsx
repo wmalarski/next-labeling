@@ -1,19 +1,31 @@
 import React, { useCallback, useMemo } from "react";
 import { Layer, Stage } from "react-konva";
+import { useSelector } from "react-redux";
+import { useRootDispatch } from "../../common/redux/store";
 import { calculateNewValues } from "../../editors/functions";
+import { LabelingFieldValues } from "../../editors/types";
 import { getEventRelativePosition } from "../../visualization/functions";
 import { UseZoomResult } from "../../visualization/hooks/useZoom";
 import { MouseButton } from "../../visualization/types";
 import { inFrameFilter, labelingFilter } from "../../workspace/functions";
 import useDrawingTool from "../../workspace/hooks/useDrawingTool";
-import useLabelingContext from "../../workspace/hooks/useLabelingContext";
 import usePreferences from "../../workspace/hooks/usePreferencesContext";
 import useToolContext from "../../workspace/hooks/useToolContext";
-import { ToolType } from "../../workspace/types/client";
-import addSelectedObjectUpdate from "../../workspace/updates/addSelectedObjectUpdate";
-import setAttributeUpdate from "../../workspace/updates/setAttributeUpdate";
-import setSelectedObjectUpdate from "../../workspace/updates/setSelectedObjectUpdate";
-import setSelectedUpdate from "../../workspace/updates/setSelectedUpdate";
+import {
+  currentDocumentSelector,
+  filtersSelector,
+} from "../../workspace/redux/selectors";
+import {
+  addSelectedObject,
+  setAttribute,
+  setSelected,
+  setSelectedObject,
+} from "../../workspace/redux/slice";
+import {
+  LabelingField,
+  LabelingObject,
+  ToolType,
+} from "../../workspace/types/client";
 import {
   FinishedObject,
   InProgressObject,
@@ -30,9 +42,9 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
   const { width, height, zoom } = props;
   const { handleWheel, stageScale, stageX, stageY } = zoom;
 
-  const context = useLabelingContext();
-  const { history, filters } = context;
-  const { data, pushLabeling } = history;
+  const dispatch = useRootDispatch();
+  const filters = useSelector(filtersSelector);
+  const data = useSelector(currentDocumentSelector);
   const { currentFrame, selected, objects } = data;
 
   const { toolType } = useToolContext();
@@ -47,18 +59,35 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
   const drawingValue = builderState.currentValue?.value;
 
   const handleSelect = useCallback(
-    (id: string, reset: boolean) =>
-      pushLabeling(doc =>
-        reset
-          ? setSelectedObjectUpdate(doc, id)
-          : addSelectedObjectUpdate(doc, id),
-      ),
-    [pushLabeling],
+    (id: string, reset: boolean): void =>
+      void dispatch(reset ? setSelectedObject(id) : addSelectedObject(id)),
+    [dispatch],
   );
 
   const handleDeselect = useCallback(
-    () => pushLabeling(doc => setSelectedUpdate(doc, [])),
-    [pushLabeling],
+    (): void => void dispatch(setSelected([])),
+    [dispatch],
+  );
+
+  const handleChange = useCallback(
+    (
+      newValues: LabelingFieldValues,
+      object: LabelingObject,
+      field: LabelingField,
+    ) =>
+      dispatch(
+        setAttribute({
+          objectId: object.id,
+          fieldId: field.id,
+          values: calculateNewValues(
+            field.values,
+            field.fieldSchema.perFrame,
+            newValues,
+            preferences.labelingDirection,
+          ),
+        }),
+      ),
+    [dispatch, preferences.labelingDirection],
   );
 
   const filteredObjects = useMemo(
@@ -96,7 +125,7 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
           acceptPoint(point, e.evt.button === MouseButton.RIGHT, currentFrame);
         }}
       >
-        <VideoView context={context} onClick={handleDeselect} />
+        <VideoView onClick={handleDeselect} />
         {filteredObjects.flatMap(object => {
           const isSelected = selected.some(sel => sel.objectId === object.id);
           return object.fields.map(field => (
@@ -107,21 +136,7 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
               field={field}
               frame={currentFrame}
               onSelect={handleSelect}
-              onChange={newValue => {
-                pushLabeling(doc =>
-                  setAttributeUpdate(
-                    doc,
-                    object.id,
-                    field.id,
-                    calculateNewValues(
-                      field.values,
-                      field.fieldSchema.perFrame,
-                      newValue,
-                      preferences.labelingDirection,
-                    ),
-                  ),
-                );
-              }}
+              onChange={newValues => handleChange(newValues, object, field)}
             />
           ));
         })}
@@ -140,7 +155,3 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
     </Stage>
   );
 }
-
-// export default withResizeDetector(KonvaStage, {
-//   refreshRate: 10000,
-// });

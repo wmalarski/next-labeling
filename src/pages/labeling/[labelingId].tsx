@@ -1,20 +1,12 @@
 import { GetServerSideProps } from "next";
-import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
+import { Provider } from "react-redux";
 import withToken from "../../auth/functions/withToken";
-import Footer from "../../common/components/footer";
-import Header from "../../common/components/header";
-import LoadingBackdrop from "../../common/components/loadingBackdrop";
-import useSnackbar from "../../common/hooks/useSnackbar";
+import store from "../../common/redux/store";
 import { initializeFirebase } from "../../firebase/firebaseClient";
-import LabelingProvider from "../../workspace/components/labelingProvider";
-import LabelingWorkspace from "../../workspace/components/labelingWorkspace";
 import PreferencesProvider from "../../workspace/components/preferences/preferencesProvider";
-import EditorHeader from "../../workspace/components/toolbars/editorHeader";
-import EditorSidebar from "../../workspace/components/toolbars/editorSidebar";
 import ToolProvider from "../../workspace/components/toolbars/toolProvider";
-import useFetchLabeling from "../../workspace/hooks/useFetchLabeling";
-import { useLabelingEditorStyles } from "../../workspace/styles";
+import WorkspacePage from "../../workspace/components/workspacePage";
 
 initializeFirebase();
 
@@ -26,47 +18,17 @@ export default function LabelingEditor(
   props: LabelingEditorProps,
 ): JSX.Element {
   const { documentId } = props;
-  const classes = useLabelingEditorStyles();
-
-  const router = useRouter();
-
-  const { isLoading, document, exist } = useFetchLabeling(documentId);
-
-  useEffect(() => {
-    if (!isLoading && !exist) router.push("/404");
-  }, [exist, isLoading, router]);
-
-  const { showSnackbar } = useSnackbar();
 
   return (
-    <>
+    <Provider store={store}>
       {document && (
         <ToolProvider>
-          <LabelingProvider
-            documentId={documentId}
-            document={document}
-            setSnackbarState={showSnackbar}
-          >
-            <PreferencesProvider>
-              <div className={classes.root}>
-                <Header>
-                  <EditorHeader />
-                </Header>
-                <EditorSidebar />
-                {!isLoading && (
-                  <div className={classes.content}>
-                    <div className={classes.toolbar} />
-                    <LabelingWorkspace documentId={documentId} />
-                  </div>
-                )}
-              </div>
-              <LoadingBackdrop isLoading={isLoading} />
-              <Footer />
-            </PreferencesProvider>
-          </LabelingProvider>
+          <PreferencesProvider>
+            {documentId && <WorkspacePage documentId={documentId} />}
+          </PreferencesProvider>
         </ToolProvider>
       )}
-    </>
+    </Provider>
   );
 }
 

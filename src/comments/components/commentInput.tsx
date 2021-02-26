@@ -8,9 +8,10 @@ import TextField from "@material-ui/core/TextField";
 import firebase from "firebase/app";
 import "firebase/firestore";
 import React, { useCallback, useState } from "react";
+import { useSelector } from "react-redux";
 import useAuth from "../../auth/hooks/useAuth";
 import { AuthUser } from "../../auth/types";
-import useLabelingContext from "../../workspace/hooks/useLabelingContext";
+import { currentDocumentSelector } from "../../workspace/redux/selectors";
 import { LabelingDocument } from "../../workspace/types/client";
 import { ExternalObject } from "../../workspace/types/database";
 import { CommentDocument, CommentSnapshot } from "../types";
@@ -49,7 +50,8 @@ export default function CommentInput(props: CommentInputProps): JSX.Element {
   const { onSave } = props;
 
   const { authUser } = useAuth();
-  const { history } = useLabelingContext();
+  const labelingDoc = useSelector(currentDocumentSelector);
+
   const [message, setMessage] = useState("");
   const [snapType, setSnapType] = useState<SnapshotType>(SnapshotType.NO);
 
@@ -89,7 +91,7 @@ export default function CommentInput(props: CommentInputProps): JSX.Element {
             message,
             authUser,
             false,
-            calculateSnapshot(history.data, snapType),
+            calculateSnapshot(labelingDoc, snapType),
           );
           setMessage("");
         }}
@@ -104,7 +106,7 @@ export default function CommentInput(props: CommentInputProps): JSX.Element {
             message,
             authUser,
             true,
-            calculateSnapshot(history.data, snapType),
+            calculateSnapshot(labelingDoc, snapType),
           );
           setMessage("");
         }}

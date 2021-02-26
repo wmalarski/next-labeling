@@ -18,25 +18,26 @@ import ViewListIcon from "@material-ui/icons/ViewList";
 import clsx from "clsx";
 import React, { useCallback, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { getFirstFrame, getLastFrame } from "../../functions";
-import useLabelingContext from "../../hooks/useLabelingContext";
+import { useSelector } from "react-redux";
+import { useRootDispatch } from "../../../common/redux/store";
 import usePreferences from "../../hooks/usePreferencesContext";
-import useToolContext from "../../hooks/useToolContext";
+import { currentDocumentSelector, schemaSelector } from "../../redux/selectors";
+import {
+  addObjectCopy,
+  addObjectCopyFrame,
+  addObjectMerge,
+  addObjectSplit,
+  deleteBackward,
+  deleteForward,
+  deleteObjects,
+  setObjectFirstFrame,
+  setObjectLastFrame,
+  setObjectsIsDone,
+  setSelected,
+  setSelectedAll,
+  setSelectedNext,
+} from "../../redux/slice";
 import { useEditorSidebarStyles } from "../../styles";
-import { ToolType } from "../../types/client";
-import addObjectCopyFrameUpdate from "../../updates/addObjectCopyFrameUpdate";
-import addObjectCopyUpdate from "../../updates/addObjectCopyUpdate";
-import addObjectMergeUpdate from "../../updates/addObjectMergeUpdate";
-import addObjectSplitUpdate from "../../updates/addObjectSplitUpdate";
-import addObjectUpdate from "../../updates/addObjectUpdate";
-import deleteBackwardUpdate from "../../updates/deleteBackwardUpdate";
-import deleteForwardUpdate from "../../updates/deleteForwardUpdate";
-import deleteObjectsUpdate from "../../updates/deleteObjectsUpdate";
-import setCurrentFrameUpdate from "../../updates/setCurrentFrameUpdate";
-import setObjectsIsDoneUpdate from "../../updates/setObjectsIsDoneUpdate";
-import setSelectedAllUpdate from "../../updates/setSelectedAllUpdate";
-import setSelectedNextUpdate from "../../updates/setSelectedNextUpdate";
-import setSelectedUpdate from "../../updates/setSelectedUpdate";
 import {
   filterIcons,
   isViewVisible,
@@ -48,10 +49,11 @@ import EditorSettingsDialog from "../preferences/editorSettingsDialog";
 export default function EditorSidebar(): JSX.Element {
   const classes = useEditorSidebarStyles();
 
-  const { history, document } = useLabelingContext();
-  const { pushLabeling } = history;
-  const { selected, currentFrame } = history.data;
-  const { setTool } = useToolContext();
+  const dispatch = useRootDispatch();
+  const schema = useSelector(schemaSelector);
+  const currentDoc = useSelector(currentDocumentSelector);
+  const { selected } = currentDoc;
+
   const { preferences, setPreferences } = usePreferences();
   const { shortcuts, frameChangeStep: frameStep, views } = preferences;
 
@@ -62,69 +64,77 @@ export default function EditorSidebar(): JSX.Element {
   const isSelected = selectedObjects.length !== 0;
   const [open, setOpen] = useState(true);
 
-  const setObjectDone = useCallback(
-    () => pushLabeling(data => setObjectsIsDoneUpdate(data)),
-    [pushLabeling],
+  const handleSetObjectDone = useCallback(
+    (): void => void dispatch(setObjectsIsDone()),
+    [dispatch],
   );
 
-  const copyFrames = useCallback(
-    () => pushLabeling(data => addObjectCopyFrameUpdate(data)),
-    [pushLabeling],
+  const handleCopyFrames = useCallback(
+    (): void => void dispatch(addObjectCopyFrame()),
+    [dispatch],
   );
 
-  const deleteObjects = useCallback(
-    () => pushLabeling(data => deleteObjectsUpdate(data)),
-    [pushLabeling],
+  const handleDeleteObjects = useCallback(
+    (): void => void dispatch(deleteObjects()),
+    [dispatch],
   );
 
-  const deleteForward = useCallback(
-    () => pushLabeling(data => deleteForwardUpdate(data)),
-    [pushLabeling],
+  const handleDeleteForward = useCallback(
+    (): void => void dispatch(deleteForward()),
+    [dispatch],
   );
 
-  const deleteBackward = useCallback(
-    () => pushLabeling(data => deleteBackwardUpdate(data)),
-    [pushLabeling],
+  const handleDeleteBackward = useCallback(
+    (): void => void dispatch(deleteBackward()),
+    [dispatch],
   );
 
-  const splitObjects = useCallback(
-    () => pushLabeling(data => addObjectSplitUpdate(data)),
-    [pushLabeling],
+  const handleSplitObjects = useCallback(
+    (): void => void dispatch(addObjectSplit()),
+    [dispatch],
   );
 
-  const mergeObjects = useCallback(
-    () => pushLabeling(data => addObjectMergeUpdate(data)),
-    [pushLabeling],
+  const handleMergeObjects = useCallback(
+    (): void => void dispatch(addObjectMerge()),
+    [dispatch],
   );
 
-  const selectAll = useCallback(
-    () => pushLabeling(data => setSelectedAllUpdate(data)),
-    [pushLabeling],
+  const handleSelectAll = useCallback(
+    (): void => void dispatch(setSelectedAll()),
+    [dispatch],
   );
 
-  const deselect = useCallback(
-    () => pushLabeling(data => setSelectedUpdate(data, [])),
-    [pushLabeling],
+  const handleDeselect = useCallback(
+    (): void => void dispatch(setSelected([])),
+    [dispatch],
   );
 
-  const selectPrevious = useCallback(
-    () => pushLabeling(data => setSelectedNextUpdate(data, -1)),
-    [pushLabeling],
+  const handleSelectPrevious = useCallback(
+    (): void => void dispatch(setSelectedNext(-1)),
+    [dispatch],
   );
 
-  const selectNext = useCallback(
-    () => pushLabeling(data => setSelectedNextUpdate(data, 1)),
-    [pushLabeling],
+  const handleSelectNext = useCallback(
+    (): void => void dispatch(setSelectedNext(1)),
+    [dispatch],
   );
 
-  useHotkeys(shortcuts.SetObjectDone, setObjectDone, [setObjectDone]);
-  useHotkeys(shortcuts.DeleteObject, deleteObjects, [deleteObjects]);
-  useHotkeys(shortcuts.DeleteForward, deleteForward, [deleteForward]);
-  useHotkeys(shortcuts.DeleteBackward, deleteBackward, [deleteBackward]);
-  useHotkeys(shortcuts.SelectAll, selectAll, [selectAll]);
-  useHotkeys(shortcuts.Deselect, deselect, [deselect]);
-  useHotkeys(shortcuts.SelectNext, selectNext, [selectNext]);
-  useHotkeys(shortcuts.SelectPrevious, selectPrevious, [selectPrevious]);
+  useHotkeys(shortcuts.SetObjectDone, handleSetObjectDone, [
+    handleSetObjectDone,
+  ]);
+  useHotkeys(shortcuts.DeleteObject, handleDeleteObjects, [deleteObjects]);
+  useHotkeys(shortcuts.DeleteForward, handleDeleteForward, [
+    handleDeleteForward,
+  ]);
+  useHotkeys(shortcuts.DeleteBackward, handleDeleteBackward, [
+    handleDeleteBackward,
+  ]);
+  useHotkeys(shortcuts.SelectAll, handleSelectAll, [handleSelectAll]);
+  useHotkeys(shortcuts.Deselect, handleDeselect, [handleDeselect]);
+  useHotkeys(shortcuts.SelectNext, handleSelectNext, [handleSelectNext]);
+  useHotkeys(shortcuts.SelectPrevious, handleSelectPrevious, [
+    handleSelectPrevious,
+  ]);
 
   return (
     <Drawer
@@ -143,7 +153,7 @@ export default function EditorSidebar(): JSX.Element {
       <div className={classes.toolbar} />
       <div className={classes.lists}>
         <List>
-          {document.schema.objects
+          {schema.objects
             .filter(object => !object.singleton)
             .map((object, index) => {
               const ToolIcon = filterIcons[index % filterIcons.length];
@@ -151,20 +161,20 @@ export default function EditorSidebar(): JSX.Element {
                 <ListItem
                   key={object.id}
                   button
-                  onClick={() =>
-                    pushLabeling(doc => {
-                      const [newObjectId, state] = addObjectUpdate(
-                        doc,
-                        object,
-                        currentFrame,
-                      );
-                      setTool({
-                        toolType: ToolType.DRAWING_TOOL,
-                        objectId: newObjectId,
-                      });
-                      return state;
-                    })
-                  }
+                  // onClick={() =>
+                  //   dispatch(doc => {
+                  //     const [newObjectId, state] = addObjectUpdate(
+                  //       doc,
+                  //       object,
+                  //       currentFrame,
+                  //     );
+                  //     // setTool({
+                  //     //   toolType: ToolType.DRAWING_TOOL,
+                  //     //   objectId: newObjectId,
+                  //     // });
+                  //     return state;
+                  //   })
+                  // }
                 >
                   <ListItemIcon>
                     <ToolIcon />
@@ -180,10 +190,8 @@ export default function EditorSidebar(): JSX.Element {
           <ListItem
             disabled={!isSelected}
             button
-            onClick={() =>
-              pushLabeling(data =>
-                addObjectCopyUpdate(data, selectedObjectsIds),
-              )
+            onClick={(): void =>
+              void dispatch(addObjectCopy(selectedObjectsIds))
             }
           >
             <ListItemIcon>
@@ -191,37 +199,41 @@ export default function EditorSidebar(): JSX.Element {
             </ListItemIcon>
             <ListItemText primary={"Copy"} />
           </ListItem>
-          <ListItem disabled={!isSelected} button onClick={copyFrames}>
+          <ListItem disabled={!isSelected} button onClick={handleCopyFrames}>
             <ListItemIcon>
               <FileCopyIcon />
             </ListItemIcon>
             <ListItemText primary={"Copy frame"} />
           </ListItem>
-          <ListItem disabled={!isSelected} button onClick={splitObjects}>
+          <ListItem disabled={!isSelected} button onClick={handleSplitObjects}>
             <ListItemIcon>
               <HighlightOffIcon />
             </ListItemIcon>
             <ListItemText primary={"Split"} />
           </ListItem>
-          <ListItem disabled={!isSelected} button onClick={mergeObjects}>
+          <ListItem disabled={!isSelected} button onClick={handleMergeObjects}>
             <ListItemIcon>
               <HighlightOffIcon />
             </ListItemIcon>
             <ListItemText primary={"Merge"} />
           </ListItem>
-          <ListItem disabled={!isSelected} button onClick={deleteObjects}>
+          <ListItem disabled={!isSelected} button onClick={handleDeleteObjects}>
             <ListItemIcon>
               <HighlightOffIcon />
             </ListItemIcon>
             <ListItemText primary={"Delete"} />
           </ListItem>
-          <ListItem disabled={!isSelected} button onClick={deleteBackward}>
+          <ListItem
+            disabled={!isSelected}
+            button
+            onClick={handleDeleteBackward}
+          >
             <ListItemIcon>
               <ArrowBackIcon />
             </ListItemIcon>
             <ListItemText primary={"Delete Backward"} />
           </ListItem>
-          <ListItem disabled={!isSelected} button onClick={deleteForward}>
+          <ListItem disabled={!isSelected} button onClick={handleDeleteForward}>
             <ListItemIcon>
               <ArrowForwardIcon />
             </ListItemIcon>
@@ -231,12 +243,12 @@ export default function EditorSidebar(): JSX.Element {
           <ListItem
             disabled={!isSelected}
             button
-            onClick={() =>
-              pushLabeling(data => {
-                const frame = getFirstFrame(history.data, selectedObjectsIds);
-                if (!frame) return;
-                return setCurrentFrameUpdate(data, frame, frameStep);
-              })
+            onClick={(): void =>
+              void dispatch(
+                setObjectFirstFrame({
+                  propagationStep: frameStep,
+                }),
+              )
             }
           >
             <ListItemIcon>
@@ -247,12 +259,12 @@ export default function EditorSidebar(): JSX.Element {
           <ListItem
             disabled={!isSelected}
             button
-            onClick={() =>
-              pushLabeling(data => {
-                const frame = getLastFrame(history.data, selectedObjectsIds);
-                if (!frame) return;
-                return setCurrentFrameUpdate(data, frame, frameStep);
-              })
+            onClick={(): void =>
+              void dispatch(
+                setObjectLastFrame({
+                  propagationStep: frameStep,
+                }),
+              )
             }
           >
             <ListItemIcon>

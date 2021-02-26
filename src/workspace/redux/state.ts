@@ -1,6 +1,7 @@
 import { OverridableComponent } from "@material-ui/core/OverridableComponent";
 import { SvgIconTypeMap } from "@material-ui/core/SvgIcon";
-import { LabelingDocument } from "../types/client";
+import { LabelingDisplayFilters, LabelingDocument } from "../types/client";
+import { ExternalDocument } from "../types/database";
 
 export const HISTORY_LIMIT = 10;
 
@@ -18,6 +19,9 @@ export interface WorkspaceSnapshotMessage {
 }
 
 export interface WorkspaceState {
+  initial: ExternalDocument;
   history: WorkspaceSnapshot[];
   index: number;
+  duration: number;
+  filters: LabelingDisplayFilters;
 }

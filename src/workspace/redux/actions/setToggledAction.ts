@@ -7,15 +7,20 @@ import { WorkspaceState } from "../state";
 
 export default function setToggledAction(
   state: WorkspaceState,
-  action: PayloadAction<string[]>,
+  action: PayloadAction<string>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
-  const { payload: toggled } = action;
+  const { toggled } = data;
+  const { payload: id } = action;
+
+  const newToggled = toggled.includes(id)
+    ? toggled.filter(t => t !== id)
+    : [...toggled, id];
 
   return addSnapshot(state, {
     id: uuidv4(),
     message: "Selection changed",
     icon: SelectAllIcon,
-    data: { ...data, toggled },
+    data: { ...data, toggled: newToggled },
   });
 }

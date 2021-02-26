@@ -6,30 +6,32 @@ import SaveIcon from "@material-ui/icons/Save";
 import { useRouter } from "next/router";
 import React from "react";
 import { useHotkeys } from "react-hotkeys-hook";
+import { useSelector } from "react-redux";
 import useLabelingAutoSave from "../../hooks/useLabelingAutoSave";
 import useLabelingContext from "../../hooks/useLabelingContext";
 import usePreferences from "../../hooks/usePreferencesContext";
+import {
+  currentDocumentSelector,
+  initialDocumentSelector,
+} from "../../redux/selectors";
 import { ExternalDocument } from "../../types/database";
 import UndoRedoButtons from "./undoRedoButtons";
 
 export default function EditorHeader(): JSX.Element {
   const router = useRouter();
 
-  const {
-    document,
-    saveLabeling,
-    removeLabeling,
-    history,
-  } = useLabelingContext();
-  const { data } = history;
+  const { saveLabeling, removeLabeling } = useLabelingContext();
+  const initialDoc = useSelector(initialDocumentSelector);
+  const currentDoc = useSelector(currentDocumentSelector);
+
   const { preferences } = usePreferences();
   const { shortcuts } = preferences;
 
   const saveCallback = () =>
     saveLabeling(
       ExternalDocument.encode({
-        ...document,
-        objects: data.objects,
+        ...initialDoc,
+        objects: currentDoc.objects,
       }),
     );
 
@@ -44,7 +46,7 @@ export default function EditorHeader(): JSX.Element {
       </Button>
       <Button
         startIcon={<DeleteOutlineIcon />}
-        onClick={() => removeLabeling(document)}
+        onClick={() => removeLabeling(initialDoc)}
       >
         Remove
       </Button>

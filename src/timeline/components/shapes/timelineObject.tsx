@@ -1,8 +1,16 @@
 import { useTheme } from "@material-ui/core";
-import React from "react";
+import React, { useCallback } from "react";
 import { Rect } from "react-konva";
+import { useRootDispatch } from "../../../common/redux/store";
 import { getEventRelativePosition } from "../../../visualization/functions";
 import { Point2D } from "../../../visualization/types";
+import { frameToRange } from "../../../workspace/functions";
+import usePreferences from "../../../workspace/hooks/usePreferencesContext";
+import {
+  deselectObject,
+  selectObject,
+  setCurrentFrame,
+} from "../../../workspace/redux/slice";
 import { LabelingObject } from "../../../workspace/types/client";
 import { TimelineObjectConfig } from "../../types";
 import TimelineField from "./timelineField";
@@ -12,9 +20,6 @@ export interface TimelineObjectProps extends TimelineObjectConfig {
   duration: number;
   rowHeight: number;
   selectedNodes: string[];
-  onSelect: (object: LabelingObject, reset: boolean, field?: string) => void;
-  onDeselect: (object: LabelingObject, reset: boolean, field?: string) => void;
-  onFrameSelected: (index: number) => void;
   onTooltipEnter: (point: Point2D, text: string) => void;
   onTooltipLeave: () => void;
 }
@@ -30,13 +35,38 @@ export default function TimelineObject(
     objectBlocks,
     fieldBlocks,
     selectedNodes,
-    onSelect,
-    onDeselect,
-    onFrameSelected,
     onTooltipEnter,
     onTooltipLeave,
   } = props;
   const isSelected = selectedNodes.includes(object.id);
+
+  const dispatch = useRootDispatch();
+
+  const { preferences } = usePreferences();
+  const { frameChangeStep: frameStep } = preferences;
+
+  const handleSelect = useCallback(
+    (object: LabelingObject, reset: boolean, fieldId?: string): void =>
+      void dispatch(selectObject({ object, reset, fieldId })),
+    [dispatch],
+  );
+
+  const handleDeselect = useCallback(
+    (object: LabelingObject, reset: boolean, fieldId?: string): void =>
+      void dispatch(deselectObject({ objectId: object.id, reset, fieldId })),
+    [dispatch],
+  );
+
+  const handleFrameSelected = useCallback(
+    (index: number): void =>
+      void dispatch(
+        setCurrentFrame({
+          nextFrame: frameToRange(Number(index), duration),
+          propagationStep: frameStep,
+        }),
+      ),
+    [duration, frameStep, dispatch],
+  );
 
   const theme = useTheme();
   const selectionColor = theme.palette.primary.light;
@@ -52,12 +82,12 @@ export default function TimelineObject(
         onClick={event => {
           if (event.evt.altKey) {
             const position = getEventRelativePosition(event);
-            if (position) onFrameSelected(position.x);
+            if (position) handleFrameSelected(position.x);
             return;
           }
           const isReset = !event.evt.ctrlKey;
-          if (!isSelected) onSelect(object, isReset);
-          else onDeselect(object, isReset);
+          if (!isSelected) handleSelect(object, isReset);
+          else handleDeselect(object, isReset);
         }}
       >
         {objectBlocks.map(block => (
@@ -80,9 +110,9 @@ export default function TimelineObject(
           rowHeight={rowHeight}
           object={object}
           selectedNodes={selectedNodes}
-          onSelect={onSelect}
-          onDeselect={onDeselect}
-          onFrameSelected={onFrameSelected}
+          onSelect={handleSelect}
+          onDeselect={handleDeselect}
+          onFrameSelected={handleFrameSelected}
           onTooltipEnter={onTooltipEnter}
           onTooltipLeave={onTooltipLeave}
         />

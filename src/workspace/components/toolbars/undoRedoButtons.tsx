@@ -14,23 +14,34 @@ import RedoIcon from "@material-ui/icons/Redo";
 import UndoIcon from "@material-ui/icons/Undo";
 import React, { useCallback, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import useLabelingContext from "../../hooks/useLabelingContext";
+import { useSelector } from "react-redux";
+import { useRootDispatch } from "../../../common/redux/store";
 import usePreferences from "../../hooks/usePreferencesContext";
+import {
+  currentSnapshotSelector,
+  messagesSelector,
+  redoMessageSelector,
+  undoMessageSelector,
+} from "../../redux/selectors";
+import { redoLabeling, setSnapshotId, undoLabeling } from "../../redux/slice";
 
 export default function UndoRedoButtons(): JSX.Element {
+  const dispatch = useRootDispatch();
+  const { id: currentId, message } = useSelector(currentSnapshotSelector);
+  const undoMessage = useSelector(undoMessageSelector);
+  const redoMessage = useSelector(redoMessageSelector);
+  const messages = useSelector(messagesSelector);
+  const handleUndoLabeling = useCallback(
+    (): void => void dispatch(undoLabeling()),
+    [dispatch],
+  );
+  const handleRedoLabeling = useCallback(
+    (): void => void dispatch(redoLabeling()),
+    [dispatch],
+  );
+
   const { preferences } = usePreferences();
   const { shortcuts } = preferences;
-  const { history } = useLabelingContext();
-  const {
-    undoLabeling,
-    redoLabeling,
-    setLabelingId,
-    message,
-    undoMessage,
-    redoMessage,
-    messages,
-    currentId,
-  } = history;
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);
@@ -38,8 +49,8 @@ export default function UndoRedoButtons(): JSX.Element {
   const handleToggle = useCallback(() => setOpen(prevState => !prevState), []);
   const handleClose = useCallback(() => setOpen(false), []);
 
-  useHotkeys(shortcuts.Undo, undoLabeling, [undoLabeling]);
-  useHotkeys(shortcuts.Redo, redoLabeling, [redoLabeling]);
+  useHotkeys(shortcuts.Undo, handleUndoLabeling, [handleUndoLabeling]);
+  useHotkeys(shortcuts.Redo, handleRedoLabeling, [handleRedoLabeling]);
 
   const styleArgs: Partial<ButtonProps> = {
     size: "small",
@@ -54,7 +65,7 @@ export default function UndoRedoButtons(): JSX.Element {
           <Button
             {...styleArgs}
             startIcon={<UndoIcon />}
-            onClick={undoLabeling}
+            onClick={handleUndoLabeling}
           >
             Undo
           </Button>
@@ -69,7 +80,7 @@ export default function UndoRedoButtons(): JSX.Element {
           <Button
             {...styleArgs}
             startIcon={<RedoIcon />}
-            onClick={redoLabeling}
+            onClick={handleRedoLabeling}
           >
             Redo
           </Button>
@@ -114,7 +125,7 @@ export default function UndoRedoButtons(): JSX.Element {
                       <MenuItem
                         key={messagePair.id}
                         selected={messagePair.id === currentId}
-                        onClick={() => setLabelingId(messagePair.id)}
+                        onClick={() => dispatch(setSnapshotId(messagePair.id))}
                       >
                         <ListItemIcon>
                           <ActionIcon />
