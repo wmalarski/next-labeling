@@ -1,12 +1,13 @@
 import TextField from "@material-ui/core/TextField";
 import React from "react";
-import usePreferences from "../../workspace/hooks/usePreferencesContext";
+import { useSelector } from "react-redux";
+import { labelingDirectionSelector } from "../../workspace/redux/selectors";
 import { calculateNewValues, getFieldValues } from "../functions";
 import { FieldEditorProps, FieldType } from "../types";
 
 export default function NumericEditor(props: FieldEditorProps): JSX.Element {
   const { disabled, name, perFrame, frame, attributes, onChange } = props;
-  const { preferences } = usePreferences();
+  const labelingDirection = useSelector(labelingDirectionSelector);
   const config = attributes.Numeric;
 
   const frameValues = getFieldValues(props)?.Numeric;
@@ -40,7 +41,7 @@ export default function NumericEditor(props: FieldEditorProps): JSX.Element {
                 },
               ],
             },
-            preferences.labelingDirection,
+            labelingDirection,
           ),
         );
       }}

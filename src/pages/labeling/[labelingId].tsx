@@ -4,8 +4,6 @@ import { Provider } from "react-redux";
 import withToken from "../../auth/functions/withToken";
 import store from "../../common/redux/store";
 import { initializeFirebase } from "../../firebase/firebaseClient";
-import PreferencesProvider from "../../workspace/components/preferences/preferencesProvider";
-import ToolProvider from "../../workspace/components/toolbars/toolProvider";
 import WorkspacePage from "../../workspace/components/workspacePage";
 
 initializeFirebase();
@@ -21,13 +19,7 @@ export default function LabelingEditor(
 
   return (
     <Provider store={store}>
-      {document && (
-        <ToolProvider>
-          <PreferencesProvider>
-            {documentId && <WorkspacePage documentId={documentId} />}
-          </PreferencesProvider>
-        </ToolProvider>
-      )}
+      {document && documentId && <WorkspacePage documentId={documentId} />}
     </Provider>
   );
 }

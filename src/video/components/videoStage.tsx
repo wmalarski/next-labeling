@@ -6,14 +6,13 @@ import { calculateNewValues } from "../../editors/functions";
 import { LabelingFieldValues } from "../../editors/types";
 import { getEventRelativePosition } from "../../visualization/functions";
 import { UseZoomResult } from "../../visualization/hooks/useZoom";
-import { MouseButton } from "../../visualization/types";
 import { inFrameFilter, labelingFilter } from "../../workspace/functions";
 import useDrawingTool from "../../workspace/hooks/useDrawingTool";
-import usePreferences from "../../workspace/hooks/usePreferencesContext";
-import useToolContext from "../../workspace/hooks/useToolContext";
 import {
   currentDocumentSelector,
   filtersSelector,
+  labelingDirectionSelector,
+  toolTypeSelector,
 } from "../../workspace/redux/selectors";
 import {
   addSelectedObject,
@@ -26,10 +25,7 @@ import {
   LabelingObject,
   ToolType,
 } from "../../workspace/types/client";
-import {
-  FinishedObject,
-  InProgressObject,
-} from "./objects/visualizationObject";
+import { FinishedObject } from "./objects/visualizationObject";
 import VideoView from "./videoView";
 
 export interface VideoStageProps {
@@ -45,18 +41,17 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
   const dispatch = useRootDispatch();
   const filters = useSelector(filtersSelector);
   const data = useSelector(currentDocumentSelector);
-  const { currentFrame, selected, objects } = data;
+  const toolType = useSelector(toolTypeSelector);
+  const labelingDirection = useSelector(labelingDirectionSelector);
 
-  const { toolType } = useToolContext();
+  const { currentFrame, selected, objects } = data;
   const zoomAndPaneSelected = toolType === ToolType.ZOOM_AND_PANE;
 
-  const { preferences } = usePreferences();
-
   const drawingTool = useDrawingTool();
-  const { acceptPoint, pushPoint, builderState } = drawingTool.builderResult;
-  const drawingSchema = drawingTool.field?.fieldSchema;
-  const drawingStage = builderState.currentValue?.stage;
-  const drawingValue = builderState.currentValue?.value;
+  // const { acceptPoint, pushPoint, builderState } = drawingTool.builderResult;
+  // const drawingSchema = drawingTool.field?.fieldSchema;
+  // const drawingStage = builderState.currentValue?.stage;
+  // const drawingValue = builderState.currentValue?.value;
 
   const handleSelect = useCallback(
     (id: string, reset: boolean): void =>
@@ -83,11 +78,11 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
             field.values,
             field.fieldSchema.perFrame,
             newValues,
-            preferences.labelingDirection,
+            labelingDirection,
           ),
         }),
       ),
-    [dispatch, preferences.labelingDirection],
+    [dispatch, labelingDirection],
   );
 
   const filteredObjects = useMemo(
@@ -117,12 +112,12 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
         onMouseMove={e => {
           const point = getEventRelativePosition(e);
           if (!point) return;
-          pushPoint(point, currentFrame);
+          // pushPoint(point, currentFrame);
         }}
         onClick={e => {
           const point = getEventRelativePosition(e);
           if (!point) return;
-          acceptPoint(point, e.evt.button === MouseButton.RIGHT, currentFrame);
+          // acceptPoint(point, e.evt.button === MouseButton.RIGHT, currentFrame);
         }}
       >
         <VideoView onClick={handleDeselect} />
@@ -140,7 +135,7 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
             />
           ));
         })}
-        {drawingSchema &&
+        {/* {drawingSchema &&
           drawingTool.object &&
           drawingStage &&
           drawingValue && (
@@ -150,7 +145,7 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
               stage={drawingStage}
               value={drawingValue}
             />
-          )}
+          )} */}
       </Layer>
     </Stage>
   );

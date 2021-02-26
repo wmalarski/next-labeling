@@ -9,10 +9,10 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
 import useLabelingAutoSave from "../../hooks/useLabelingAutoSave";
 import useLabelingContext from "../../hooks/useLabelingContext";
-import usePreferences from "../../hooks/usePreferencesContext";
 import {
   currentDocumentSelector,
   initialDocumentSelector,
+  shortcutsSelector,
 } from "../../redux/selectors";
 import { ExternalDocument } from "../../types/database";
 import UndoRedoButtons from "./undoRedoButtons";
@@ -23,9 +23,7 @@ export default function EditorHeader(): JSX.Element {
   const { saveLabeling, removeLabeling } = useLabelingContext();
   const initialDoc = useSelector(initialDocumentSelector);
   const currentDoc = useSelector(currentDocumentSelector);
-
-  const { preferences } = usePreferences();
-  const { shortcuts } = preferences;
+  const shortcuts = useSelector(shortcutsSelector);
 
   const saveCallback = () =>
     saveLabeling(

@@ -1,9 +1,17 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../../common/redux/store";
 import { Schema } from "../../schema/types";
-import { LabelingDisplayFilters, LabelingDocument } from "../types/client";
-import { ExternalDocument } from "../types/database";
+import { ShortcutActions } from "../shortcuts";
 import {
+  LabelingDisplayFilters,
+  LabelingDocument,
+  ToolType,
+} from "../types/client";
+import { ExternalDocument } from "../types/database";
+import { LabelingViews } from "../views";
+import {
+  LabelingDirection,
+  PreferencesState,
   WorkspaceSnapshot,
   WorkspaceSnapshotMessage,
   WorkspaceState,
@@ -65,4 +73,44 @@ export const durationSelector = createSelector(
 export const filtersSelector = createSelector(
   workspaceSelector,
   (state): LabelingDisplayFilters => state.filters,
+);
+
+export const drawingToolSelector = createSelector(
+  workspaceSelector,
+  (state): string | null => state.drawingTool,
+);
+
+export const toolTypeSelector = createSelector(
+  workspaceSelector,
+  (state): ToolType => state.toolType,
+);
+
+export const preferencesSelector = createSelector(
+  workspaceSelector,
+  (state): PreferencesState => state.preferences,
+);
+
+export const labelingDirectionSelector = createSelector(
+  preferencesSelector,
+  (state): LabelingDirection => state.labelingDirection,
+);
+
+export const frameStepSelector = createSelector(
+  preferencesSelector,
+  (state): number => state.frameChangeStep,
+);
+
+export const shortcutsSelector = createSelector(
+  preferencesSelector,
+  (state): ShortcutActions => state.shortcuts,
+);
+
+export const autoSaveDelayMinutesSelector = createSelector(
+  preferencesSelector,
+  (state): number | null => state.autoSaveDelayMinutes,
+);
+
+export const labelingViewsSelector = createSelector(
+  preferencesSelector,
+  (state): LabelingViews => state.views,
 );

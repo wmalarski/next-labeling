@@ -17,16 +17,26 @@ import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup/ToggleButtonGr
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import NumberInput from "../../../common/components/numberInput";
-import { LabelingDirection } from "../../contexts/preferencesContext";
+import { useRootDispatch } from "../../../common/redux/store";
 import useLabelingContext from "../../hooks/useLabelingContext";
-import usePreferences from "../../hooks/usePreferencesContext";
-import { initialDocumentSelector } from "../../redux/selectors";
+import {
+  autoSaveDelayMinutesSelector,
+  frameStepSelector,
+  initialDocumentSelector,
+  labelingDirectionSelector,
+} from "../../redux/selectors";
+import { setPreferences } from "../../redux/slice";
+import { LabelingDirection } from "../../redux/state";
 import ShortcutsSettingsTreeView from "./shortcutsSettingsTreeView";
 
 export default function EditorSettingsDialog(): JSX.Element {
   const { saveLabeling } = useLabelingContext();
+
+  const dispatch = useRootDispatch();
   const initialDoc = useSelector(initialDocumentSelector);
-  const { preferences, setPreferences } = usePreferences();
+  const labelingDirection = useSelector(labelingDirectionSelector);
+  const frameStep = useSelector(frameStepSelector);
+  const delayMinutes = useSelector(autoSaveDelayMinutesSelector);
 
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => setOpen(true);
@@ -101,10 +111,10 @@ export default function EditorSettingsDialog(): JSX.Element {
             </Grid>
             <Grid item xs={6}>
               <ToggleButtonGroup
-                value={preferences.labelingDirection}
+                value={labelingDirection}
                 exclusive
                 onChange={(_event, value) =>
-                  setPreferences({ ...preferences, labelingDirection: value })
+                  dispatch(setPreferences({ labelingDirection: value }))
                 }
                 aria-label="text alignment"
               >
@@ -129,10 +139,8 @@ export default function EditorSettingsDialog(): JSX.Element {
               <NumberInput
                 max={16}
                 min={1}
-                value={preferences.frameChangeStep}
-                onChange={value =>
-                  setPreferences({ ...preferences, frameChangeStep: value })
-                }
+                value={frameStep}
+                onChange={value => setPreferences({ frameChangeStep: value })}
               />
             </Grid>
             <Grid item xs={4}>
@@ -142,13 +150,10 @@ export default function EditorSettingsDialog(): JSX.Element {
               <FormControlLabel
                 control={
                   <Checkbox
-                    checked={!!preferences.autoSaveDelayMinutes}
+                    checked={!!delayMinutes}
                     onChange={() =>
                       setPreferences({
-                        ...preferences,
-                        autoSaveDelayMinutes: preferences.autoSaveDelayMinutes
-                          ? null
-                          : 5,
+                        autoSaveDelayMinutes: delayMinutes ? null : 5,
                       })
                     }
                     name="checkedA"
@@ -159,13 +164,10 @@ export default function EditorSettingsDialog(): JSX.Element {
               <NumberInput
                 max={16}
                 min={1}
-                disabled={!preferences.autoSaveDelayMinutes}
-                value={preferences.autoSaveDelayMinutes ?? 5}
+                disabled={!delayMinutes}
+                value={delayMinutes ?? 5}
                 onChange={value =>
-                  setPreferences({
-                    ...preferences,
-                    autoSaveDelayMinutes: value,
-                  })
+                  setPreferences({ autoSaveDelayMinutes: value })
                 }
               />
             </Grid>

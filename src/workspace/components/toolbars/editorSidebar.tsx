@@ -20,8 +20,13 @@ import React, { useCallback, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../../common/redux/store";
-import usePreferences from "../../hooks/usePreferencesContext";
-import { currentDocumentSelector, schemaSelector } from "../../redux/selectors";
+import {
+  currentDocumentSelector,
+  frameStepSelector,
+  labelingViewsSelector,
+  schemaSelector,
+  shortcutsSelector,
+} from "../../redux/selectors";
 import {
   addObjectCopy,
   addObjectCopyFrame,
@@ -36,14 +41,10 @@ import {
   setSelected,
   setSelectedAll,
   setSelectedNext,
+  toggleWorkspaceView,
 } from "../../redux/slice";
 import { useEditorSidebarStyles } from "../../styles";
-import {
-  filterIcons,
-  isViewVisible,
-  LabelingView,
-  toggleView,
-} from "../../views";
+import { filterIcons, isViewVisible, LabelingView } from "../../views";
 import EditorSettingsDialog from "../preferences/editorSettingsDialog";
 
 export default function EditorSidebar(): JSX.Element {
@@ -52,10 +53,10 @@ export default function EditorSidebar(): JSX.Element {
   const dispatch = useRootDispatch();
   const schema = useSelector(schemaSelector);
   const currentDoc = useSelector(currentDocumentSelector);
+  const views = useSelector(labelingViewsSelector);
+  const shortcuts = useSelector(shortcutsSelector);
+  const frameStep = useSelector(frameStepSelector);
   const { selected } = currentDoc;
-
-  const { preferences, setPreferences } = usePreferences();
-  const { shortcuts, frameChangeStep: frameStep, views } = preferences;
 
   const selectedObjects = selected.filter(
     object => !object.singleton && object.objectSelected,
@@ -278,12 +279,7 @@ export default function EditorSidebar(): JSX.Element {
           <ListItem
             button
             selected={isViewVisible(views, LabelingView.TIMELINE)}
-            onClick={() =>
-              setPreferences({
-                ...preferences,
-                views: toggleView(views, LabelingView.TIMELINE),
-              })
-            }
+            onClick={() => dispatch(toggleWorkspaceView(LabelingView.TIMELINE))}
           >
             <ListItemIcon>
               <AccountTreeIcon />
@@ -294,10 +290,7 @@ export default function EditorSidebar(): JSX.Element {
             button
             selected={isViewVisible(views, LabelingView.PROPERTIES)}
             onClick={() =>
-              setPreferences({
-                ...preferences,
-                views: toggleView(views, LabelingView.PROPERTIES),
-              })
+              dispatch(toggleWorkspaceView(LabelingView.PROPERTIES))
             }
           >
             <ListItemIcon>
@@ -308,12 +301,7 @@ export default function EditorSidebar(): JSX.Element {
           <ListItem
             button
             selected={isViewVisible(views, LabelingView.COMMENTS)}
-            onClick={() =>
-              setPreferences({
-                ...preferences,
-                views: toggleView(views, LabelingView.COMMENTS),
-              })
-            }
+            onClick={() => dispatch(toggleWorkspaceView(LabelingView.COMMENTS))}
           >
             <ListItemIcon>
               <ChatIcon />

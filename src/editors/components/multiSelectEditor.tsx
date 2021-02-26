@@ -4,7 +4,8 @@ import { GridSize } from "@material-ui/core/Grid/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import ToggleButton from "@material-ui/lab/ToggleButton/ToggleButton";
 import React from "react";
-import usePreferences from "../../workspace/hooks/usePreferencesContext";
+import { useSelector } from "react-redux";
+import { labelingDirectionSelector } from "../../workspace/redux/selectors";
 import { calculateNewValues, getFieldValues } from "../functions";
 import { FieldEditorProps, FieldType } from "../types";
 
@@ -12,7 +13,7 @@ export default function MultiSelectEditor(
   props: FieldEditorProps,
 ): JSX.Element {
   const { disabled, frame, perFrame, attributes, name, onChange } = props;
-  const { preferences } = usePreferences();
+  const labelingDirection = useSelector(labelingDirectionSelector);
   const config = attributes.MultiSelect;
 
   const frameValues = getFieldValues(props)?.MultiSelect;
@@ -51,7 +52,7 @@ export default function MultiSelectEditor(
                           },
                         ],
                       },
-                      preferences.labelingDirection,
+                      labelingDirection,
                     );
                   }
                   const newSelected = [...selected];
@@ -67,7 +68,7 @@ export default function MultiSelectEditor(
                         },
                       ],
                     },
-                    preferences.labelingDirection,
+                    labelingDirection,
                   );
                 })
               }

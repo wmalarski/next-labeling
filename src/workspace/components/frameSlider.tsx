@@ -12,19 +12,23 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../common/redux/store";
 import { frameToRange } from "../functions";
-import usePreferences from "../hooks/usePreferencesContext";
-import { currentFrameSelector, durationSelector } from "../redux/selectors";
+import {
+  currentFrameSelector,
+  durationSelector,
+  frameStepSelector,
+  shortcutsSelector,
+} from "../redux/selectors";
 import { moveCurrentFrame, setCurrentFrame } from "../redux/slice";
 import { useFrameSliderStyles } from "../styles";
 
 export default function FrameSlider(): JSX.Element {
   const classes = useFrameSliderStyles();
-  const { preferences } = usePreferences();
-  const { frameChangeStep: frameStep, shortcuts } = preferences;
 
   const dispatch = useRootDispatch();
   const duration = useSelector(durationSelector);
   const currentFrame = useSelector(currentFrameSelector);
+  const frameStep = useSelector(frameStepSelector);
+  const shortcuts = useSelector(shortcutsSelector);
 
   const moveBy = useCallback(
     (value: number): void =>

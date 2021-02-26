@@ -16,11 +16,11 @@ import React, { useCallback, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../../common/redux/store";
-import usePreferences from "../../hooks/usePreferencesContext";
 import {
   currentSnapshotSelector,
   messagesSelector,
   redoMessageSelector,
+  shortcutsSelector,
   undoMessageSelector,
 } from "../../redux/selectors";
 import { redoLabeling, setSnapshotId, undoLabeling } from "../../redux/slice";
@@ -31,6 +31,8 @@ export default function UndoRedoButtons(): JSX.Element {
   const undoMessage = useSelector(undoMessageSelector);
   const redoMessage = useSelector(redoMessageSelector);
   const messages = useSelector(messagesSelector);
+  const shortcuts = useSelector(shortcutsSelector);
+
   const handleUndoLabeling = useCallback(
     (): void => void dispatch(undoLabeling()),
     [dispatch],
@@ -39,9 +41,6 @@ export default function UndoRedoButtons(): JSX.Element {
     (): void => void dispatch(redoLabeling()),
     [dispatch],
   );
-
-  const { preferences } = usePreferences();
-  const { shortcuts } = preferences;
 
   const [open, setOpen] = useState(false);
   const anchorRef = useRef<HTMLButtonElement>(null);

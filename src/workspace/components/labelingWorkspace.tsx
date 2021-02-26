@@ -4,8 +4,12 @@ import RGL, { WidthProvider } from "react-grid-layout";
 import { useSelector } from "react-redux";
 import "../../../node_modules/react-grid-layout/css/styles.css";
 import "../../../node_modules/react-resizable/css/styles.css";
-import usePreferences from "../hooks/usePreferencesContext";
-import { initialDocumentSelector } from "../redux/selectors";
+import { useRootDispatch } from "../../common/redux/store";
+import {
+  initialDocumentSelector,
+  labelingViewsSelector,
+} from "../redux/selectors";
+import { setPreferences } from "../redux/slice";
 import { updateViews } from "../views";
 import LabelingViewItem from "./labelingViewItem";
 
@@ -19,9 +23,10 @@ export default function LabelingWorkspace(
   props: LabelingWorkspaceProps,
 ): JSX.Element {
   const { documentId } = props;
+
+  const dispatch = useRootDispatch();
   const doc = useSelector(initialDocumentSelector);
-  const { preferences, setPreferences } = usePreferences();
-  const { views } = preferences;
+  const views = useSelector(labelingViewsSelector);
 
   return (
     <div>
@@ -35,10 +40,11 @@ export default function LabelingWorkspace(
         cols={12}
         rowHeight={100}
         onLayoutChange={layout =>
-          setPreferences({
-            ...preferences,
-            views: updateViews(views, layout),
-          })
+          dispatch(
+            setPreferences({
+              views: updateViews(views, layout),
+            }),
+          )
         }
       >
         {views.map(view => (

@@ -83,7 +83,11 @@ export default function addObjectMergeAction(
   }));
 
   const newObject = {
-    ...createObject(objectsToMerge[0].objectSchema, currentFrame),
+    ...createObject({
+      objectSchema: objectsToMerge[0].objectSchema,
+      currentFrame,
+      defaultFields: [],
+    }),
     frames,
     fields,
   };

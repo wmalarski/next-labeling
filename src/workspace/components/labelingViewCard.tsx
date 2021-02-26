@@ -8,9 +8,9 @@ import React from "react";
 import GridLayout from "react-grid-layout";
 import "../../../node_modules/react-grid-layout/css/styles.css";
 import "../../../node_modules/react-resizable/css/styles.css";
-import usePreferences from "../hooks/usePreferencesContext";
+import { useRootDispatch } from "../../common/redux/store";
+import { toggleWorkspaceView, updateWorkspaceView } from "../redux/slice";
 import { useLabelingViewCardStyles } from "../styles";
-import { toggleView, updateView } from "../views";
 
 export interface LabelingViewCardProps {
   view: GridLayout.Layout;
@@ -38,7 +38,7 @@ export default function LabelingViewCard(
   } = props;
   const { i: key, static: isStatic } = view;
 
-  const { setViews } = usePreferences();
+  const dispatch = useRootDispatch();
 
   return (
     <Card elevation={3} className={classes.card}>
@@ -49,7 +49,9 @@ export default function LabelingViewCard(
             <IconButton
               aria-label="pin"
               onClick={() =>
-                setViews(views => updateView(views, key, { static: !isStatic }))
+                dispatch(
+                  updateWorkspaceView({ key, options: { static: !isStatic } }),
+                )
               }
             >
               <DragIndicatorIcon color={isStatic ? "disabled" : "primary"} />
@@ -57,7 +59,7 @@ export default function LabelingViewCard(
             {isClosable && (
               <IconButton
                 aria-label="close"
-                onClick={() => setViews(views => toggleView(views, key))}
+                onClick={() => dispatch(toggleWorkspaceView(key))}
               >
                 <CloseIcon />
               </IconButton>

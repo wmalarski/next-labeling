@@ -7,11 +7,15 @@ import ReplayIcon from "@material-ui/icons/Replay";
 import TreeItem from "@material-ui/lab/TreeItem";
 import TreeView from "@material-ui/lab/TreeView";
 import React from "react";
-import usePreferences from "../../hooks/usePreferencesContext";
+import { useSelector } from "react-redux";
+import { useRootDispatch } from "../../../common/redux/store";
+import { shortcutsSelector } from "../../redux/selectors";
+import { setShortcut } from "../../redux/slice";
 import { shortcutCategories } from "../../shortcuts";
 
 export default function ShortcutsSettingsTreeView(): JSX.Element {
-  const { preferences, setPreferences } = usePreferences();
+  const dispatch = useRootDispatch();
+  const shortcuts = useSelector(shortcutsSelector);
 
   return (
     <TreeView
@@ -42,29 +46,22 @@ export default function ShortcutsSettingsTreeView(): JSX.Element {
                       onChange={event => {
                         event.stopPropagation();
                         const value = event.target.value;
-                        setPreferences({
-                          ...preferences,
-                          shortcuts: {
-                            ...preferences.shortcuts,
-                            [action.action]: value,
-                          },
-                        });
+                        dispatch(
+                          setShortcut({ action: action.action, key: value }),
+                        );
                       }}
-                      value={
-                        preferences.shortcuts[action.action] ?? action.default
-                      }
+                      value={shortcuts[action.action] ?? action.default}
                     />
                   </Grid>
                   <Grid item xs={1}>
                     <IconButton
                       onClick={() =>
-                        setPreferences({
-                          ...preferences,
-                          shortcuts: {
-                            ...preferences.shortcuts,
-                            [action.action]: action.default,
-                          },
-                        })
+                        dispatch(
+                          setShortcut({
+                            action: action.action,
+                            key: action.default,
+                          }),
+                        )
                       }
                       aria-label="reset-shortcut"
                     >

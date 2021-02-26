@@ -40,7 +40,13 @@ export default function CreateLabelingDialog(
     schemaId: schemaId,
     objects: schema.schema.objects
       .filter(object => object.singleton)
-      .map(object => createObject(object, 0)),
+      .map(object =>
+        createObject({
+          objectSchema: object,
+          currentFrame: 0,
+          defaultFields: [],
+        }),
+      ),
   });
 
   const [open, setOpen] = useState(false);

@@ -25,7 +25,11 @@ export default function addObjectCopyFrameAction(
       ...data,
       objects: data.objects.flatMap(object => {
         if (!ids.includes(object.id)) return [object];
-        const newObject = createObject(object.objectSchema, currentFrame);
+        const newObject = createObject({
+          objectSchema: object.objectSchema,
+          currentFrame,
+          defaultFields: [],
+        });
         return [
           object,
           {

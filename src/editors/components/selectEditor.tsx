@@ -4,13 +4,14 @@ import { GridSize } from "@material-ui/core/Grid/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import React from "react";
-import usePreferences from "../../workspace/hooks/usePreferencesContext";
+import { useSelector } from "react-redux";
+import { labelingDirectionSelector } from "../../workspace/redux/selectors";
 import { calculateNewValues, getFieldValues } from "../functions";
 import { FieldEditorProps, FieldType } from "../types";
 
 export default function SelectEditor(props: FieldEditorProps): JSX.Element {
   const { disabled, frame, perFrame, attributes, name, onChange } = props;
-  const { preferences } = usePreferences();
+  const labelingDirection = useSelector(labelingDirectionSelector);
   const config = attributes.Select;
 
   const frameValues = getFieldValues(props)?.Select;
@@ -47,7 +48,7 @@ export default function SelectEditor(props: FieldEditorProps): JSX.Element {
                         },
                       ],
                     },
-                    preferences.labelingDirection,
+                    labelingDirection,
                   ),
                 )
               }
