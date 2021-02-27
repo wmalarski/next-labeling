@@ -43,6 +43,11 @@ export enum ToolType {
   DRAWING_TOOL,
 }
 
+export interface DrawingTool {
+  fieldSchema: FieldSchema;
+  objectSchema: ObjectSchema;
+}
+
 export interface LabelingDisplayFilters {
   objectSchemaIds: string[];
   name?: string | null;

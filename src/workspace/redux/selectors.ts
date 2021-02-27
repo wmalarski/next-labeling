@@ -1,8 +1,11 @@
 import { createSelector } from "@reduxjs/toolkit";
+import compact from "lodash/compact";
+import head from "lodash/head";
 import { RootState } from "../../common/redux/store";
 import { Schema } from "../../schema/types";
 import { ShortcutActions } from "../shortcuts";
 import {
+  DrawingTool,
   LabelingDisplayFilters,
   LabelingDocument,
   ToolType,
@@ -77,7 +80,17 @@ export const filtersSelector = createSelector(
 
 export const drawingToolSelector = createSelector(
   workspaceSelector,
-  (state): string | null => state.drawingTool,
+  (state): DrawingTool | null =>
+    head(
+      compact(
+        state.initial.schema.objects.map(objectSchema => {
+          const field = objectSchema.fields.find(
+            fieldSchema => fieldSchema.id === state.drawingTool,
+          );
+          return field ? { objectSchema, fieldSchema: field } : null;
+        }),
+      ),
+    ) ?? null,
 );
 
 export const toolTypeSelector = createSelector(

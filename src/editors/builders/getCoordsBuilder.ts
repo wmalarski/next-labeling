@@ -1,3 +1,5 @@
+import head from "lodash/head";
+import { DrawingTool } from "../../workspace/types/client";
 import { CoordsBuilder, FieldType } from "../types";
 import Box3dBuilder from "./box3dBuilder";
 import EyeBuilder from "./eyeBuilder";
@@ -8,9 +10,10 @@ import PolygonBuilder from "./polygonBuilder";
 import RectangleBuilder from "./rectangleBuilder";
 
 export default function getCoordsBuilders(
-  fieldType: string,
+  drawingTool: DrawingTool | null,
 ): CoordsBuilder | null {
-  if (!fieldType) return null;
+  if (!drawingTool) return null;
+  const fieldType = head(Object.keys(drawingTool?.fieldSchema.attributes));
 
   switch (fieldType) {
     case FieldType.RECTANGLE:

@@ -1,14 +1,14 @@
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
-import { createObject, CreateObjectFields } from "../../functions";
+import { LabelingFieldValues } from "../../../editors/types";
+import { createObject } from "../../functions";
 import { addSnapshot } from "../functions";
-import { currentDocumentSelector } from "../selectors";
+import { currentDocumentSelector, drawingToolSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 
 export interface AddObjectUpdatePayload {
-  objectSchemaId: string;
-  defaultFields: CreateObjectFields[];
+  values: LabelingFieldValues;
 }
 
 export default function addObjectAction(
@@ -16,19 +16,19 @@ export default function addObjectAction(
   action: PayloadAction<AddObjectUpdatePayload>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
-  const { currentFrame, objects } = data;
-  const { objectSchemaId, defaultFields } = action.payload;
+  const drawingTool = drawingToolSelector.resultFunc(state);
+  if (!drawingTool) return state;
 
-  const objectSchema = state.initial.schema.objects.find(
-    schema => schema.id === objectSchemaId,
-  );
+  const { currentFrame, objects } = data;
+  const { fieldSchema, objectSchema } = drawingTool;
+  const { values } = action.payload;
 
   if (!objectSchema) return state;
 
   const object = createObject({
     objectSchema,
     currentFrame,
-    defaultFields,
+    defaultFields: [{ fieldId: fieldSchema.id, values }],
   });
   return addSnapshot(state, {
     id: uuidv4(),

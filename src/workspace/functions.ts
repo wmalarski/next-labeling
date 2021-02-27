@@ -36,11 +36,16 @@ export function createObject(props: CreateObjectProps): LabelingObject {
     frames: objectSchema.singleton ? null : [currentFrame],
     fields: objectSchema.fields.map(fieldSchema => {
       const [key, value] = Object.entries(fieldSchema.attributes)[0];
+      const defaultValues = defaultFields.find(
+        pair => pair.fieldId === fieldSchema.id,
+      )?.values;
       return {
         id: uuidv4(),
         fieldSchema,
         fieldSchemaId: fieldSchema.id,
-        values: { [key]: [{ frame: currentFrame, value: value?.default }] },
+        values: defaultValues ?? {
+          [key]: [{ frame: currentFrame, value: value?.default }],
+        },
       };
     }),
   };

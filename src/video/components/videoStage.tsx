@@ -6,6 +6,7 @@ import { calculateNewValues } from "../../editors/functions";
 import { LabelingFieldValues } from "../../editors/types";
 import { getEventRelativePosition } from "../../visualization/functions";
 import { UseZoomResult } from "../../visualization/hooks/useZoom";
+import { MouseButton } from "../../visualization/types";
 import { inFrameFilter, labelingFilter } from "../../workspace/functions";
 import useDrawingTool from "../../workspace/hooks/useDrawingTool";
 import {
@@ -25,7 +26,10 @@ import {
   LabelingObject,
   ToolType,
 } from "../../workspace/types/client";
-import { FinishedObject } from "./objects/visualizationObject";
+import {
+  FinishedObject,
+  InProgressObject,
+} from "./objects/visualizationObject";
 import VideoView from "./videoView";
 
 export interface VideoStageProps {
@@ -48,10 +52,10 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
   const zoomAndPaneSelected = toolType === ToolType.ZOOM_AND_PANE;
 
   const drawingTool = useDrawingTool();
-  // const { acceptPoint, pushPoint, builderState } = drawingTool.builderResult;
-  // const drawingSchema = drawingTool.field?.fieldSchema;
-  // const drawingStage = builderState.currentValue?.stage;
-  // const drawingValue = builderState.currentValue?.value;
+  const { acceptPoint, pushPoint, builderState } = drawingTool.result;
+  const drawingSchema = drawingTool.tool?.fieldSchema;
+  const drawingStage = builderState.currentValue?.stage;
+  const drawingValue = builderState.currentValue?.value;
 
   const handleSelect = useCallback(
     (id: string, reset: boolean): void =>
@@ -112,12 +116,12 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
         onMouseMove={e => {
           const point = getEventRelativePosition(e);
           if (!point) return;
-          // pushPoint(point, currentFrame);
+          pushPoint(point, currentFrame);
         }}
         onClick={e => {
           const point = getEventRelativePosition(e);
           if (!point) return;
-          // acceptPoint(point, e.evt.button === MouseButton.RIGHT, currentFrame);
+          acceptPoint(point, e.evt.button === MouseButton.RIGHT, currentFrame);
         }}
       >
         <VideoView onClick={handleDeselect} />
@@ -135,17 +139,13 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
             />
           ));
         })}
-        {/* {drawingSchema &&
-          drawingTool.object &&
-          drawingStage &&
-          drawingValue && (
-            <InProgressObject
-              fieldSchema={drawingSchema}
-              object={drawingTool.object}
-              stage={drawingStage}
-              value={drawingValue}
-            />
-          )} */}
+        {drawingSchema && drawingStage && drawingValue && (
+          <InProgressObject
+            fieldSchema={drawingSchema}
+            stage={drawingStage}
+            value={drawingValue}
+          />
+        )}
       </Layer>
     </Stage>
   );

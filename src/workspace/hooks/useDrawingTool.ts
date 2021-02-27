@@ -6,19 +6,18 @@ import getCoordsBuilders from "../../editors/builders/getCoordsBuilder";
 import useCoordsBuilder, {
   UseCoordsBuilderResult,
 } from "../../editors/hooks/useCoordsBuilder";
-import {
-  currentFrameSelector,
-  drawingToolSelector,
-  labelingDirectionSelector,
-} from "../redux/selectors";
-import { setToolType } from "../redux/slice";
-import { ToolType } from "../types/client";
+import { drawingToolSelector } from "../redux/selectors";
+import { addObject, setToolType } from "../redux/slice";
+import { DrawingTool, ToolType } from "../types/client";
 
-export default function useDrawingTool(): UseCoordsBuilderResult {
+export interface UseDrawingToolResult {
+  result: UseCoordsBuilderResult;
+  tool: DrawingTool | null;
+}
+
+export default function useDrawingTool(): UseDrawingToolResult {
   const dispatch = useRootDispatch();
   const drawingTool = useSelector(drawingToolSelector);
-  const labelingDirection = useSelector(labelingDirectionSelector);
-  const currentFrame = useSelector(currentFrameSelector);
 
   const builder = useMemo(
     () => (!isNull(drawingTool) ? getCoordsBuilders(drawingTool) : null),
@@ -31,34 +30,11 @@ export default function useDrawingTool(): UseCoordsBuilderResult {
     if (!builderState.isEnded || !builderState.lastValue) return;
     dispatch(setToolType(ToolType.ZOOM_AND_PANE));
     resetEdit();
-    const value = builderState.lastValue?.value;
-    if (!value || !drawingTool) return;
+    const values = builderState.lastValue?.value;
+    if (!values) return;
 
-    // dispatch(
-    //   addObject({
-    //     objectSchemaId: drawingTool,
-    //     defaultFields: [
-    //       {
-    //         fieldId: drawingTool,
-    //         values: calculateNewValues(
-    //           values,
-    //           fieldSchema.perFrame,
-    //           value,
-    //           labelingDirection,
-    //         ),
-    //       },
-    //     ],
-    //   }),
-    // );
-  }, [
-    currentFrame,
-    builderState.isEnded,
-    builderState.lastValue,
-    labelingDirection,
-    resetEdit,
-    dispatch,
-    drawingTool,
-  ]);
+    dispatch(addObject({ values }));
+  }, [builderState.isEnded, builderState.lastValue, dispatch, resetEdit]);
 
-  return builderResult;
+  return { result: builderResult, tool: drawingTool };
 }

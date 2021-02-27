@@ -103,7 +103,6 @@ export interface InProgressObjectProps {
   stage: number;
   fieldSchema: FieldSchema;
   value: LabelingFieldValues;
-  object: LabelingObject;
 }
 
 export interface FinishedObjectProps {
