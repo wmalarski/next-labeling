@@ -77,13 +77,10 @@ export type OnAttributeChangeHandler = (
 ) => void;
 
 export interface FieldEditorProps {
-  name: string;
-  perFrame: boolean;
+  field: LabelingField;
   disabled: boolean;
   frame: number;
-  values: LabelingFieldValues;
-  attributes: LabelingFieldAttributes;
-  onChange: OnValueChangeHandler;
+  onChange: (value: LabelingFieldValues) => void;
 }
 
 export interface CoordsBuilderResult {

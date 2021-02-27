@@ -2,7 +2,6 @@ import React, { useCallback, useMemo } from "react";
 import { Layer, Stage } from "react-konva";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../common/redux/store";
-import { calculateNewValues } from "../../editors/functions";
 import { LabelingFieldValues } from "../../editors/types";
 import { getEventRelativePosition } from "../../visualization/functions";
 import { UseZoomResult } from "../../visualization/hooks/useZoom";
@@ -12,7 +11,6 @@ import useDrawingTool from "../../workspace/hooks/useDrawingTool";
 import {
   currentDocumentSelector,
   filtersSelector,
-  labelingDirectionSelector,
   toolTypeSelector,
 } from "../../workspace/redux/selectors";
 import {
@@ -46,7 +44,6 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
   const filters = useSelector(filtersSelector);
   const data = useSelector(currentDocumentSelector);
   const toolType = useSelector(toolTypeSelector);
-  const labelingDirection = useSelector(labelingDirectionSelector);
 
   const { currentFrame, selected, objects } = data;
   const zoomAndPaneSelected = toolType === ToolType.ZOOM_AND_PANE;
@@ -78,15 +75,10 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
         setAttribute({
           objectId: object.id,
           fieldId: field.id,
-          values: calculateNewValues(
-            field.values,
-            field.fieldSchema.perFrame,
-            newValues,
-            labelingDirection,
-          ),
+          values: newValues,
         }),
       ),
-    [dispatch, labelingDirection],
+    [dispatch],
   );
 
   const filteredObjects = useMemo(

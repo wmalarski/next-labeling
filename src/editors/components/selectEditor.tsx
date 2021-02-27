@@ -4,24 +4,29 @@ import { GridSize } from "@material-ui/core/Grid/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import React from "react";
-import { useSelector } from "react-redux";
-import { labelingDirectionSelector } from "../../workspace/redux/selectors";
-import { calculateNewValues, getFieldValues } from "../functions";
+import { getFieldValues } from "../functions";
 import { FieldEditorProps, FieldType } from "../types";
 
-export default function SelectEditor(props: FieldEditorProps): JSX.Element {
-  const { disabled, frame, perFrame, attributes, name, onChange } = props;
-  const labelingDirection = useSelector(labelingDirectionSelector);
-  const config = attributes.Select;
+export default function SelectEditor(
+  props: FieldEditorProps,
+): JSX.Element | null {
+  const { disabled, field, frame, onChange } = props;
 
-  const frameValues = getFieldValues(props)?.Select;
-  if (!frameValues) return <></>;
+  const config = field.fieldSchema.attributes.Select;
+  const frameValues = getFieldValues({
+    frame,
+    perFrame: field.fieldSchema.perFrame,
+    values: field.values,
+  })?.Select;
+  if (!frameValues) return null;
   const frameValue = frameValues[0];
   const selected = frameValue?.value;
 
   return frameValue && config ? (
     <FormControl>
-      <InputLabel id="select-field-type-label">{name}</InputLabel>
+      <InputLabel id="select-field-type-label">
+        {field.fieldSchema.name}
+      </InputLabel>
       <Grid container spacing={1}>
         {config.options.map(option => (
           <Grid
@@ -36,21 +41,14 @@ export default function SelectEditor(props: FieldEditorProps): JSX.Element {
               size="small"
               color="inherit"
               onChange={() =>
-                onChange(values =>
-                  calculateNewValues(
-                    values,
-                    perFrame,
+                onChange({
+                  [FieldType.SELECT]: [
                     {
-                      [FieldType.SELECT]: [
-                        {
-                          frame,
-                          value: option.text,
-                        },
-                      ],
+                      frame,
+                      value: option.text,
                     },
-                    labelingDirection,
-                  ),
-                )
+                  ],
+                })
               }
             >
               {option.text}
@@ -59,7 +57,5 @@ export default function SelectEditor(props: FieldEditorProps): JSX.Element {
         ))}
       </Grid>
     </FormControl>
-  ) : (
-    <></>
-  );
+  ) : null;
 }

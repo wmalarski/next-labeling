@@ -21,9 +21,11 @@ export interface FieldDetailsProps {
   field: FieldSchema;
 }
 
-export default function FieldDetails(props: FieldDetailsProps): JSX.Element {
-  const { field } = props;
-  const [type, fieldAttributes] = Object.entries(field.attributes)[0];
+export default function FieldDetails(
+  props: FieldDetailsProps,
+): JSX.Element | null {
+  const { field: fieldSchema } = props;
+  const [type, fieldAttributes] = Object.entries(fieldSchema.attributes)[0];
   const fieldType = type as FieldType;
 
   const classes = useFieldDetailsStyles();
@@ -37,27 +39,23 @@ export default function FieldDetails(props: FieldDetailsProps): JSX.Element {
     setValues(getDefaultValues(fieldType, fieldAttributes));
   }, [fieldType, fieldAttributes, setValues]);
 
-  if (!isCorrectType) return <></>;
+  if (!isCorrectType) return null;
 
   return (
     <>
-      <Typography variant="h5">{field.name}</Typography>
-      <Typography variant="subtitle2">{`Per frame: ${field.perFrame}`}</Typography>
+      <Typography variant="h5">{fieldSchema.name}</Typography>
+      <Typography variant="subtitle2">{`Per frame: ${fieldSchema.perFrame}`}</Typography>
       <Paper className={classes.paper}>
         <FieldEditor
           frame={0}
-          attributes={field.attributes}
+          field={{
+            fieldSchema,
+            fieldSchemaId: fieldSchema.id,
+            id: "",
+            values,
+          }}
           disabled={false}
-          name={field.name}
-          perFrame={false}
-          values={values}
-          onChange={provider =>
-            setValues(oldValues => {
-              const result = provider(oldValues);
-              if (!result) return oldValues;
-              return result;
-            })
-          }
+          onChange={setValues}
         />
       </Paper>
     </>

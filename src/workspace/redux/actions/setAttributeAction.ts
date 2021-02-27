@@ -1,6 +1,7 @@
 import EditIcon from "@material-ui/icons/Edit";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
+import { calculateNewValues } from "../../../editors/functions";
 import { LabelingFieldValues } from "../../../editors/types";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
@@ -26,7 +27,14 @@ export default function setAttributeAction(
   const fields = [...object.fields];
   const field = fields[fieldIndex];
 
-  fields[fieldIndex] = { ...field, values };
+  const newValues = calculateNewValues(
+    field.values,
+    field.fieldSchema.perFrame,
+    values,
+    state.preferences.labelingDirection,
+  );
+
+  fields[fieldIndex] = { ...field, values: newValues };
   objects[objectIndex] = { ...object, fields };
   return addSnapshot(state, {
     id: uuidv4(),
