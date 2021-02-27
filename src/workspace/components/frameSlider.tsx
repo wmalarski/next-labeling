@@ -11,7 +11,6 @@ import React, { useCallback } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../common/redux/store";
-import { frameToRange } from "../functions";
 import {
   currentFrameSelector,
   durationSelector,
@@ -31,15 +30,8 @@ export default function FrameSlider(): JSX.Element {
   const shortcuts = useSelector(shortcutsSelector);
 
   const moveBy = useCallback(
-    (value: number): void =>
-      void dispatch(
-        moveCurrentFrame({
-          step: value,
-          duration,
-          propagationStep: frameStep,
-        }),
-      ),
-    [duration, frameStep, dispatch],
+    (value: number): void => void dispatch(moveCurrentFrame({ step: value })),
+    [dispatch],
   );
 
   useHotkeys(shortcuts.DoubleFrameBackward, () => moveBy(-5), [moveBy]);
@@ -57,12 +49,7 @@ export default function FrameSlider(): JSX.Element {
           max={duration}
           step={frameStep}
           onChange={(_event, value): void =>
-            void dispatch(
-              setCurrentFrame({
-                nextFrame: frameToRange(Number(value), duration),
-                propagationStep: frameStep,
-              }),
-            )
+            void dispatch(setCurrentFrame({ nextFrame: Number(value) }))
           }
           aria-labelledby="continuous-slider"
         />

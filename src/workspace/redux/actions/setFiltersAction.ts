@@ -4,8 +4,8 @@ import { WorkspaceState } from "../state";
 
 export default function setFiltersAction(
   state: WorkspaceState,
-  action: PayloadAction<LabelingDisplayFilters>,
+  action: PayloadAction<Partial<LabelingDisplayFilters>>,
 ): WorkspaceState {
   const { payload } = action;
-  return { ...state, filters: payload };
+  return { ...state, filters: { ...state.filters, ...payload } };
 }

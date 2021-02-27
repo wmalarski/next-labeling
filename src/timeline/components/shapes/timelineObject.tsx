@@ -1,12 +1,10 @@
 import { useTheme } from "@material-ui/core";
 import React, { useCallback } from "react";
 import { Rect } from "react-konva";
-import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../../common/redux/store";
 import { getEventRelativePosition } from "../../../visualization/functions";
 import { Point2D } from "../../../visualization/types";
 import { frameToRange } from "../../../workspace/functions";
-import { frameStepSelector } from "../../../workspace/redux/selectors";
 import {
   deselectObject,
   selectObject,
@@ -42,7 +40,6 @@ export default function TimelineObject(
   const isSelected = selectedNodes.includes(object.id);
 
   const dispatch = useRootDispatch();
-  const frameStep = useSelector(frameStepSelector);
 
   const handleSelect = useCallback(
     (object: LabelingObject, reset: boolean, fieldId?: string): void =>
@@ -61,10 +58,9 @@ export default function TimelineObject(
       void dispatch(
         setCurrentFrame({
           nextFrame: frameToRange(Number(index), duration),
-          propagationStep: frameStep,
         }),
       ),
-    [duration, frameStep, dispatch],
+    [duration, dispatch],
   );
 
   const theme = useTheme();

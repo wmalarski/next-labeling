@@ -18,8 +18,8 @@ export default function VideoView(props: VideoViewProps): JSX.Element {
 
   const dispatch = useRootDispatch();
   const currentFrame = useSelector(currentFrameSelector);
-  const initialDocument = useSelector(initialDocumentSelector);
-  const { filename: source, fps = 24 } = initialDocument;
+  const initial = useSelector(initialDocumentSelector);
+  const { filename: source, fps = 24 } = initial;
 
   const imageRef = useRef<Konva.Image | null>(null);
   const [size, setSize] = useState({ width: 50, height: 50 });

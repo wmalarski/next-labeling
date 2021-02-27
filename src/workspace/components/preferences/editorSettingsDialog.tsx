@@ -33,7 +33,7 @@ export default function EditorSettingsDialog(): JSX.Element {
   const { saveLabeling } = useLabelingContext();
 
   const dispatch = useRootDispatch();
-  const initialDoc = useSelector(initialDocumentSelector);
+  const initial = useSelector(initialDocumentSelector);
   const labelingDirection = useSelector(labelingDirectionSelector);
   const frameStep = useSelector(frameStepSelector);
   const delayMinutes = useSelector(autoSaveDelayMinutesSelector);
@@ -42,11 +42,11 @@ export default function EditorSettingsDialog(): JSX.Element {
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const [name, setName] = useState(initialDoc.name);
-  useEffect(() => setName(initialDoc.name), [initialDoc.name]);
+  const [name, setName] = useState(initial.name);
+  useEffect(() => setName(initial.name), [initial.name]);
 
-  const [filename, setFilename] = useState(initialDoc.filename);
-  useEffect(() => setFilename(initialDoc.filename), [initialDoc.filename]);
+  const [filename, setFilename] = useState(initial.filename);
+  useEffect(() => setFilename(initial.filename), [initial.filename]);
 
   // TODO: https://github.com/wmalarski/next-labeling/issues/14
   return (
@@ -87,15 +87,11 @@ export default function EditorSettingsDialog(): JSX.Element {
             </Button>
             <Button
               disabled={
-                initialDoc.name?.length === 0 ||
-                initialDoc.filename?.length === 0
+                initial.name?.length === 0 || initial.filename?.length === 0
               }
               onClick={() => {
-                if (
-                  name !== initialDoc.name ||
-                  filename !== initialDoc.filename
-                ) {
-                  saveLabeling({ ...initialDoc, name, filename });
+                if (name !== initial.name || filename !== initial.filename) {
+                  saveLabeling({ ...initial, name, filename });
                 }
                 handleClose();
               }}

@@ -25,14 +25,14 @@ export default function LabelingWorkspace(
   const { documentId } = props;
 
   const dispatch = useRootDispatch();
-  const doc = useSelector(initialDocumentSelector);
+  const initial = useSelector(initialDocumentSelector);
   const views = useSelector(labelingViewsSelector);
 
   return (
     <div>
       <div style={{ flexGrow: 1 }}>
-        <Typography variant="h5">{doc.name}</Typography>
-        <Typography variant="subtitle2">{doc.filename}</Typography>
+        <Typography variant="h5">{initial.name}</Typography>
+        <Typography variant="subtitle2">{initial.filename}</Typography>
       </div>
       <ReactGridLayout
         className="layout"

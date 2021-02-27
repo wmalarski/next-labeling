@@ -3,11 +3,19 @@ import compact from "lodash/compact";
 import head from "lodash/head";
 import { RootState } from "../../common/redux/store";
 import { Schema } from "../../schema/types";
+import {
+  FilterFieldsResultPair,
+  filterSelectedFields,
+  inFrameFilter,
+  labelingFilter,
+} from "../functions";
 import { ShortcutActions } from "../shortcuts";
 import {
   DrawingTool,
   LabelingDisplayFilters,
   LabelingDocument,
+  LabelingObject,
+  ObjectSelection,
   ToolType,
 } from "../types/client";
 import { ExternalDocument } from "../types/database";
@@ -33,9 +41,48 @@ export const currentDocumentSelector = createSelector(
   (state): LabelingDocument => state.history[state.index].data,
 );
 
+export const filtersSelector = createSelector(
+  workspaceSelector,
+  (state): LabelingDisplayFilters => state.filters,
+);
+
 export const currentFrameSelector = createSelector(
   currentDocumentSelector,
   (state): number => state.currentFrame,
+);
+
+export const objectsSelector = createSelector(
+  currentDocumentSelector,
+  (doc): LabelingObject[] => doc.objects,
+);
+
+export const filteredObjectSelector = createSelector(
+  filtersSelector,
+  objectsSelector,
+  (filters, objects): LabelingObject[] =>
+    objects.filter(labelingFilter(filters)),
+);
+
+export const filteredInFrameObjectSelector = createSelector(
+  filteredObjectSelector,
+  currentFrameSelector,
+  (filteredObjects, currentFrame): LabelingObject[] =>
+    filteredObjects.filter(inFrameFilter(currentFrame)),
+);
+
+export const selectedFieldsSelector = createSelector(
+  currentDocumentSelector,
+  (state): FilterFieldsResultPair[] => filterSelectedFields(state),
+);
+
+export const selectedObjectSelector = createSelector(
+  currentDocumentSelector,
+  (state): ObjectSelection[] => state.selected,
+);
+
+export const toggledObjectSelector = createSelector(
+  currentDocumentSelector,
+  (state): string[] => state.toggled,
 );
 
 export const initialDocumentSelector = createSelector(
@@ -71,11 +118,6 @@ export const redoMessageSelector = createSelector(
 export const durationSelector = createSelector(
   workspaceSelector,
   (state): number => state.duration,
-);
-
-export const filtersSelector = createSelector(
-  workspaceSelector,
-  (state): LabelingDisplayFilters => state.filters,
 );
 
 export const drawingToolSelector = createSelector(

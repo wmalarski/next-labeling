@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import { Layer, Stage } from "react-konva";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../common/redux/store";
@@ -6,11 +6,11 @@ import { LabelingFieldValues } from "../../editors/types";
 import { getEventRelativePosition } from "../../visualization/functions";
 import { UseZoomResult } from "../../visualization/hooks/useZoom";
 import { MouseButton } from "../../visualization/types";
-import { inFrameFilter, labelingFilter } from "../../workspace/functions";
 import useDrawingTool from "../../workspace/hooks/useDrawingTool";
 import {
-  currentDocumentSelector,
-  filtersSelector,
+  currentFrameSelector,
+  filteredInFrameObjectSelector,
+  selectedObjectSelector,
   toolTypeSelector,
 } from "../../workspace/redux/selectors";
 import {
@@ -41,11 +41,11 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
   const { handleWheel, stageScale, stageX, stageY } = zoom;
 
   const dispatch = useRootDispatch();
-  const filters = useSelector(filtersSelector);
-  const data = useSelector(currentDocumentSelector);
+  const filteredObjects = useSelector(filteredInFrameObjectSelector);
+  const currentFrame = useSelector(currentFrameSelector);
   const toolType = useSelector(toolTypeSelector);
+  const selected = useSelector(selectedObjectSelector);
 
-  const { currentFrame, selected, objects } = data;
   const zoomAndPaneSelected = toolType === ToolType.ZOOM_AND_PANE;
 
   const drawingTool = useDrawingTool();
@@ -79,14 +79,6 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
         }),
       ),
     [dispatch],
-  );
-
-  const filteredObjects = useMemo(
-    () =>
-      objects
-        .filter(labelingFilter(filters))
-        .filter(inFrameFilter(currentFrame)),
-    [currentFrame, filters, objects],
   );
 
   return (

@@ -21,10 +21,9 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../../common/redux/store";
 import {
-  currentDocumentSelector,
-  frameStepSelector,
   labelingViewsSelector,
   schemaSelector,
+  selectedObjectSelector,
   shortcutsSelector,
 } from "../../redux/selectors";
 import {
@@ -52,11 +51,9 @@ export default function EditorSidebar(): JSX.Element {
 
   const dispatch = useRootDispatch();
   const schema = useSelector(schemaSelector);
-  const currentDoc = useSelector(currentDocumentSelector);
+  const selected = useSelector(selectedObjectSelector);
   const views = useSelector(labelingViewsSelector);
   const shortcuts = useSelector(shortcutsSelector);
-  const frameStep = useSelector(frameStepSelector);
-  const { selected } = currentDoc;
 
   const selectedObjects = selected.filter(
     object => !object.singleton && object.objectSelected,
@@ -244,13 +241,7 @@ export default function EditorSidebar(): JSX.Element {
           <ListItem
             disabled={!isSelected}
             button
-            onClick={(): void =>
-              void dispatch(
-                setObjectFirstFrame({
-                  propagationStep: frameStep,
-                }),
-              )
-            }
+            onClick={(): void => void dispatch(setObjectFirstFrame())}
           >
             <ListItemIcon>
               <FirstPageIcon />
@@ -260,13 +251,7 @@ export default function EditorSidebar(): JSX.Element {
           <ListItem
             disabled={!isSelected}
             button
-            onClick={(): void =>
-              void dispatch(
-                setObjectLastFrame({
-                  propagationStep: frameStep,
-                }),
-              )
-            }
+            onClick={(): void => void dispatch(setObjectLastFrame())}
           >
             <ListItemIcon>
               <LastPageIcon />

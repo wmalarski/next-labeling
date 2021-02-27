@@ -38,9 +38,7 @@ export function TimelineFilterControls(
       <Grid item xs={4}>
         <SearchInput
           onSubmit={value =>
-            dispatch(
-              setFilters({ ...filters, name: value === "" ? null : value }),
-            )
+            dispatch(setFilters({ name: value === "" ? null : value }))
           }
         />
       </Grid>
@@ -51,7 +49,6 @@ export function TimelineFilterControls(
           onChange={(_event, value) =>
             dispatch(
               setFilters({
-                ...filters,
                 isDone: !value ? IsDoneFilterValue.ALL : value,
               }),
             )
@@ -78,7 +75,6 @@ export function TimelineFilterControls(
                 const newIds = [...filters.objectSchemaIds];
                 dispatch(
                   setFilters({
-                    ...filters,
                     objectSchemaIds: isSelected
                       ? newIds.filter(id => id !== objectSchema.id)
                       : [...newIds, objectSchema.id],

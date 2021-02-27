@@ -4,11 +4,12 @@ import { Layer, Line, Rect, Stage } from "react-konva";
 import { useSelector } from "react-redux";
 import { TooltipLabel } from "../../visualization/components/tooltipLabel";
 import { useTooltipLabel } from "../../visualization/hooks/useTooltipLabel";
-import { labelingFilter } from "../../workspace/functions";
 import {
-  currentDocumentSelector,
+  currentFrameSelector,
   durationSelector,
-  filtersSelector,
+  filteredObjectSelector,
+  selectedObjectSelector,
+  toggledObjectSelector,
 } from "../../workspace/redux/selectors";
 import { TimelineRowHeight, TimelineVerticalLineWidth } from "../constants";
 import { getTimelineObjectConfigs } from "../functions";
@@ -25,22 +26,18 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
   const { width, scaleX, stageX } = props;
 
   const duration = useSelector(durationSelector);
-  const filters = useSelector(filtersSelector);
-  const data = useSelector(currentDocumentSelector);
-  const { objects, selected, toggled, currentFrame } = data;
+  const filteredObjects = useSelector(filteredObjectSelector);
+  const toggled = useSelector(toggledObjectSelector);
+  const selected = useSelector(selectedObjectSelector);
+  const currentFrame = useSelector(currentFrameSelector);
 
   const theme = useTheme();
   const errorColor = theme.palette.error.light;
   const backgroundColor = theme.palette.background.default;
 
   const configs = useMemo(
-    () =>
-      getTimelineObjectConfigs(
-        objects.filter(labelingFilter(filters)),
-        toggled,
-        duration,
-      ),
-    [duration, filters, objects, toggled],
+    () => getTimelineObjectConfigs(filteredObjects, toggled, duration),
+    [duration, filteredObjects, toggled],
   );
 
   const height = useMemo(

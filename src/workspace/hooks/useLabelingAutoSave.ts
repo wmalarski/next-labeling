@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import { useInterval } from "../../common/hooks/useInterval";
 import {
   autoSaveDelayMinutesSelector,
-  currentDocumentSelector,
   initialDocumentSelector,
+  objectsSelector,
 } from "../redux/selectors";
 import { ExternalDocument } from "../types/database";
 import useLabelingContext from "./useLabelingContext";
@@ -16,7 +16,7 @@ export default function useLabelingAutoSave(): void {
 
   const initialDocument = useSelector(initialDocumentSelector);
   const delayMinutes = useSelector(autoSaveDelayMinutesSelector);
-  const { objects } = useSelector(currentDocumentSelector);
+  const objects = useSelector(objectsSelector);
 
   const callback = useCallback(
     () =>

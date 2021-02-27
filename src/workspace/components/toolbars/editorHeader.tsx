@@ -10,8 +10,8 @@ import { useSelector } from "react-redux";
 import useLabelingAutoSave from "../../hooks/useLabelingAutoSave";
 import useLabelingContext from "../../hooks/useLabelingContext";
 import {
-  currentDocumentSelector,
   initialDocumentSelector,
+  objectsSelector,
   shortcutsSelector,
 } from "../../redux/selectors";
 import { ExternalDocument } from "../../types/database";
@@ -22,16 +22,11 @@ export default function EditorHeader(): JSX.Element {
 
   const { saveLabeling, removeLabeling } = useLabelingContext();
   const initialDoc = useSelector(initialDocumentSelector);
-  const currentDoc = useSelector(currentDocumentSelector);
+  const objects = useSelector(objectsSelector);
   const shortcuts = useSelector(shortcutsSelector);
 
   const saveCallback = () =>
-    saveLabeling(
-      ExternalDocument.encode({
-        ...initialDoc,
-        objects: currentDoc.objects,
-      }),
-    );
+    saveLabeling(ExternalDocument.encode({ ...initialDoc, objects }));
 
   useLabelingAutoSave();
   useHotkeys(shortcuts.SaveDatabase, saveCallback, [saveCallback]);

@@ -4,18 +4,12 @@ import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 import setCurrentFrameAction from "./setCurrentFrameAction";
 
-export interface SetObjectFirstFrameActionPayload {
-  propagationStep: number;
-}
-
 export default function setObjectFirstFrameAction(
   state: WorkspaceState,
-  action: PayloadAction<SetObjectFirstFrameActionPayload>,
+  action: PayloadAction,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
   const { selected } = data;
-
-  const { propagationStep } = action.payload;
 
   const selectedObjects = selected.filter(
     object => !object.singleton && object.objectSelected,
@@ -26,7 +20,7 @@ export default function setObjectFirstFrameAction(
   return nextFrame
     ? setCurrentFrameAction(state, {
         ...action,
-        payload: { nextFrame, propagationStep },
+        payload: { nextFrame },
       })
     : state;
 }
