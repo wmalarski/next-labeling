@@ -16,13 +16,13 @@ import React, { useCallback, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../../common/redux/store";
+import { messagesSelector } from "../../redux/selectors/common-selectors";
 import {
   currentSnapshotSelector,
-  messagesSelector,
   redoMessageSelector,
-  shortcutsSelector,
   undoMessageSelector,
-} from "../../redux/selectors";
+} from "../../redux/selectors/doc-selectors";
+import { shortcutsSelector } from "../../redux/selectors/preferences-selectors";
 import { redoLabeling, setSnapshotId, undoLabeling } from "../../redux/slice";
 
 export default function UndoRedoButtons(): JSX.Element {

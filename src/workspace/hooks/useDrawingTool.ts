@@ -6,7 +6,7 @@ import getCoordsBuilders from "../../editors/builders/getCoordsBuilder";
 import useCoordsBuilder, {
   UseCoordsBuilderResult,
 } from "../../editors/hooks/useCoordsBuilder";
-import { drawingToolSelector } from "../redux/selectors";
+import { drawingToolSelector } from "../redux/selectors/common-selectors";
 import { addObject, setToolType } from "../redux/slice";
 import { DrawingTool, ToolType } from "../types/client";
 

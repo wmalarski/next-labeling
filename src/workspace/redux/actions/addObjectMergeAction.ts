@@ -9,7 +9,7 @@ import {
 import { FieldSchema } from "../../../schema/types";
 import { createObject } from "../../functions";
 import { addSnapshot } from "../functions";
-import { currentDocumentSelector } from "../selectors";
+import { currentDocumentSelector } from "../selectors/doc-selectors";
 import { WorkspaceState } from "../state";
 
 type FieldReducer = Record<

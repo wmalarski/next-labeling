@@ -11,7 +11,7 @@ import React, { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import useAuth from "../../auth/hooks/useAuth";
 import { AuthUser } from "../../auth/types";
-import { currentDocumentSelector } from "../../workspace/redux/selectors";
+import { currentDocumentSelector } from "../../workspace/redux/selectors/doc-selectors";
 import { LabelingDocument } from "../../workspace/types/client";
 import { ExternalObject } from "../../workspace/types/database";
 import { CommentDocument, CommentSnapshot } from "../types";

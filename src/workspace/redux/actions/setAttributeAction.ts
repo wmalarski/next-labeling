@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { calculateNewValues } from "../../../editors/functions";
 import { LabelingFieldValues } from "../../../editors/types";
 import { addSnapshot } from "../functions";
-import { currentDocumentSelector } from "../selectors";
+import { currentDocumentSelector } from "../selectors/doc-selectors";
 import { WorkspaceState } from "../state";
 
 export interface SetAttributeActionPayload {

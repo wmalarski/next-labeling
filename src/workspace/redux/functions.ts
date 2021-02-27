@@ -9,12 +9,14 @@ export function addSnapshot(
 
   if (newHistory.length < HISTORY_LIMIT) {
     return {
+      ...state,
       history: [...newHistory, snapshot],
       index: state.index + 1,
     };
   }
   newHistory.shift();
   return {
+    ...state,
     history: [...newHistory, snapshot],
     index: state.index,
   };

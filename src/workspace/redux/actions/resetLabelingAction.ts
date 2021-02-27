@@ -12,6 +12,7 @@ export default function resetLabelingAction(
   const data = createLabelingDocument(initial);
 
   return {
+    ...state,
     history: [{ id: uuidv4(), data, message: "LabelingLoaded" }],
     index: 0,
     initial,

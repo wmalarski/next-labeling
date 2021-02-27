@@ -5,10 +5,8 @@ import { useSelector } from "react-redux";
 import "../../../node_modules/react-grid-layout/css/styles.css";
 import "../../../node_modules/react-resizable/css/styles.css";
 import { useRootDispatch } from "../../common/redux/store";
-import {
-  initialDocumentSelector,
-  labelingViewsSelector,
-} from "../redux/selectors";
+import { initialDocumentSelector } from "../redux/selectors/common-selectors";
+import { labelingViewsSelector } from "../redux/selectors/preferences-selectors";
 import { setPreferences } from "../redux/slice";
 import { updateViews } from "../views";
 import LabelingViewItem from "./labelingViewItem";

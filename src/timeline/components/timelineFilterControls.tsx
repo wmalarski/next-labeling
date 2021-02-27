@@ -7,10 +7,10 @@ import { useSelector } from "react-redux";
 import SearchInput from "../../common/components/searchInput";
 import { useRootDispatch } from "../../common/redux/store";
 import {
-  currentFrameSelector,
   filtersSelector,
   schemaSelector,
-} from "../../workspace/redux/selectors";
+} from "../../workspace/redux/selectors/common-selectors";
+import { currentFrameSelector } from "../../workspace/redux/selectors/doc-selectors";
 import { setFilters } from "../../workspace/redux/slice";
 import { IsDoneFilterValue } from "../../workspace/types/client";
 import { UseXZoomResult } from "../hooks/useXZoom";

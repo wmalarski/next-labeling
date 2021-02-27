@@ -20,12 +20,12 @@ import React, { useCallback, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../../common/redux/store";
+import { schemaSelector } from "../../redux/selectors/common-selectors";
+import { selectedObjectSelector } from "../../redux/selectors/doc-selectors";
 import {
   labelingViewsSelector,
-  schemaSelector,
-  selectedObjectSelector,
   shortcutsSelector,
-} from "../../redux/selectors";
+} from "../../redux/selectors/preferences-selectors";
 import {
   addObjectCopy,
   addObjectCopyFrame,

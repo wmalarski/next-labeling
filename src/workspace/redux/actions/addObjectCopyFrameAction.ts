@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getFieldValues, unpackValues } from "../../../editors/functions";
 import { createObject } from "../../functions";
 import { addSnapshot } from "../functions";
-import { currentDocumentSelector } from "../selectors";
+import { currentDocumentSelector } from "../selectors/doc-selectors";
 import { WorkspaceState } from "../state";
 
 export default function addObjectCopyFrameAction(

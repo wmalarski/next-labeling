@@ -9,7 +9,7 @@ import TreeView from "@material-ui/lab/TreeView";
 import React from "react";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../../common/redux/store";
-import { shortcutsSelector } from "../../redux/selectors";
+import { shortcutsSelector } from "../../redux/selectors/preferences-selectors";
 import { setShortcut } from "../../redux/slice";
 import { shortcutCategories } from "../../shortcuts";
 

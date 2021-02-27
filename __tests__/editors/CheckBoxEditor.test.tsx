@@ -5,13 +5,20 @@ import { FieldEditorProps, FieldType } from "../../src/editors/types";
 
 function shallowCheckBoxEditor(props: Partial<FieldEditorProps> = {}) {
   const defaultProps: FieldEditorProps = {
-    attributes: {},
+    field: {
+      fieldSchema: {
+        attributes: {},
+        id: "a",
+        name: "s",
+        perFrame: true,
+      },
+      fieldSchemaId: "a",
+      id: "b",
+      values: { [FieldType.CHECKBOX]: [{ frame: 1, value: false }] },
+    },
     disabled: false,
     frame: 1,
-    name: "editor",
     onChange: () => void 0,
-    perFrame: true,
-    values: { [FieldType.CHECKBOX]: [{ frame: 1, value: false }] },
   };
   const newProps = { ...defaultProps, ...props };
   return shallow(<CheckBoxEditor {...newProps} />);

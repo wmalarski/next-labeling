@@ -1,6 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { getLastFrame } from "../../functions";
-import { currentDocumentSelector } from "../selectors";
+import { currentDocumentSelector } from "../selectors/doc-selectors";
 import { WorkspaceState } from "../state";
 import setCurrentFrameAction from "./setCurrentFrameAction";
 

@@ -3,7 +3,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 import { copyObject } from "../../functions";
 import { addSnapshot } from "../functions";
-import { currentDocumentSelector } from "../selectors";
+import { currentDocumentSelector } from "../selectors/doc-selectors";
 import { WorkspaceState } from "../state";
 
 export default function addObjectCopyAction(

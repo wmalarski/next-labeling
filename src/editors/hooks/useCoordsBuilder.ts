@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { Point2D } from "../../visualization/types";
-import { CoordsFieldBuilder } from "../builders/getCoordsBuilder";
-import { CoordsBuilderResult } from "../types";
+import { CoordsBuilder, CoordsBuilderResult } from "../types";
 
 export interface UseCoordsBuilderState {
   lastValue?: CoordsBuilderResult;
@@ -18,7 +17,7 @@ export interface UseCoordsBuilderResult {
 }
 
 export default function useCoordsBuilder(
-  fieldBuilder?: CoordsFieldBuilder,
+  fieldBuilder: CoordsBuilder | null,
 ): UseCoordsBuilderResult {
   const [builderState, setBuilderState] = useState<UseCoordsBuilderState>({
     isDrawing: !!fieldBuilder,
@@ -34,7 +33,7 @@ export default function useCoordsBuilder(
     (point: Point2D, frame: number): void =>
       setBuilderState(state => {
         if (!state.isDrawing || !fieldBuilder) return state;
-        const builderResult = fieldBuilder.builder(
+        const builderResult = fieldBuilder(
           point,
           frame,
           state.lastValue?.value,
@@ -51,7 +50,7 @@ export default function useCoordsBuilder(
     (point: Point2D, finish: boolean, frame: number): void =>
       setBuilderState(state => {
         if (!state.isDrawing || !fieldBuilder) return state;
-        const builderResult = fieldBuilder.builder(
+        const builderResult = fieldBuilder(
           point,
           frame,
           state.lastValue?.value,

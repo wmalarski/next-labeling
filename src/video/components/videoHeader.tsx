@@ -8,10 +8,8 @@ import React, { useCallback } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../common/redux/store";
-import {
-  shortcutsSelector,
-  toolTypeSelector,
-} from "../../workspace/redux/selectors";
+import { toolTypeSelector } from "../../workspace/redux/selectors/common-selectors";
+import { shortcutsSelector } from "../../workspace/redux/selectors/preferences-selectors";
 import { setToolType } from "../../workspace/redux/slice";
 import { ToolType } from "../../workspace/types/client";
 import { useVideoHeaderStyles } from "../styles";

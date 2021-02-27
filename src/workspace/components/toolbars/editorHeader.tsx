@@ -9,11 +9,9 @@ import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
 import useLabelingAutoSave from "../../hooks/useLabelingAutoSave";
 import useLabelingContext from "../../hooks/useLabelingContext";
-import {
-  initialDocumentSelector,
-  objectsSelector,
-  shortcutsSelector,
-} from "../../redux/selectors";
+import { initialDocumentSelector } from "../../redux/selectors/common-selectors";
+import { objectsSelector } from "../../redux/selectors/doc-selectors";
+import { shortcutsSelector } from "../../redux/selectors/preferences-selectors";
 import { ExternalDocument } from "../../types/database";
 import UndoRedoButtons from "./undoRedoButtons";
 

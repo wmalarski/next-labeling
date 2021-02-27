@@ -4,7 +4,13 @@ import { v4 as uuidv4 } from "uuid";
 import { LabelingFieldValues } from "../../../editors/types";
 import { createObject } from "../../functions";
 import { addSnapshot } from "../functions";
-import { currentDocumentSelector, drawingToolSelector } from "../selectors";
+import {
+  drawingToolIdSelector,
+  drawingToolSelector,
+  initialDocumentSelector,
+  schemaSelector,
+} from "../selectors/common-selectors";
+import { currentDocumentSelector } from "../selectors/doc-selectors";
 import { WorkspaceState } from "../state";
 
 export interface AddObjectUpdatePayload {
@@ -16,7 +22,10 @@ export default function addObjectAction(
   action: PayloadAction<AddObjectUpdatePayload>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
-  const drawingTool = drawingToolSelector.resultFunc(state);
+  const initial = initialDocumentSelector.resultFunc(state);
+  const schema = schemaSelector.resultFunc(initial);
+  const drawingToolId = drawingToolIdSelector.resultFunc(state);
+  const drawingTool = drawingToolSelector.resultFunc(schema, drawingToolId);
   if (!drawingTool) return state;
 
   const { currentFrame, objects } = data;

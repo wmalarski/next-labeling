@@ -1,11 +1,9 @@
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { useInterval } from "../../common/hooks/useInterval";
-import {
-  autoSaveDelayMinutesSelector,
-  initialDocumentSelector,
-  objectsSelector,
-} from "../redux/selectors";
+import { initialDocumentSelector } from "../redux/selectors/common-selectors";
+import { objectsSelector } from "../redux/selectors/doc-selectors";
+import { autoSaveDelayMinutesSelector } from "../redux/selectors/preferences-selectors";
 import { ExternalDocument } from "../types/database";
 import useLabelingContext from "./useLabelingContext";
 

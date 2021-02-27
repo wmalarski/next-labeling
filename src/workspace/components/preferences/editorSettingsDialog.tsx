@@ -19,12 +19,12 @@ import { useSelector } from "react-redux";
 import NumberInput from "../../../common/components/numberInput";
 import { useRootDispatch } from "../../../common/redux/store";
 import useLabelingContext from "../../hooks/useLabelingContext";
+import { initialDocumentSelector } from "../../redux/selectors/common-selectors";
 import {
   autoSaveDelayMinutesSelector,
   frameStepSelector,
-  initialDocumentSelector,
   labelingDirectionSelector,
-} from "../../redux/selectors";
+} from "../../redux/selectors/preferences-selectors";
 import { setPreferences } from "../../redux/slice";
 import { LabelingDirection } from "../../redux/state";
 import ShortcutsSettingsTreeView from "./shortcutsSettingsTreeView";

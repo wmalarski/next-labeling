@@ -5,10 +5,10 @@ import { CommentSnapshot } from "../../../comments/types";
 import { createLabelingObjects } from "../../functions";
 import { addSnapshot } from "../functions";
 import {
-  currentDocumentSelector,
   initialDocumentSelector,
   schemaSelector,
-} from "../selectors";
+} from "../selectors/common-selectors";
+import { currentDocumentSelector } from "../selectors/doc-selectors";
 import { WorkspaceState } from "../state";
 
 export interface SetSnapshotActionPayload {

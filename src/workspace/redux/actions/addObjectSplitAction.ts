@@ -7,7 +7,7 @@ import {
   deleteObjectForward,
 } from "../../functions";
 import { addSnapshot } from "../functions";
-import { currentDocumentSelector } from "../selectors";
+import { currentDocumentSelector } from "../selectors/doc-selectors";
 import { WorkspaceState } from "../state";
 
 export default function addObjectSplitAction(

@@ -7,12 +7,12 @@ import { getEventRelativePosition } from "../../visualization/functions";
 import { UseZoomResult } from "../../visualization/hooks/useZoom";
 import { MouseButton } from "../../visualization/types";
 import useDrawingTool from "../../workspace/hooks/useDrawingTool";
+import { toolTypeSelector } from "../../workspace/redux/selectors/common-selectors";
 import {
   currentFrameSelector,
   filteredInFrameObjectSelector,
   selectedObjectSelector,
-  toolTypeSelector,
-} from "../../workspace/redux/selectors";
+} from "../../workspace/redux/selectors/doc-selectors";
 import {
   addSelectedObject,
   setAttribute,

@@ -1,6 +1,6 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import compact from "lodash/compact";
-import { currentDocumentSelector } from "../selectors";
+import { currentDocumentSelector } from "../selectors/doc-selectors";
 import { WorkspaceState } from "../state";
 import setSelectedAction from "./setSelectedAction";
 
