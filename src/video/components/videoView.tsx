@@ -3,8 +3,10 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Image } from "react-konva";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../common/redux/store";
-import { initialDocumentSelector } from "../../workspace/redux/selectors/common-selectors";
-import { currentFrameSelector } from "../../workspace/redux/selectors/doc-selectors";
+import {
+  currentFrameSelector,
+  initialDocumentSelector,
+} from "../../workspace/redux/selectors";
 import { setDuration } from "../../workspace/redux/slice";
 
 export interface VideoViewProps {

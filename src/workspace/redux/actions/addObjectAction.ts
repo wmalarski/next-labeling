@@ -1,16 +1,18 @@
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
+import {
+  drawingToolIdSelector,
+  drawingToolSelector,
+} from "../../../editors/redux/selectors";
 import { LabelingFieldValues } from "../../../editors/types";
 import { createObject } from "../../functions";
 import { addSnapshot } from "../functions";
 import {
-  drawingToolIdSelector,
-  drawingToolSelector,
+  currentDocumentSelector,
   initialDocumentSelector,
   schemaSelector,
-} from "../selectors/common-selectors";
-import { currentDocumentSelector } from "../selectors/doc-selectors";
+} from "../selectors";
 import { WorkspaceState } from "../state";
 
 export interface AddObjectUpdatePayload {

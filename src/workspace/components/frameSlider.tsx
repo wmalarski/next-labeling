@@ -11,12 +11,11 @@ import React, { useCallback } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../common/redux/store";
-import { durationSelector } from "../redux/selectors/common-selectors";
-import { currentFrameSelector } from "../redux/selectors/doc-selectors";
 import {
   frameStepSelector,
   shortcutsSelector,
-} from "../redux/selectors/preferences-selectors";
+} from "../../preferences/redux/selectors";
+import { currentFrameSelector, durationSelector } from "../redux/selectors";
 import { moveCurrentFrame, setCurrentFrame } from "../redux/slice";
 import { useFrameSliderStyles } from "../styles";
 

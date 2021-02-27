@@ -8,7 +8,7 @@ import { useRootDispatch } from "../../common/redux/store";
 import {
   currentFrameSelector,
   selectedFieldsSelector,
-} from "../../workspace/redux/selectors/doc-selectors";
+} from "../../workspace/redux/selectors";
 import {
   setAttribute,
   setIsDone,

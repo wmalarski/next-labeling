@@ -5,7 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { unpackValues } from "../../../editors/functions";
 import { frameToRange } from "../../functions";
 import { addSnapshot } from "../functions";
-import { currentDocumentSelector } from "../selectors/doc-selectors";
+import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 
 export interface SetCurrentFrameActionPayload {

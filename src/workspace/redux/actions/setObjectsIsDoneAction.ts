@@ -1,7 +1,7 @@
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { v4 as uuidv4 } from "uuid";
 import { addSnapshot } from "../functions";
-import { currentDocumentSelector } from "../selectors/doc-selectors";
+import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 
 export default function setObjectsIsDoneAction(

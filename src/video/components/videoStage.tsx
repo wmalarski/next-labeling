@@ -2,17 +2,17 @@ import React, { useCallback } from "react";
 import { Layer, Stage } from "react-konva";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../common/redux/store";
+import useDrawingTool from "../../editors/hooks/useDrawingTool";
+import { toolTypeSelector } from "../../editors/redux/selectors";
 import { LabelingFieldValues } from "../../editors/types";
 import { getEventRelativePosition } from "../../visualization/functions";
 import { UseZoomResult } from "../../visualization/hooks/useZoom";
 import { MouseButton } from "../../visualization/types";
-import useDrawingTool from "../../workspace/hooks/useDrawingTool";
-import { toolTypeSelector } from "../../workspace/redux/selectors/common-selectors";
 import {
   currentFrameSelector,
   filteredInFrameObjectSelector,
   selectedObjectSelector,
-} from "../../workspace/redux/selectors/doc-selectors";
+} from "../../workspace/redux/selectors";
 import {
   addSelectedObject,
   setAttribute,

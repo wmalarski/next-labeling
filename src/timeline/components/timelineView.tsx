@@ -4,13 +4,13 @@ import { Layer, Line, Rect, Stage } from "react-konva";
 import { useSelector } from "react-redux";
 import { TooltipLabel } from "../../visualization/components/tooltipLabel";
 import { useTooltipLabel } from "../../visualization/hooks/useTooltipLabel";
-import { durationSelector } from "../../workspace/redux/selectors/common-selectors";
 import {
   currentFrameSelector,
+  durationSelector,
   filteredObjectSelector,
   selectedObjectSelector,
   toggledObjectSelector,
-} from "../../workspace/redux/selectors/doc-selectors";
+} from "../../workspace/redux/selectors";
 import { TimelineRowHeight, TimelineVerticalLineWidth } from "../constants";
 import { getTimelineObjectConfigs } from "../functions";
 import TimelineLabel from "./shapes/timelineLabel";
