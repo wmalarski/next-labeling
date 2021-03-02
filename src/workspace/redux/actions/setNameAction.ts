@@ -1,7 +1,6 @@
-import EditIcon from "@material-ui/icons/Edit";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
-import { LabelingObject } from "../../types/client";
+import { LabelingAction, LabelingObject } from "../../types/client";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
@@ -24,7 +23,7 @@ export default function setNameAction(
   return addSnapshot(state, {
     id: uuidv4(),
     message: `Name '${object.name}' changed to '${name}'`,
-    icon: EditIcon,
+    action: LabelingAction.SET_NAME,
     data: { ...data, objects },
   });
 }

@@ -1,7 +1,6 @@
-import ImageSearchIcon from "@material-ui/icons/ImageSearch";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
-import { LabelingObject } from "../../types/client";
+import { LabelingAction, LabelingObject } from "../../types/client";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
@@ -24,7 +23,7 @@ export default function setIsTrackedAction(
   return addSnapshot(state, {
     id: uuidv4(),
     message: `Tracked value changed to ${checked}`,
-    icon: ImageSearchIcon,
+    action: LabelingAction.SET_IS_TRACKED,
     data: { ...data, objects },
   });
 }

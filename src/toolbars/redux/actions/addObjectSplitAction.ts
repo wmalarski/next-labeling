@@ -1,4 +1,3 @@
-import AddBoxIcon from "@material-ui/icons/AddBox";
 import compact from "lodash/compact";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -9,6 +8,7 @@ import {
 import { addSnapshot } from "../../../workspace/redux/functions";
 import { currentDocumentSelector } from "../../../workspace/redux/selectors";
 import { WorkspaceState } from "../../../workspace/redux/state";
+import { LabelingAction } from "../../../workspace/types/client";
 
 export default function addObjectSplitAction(
   state: WorkspaceState,
@@ -23,7 +23,7 @@ export default function addObjectSplitAction(
   return addSnapshot(state, {
     id: uuidv4(),
     message: "Objects splited",
-    icon: AddBoxIcon,
+    action: LabelingAction.ADD_OBJECT,
     data: {
       ...data,
       objects: data.objects.flatMap(object => {

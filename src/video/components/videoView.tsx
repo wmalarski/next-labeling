@@ -1,8 +1,8 @@
 import Konva from "konva";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Image } from "react-konva";
-import { useSelector } from "react-redux";
-import { useRootDispatch } from "../../common/redux/store";
+import { Provider, useSelector } from "react-redux";
+import store, { useRootDispatch } from "../../common/redux/store";
 import {
   currentFrameSelector,
   initialDocumentSelector,
@@ -13,7 +13,7 @@ export interface VideoViewProps {
   onClick: () => void;
 }
 
-export default function VideoView(props: VideoViewProps): JSX.Element {
+function VideoView(props: VideoViewProps): JSX.Element {
   const { onClick } = props;
 
   const dispatch = useRootDispatch();
@@ -76,5 +76,13 @@ export default function VideoView(props: VideoViewProps): JSX.Element {
       height={size.height}
       onClick={onClick}
     />
+  );
+}
+
+export default function WrappedVideoView(props: VideoViewProps): JSX.Element {
+  return (
+    <Provider store={store}>
+      <VideoView {...props} />
+    </Provider>
   );
 }

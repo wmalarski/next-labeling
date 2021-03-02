@@ -1,4 +1,3 @@
-import FileCopyIcon from "@material-ui/icons/FileCopy";
 import compact from "lodash/compact";
 import { v4 as uuidv4 } from "uuid";
 import { getFieldValues, unpackValues } from "../../../editors/functions";
@@ -6,6 +5,7 @@ import { createObject } from "../../../workspace/functions";
 import { addSnapshot } from "../../../workspace/redux/functions";
 import { currentDocumentSelector } from "../../../workspace/redux/selectors";
 import { WorkspaceState } from "../../../workspace/redux/state";
+import { LabelingAction } from "../../../workspace/types/client";
 
 export default function addObjectCopyFrameAction(
   state: WorkspaceState,
@@ -20,7 +20,7 @@ export default function addObjectCopyFrameAction(
   return addSnapshot(state, {
     id: uuidv4(),
     message: "Objects frame copied",
-    icon: FileCopyIcon,
+    action: LabelingAction.ADD_OBJECT_COPY,
     data: {
       ...data,
       objects: data.objects.flatMap(object => {

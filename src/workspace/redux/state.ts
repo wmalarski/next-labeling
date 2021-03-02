@@ -1,7 +1,6 @@
-import { OverridableComponent } from "@material-ui/core/OverridableComponent";
-import { SvgIconTypeMap } from "@material-ui/core/SvgIcon";
 import { ShortcutActions } from "../shortcuts";
 import {
+  LabelingAction,
   LabelingDisplayFilters,
   LabelingDocument,
   ToolType,
@@ -28,13 +27,13 @@ export interface WorkspaceSnapshot {
   id: string;
   data: LabelingDocument;
   message: string;
-  icon?: OverridableComponent<SvgIconTypeMap<unknown, "svg">>;
+  action?: LabelingAction;
 }
 
 export interface WorkspaceSnapshotMessage {
   id: string;
   message: string;
-  icon?: OverridableComponent<SvgIconTypeMap<unknown, "svg">>;
+  action?: LabelingAction;
 }
 
 export interface WorkspaceState {

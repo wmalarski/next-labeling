@@ -1,4 +1,3 @@
-import AddBoxIcon from "@material-ui/icons/AddBox";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -7,6 +6,7 @@ import {
 } from "../../../editors/redux/selectors";
 import { LabelingFieldValues } from "../../../editors/types";
 import { createObject } from "../../functions";
+import { LabelingAction } from "../../types/client";
 import { addSnapshot } from "../functions";
 import {
   currentDocumentSelector,
@@ -44,7 +44,7 @@ export default function addObjectAction(
   return addSnapshot(state, {
     id: uuidv4(),
     message: `${object.name} created`,
-    icon: AddBoxIcon,
+    action: LabelingAction.ADD_OBJECT,
     data: {
       ...data,
       objects: [...objects, object],

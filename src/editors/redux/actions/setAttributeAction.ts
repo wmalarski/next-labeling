@@ -1,9 +1,9 @@
-import EditIcon from "@material-ui/icons/Edit";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 import { addSnapshot } from "../../../workspace/redux/functions";
 import { currentDocumentSelector } from "../../../workspace/redux/selectors";
 import { WorkspaceState } from "../../../workspace/redux/state";
+import { LabelingAction } from "../../../workspace/types/client";
 import { calculateNewValues } from "../../functions";
 import { LabelingFieldValues } from "../../types";
 
@@ -39,7 +39,7 @@ export default function setAttributeAction(
   return addSnapshot(state, {
     id: uuidv4(),
     message: `Attribute ${field.fieldSchema.name} changed`,
-    icon: EditIcon,
+    action: LabelingAction.SET_ATTRIBUTE,
     data: { ...data, objects },
   });
 }

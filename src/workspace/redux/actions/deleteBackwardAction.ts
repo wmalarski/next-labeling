@@ -1,7 +1,7 @@
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import compact from "lodash/compact";
 import { v4 as uuidv4 } from "uuid";
 import { deleteObjectBackward } from "../../functions";
+import { LabelingAction } from "../../types/client";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
@@ -19,7 +19,7 @@ export default function deleteBackwardAction(
   return addSnapshot(state, {
     id: uuidv4(),
     message: "Objects deleted forward",
-    icon: ArrowBackIcon,
+    action: LabelingAction.DELETE_BACKWARD,
     data: {
       ...data,
       objects: compact(

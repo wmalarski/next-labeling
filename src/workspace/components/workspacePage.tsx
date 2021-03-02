@@ -34,7 +34,13 @@ export default function WorkspacePage(props: WorkspacePageProps): JSX.Element {
   const dispatch = useRootDispatch();
   useEffect(() => {
     if (!document) return;
-    dispatch(resetLabeling(document));
+    const { seconds, nanoseconds } = document.createdAt as any;
+    dispatch(
+      resetLabeling({
+        ...document,
+        createdAt: { seconds, nanoseconds },
+      }),
+    );
   }, [dispatch, document]);
 
   return (

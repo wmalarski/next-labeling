@@ -22,6 +22,7 @@ import {
   setSnapshotId,
   undoLabeling,
 } from "../../workspace/redux/slice";
+import actionIcons from "../actionIcons";
 import {
   currentSnapshotSelector,
   messagesSelector,
@@ -123,7 +124,10 @@ export default function UndoRedoButtons(): JSX.Element {
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList id="split-button-menu">
                   {[...messages].reverse().map(messagePair => {
-                    const ActionIcon = messagePair.icon ?? ChangeHistoryIcon;
+                    const ActionIcon =
+                      (messagePair.action
+                        ? actionIcons[messagePair.action]
+                        : null) ?? ChangeHistoryIcon;
                     return (
                       <MenuItem
                         key={messagePair.id}

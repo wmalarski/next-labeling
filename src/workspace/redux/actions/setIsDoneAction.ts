@@ -1,7 +1,6 @@
-import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
-import { LabelingObject } from "../../types/client";
+import { LabelingAction, LabelingObject } from "../../types/client";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
@@ -24,7 +23,7 @@ export default function setIsDoneAction(
   return addSnapshot(state, {
     id: uuidv4(),
     message: `Done value changed to ${checked}`,
-    icon: CheckCircleIcon,
+    action: LabelingAction.SET_IS_DONE,
     data: { ...data, objects },
   });
 }

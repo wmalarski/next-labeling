@@ -1,4 +1,3 @@
-import AddBoxIcon from "@material-ui/icons/AddBox";
 import compact from "lodash/compact";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -11,6 +10,7 @@ import { createObject } from "../../../workspace/functions";
 import { addSnapshot } from "../../../workspace/redux/functions";
 import { currentDocumentSelector } from "../../../workspace/redux/selectors";
 import { WorkspaceState } from "../../../workspace/redux/state";
+import { LabelingAction } from "../../../workspace/types/client";
 
 type FieldReducer = Record<
   string,
@@ -95,7 +95,7 @@ export default function addObjectMergeAction(
   return addSnapshot(state, {
     id: uuidv4(),
     message: "Objects merged",
-    icon: AddBoxIcon,
+    action: LabelingAction.ADD_OBJECT,
     data: {
       ...data,
       objects: [

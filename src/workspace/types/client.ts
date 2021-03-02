@@ -53,3 +53,17 @@ export interface LabelingDisplayFilters {
   name?: string | null;
   isDone: IsDoneFilterValue;
 }
+
+export enum LabelingAction {
+  SET_ATTRIBUTE,
+  ADD_OBJECT_COPY,
+  ADD_OBJECT,
+  SET_SNAPSHOT,
+  SELECTION_CHANGE,
+  DELETE_BACKWARD,
+  DELETE_FORWARD,
+  DELETE_OBJECTS,
+  SET_IS_DONE,
+  SET_IS_TRACKED,
+  SET_NAME,
+}

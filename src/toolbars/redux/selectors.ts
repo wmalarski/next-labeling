@@ -11,7 +11,7 @@ export const messagesSelector = createSelector(
     state.history.map(pair => ({
       message: pair.message,
       id: pair.id,
-      icon: pair.icon,
+      action: pair.action,
     })),
 );
 

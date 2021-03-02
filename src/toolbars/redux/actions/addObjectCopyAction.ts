@@ -1,10 +1,10 @@
-import FileCopyIcon from "@material-ui/icons/FileCopy";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 import { copyObject } from "../../../workspace/functions";
 import { addSnapshot } from "../../../workspace/redux/functions";
 import { currentDocumentSelector } from "../../../workspace/redux/selectors";
 import { WorkspaceState } from "../../../workspace/redux/state";
+import { LabelingAction } from "../../../workspace/types/client";
 
 export default function addObjectCopyAction(
   state: WorkspaceState,
@@ -16,7 +16,7 @@ export default function addObjectCopyAction(
   return addSnapshot(state, {
     id: uuidv4(),
     message: "Objects copied",
-    icon: FileCopyIcon,
+    action: LabelingAction.ADD_OBJECT_COPY,
     data: {
       ...data,
       objects: [

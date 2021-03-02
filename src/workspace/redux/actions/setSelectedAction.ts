@@ -1,8 +1,7 @@
-import SelectAllIcon from "@material-ui/icons/SelectAll";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 import { getFrames } from "../../functions";
-import { ObjectSelection } from "../../types/client";
+import { LabelingAction, ObjectSelection } from "../../types/client";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
@@ -29,7 +28,7 @@ export default function setSelectedAction(
   return addSnapshot(state, {
     id: uuidv4(),
     message: "Selection changed",
-    icon: SelectAllIcon,
+    action: LabelingAction.SELECTION_CHANGE,
     data: { ...data, selected, currentFrame: newFrame },
   });
 }

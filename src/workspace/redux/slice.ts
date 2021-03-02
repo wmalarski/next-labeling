@@ -94,7 +94,7 @@ const initialState: WorkspaceState = {
   },
 };
 
-const workspaceReducer = createSlice({
+export const workspaceReducer = createSlice({
   name: "workspace",
   initialState,
   reducers: {

@@ -1,4 +1,3 @@
-import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 import { CommentSnapshot } from "../../../comments/types";
@@ -10,6 +9,7 @@ import {
   schemaSelector,
 } from "../../../workspace/redux/selectors";
 import { WorkspaceState } from "../../../workspace/redux/state";
+import { LabelingAction } from "../../../workspace/types/client";
 
 export interface SetSnapshotActionPayload {
   snapshot: CommentSnapshot;
@@ -28,7 +28,7 @@ export default function setSnapshotAction(
   return addSnapshot(state, {
     id: uuidv4(),
     message: "Snapshot loaded",
-    icon: AddAPhotoIcon,
+    action: LabelingAction.SET_SNAPSHOT,
     data: {
       ...data,
       currentFrame,

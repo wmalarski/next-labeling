@@ -1,5 +1,5 @@
-import SelectAllIcon from "@material-ui/icons/SelectAll";
 import { v4 as uuidv4 } from "uuid";
+import { LabelingAction } from "../../types/client";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
@@ -12,7 +12,7 @@ export default function setSelectedAllAction(
   return addSnapshot(state, {
     id: uuidv4(),
     message: "Selection changed",
-    icon: SelectAllIcon,
+    action: LabelingAction.SELECTION_CHANGE,
     data: {
       ...data,
       selected: data.objects.map(object => ({
