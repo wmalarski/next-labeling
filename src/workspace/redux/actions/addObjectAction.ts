@@ -1,18 +1,11 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
-import {
-  drawingToolIdSelector,
-  drawingToolSelector,
-} from "../../../editors/redux/selectors";
+import { drawingToolSelector } from "../../../editors/redux/selectors";
 import { LabelingFieldValues } from "../../../editors/types";
 import { createObject } from "../../functions";
 import { LabelingAction } from "../../types/client";
 import { addSnapshot } from "../functions";
-import {
-  currentDocumentSelector,
-  initialDocumentSelector,
-  schemaSelector,
-} from "../selectors";
+import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 
 export interface AddObjectUpdatePayload {
@@ -24,10 +17,7 @@ export default function addObjectAction(
   action: PayloadAction<AddObjectUpdatePayload>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
-  const initial = initialDocumentSelector.resultFunc(state);
-  const schema = schemaSelector.resultFunc(initial);
-  const drawingToolId = drawingToolIdSelector.resultFunc(state);
-  const drawingTool = drawingToolSelector.resultFunc(schema, drawingToolId);
+  const drawingTool = drawingToolSelector.resultFunc(state);
   if (!drawingTool) return state;
 
   const { currentFrame, objects } = data;

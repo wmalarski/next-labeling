@@ -1,5 +1,6 @@
 import { ShortcutActions } from "../shortcuts";
 import {
+  DrawingTool,
   LabelingAction,
   LabelingDisplayFilters,
   LabelingDocument,
@@ -43,6 +44,6 @@ export interface WorkspaceState {
   duration: number;
   filters: LabelingDisplayFilters;
   toolType: ToolType;
-  drawingTool: string | null;
+  drawingTool: DrawingTool | null;
   preferences: PreferencesState;
 }

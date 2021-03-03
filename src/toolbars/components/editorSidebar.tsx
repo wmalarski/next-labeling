@@ -20,6 +20,7 @@ import React, { useCallback, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../common/redux/store";
+import getCoordsBuilders from "../../editors/builders/getCoordsBuilder";
 import EditorSettingsDialog from "../../preferences/components/editorSettingsDialog";
 import {
   labelingViewsSelector,
@@ -37,6 +38,7 @@ import {
   deleteBackward,
   deleteForward,
   deleteObjects,
+  setDrawingTool,
   setObjectFirstFrame,
   setObjectLastFrame,
   setObjectsIsDone,
@@ -158,36 +160,34 @@ export default function EditorSidebar(): JSX.Element {
       <div className={classes.lists}>
         <List>
           {schema.objects
-            .filter(object => !object.singleton)
-            .map((object, index) => {
+            .filter(objectSchema => !objectSchema.singleton)
+            .map((objectSchema, index) => {
               const ToolIcon = filterIcons[index % filterIcons.length];
+              const fieldSchema = objectSchema.fields.find(
+                field =>
+                  !!getCoordsBuilders({
+                    fieldSchema: field,
+                    objectSchema,
+                  }),
+              );
               return (
-                <ListItem
-                  key={object.id}
-                  button
-                  // onClick={() =>
-                  //   dispatch(doc => {
-                  //     const [newObjectId, state] = addObjectUpdate(
-                  //       doc,
-                  //       object,
-                  //       currentFrame,
-                  //     );
-                  //     // setTool({
-                  //     //   toolType: ToolType.DRAWING_TOOL,
-                  //     //   objectId: newObjectId,
-                  //     // });
-                  //     return state;
-                  //   })
-                  // }
-                >
-                  <ListItemIcon>
-                    <ToolIcon />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={object.name}
-                    secondary={`Add new ${object.name}`}
-                  />
-                </ListItem>
+                fieldSchema && (
+                  <ListItem
+                    key={objectSchema.id}
+                    button
+                    onClick={() =>
+                      dispatch(setDrawingTool({ fieldSchema, objectSchema }))
+                    }
+                  >
+                    <ListItemIcon>
+                      <ToolIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={objectSchema.name}
+                      secondary={`Add new ${objectSchema.name}`}
+                    />
+                  </ListItem>
+                )
               );
             })}
           <Divider />
