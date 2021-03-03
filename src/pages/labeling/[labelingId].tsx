@@ -19,7 +19,7 @@ export default function LabelingEditor(
 
   return (
     <Provider store={store}>
-      {document && documentId && <WorkspacePage documentId={documentId} />}
+      {documentId && <WorkspacePage documentId={documentId} />}
     </Provider>
   );
 }

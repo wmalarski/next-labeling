@@ -66,4 +66,6 @@ export enum LabelingAction {
   SET_IS_DONE,
   SET_IS_TRACKED,
   SET_NAME,
+  FRAME_CHANGE_FORWARD,
+  FRAME_CHANGE_BACKWARD,
 }

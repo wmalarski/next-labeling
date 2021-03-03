@@ -1,10 +1,8 @@
 import { useTheme } from "@material-ui/core";
 import Konva from "konva";
-import React, { useCallback, useRef } from "react";
+import React, { useRef } from "react";
 import { Line, Rect, Text } from "react-konva";
-import { useRootDispatch } from "../../../common/redux/store";
 import useMouseHover from "../../../visualization/hooks/useMouseHover";
-import { setToggled } from "../../../workspace/redux/slice";
 import { TimelineObjectConfig } from "../../types";
 
 const hoverProps = { strokeWidth: 2 };
@@ -15,6 +13,7 @@ export interface TimelineLabelProps extends TimelineObjectConfig {
   rowHeight: number;
   horPadding: number;
   verPadding: number;
+  onToggle: (id: string) => void;
 }
 
 export default function TimelineLabel(props: TimelineLabelProps): JSX.Element {
@@ -27,14 +26,9 @@ export default function TimelineLabel(props: TimelineLabelProps): JSX.Element {
     horPadding,
     verPadding,
     fieldBlocks,
+    onToggle,
   } = props;
   const { id, name } = object;
-
-  const dispatch = useRootDispatch();
-  const handleToggle = useCallback(
-    (id: string): void => void dispatch(setToggled(id)),
-    [dispatch],
-  );
 
   const theme = useTheme();
   const textStroke = theme.palette.text.primary;
@@ -83,7 +77,7 @@ export default function TimelineLabel(props: TimelineLabelProps): JSX.Element {
         y={yShift}
         height={rowHeight}
         width={arrowWidth}
-        onClick={() => handleToggle(id)}
+        onClick={() => onToggle(id)}
         {...hoverCallbacks}
       />
       <Text x={arrowWidth} y={yShift} text={name} {...textCommonProps} />

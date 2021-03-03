@@ -13,16 +13,15 @@ export default function SelectEditor(
   const { disabled, field, frame, onChange } = props;
 
   const config = field.fieldSchema.attributes.Select;
-  const frameValues = getFieldValues({
+  const frameValue = getFieldValues({
     frame,
     perFrame: field.fieldSchema.perFrame,
     values: field.values,
-  })?.Select;
-  if (!frameValues) return null;
-  const frameValue = frameValues[0];
-  const selected = frameValue?.value;
+  })?.Select?.[0];
 
-  return frameValue && config ? (
+  if (!frameValue || !config) return null;
+
+  return (
     <FormControl>
       <InputLabel id="select-field-type-label">
         {field.fieldSchema.name}
@@ -37,7 +36,7 @@ export default function SelectEditor(
             <ToggleButton
               disabled={disabled}
               value={option.text}
-              selected={selected === option.text}
+              selected={frameValue.value === option.text}
               size="small"
               color="inherit"
               onChange={() =>
@@ -57,5 +56,5 @@ export default function SelectEditor(
         ))}
       </Grid>
     </FormControl>
-  ) : null;
+  );
 }

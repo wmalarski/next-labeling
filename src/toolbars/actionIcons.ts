@@ -4,6 +4,8 @@ import AddAPhotoIcon from "@material-ui/icons/AddAPhoto";
 import AddBoxIcon from "@material-ui/icons/AddBox";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward";
+import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
+import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import EditIcon from "@material-ui/icons/Edit";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
@@ -27,6 +29,8 @@ const actionIcons: Record<
   [LabelingAction.SET_IS_DONE]: CheckCircleIcon,
   [LabelingAction.SET_IS_TRACKED]: ImageSearchIcon,
   [LabelingAction.SET_NAME]: EditIcon,
+  [LabelingAction.FRAME_CHANGE_FORWARD]: ArrowRightIcon,
+  [LabelingAction.FRAME_CHANGE_BACKWARD]: ArrowLeftIcon,
 };
 
 export default actionIcons;

@@ -1,9 +1,8 @@
-import ArrowLeftIcon from "@material-ui/icons/ArrowLeft";
-import ArrowRightIcon from "@material-ui/icons/ArrowRight";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
 import { unpackValues } from "../../../editors/functions";
 import { frameToRange } from "../../functions";
+import { LabelingAction } from "../../types/client";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
@@ -24,13 +23,16 @@ export default function setCurrentFrameAction(
   const { objects, currentFrame } = data;
   const changeStep = nextFrameInRange - currentFrame;
   const message = `Frame changed`;
-  const icon = changeStep < 0 ? ArrowLeftIcon : ArrowRightIcon;
+  const actionIcon =
+    changeStep < 0
+      ? LabelingAction.FRAME_CHANGE_BACKWARD
+      : LabelingAction.FRAME_CHANGE_FORWARD;
 
   if (Math.abs(changeStep) !== propagationStep)
     return addSnapshot(state, {
       id: uuidv4(),
       message,
-      icon,
+      action: actionIcon,
       data: { ...data, currentFrame: nextFrameInRange },
     });
   const newObjects = objects.map(object => {
@@ -76,7 +78,7 @@ export default function setCurrentFrameAction(
   return addSnapshot(state, {
     id: uuidv4(),
     message,
-    icon,
+    action: actionIcon,
     data: { ...data, currentFrame: nextFrameInRange, objects: newObjects },
   });
 }

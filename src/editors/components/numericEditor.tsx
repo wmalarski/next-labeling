@@ -10,17 +10,17 @@ export default function NumericEditor(
 
   const config = field.fieldSchema.attributes.Numeric;
 
-  const frameValues = getFieldValues({
+  const frameValue = getFieldValues({
     frame,
     perFrame: field.fieldSchema.perFrame,
     values: field.values,
-  })?.Numeric;
-  if (!frameValues) return null;
-  const frameValue = frameValues[0];
+  })?.Numeric?.[0];
 
-  return frameValue && config ? (
+  if (!frameValue || !config) return null;
+
+  return (
     <TextField
-      label={field.fieldSchema}
+      label={field.fieldSchema.name}
       disabled={disabled}
       fullWidth
       type="number"
@@ -42,5 +42,5 @@ export default function NumericEditor(
         })
       }
     />
-  ) : null;
+  );
 }

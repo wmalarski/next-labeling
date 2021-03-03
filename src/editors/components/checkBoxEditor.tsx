@@ -9,15 +9,15 @@ export default function CheckBoxEditor(
 ): JSX.Element | null {
   const { disabled, field, frame, onChange } = props;
 
-  const frameValues = getFieldValues({
+  const frameValue = getFieldValues({
     frame,
     perFrame: field.fieldSchema.perFrame,
     values: field.values,
-  })?.CheckBox;
-  if (!frameValues) return null;
-  const frameValue = frameValues[0];
+  })?.CheckBox?.[0];
 
-  return frameValue ? (
+  if (!frameValue) return null;
+
+  return (
     <FormControlLabel
       control={
         <Checkbox
@@ -37,5 +37,5 @@ export default function CheckBoxEditor(
       }
       label={field.fieldSchema.name}
     />
-  ) : null;
+  );
 }

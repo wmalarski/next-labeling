@@ -8,15 +8,15 @@ export default function TextEditor(
 ): JSX.Element | null {
   const { disabled, field, frame, onChange } = props;
 
-  const frameValues = getFieldValues({
+  const frameValue = getFieldValues({
     frame,
     perFrame: field.fieldSchema.perFrame,
     values: field.values,
-  })?.Text;
-  if (!frameValues) return null;
-  const frameValue = frameValues[0];
+  })?.Text?.[0];
 
-  return frameValue ? (
+  if (!frameValue) return null;
+
+  return (
     <TextField
       label={field.fieldSchema.name}
       disabled={disabled}
@@ -34,5 +34,5 @@ export default function TextEditor(
         });
       }}
     />
-  ) : null;
+  );
 }

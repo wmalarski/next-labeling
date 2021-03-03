@@ -1,3 +1,4 @@
+import sortBy from "lodash/sortBy";
 import { UnpackedFrameValuePair, unpackValues } from "../editors/functions";
 import getValueIndex from "../editors/indexes";
 import { LabelingField, LabelingObject } from "../workspace/types/client";
@@ -16,7 +17,7 @@ export function calculateObjectBlocks(
     return [{ firstFrame: 0, lastFrame: duration }];
   }
 
-  const [first, ...frames] = object.frames.sort((a, b) => a - b);
+  const [first, ...frames] = sortBy(object.frames);
   return frames
     .reduce(
       (prev, curr, index, array) => {

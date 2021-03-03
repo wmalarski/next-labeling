@@ -1,9 +1,11 @@
 import { useTheme } from "@material-ui/core";
-import React, { useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { Layer, Line, Rect, Stage } from "react-konva";
 import { useSelector } from "react-redux";
+import { useRootDispatch } from "../../common/redux/store";
 import { TooltipLabel } from "../../visualization/components/tooltipLabel";
 import { useTooltipLabel } from "../../visualization/hooks/useTooltipLabel";
+import { frameToRange } from "../../workspace/functions";
 import {
   currentFrameSelector,
   durationSelector,
@@ -11,6 +13,13 @@ import {
   selectedObjectSelector,
   toggledObjectSelector,
 } from "../../workspace/redux/selectors";
+import {
+  deselectObject,
+  selectObject,
+  setCurrentFrame,
+  setToggled,
+} from "../../workspace/redux/slice";
+import { LabelingObject } from "../../workspace/types/client";
 import { TimelineRowHeight, TimelineVerticalLineWidth } from "../constants";
 import { getTimelineObjectConfigs } from "../functions";
 import TimelineLabel from "./shapes/timelineLabel";
@@ -25,15 +34,43 @@ export interface TimelineViewProps {
 export default function TimelineView(props: TimelineViewProps): JSX.Element {
   const { width, scaleX, stageX } = props;
 
+  const theme = useTheme();
+  const errorColor = theme.palette.error.light;
+  const backgroundColor = theme.palette.background.default;
+
+  const dispatch = useRootDispatch();
   const duration = useSelector(durationSelector);
   const filteredObjects = useSelector(filteredObjectSelector);
   const toggled = useSelector(toggledObjectSelector);
   const selected = useSelector(selectedObjectSelector);
   const currentFrame = useSelector(currentFrameSelector);
 
-  const theme = useTheme();
-  const errorColor = theme.palette.error.light;
-  const backgroundColor = theme.palette.background.default;
+  const handleSelect = useCallback(
+    (object: LabelingObject, reset: boolean, fieldId?: string): void =>
+      void dispatch(selectObject({ object, reset, fieldId })),
+    [dispatch],
+  );
+
+  const handleDeselect = useCallback(
+    (object: LabelingObject, reset: boolean, fieldId?: string): void =>
+      void dispatch(deselectObject({ objectId: object.id, reset, fieldId })),
+    [dispatch],
+  );
+
+  const handleFrameSelected = useCallback(
+    (index: number): void =>
+      void dispatch(
+        setCurrentFrame({
+          nextFrame: frameToRange(Number(index), duration),
+        }),
+      ),
+    [duration, dispatch],
+  );
+
+  const handleToggle = useCallback(
+    (id: string): void => void dispatch(setToggled(id)),
+    [dispatch],
+  );
 
   const configs = useMemo(
     () => getTimelineObjectConfigs(filteredObjects, toggled, duration),
@@ -76,6 +113,9 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
             {...config}
             onTooltipEnter={onPointMove}
             onTooltipLeave={onMouseLeave}
+            onDeselect={handleDeselect}
+            onFrameSelected={handleFrameSelected}
+            onSelect={handleSelect}
           />
         ))}
       </Layer>
@@ -101,6 +141,7 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
             arrowWidth={arrowWidth}
             horPadding={8}
             verPadding={14}
+            onToggle={handleToggle}
             {...config}
           />
         ))}

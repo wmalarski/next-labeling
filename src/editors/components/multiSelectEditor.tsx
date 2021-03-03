@@ -9,21 +9,22 @@ import { FieldEditorProps, FieldType } from "../types";
 
 export default function MultiSelectEditor(
   props: FieldEditorProps,
-): JSX.Element {
+): JSX.Element | null {
   const { disabled, frame, field, onChange } = props;
 
   const config = field.fieldSchema.attributes.MultiSelect;
 
-  const frameValues = getFieldValues({
+  const frameValue = getFieldValues({
     frame,
     perFrame: field.fieldSchema.perFrame,
     values: field.values,
-  })?.MultiSelect;
-  if (!frameValues) return <></>;
-  const frameValue = frameValues[0];
+  })?.MultiSelect?.[0];
+
+  if (!frameValue || !config) return null;
+
   const selected = frameValue?.value ?? [];
 
-  return frameValue && config ? (
+  return (
     <FormControl>
       <InputLabel id="select-field-type-label">
         {field.fieldSchema.name}
@@ -71,7 +72,5 @@ export default function MultiSelectEditor(
         ))}
       </Grid>
     </FormControl>
-  ) : (
-    <></>
   );
 }

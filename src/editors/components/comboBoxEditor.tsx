@@ -12,15 +12,15 @@ export default function ComboBoxEditor(
   const { disabled, field, frame, onChange } = props;
 
   const config = field.fieldSchema.attributes.ComboBox;
-  const frameValues = getFieldValues({
+  const frameValue = getFieldValues({
     frame,
     perFrame: field.fieldSchema.perFrame,
     values: field.values,
-  })?.ComboBox;
-  if (!frameValues) return null;
-  const frameValue = frameValues[0];
+  })?.ComboBox?.[0];
 
-  return frameValue && config ? (
+  if (!frameValue || !config) return null;
+
+  return (
     <FormControl fullWidth>
       <InputLabel id="select-field-type-label">
         {field.fieldSchema.name}
@@ -51,5 +51,5 @@ export default function ComboBoxEditor(
         )}
       </Select>
     </FormControl>
-  ) : null;
+  );
 }
