@@ -9,8 +9,11 @@ import useAuth from "../../auth/hooks/useAuth";
 import Footer from "../../common/components/footer";
 import Header from "../../common/components/header";
 import SearchInput from "../../common/components/searchInput";
+import { initializeFirebase } from "../../firebase/firebaseClient";
 import { LabelingCollection } from "../../firebase/types";
 import LabelingList from "../../labeling/components/labelingList";
+
+initializeFirebase();
 
 export default function LabelingListPage(): JSX.Element {
   const { authUser } = useAuth();

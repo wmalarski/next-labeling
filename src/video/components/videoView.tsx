@@ -1,19 +1,25 @@
 import Konva from "konva";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Image } from "react-konva";
-import { LabelingContextValue } from "../../workspace/contexts/labelingContext";
+import { Provider, useSelector } from "react-redux";
+import store, { useRootDispatch } from "../../common/redux/store";
+import {
+  currentFrameSelector,
+  initialDocumentSelector,
+} from "../../workspace/redux/selectors";
+import { setDuration } from "../../workspace/redux/slice";
 
 export interface VideoViewProps {
-  context: LabelingContextValue;
   onClick: () => void;
 }
 
-export default function VideoView(props: VideoViewProps): JSX.Element {
-  const { context, onClick } = props;
+function VideoView(props: VideoViewProps): JSX.Element {
+  const { onClick } = props;
 
-  const { document: labelingDocument, history, setDuration } = context;
-  const { currentFrame } = history.data;
-  const { filename: source, fps = 24 } = labelingDocument;
+  const dispatch = useRootDispatch();
+  const currentFrame = useSelector(currentFrameSelector);
+  const initial = useSelector(initialDocumentSelector);
+  const { filename: source, fps = 24 } = initial;
 
   const imageRef = useRef<Konva.Image | null>(null);
   const [size, setSize] = useState({ width: 50, height: 50 });
@@ -35,13 +41,13 @@ export default function VideoView(props: VideoViewProps): JSX.Element {
 
       const durationSeconds = videoElement.duration;
       const framesDuration = Math.floor(durationSeconds * fps);
-      setDuration(framesDuration);
+      dispatch(setDuration(framesDuration));
     };
     videoElement.addEventListener("loadedmetadata", onload);
     return () => {
       videoElement.removeEventListener("loadedmetadata", onload);
     };
-  }, [fps, setDuration, videoElement]);
+  }, [dispatch, fps, videoElement]);
 
   // use Konva.Animation to redraw a layer
   useEffect(() => {
@@ -70,5 +76,13 @@ export default function VideoView(props: VideoViewProps): JSX.Element {
       height={size.height}
       onClick={onClick}
     />
+  );
+}
+
+export default function WrappedVideoView(props: VideoViewProps): JSX.Element {
+  return (
+    <Provider store={store}>
+      <VideoView {...props} />
+    </Provider>
   );
 }

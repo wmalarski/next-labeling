@@ -5,26 +5,23 @@ import firebase from "firebase/app";
 import "firebase/firestore";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import withToken from "../../auth/functions/withToken";
-import useAuth from "../../auth/hooks/useAuth";
+import useAuthWithRedirect from "../../auth/hooks/useAuthWithRedirect";
 import Footer from "../../common/components/footer";
 import Header from "../../common/components/header";
 import SearchInput from "../../common/components/searchInput";
+import { initializeFirebase } from "../../firebase/firebaseClient";
 import { SchemaCollection } from "../../firebase/types";
 import { SchemaList } from "../../schema/components/details/schemaList";
 
+initializeFirebase();
+
 export default function SchemaListPage(): JSX.Element {
-  const { authUser } = useAuth();
+  const { authUser } = useAuthWithRedirect();
   const router = useRouter();
 
   const [searchText, setSearchText] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!authUser) {
-      router.push("/");
-    }
-  });
 
   const collection = firebase.firestore().collection(SchemaCollection);
   const query = searchText

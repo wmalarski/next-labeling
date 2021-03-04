@@ -1,21 +1,26 @@
 import TextField from "@material-ui/core/TextField";
 import React from "react";
-import usePreferences from "../../workspace/hooks/usePreferencesContext";
-import { calculateNewValues, getFieldValues } from "../functions";
+import { getFieldValues } from "../functions";
 import { FieldEditorProps, FieldType } from "../types";
 
-export default function NumericEditor(props: FieldEditorProps): JSX.Element {
-  const { disabled, name, perFrame, frame, attributes, onChange } = props;
-  const { preferences } = usePreferences();
-  const config = attributes.Numeric;
+export default function NumericEditor(
+  props: FieldEditorProps,
+): JSX.Element | null {
+  const { disabled, field, frame, onChange } = props;
 
-  const frameValues = getFieldValues(props)?.Numeric;
-  if (!frameValues) return <></>;
-  const frameValue = frameValues[0];
+  const config = field.fieldSchema.attributes.Numeric;
 
-  return frameValue && config ? (
+  const frameValue = getFieldValues({
+    frame,
+    perFrame: field.fieldSchema.perFrame,
+    values: field.values,
+  })?.Numeric?.[0];
+
+  if (!frameValue || !config) return null;
+
+  return (
     <TextField
-      label={name}
+      label={field.fieldSchema.name}
       disabled={disabled}
       fullWidth
       type="number"
@@ -26,26 +31,16 @@ export default function NumericEditor(props: FieldEditorProps): JSX.Element {
         min: config.min,
         step: config.step,
       }}
-      onChange={event => {
-        const value = Number(event.target.value);
-        onChange(values =>
-          calculateNewValues(
-            values,
-            perFrame,
+      onChange={event =>
+        onChange({
+          [FieldType.NUMERIC]: [
             {
-              [FieldType.NUMERIC]: [
-                {
-                  frame,
-                  value,
-                },
-              ],
+              frame,
+              value: Number(event.target.value),
             },
-            preferences.labelingDirection,
-          ),
-        );
-      }}
+          ],
+        })
+      }
     />
-  ) : (
-    <></>
   );
 }

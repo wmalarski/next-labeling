@@ -3,8 +3,15 @@ import Grid from "@material-ui/core/Grid";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import React from "react";
+import { useSelector } from "react-redux";
 import SearchInput from "../../common/components/searchInput";
-import useLabelingContext from "../../workspace/hooks/useLabelingContext";
+import { useRootDispatch } from "../../common/redux/store";
+import {
+  currentFrameSelector,
+  filtersSelector,
+  schemaSelector,
+} from "../../workspace/redux/selectors";
+import { setFilters } from "../../workspace/redux/slice";
 import { IsDoneFilterValue } from "../../workspace/types/client";
 import { UseXZoomResult } from "../hooks/useXZoom";
 import { TimelineZoomControls } from "./timelineZoomControls";
@@ -18,8 +25,11 @@ export function TimelineFilterControls(
 ): JSX.Element {
   const { zoom } = props;
 
-  const { document, filters, setFilters, history } = useLabelingContext();
-  const index = history.data.currentFrame;
+  const dispatch = useRootDispatch();
+  const index = useSelector(currentFrameSelector);
+  const filters = useSelector(filtersSelector);
+  const schema = useSelector(schemaSelector);
+
   const isDoneValue =
     filters.isDone === IsDoneFilterValue.ALL ? null : filters.isDone;
 
@@ -28,7 +38,7 @@ export function TimelineFilterControls(
       <Grid item xs={4}>
         <SearchInput
           onSubmit={value =>
-            setFilters({ ...filters, name: value === "" ? null : value })
+            dispatch(setFilters({ name: value === "" ? null : value }))
           }
         />
       </Grid>
@@ -37,10 +47,11 @@ export function TimelineFilterControls(
           value={isDoneValue}
           exclusive
           onChange={(_event, value) =>
-            setFilters({
-              ...filters,
-              isDone: !value ? IsDoneFilterValue.ALL : value,
-            })
+            dispatch(
+              setFilters({
+                isDone: !value ? IsDoneFilterValue.ALL : value,
+              }),
+            )
           }
           aria-label="is done buttons"
         >
@@ -53,7 +64,7 @@ export function TimelineFilterControls(
         </ToggleButtonGroup>
       </Grid>
       <Grid item xs={2}>
-        {document.schema.objects.map(objectSchema => {
+        {schema.objects.map(objectSchema => {
           const isSelected = filters.objectSchemaIds.includes(objectSchema.id);
           return (
             <Chip
@@ -62,12 +73,13 @@ export function TimelineFilterControls(
               color={isSelected ? "primary" : "default"}
               onClick={() => {
                 const newIds = [...filters.objectSchemaIds];
-                setFilters({
-                  ...filters,
-                  objectSchemaIds: isSelected
-                    ? newIds.filter(id => id !== objectSchema.id)
-                    : [...newIds, objectSchema.id],
-                });
+                dispatch(
+                  setFilters({
+                    objectSchemaIds: isSelected
+                      ? newIds.filter(id => id !== objectSchema.id)
+                      : [...newIds, objectSchema.id],
+                  }),
+                );
               }}
             />
           );

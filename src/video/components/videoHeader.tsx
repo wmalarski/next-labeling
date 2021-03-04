@@ -6,8 +6,11 @@ import ZoomOutIcon from "@material-ui/icons/ZoomOut";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import React, { useCallback } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import usePreferences from "../../workspace/hooks/usePreferencesContext";
-import useToolContext from "../../workspace/hooks/useToolContext";
+import { useSelector } from "react-redux";
+import { useRootDispatch } from "../../common/redux/store";
+import { toolTypeSelector } from "../../editors/redux/selectors";
+import { shortcutsSelector } from "../../preferences/redux/selectors";
+import { setToolType } from "../../workspace/redux/slice";
 import { ToolType } from "../../workspace/types/client";
 import { useVideoHeaderStyles } from "../styles";
 
@@ -21,13 +24,13 @@ export default function VideoHeader(props: VideoHeaderProps): JSX.Element {
   const { onResetClicked, onZoomInClicked, onZoomOutClicked } = props;
   const classes = useVideoHeaderStyles();
 
-  const { toolType, setTool } = useToolContext();
-  const { preferences } = usePreferences();
-  const { shortcuts } = preferences;
+  const dispatch = useRootDispatch();
+  const toolType = useSelector(toolTypeSelector);
+  const shortcuts = useSelector(shortcutsSelector);
 
   const setPan = useCallback(
-    () => setTool({ toolType: ToolType.ZOOM_AND_PANE }),
-    [setTool],
+    () => void dispatch(setToolType(ToolType.ZOOM_AND_PANE)),
+    [dispatch],
   );
 
   useHotkeys(shortcuts.SetPanTool, setPan, [setPan]);

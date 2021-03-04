@@ -1,10 +1,13 @@
 import Typography from "@material-ui/core/Typography";
 import React from "react";
 import RGL, { WidthProvider } from "react-grid-layout";
+import { useSelector } from "react-redux";
 import "../../../node_modules/react-grid-layout/css/styles.css";
 import "../../../node_modules/react-resizable/css/styles.css";
-import useLabelingContext from "../hooks/useLabelingContext";
-import usePreferences from "../hooks/usePreferencesContext";
+import { useRootDispatch } from "../../common/redux/store";
+import { labelingViewsSelector } from "../../preferences/redux/selectors";
+import { initialDocumentSelector } from "../redux/selectors";
+import { setPreferences } from "../redux/slice";
 import { updateViews } from "../views";
 import LabelingViewItem from "./labelingViewItem";
 
@@ -18,15 +21,16 @@ export default function LabelingWorkspace(
   props: LabelingWorkspaceProps,
 ): JSX.Element {
   const { documentId } = props;
-  const { document } = useLabelingContext();
-  const { preferences, setPreferences } = usePreferences();
-  const { views } = preferences;
+
+  const dispatch = useRootDispatch();
+  const initial = useSelector(initialDocumentSelector);
+  const views = useSelector(labelingViewsSelector);
 
   return (
     <div>
       <div style={{ flexGrow: 1 }}>
-        <Typography variant="h5">{document.name}</Typography>
-        <Typography variant="subtitle2">{document.filename}</Typography>
+        <Typography variant="h5">{initial.name}</Typography>
+        <Typography variant="subtitle2">{initial.filename}</Typography>
       </div>
       <ReactGridLayout
         className="layout"
@@ -34,10 +38,11 @@ export default function LabelingWorkspace(
         cols={12}
         rowHeight={100}
         onLayoutChange={layout =>
-          setPreferences({
-            ...preferences,
-            views: updateViews(views, layout),
-          })
+          dispatch(
+            setPreferences({
+              views: updateViews(views, layout),
+            }),
+          )
         }
       >
         {views.map(view => (

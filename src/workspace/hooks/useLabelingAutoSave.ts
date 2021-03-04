@@ -1,27 +1,24 @@
 import { useCallback } from "react";
+import { useSelector } from "react-redux";
 import { useInterval } from "../../common/hooks/useInterval";
+import { autoSaveDelayMinutesSelector } from "../../preferences/redux/selectors";
+import { initialDocumentSelector, objectsSelector } from "../redux/selectors";
 import { ExternalDocument } from "../types/database";
 import useLabelingContext from "./useLabelingContext";
-import usePreferences from "./usePreferencesContext";
 
 export const OneMinuteMs = 60000;
 
 export default function useLabelingAutoSave(): void {
-  const { document, saveLabeling, history } = useLabelingContext();
-  const { data } = history;
+  const { saveLabeling } = useLabelingContext();
 
-  const { preferences } = usePreferences();
-  const delayMinutes = preferences.autoSaveDelayMinutes;
+  const initialDocument = useSelector(initialDocumentSelector);
+  const delayMinutes = useSelector(autoSaveDelayMinutesSelector);
+  const objects = useSelector(objectsSelector);
 
   const callback = useCallback(
     () =>
-      saveLabeling(
-        ExternalDocument.encode({
-          ...document,
-          objects: data.objects,
-        }),
-      ),
-    [data.objects, document, saveLabeling],
+      saveLabeling(ExternalDocument.encode({ ...initialDocument, objects })),
+    [objects, initialDocument, saveLabeling],
   );
 
   useInterval(callback, delayMinutes ? delayMinutes * OneMinuteMs : null);

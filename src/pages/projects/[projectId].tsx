@@ -16,6 +16,7 @@ import Footer from "../../common/components/footer";
 import Header from "../../common/components/header";
 import LoadingBackdrop from "../../common/components/loadingBackdrop";
 import TabPanel from "../../common/components/tabPanel";
+import { initializeFirebase } from "../../firebase/firebaseClient";
 import ProjectGeneralDetails from "../../projects/components/details/projectGeneralDetails";
 import ProjectLabelingDetails from "../../projects/components/details/projectLabelingDetails";
 import ProjectSettingsDetails from "../../projects/components/details/projectSettingsDetails";
@@ -24,6 +25,8 @@ import ProjectUsersDetails from "../../projects/components/details/projectUsersD
 import ProjectWorkflowDetails from "../../projects/components/details/projectWorkflowDetails";
 import useFetchProject from "../../projects/hooks/useFetchProject";
 import { useProjectDetailsPageStyles } from "../../projects/styles";
+
+initializeFirebase();
 
 enum ProjectDetailsPages {
   General,

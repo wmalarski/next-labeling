@@ -2,6 +2,7 @@ import compact from "lodash/compact";
 import uniqueId from "lodash/uniqueId";
 import { v4 as uuidv4 } from "uuid";
 import { unpackValues } from "../editors/functions";
+import { LabelingFieldValues } from "../editors/types";
 import { ObjectSchema, Schema } from "../schema/types";
 import {
   IsDoneFilterValue,
@@ -12,10 +13,19 @@ import {
 } from "./types/client";
 import { ExternalDocument, ExternalObject } from "./types/database";
 
-export function createObject(
-  objectSchema: ObjectSchema,
-  currentFrame: number,
-): LabelingObject {
+export interface CreateObjectFields {
+  fieldId: string;
+  values: LabelingFieldValues;
+}
+
+export interface CreateObjectProps {
+  objectSchema: ObjectSchema;
+  currentFrame: number;
+  defaultFields: CreateObjectFields[];
+}
+
+export function createObject(props: CreateObjectProps): LabelingObject {
+  const { currentFrame, defaultFields, objectSchema } = props;
   return {
     id: uuidv4(),
     isTracked: true,
@@ -26,11 +36,16 @@ export function createObject(
     frames: objectSchema.singleton ? null : [currentFrame],
     fields: objectSchema.fields.map(fieldSchema => {
       const [key, value] = Object.entries(fieldSchema.attributes)[0];
+      const defaultValues = defaultFields.find(
+        pair => pair.fieldId === fieldSchema.id,
+      )?.values;
       return {
         id: uuidv4(),
         fieldSchema,
         fieldSchemaId: fieldSchema.id,
-        values: { [key]: [{ frame: currentFrame, value: value?.default }] },
+        values: defaultValues ?? {
+          [key]: [{ frame: currentFrame, value: value?.default }],
+        },
       };
     }),
   };

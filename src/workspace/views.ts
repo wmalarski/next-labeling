@@ -28,6 +28,7 @@ export const defaultLabelingViews: LabelingViews = [
     y: 0,
     w: 10,
     h: 5,
+    static: true,
   },
   {
     i: LabelingView.TIMELINE,
@@ -35,6 +36,7 @@ export const defaultLabelingViews: LabelingViews = [
     y: 5,
     w: 12,
     h: 4,
+    static: true,
   },
   {
     i: LabelingView.PROPERTIES,
@@ -42,6 +44,7 @@ export const defaultLabelingViews: LabelingViews = [
     y: 0,
     w: 2,
     h: 5,
+    static: true,
   },
   {
     i: LabelingView.SLIDER,
@@ -49,6 +52,7 @@ export const defaultLabelingViews: LabelingViews = [
     y: 9,
     w: 12,
     h: 2,
+    static: true,
   },
 ];
 

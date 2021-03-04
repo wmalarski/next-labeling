@@ -4,25 +4,31 @@ import { GridSize } from "@material-ui/core/Grid/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import ToggleButton from "@material-ui/lab/ToggleButton/ToggleButton";
 import React from "react";
-import usePreferences from "../../workspace/hooks/usePreferencesContext";
-import { calculateNewValues, getFieldValues } from "../functions";
+import { getFieldValues } from "../functions";
 import { FieldEditorProps, FieldType } from "../types";
 
 export default function MultiSelectEditor(
   props: FieldEditorProps,
-): JSX.Element {
-  const { disabled, frame, perFrame, attributes, name, onChange } = props;
-  const { preferences } = usePreferences();
-  const config = attributes.MultiSelect;
+): JSX.Element | null {
+  const { disabled, frame, field, onChange } = props;
 
-  const frameValues = getFieldValues(props)?.MultiSelect;
-  if (!frameValues) return <></>;
-  const frameValue = frameValues[0];
+  const config = field.fieldSchema.attributes.MultiSelect;
+
+  const frameValue = getFieldValues({
+    frame,
+    perFrame: field.fieldSchema.perFrame,
+    values: field.values,
+  })?.MultiSelect?.[0];
+
+  if (!frameValue || !config) return null;
+
   const selected = frameValue?.value ?? [];
 
-  return frameValue && config ? (
+  return (
     <FormControl>
-      <InputLabel id="select-field-type-label">{name}</InputLabel>
+      <InputLabel id="select-field-type-label">
+        {field.fieldSchema.name}
+      </InputLabel>
       <Grid container spacing={1}>
         {config.options.map(option => (
           <Grid
@@ -36,41 +42,29 @@ export default function MultiSelectEditor(
               value={option.text}
               size="small"
               color="inherit"
-              onChange={() =>
-                onChange(values => {
-                  const textIndex = selected.indexOf(option.text);
-                  if (textIndex === -1) {
-                    return calculateNewValues(
-                      values,
-                      perFrame,
+              onChange={() => {
+                const textIndex = selected.indexOf(option.text);
+                if (textIndex === -1) {
+                  onChange({
+                    [FieldType.MULSELECT]: [
                       {
-                        [FieldType.MULSELECT]: [
-                          {
-                            frame,
-                            value: [...selected, option.text],
-                          },
-                        ],
+                        frame,
+                        value: [...selected, option.text],
                       },
-                      preferences.labelingDirection,
-                    );
-                  }
-                  const newSelected = [...selected];
-                  newSelected.splice(textIndex, 1);
-                  return calculateNewValues(
-                    values,
-                    perFrame,
+                    ],
+                  });
+                }
+                const newSelected = [...selected];
+                newSelected.splice(textIndex, 1);
+                onChange({
+                  [FieldType.MULSELECT]: [
                     {
-                      [FieldType.MULSELECT]: [
-                        {
-                          frame,
-                          value: newSelected,
-                        },
-                      ],
+                      frame,
+                      value: newSelected,
                     },
-                    preferences.labelingDirection,
-                  );
-                })
-              }
+                  ],
+                });
+              }}
             >
               {option.text}
             </ToggleButton>
@@ -78,7 +72,5 @@ export default function MultiSelectEditor(
         ))}
       </Grid>
     </FormControl>
-  ) : (
-    <></>
   );
 }

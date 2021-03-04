@@ -1,47 +1,41 @@
 import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import React from "react";
-import usePreferences from "../../workspace/hooks/usePreferencesContext";
-import { calculateNewValues, getFieldValues } from "../functions";
+import { getFieldValues } from "../functions";
 import { FieldEditorProps, FieldType } from "../types";
 
-export default function CheckBoxEditor(props: FieldEditorProps): JSX.Element {
-  const { disabled, name, perFrame, frame, onChange } = props;
-  const { preferences } = usePreferences();
+export default function CheckBoxEditor(
+  props: FieldEditorProps,
+): JSX.Element | null {
+  const { disabled, field, frame, onChange } = props;
 
-  const frameValues = getFieldValues(props)?.CheckBox;
-  if (!frameValues) return <></>;
-  const frameValue = frameValues[0];
+  const frameValue = getFieldValues({
+    frame,
+    perFrame: field.fieldSchema.perFrame,
+    values: field.values,
+  })?.CheckBox?.[0];
 
-  return frameValue ? (
+  if (!frameValue) return null;
+
+  return (
     <FormControlLabel
       control={
         <Checkbox
           disabled={disabled}
           checked={frameValue.value}
-          onChange={event => {
-            const checked = event.target.checked;
-            onChange(values =>
-              calculateNewValues(
-                values,
-                perFrame,
+          onChange={event =>
+            onChange({
+              [FieldType.CHECKBOX]: [
                 {
-                  [FieldType.CHECKBOX]: [
-                    {
-                      frame,
-                      value: checked,
-                    },
-                  ],
+                  frame,
+                  value: event.target.checked,
                 },
-                preferences.labelingDirection,
-              ),
-            );
-          }}
+              ],
+            })
+          }
         />
       }
-      label={name}
+      label={field.fieldSchema.name}
     />
-  ) : (
-    <></>
   );
 }

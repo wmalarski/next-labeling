@@ -4,23 +4,28 @@ import { GridSize } from "@material-ui/core/Grid/Grid";
 import InputLabel from "@material-ui/core/InputLabel";
 import ToggleButton from "@material-ui/lab/ToggleButton";
 import React from "react";
-import usePreferences from "../../workspace/hooks/usePreferencesContext";
-import { calculateNewValues, getFieldValues } from "../functions";
+import { getFieldValues } from "../functions";
 import { FieldEditorProps, FieldType } from "../types";
 
-export default function SelectEditor(props: FieldEditorProps): JSX.Element {
-  const { disabled, frame, perFrame, attributes, name, onChange } = props;
-  const { preferences } = usePreferences();
-  const config = attributes.Select;
+export default function SelectEditor(
+  props: FieldEditorProps,
+): JSX.Element | null {
+  const { disabled, field, frame, onChange } = props;
 
-  const frameValues = getFieldValues(props)?.Select;
-  if (!frameValues) return <></>;
-  const frameValue = frameValues[0];
-  const selected = frameValue?.value;
+  const config = field.fieldSchema.attributes.Select;
+  const frameValue = getFieldValues({
+    frame,
+    perFrame: field.fieldSchema.perFrame,
+    values: field.values,
+  })?.Select?.[0];
 
-  return frameValue && config ? (
+  if (!frameValue || !config) return null;
+
+  return (
     <FormControl>
-      <InputLabel id="select-field-type-label">{name}</InputLabel>
+      <InputLabel id="select-field-type-label">
+        {field.fieldSchema.name}
+      </InputLabel>
       <Grid container spacing={1}>
         {config.options.map(option => (
           <Grid
@@ -31,25 +36,18 @@ export default function SelectEditor(props: FieldEditorProps): JSX.Element {
             <ToggleButton
               disabled={disabled}
               value={option.text}
-              selected={selected === option.text}
+              selected={frameValue.value === option.text}
               size="small"
               color="inherit"
               onChange={() =>
-                onChange(values =>
-                  calculateNewValues(
-                    values,
-                    perFrame,
+                onChange({
+                  [FieldType.SELECT]: [
                     {
-                      [FieldType.SELECT]: [
-                        {
-                          frame,
-                          value: option.text,
-                        },
-                      ],
+                      frame,
+                      value: option.text,
                     },
-                    preferences.labelingDirection,
-                  ),
-                )
+                  ],
+                })
               }
             >
               {option.text}
@@ -58,7 +56,5 @@ export default function SelectEditor(props: FieldEditorProps): JSX.Element {
         ))}
       </Grid>
     </FormControl>
-  ) : (
-    <></>
   );
 }

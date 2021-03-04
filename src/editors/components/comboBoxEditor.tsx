@@ -3,46 +3,44 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import Select from "@material-ui/core/Select";
 import React from "react";
-import usePreferences from "../../workspace/hooks/usePreferencesContext";
-import { calculateNewValues, getFieldValues } from "../functions";
+import { getFieldValues } from "../functions";
 import { FieldEditorProps, FieldType } from "../types";
 
-export default function ComboBoxEditor(props: FieldEditorProps): JSX.Element {
-  const { disabled, name, perFrame, frame, attributes, onChange } = props;
-  const { preferences } = usePreferences();
-  const config = attributes.ComboBox;
+export default function ComboBoxEditor(
+  props: FieldEditorProps,
+): JSX.Element | null {
+  const { disabled, field, frame, onChange } = props;
 
-  const frameValues = getFieldValues(props)?.ComboBox;
-  if (!frameValues) return <></>;
-  const frameValue = frameValues[0];
+  const config = field.fieldSchema.attributes.ComboBox;
+  const frameValue = getFieldValues({
+    frame,
+    perFrame: field.fieldSchema.perFrame,
+    values: field.values,
+  })?.ComboBox?.[0];
 
-  return frameValue && config ? (
+  if (!frameValue || !config) return null;
+
+  return (
     <FormControl fullWidth>
-      <InputLabel id="select-field-type-label">{name}</InputLabel>
+      <InputLabel id="select-field-type-label">
+        {field.fieldSchema.name}
+      </InputLabel>
       <Select
         disabled={disabled}
         labelId="select-field-type-label"
         id="select-field-type"
         value={frameValue.value}
         fullWidth
-        onChange={event => {
-          const newText = event.target.value as string;
-          onChange(values =>
-            calculateNewValues(
-              values,
-              perFrame,
+        onChange={event =>
+          onChange({
+            [FieldType.COMBOBOX]: [
               {
-                [FieldType.COMBOBOX]: [
-                  {
-                    frame,
-                    value: newText,
-                  },
-                ],
+                frame,
+                value: event.target.value as string,
               },
-              preferences.labelingDirection,
-            ),
-          );
-        }}
+            ],
+          })
+        }
       >
         {config.options.map(
           (name): JSX.Element => (
@@ -53,7 +51,5 @@ export default function ComboBoxEditor(props: FieldEditorProps): JSX.Element {
         )}
       </Select>
     </FormControl>
-  ) : (
-    <></>
   );
 }

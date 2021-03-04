@@ -9,30 +9,28 @@ import Forward5Icon from "@material-ui/icons/Forward5";
 import Replay5Icon from "@material-ui/icons/Replay5";
 import React, { useCallback } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
-import { frameToRange } from "../functions";
-import useLabelingContext from "../hooks/useLabelingContext";
-import usePreferences from "../hooks/usePreferencesContext";
+import { useSelector } from "react-redux";
+import { useRootDispatch } from "../../common/redux/store";
+import {
+  frameStepSelector,
+  shortcutsSelector,
+} from "../../preferences/redux/selectors";
+import { currentFrameSelector, durationSelector } from "../redux/selectors";
+import { moveCurrentFrame, setCurrentFrame } from "../redux/slice";
 import { useFrameSliderStyles } from "../styles";
-import setCurrentFrameUpdate from "../updates/setCurrentFrameUpdate";
 
 export default function FrameSlider(): JSX.Element {
   const classes = useFrameSliderStyles();
-  const { history, duration } = useLabelingContext();
-  const { pushLabeling } = history;
-  const { currentFrame } = history.data;
-  const { preferences } = usePreferences();
-  const { frameChangeStep: frameStep, shortcuts } = preferences;
+
+  const dispatch = useRootDispatch();
+  const duration = useSelector(durationSelector);
+  const currentFrame = useSelector(currentFrameSelector);
+  const frameStep = useSelector(frameStepSelector);
+  const shortcuts = useSelector(shortcutsSelector);
 
   const moveBy = useCallback(
-    (value: number): void =>
-      pushLabeling(data =>
-        setCurrentFrameUpdate(
-          data,
-          frameToRange(currentFrame + Number(value) * frameStep, duration),
-          frameStep,
-        ),
-      ),
-    [currentFrame, duration, frameStep, pushLabeling],
+    (value: number): void => void dispatch(moveCurrentFrame({ step: value })),
+    [dispatch],
   );
 
   useHotkeys(shortcuts.DoubleFrameBackward, () => moveBy(-5), [moveBy]);
@@ -49,14 +47,8 @@ export default function FrameSlider(): JSX.Element {
           min={0}
           max={duration}
           step={frameStep}
-          onChange={(_event, value) =>
-            pushLabeling(data =>
-              setCurrentFrameUpdate(
-                data,
-                frameToRange(Number(value), duration),
-                frameStep,
-              ),
-            )
+          onChange={(_event, value): void =>
+            void dispatch(setCurrentFrame({ nextFrame: Number(value) }))
           }
           aria-labelledby="continuous-slider"
         />

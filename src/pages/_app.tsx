@@ -4,6 +4,7 @@ import type { AppProps /*, AppContext */ } from "next/app";
 import Head from "next/head";
 import React from "react";
 import AuthProvider from "../auth/components/authProvider";
+import SnackbarProvider from "../common/components/snackbarProvider";
 import { useAppStyles } from "../common/styles";
 import theme from "../common/theme";
 
@@ -33,7 +34,9 @@ export default function MyApp(props: AppProps): JSX.Element {
         <CssBaseline />
         <div className={classes.root}>
           <AuthProvider>
-            <Component {...pageProps} />
+            <SnackbarProvider>
+              <Component {...pageProps} />
+            </SnackbarProvider>
           </AuthProvider>
         </div>
       </ThemeProvider>

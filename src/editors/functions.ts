@@ -1,4 +1,4 @@
-import { LabelingDirection } from "../workspace/contexts/preferencesContext";
+import { LabelingDirection } from "../workspace/redux/state";
 import { FieldType, LabelingFieldValues } from "./types";
 
 export interface UnpackedFrameValuePair {

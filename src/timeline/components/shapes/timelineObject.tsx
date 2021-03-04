@@ -12,11 +12,15 @@ export interface TimelineObjectProps extends TimelineObjectConfig {
   duration: number;
   rowHeight: number;
   selectedNodes: string[];
-  onSelect: (object: LabelingObject, reset: boolean, field?: string) => void;
-  onDeselect: (object: LabelingObject, reset: boolean, field?: string) => void;
-  onFrameSelected: (index: number) => void;
   onTooltipEnter: (point: Point2D, text: string) => void;
   onTooltipLeave: () => void;
+  onSelect: (object: LabelingObject, reset: boolean, fieldId?: string) => void;
+  onDeselect: (
+    object: LabelingObject,
+    reset: boolean,
+    fieldId?: string,
+  ) => void;
+  onFrameSelected: (index: number) => void;
 }
 
 export default function TimelineObject(
@@ -30,11 +34,11 @@ export default function TimelineObject(
     objectBlocks,
     fieldBlocks,
     selectedNodes,
+    onTooltipEnter,
+    onTooltipLeave,
     onSelect,
     onDeselect,
     onFrameSelected,
-    onTooltipEnter,
-    onTooltipLeave,
   } = props;
   const isSelected = selectedNodes.includes(object.id);
 

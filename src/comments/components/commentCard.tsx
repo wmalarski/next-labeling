@@ -13,9 +13,9 @@ import DoneIcon from "@material-ui/icons/Done";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import React, { useState } from "react";
 import useAuth from "../../auth/hooks/useAuth";
+import { useRootDispatch } from "../../common/redux/store";
 import { convertToDate } from "../../firebase/functions";
-import useLabelingContext from "../../workspace/hooks/useLabelingContext";
-import setSnapshotUpdate from "../../workspace/updates/setSnapshotUpdate";
+import { setSnapshot } from "../../workspace/redux/slice";
 import useUpdateComment from "../hooks/useUpdateComment";
 import { CommentDocument } from "../types";
 
@@ -37,10 +37,10 @@ export default function CommentCard(props: CommentCardProps): JSX.Element {
     message,
   } = comment;
 
-  const { history, document } = useLabelingContext();
   const { authUser } = useAuth();
-  const { pushLabeling } = history;
   const { update } = useUpdateComment(labelingId);
+
+  const dispatch = useRootDispatch();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -96,9 +96,7 @@ export default function CommentCard(props: CommentCardProps): JSX.Element {
                 <MenuItem
                   onClick={() => {
                     if (!snapshot) return;
-                    pushLabeling(data =>
-                      setSnapshotUpdate(data, document.schema, snapshot),
-                    );
+                    dispatch(setSnapshot({ snapshot }));
                     handleClose();
                   }}
                 >
