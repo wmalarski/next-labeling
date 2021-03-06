@@ -3,7 +3,7 @@ import {
   FieldType,
   FinishedObjectProps,
   InProgressObjectProps,
-} from "../../../editors/types";
+} from "../../editors/types";
 import { Box3dFinished, Box3dInProgress } from "./box3dObjects";
 import { EyeFinished, EyeInProgress } from "./eyeObjects";
 import { GraphFinished, GraphInProgress } from "./graphObjects";

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Rect } from "react-konva";
-import { BoxLeafWidth, HoverFill, HoverOpacity } from "../../constants";
+import { BoxLeafWidth, HoverFill, HoverOpacity } from "../constants";
 
 export interface BoxLeafProps {
   x: number;

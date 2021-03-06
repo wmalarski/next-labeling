@@ -17,9 +17,7 @@ export interface TimelineZoomControlsProps {
   zoom: UseXZoomResult;
 }
 
-export function TimelineZoomControls(
-  props: TimelineZoomControlsProps,
-): JSX.Element {
+function TimelineZoomControls(props: TimelineZoomControlsProps): JSX.Element {
   const { zoom } = props;
   const { scaleX, handleSetScaleX, handleZoomIn, handleZoomOut } = zoom;
 
@@ -69,3 +67,5 @@ export function TimelineZoomControls(
     </div>
   );
 }
+
+export default React.memo(TimelineZoomControls);

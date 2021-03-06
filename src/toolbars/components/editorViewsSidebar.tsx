@@ -1,4 +1,3 @@
-import Divider from "@material-ui/core/Divider";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -49,7 +48,6 @@ function EditorViewsSidebar(): JSX.Element {
         </ListItemIcon>
         <ListItemText primary={"Comments"} />
       </ListItem>
-      <Divider />
     </List>
   );
 }

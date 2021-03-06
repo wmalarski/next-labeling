@@ -1,9 +1,9 @@
 import Konva from "konva";
 import React, { useEffect, useRef } from "react";
 import { Rect, Text, Transformer } from "react-konva";
-import { LabelingObject } from "../../../workspace/types/client";
-import { FontSize } from "../../constants";
-import { getShapeStyle } from "../../functions";
+import { LabelingObject } from "../../workspace/types/client";
+import { FontSize } from "../constants";
+import { getShapeStyle } from "../functions";
 
 export interface RectangleShapeProps {
   x: number;

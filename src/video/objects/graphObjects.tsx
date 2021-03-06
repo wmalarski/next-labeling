@@ -1,16 +1,16 @@
 import React from "react";
 import { Line } from "react-konva";
-import { PointBuilderStage } from "../../../editors/builders/pointBuilder";
-import { getFieldValues } from "../../../editors/functions";
+import { PointBuilderStage } from "../../editors/builders/pointBuilder";
+import { getFieldValues } from "../../editors/functions";
 import {
   FieldType,
   FinishedObjectProps,
   InProgressObjectProps,
   LabelingFieldAttributes,
   LabelingFieldValues,
-} from "../../../editors/types";
-import { HoverTooltip } from "../../../visualization/components/hoverTooltip";
-import { getLabelText } from "../../functions";
+} from "../../editors/types";
+import { HoverTooltip } from "../../visualization/components/hoverTooltip";
+import { getLabelText } from "../functions";
 import Graph, { GraphShapeProps } from "../shapes/graph";
 
 export function getGraphProps(

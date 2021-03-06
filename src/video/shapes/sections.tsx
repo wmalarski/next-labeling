@@ -3,10 +3,10 @@ import { KonvaEventObject } from "konva/types/Node";
 import range from "lodash/range";
 import React, { useRef } from "react";
 import { Circle, Line } from "react-konva";
-import { getPoints2D } from "../../../visualization/functions";
-import { LabelingObject } from "../../../workspace/types/client";
-import { PointRadius } from "../../constants";
-import { getShapeStyle } from "../../functions";
+import { getPoints2D } from "../../visualization/functions";
+import { LabelingObject } from "../../workspace/types/client";
+import { PointRadius } from "../constants";
+import { getShapeStyle } from "../functions";
 
 function getNewPoints(
   line: Konva.Line,

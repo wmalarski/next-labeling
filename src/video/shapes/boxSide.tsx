@@ -2,9 +2,9 @@ import Konva from "konva";
 import { KonvaEventObject } from "konva/types/Node";
 import React from "react";
 import { Circle, Line } from "react-konva";
-import { LabelingObject } from "../../../workspace/types/client";
-import { PointRadius } from "../../constants";
-import { getShapeStyle } from "../../functions";
+import { LabelingObject } from "../../workspace/types/client";
+import { PointRadius } from "../constants";
+import { getShapeStyle } from "../functions";
 
 export interface BoxSideShapeProps {
   points: number[];

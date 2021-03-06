@@ -23,8 +23,8 @@ import {
 import { LabelingObject } from "../../workspace/types/client";
 import { TimelineRowHeight, TimelineVerticalLineWidth } from "../constants";
 import { getTimelineObjectConfigs } from "../functions";
-import TimelineLabel from "./shapes/timelineLabel";
-import TimelineObject from "./shapes/timelineObject";
+import TimelineLabel from "../shapes/timelineLabel";
+import TimelineObject from "../shapes/timelineObject";
 
 export interface TimelineViewProps {
   width: number;
@@ -32,7 +32,7 @@ export interface TimelineViewProps {
   stageX: number;
 }
 
-export default function TimelineView(props: TimelineViewProps): JSX.Element {
+function TimelineView(props: TimelineViewProps): JSX.Element {
   const { width, scaleX, stageX } = props;
 
   const theme = useTheme();
@@ -156,3 +156,5 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
     </Stage>
   );
 }
+
+export default React.memo(TimelineView);

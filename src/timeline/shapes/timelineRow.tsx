@@ -3,8 +3,8 @@ import Konva from "konva";
 import { KonvaEventObject } from "konva/types/Node";
 import React, { useRef } from "react";
 import { Group, Rect } from "react-konva";
-import useMouseHover from "../../../visualization/hooks/useMouseHover";
-import { TimelineHoverStroke } from "../../constants";
+import useMouseHover from "../../visualization/hooks/useMouseHover";
+import { TimelineHoverStroke } from "../constants";
 
 const hoverProps = { strokeWidth: TimelineHoverStroke };
 const outProps = { strokeWidth: 0 };

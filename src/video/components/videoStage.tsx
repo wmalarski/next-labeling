@@ -29,7 +29,7 @@ import {
 import {
   FinishedObject,
   InProgressObject,
-} from "./objects/visualizationObject";
+} from "../objects/visualizationObject";
 import VideoView from "./videoView";
 
 export interface VideoStageProps {

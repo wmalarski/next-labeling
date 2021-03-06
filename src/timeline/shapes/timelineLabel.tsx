@@ -2,8 +2,8 @@ import { useTheme } from "@material-ui/core";
 import Konva from "konva";
 import React, { useRef } from "react";
 import { Line, Rect, Text } from "react-konva";
-import useMouseHover from "../../../visualization/hooks/useMouseHover";
-import { TimelineObjectConfig } from "../../types";
+import useMouseHover from "../../visualization/hooks/useMouseHover";
+import { TimelineObjectConfig } from "../types";
 
 const hoverProps = { strokeWidth: 2 };
 const outProps = { strokeWidth: 1 };

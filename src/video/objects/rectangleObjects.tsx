@@ -1,16 +1,16 @@
 import React from "react";
 import { Rect } from "react-konva";
-import { RectangleBuilderStage } from "../../../editors/builders/rectangleBuilder";
-import { getFieldValues } from "../../../editors/functions";
+import { RectangleBuilderStage } from "../../editors/builders/rectangleBuilder";
+import { getFieldValues } from "../../editors/functions";
 import {
   FieldType,
   FinishedObjectProps,
   InProgressObjectProps,
   LabelingFieldAttributes,
   LabelingFieldValues,
-} from "../../../editors/types";
-import { HoverTooltip } from "../../../visualization/components/hoverTooltip";
-import { getLabelText } from "../../functions";
+} from "../../editors/types";
+import { HoverTooltip } from "../../visualization/components/hoverTooltip";
+import { getLabelText } from "../functions";
 import { Rectangle, RectangleShapeProps } from "../shapes/rectangle";
 
 export function getRectProps(

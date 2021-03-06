@@ -1,10 +1,10 @@
 import { useTheme } from "@material-ui/core";
 import React from "react";
 import { Rect } from "react-konva";
-import { getEventRelativePosition } from "../../../visualization/functions";
-import { Point2D } from "../../../visualization/types";
-import { LabelingObject } from "../../../workspace/types/client";
-import { TimelineObjectConfig } from "../../types";
+import { getEventRelativePosition } from "../../visualization/functions";
+import { Point2D } from "../../visualization/types";
+import { LabelingObject } from "../../workspace/types/client";
+import { TimelineObjectConfig } from "../types";
 import TimelineField from "./timelineField";
 import TimelineRow from "./timelineRow";
 

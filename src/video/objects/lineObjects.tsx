@@ -1,42 +1,40 @@
 import React from "react";
 import { Line } from "react-konva";
-import { LineBuilderStage } from "../../../editors/builders/lineBuilder";
-import { getFieldValues } from "../../../editors/functions";
+import { LineBuilderStage } from "../../editors/builders/lineBuilder";
+import { getFieldValues } from "../../editors/functions";
 import {
   FieldType,
   FinishedObjectProps,
   InProgressObjectProps,
   LabelingFieldAttributes,
   LabelingFieldValues,
-} from "../../../editors/types";
-import { HoverTooltip } from "../../../visualization/components/hoverTooltip";
-import { getLabelText } from "../../functions";
+} from "../../editors/types";
+import { HoverTooltip } from "../../visualization/components/hoverTooltip";
+import { getLabelText } from "../functions";
 import Sections, { SectionsShapeProps } from "../shapes/sections";
 
 export function getSectionsProps(
   values?: LabelingFieldValues,
   attributes?: LabelingFieldAttributes,
 ): SectionsShapeProps | null {
-  const polygon = values?.Polygon;
-  if (!polygon) return null;
-  const points = polygon[0].value;
+  const line = values?.Line;
+  if (!line) return null;
+  const points = line[0].value;
   if (!points) return null;
-  const stroke = attributes?.Polygon?.color;
-  return { points, stroke, closed: true, opacity: 0.9 };
+  const stroke = attributes?.Line?.color;
+  return { points, stroke };
 }
 
-export function PolygonInProgress(
+export function LineInProgress(
   props: InProgressObjectProps,
 ): JSX.Element | null {
   const { stage, value, fieldSchema } = props;
   if (stage <= LineBuilderStage.ONE_POINT) return null;
-  const polygonProps = getSectionsProps(value, fieldSchema.attributes);
-  return polygonProps && <Line {...polygonProps} />;
+  const lineProps = getSectionsProps(value, fieldSchema.attributes);
+  return lineProps && <Line {...lineProps} />;
 }
 
-export function PolygonFinished(
-  props: FinishedObjectProps,
-): JSX.Element | null {
+export function LineFinished(props: FinishedObjectProps): JSX.Element | null {
   const { frame, field, object, isSelected, onChange, onSelect } = props;
   const { fieldSchema } = field;
   const { perFrame, attributes } = fieldSchema;
@@ -45,13 +43,13 @@ export function PolygonFinished(
     perFrame,
     frame,
   });
-  const sectionsProps = getSectionsProps(values, attributes);
+  const lineProps = getSectionsProps(values, attributes);
 
   return (
-    sectionsProps && (
+    lineProps && (
       <HoverTooltip text={getLabelText(object)}>
         <Sections
-          sectionsProps={sectionsProps}
+          sectionsProps={lineProps}
           object={object}
           onSelect={onSelect}
           isSelected={isSelected}

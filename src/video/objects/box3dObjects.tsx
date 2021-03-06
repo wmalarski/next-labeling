@@ -1,19 +1,19 @@
 import Konva from "konva";
 import React, { useRef, useState } from "react";
 import { Rect } from "react-konva";
-import { Box3dBuilderStage } from "../../../editors/builders/box3dBuilder";
-import { getFieldValues } from "../../../editors/functions";
+import { Box3dBuilderStage } from "../../editors/builders/box3dBuilder";
+import { getFieldValues } from "../../editors/functions";
 import {
   FieldType,
   FinishedObjectProps,
   InProgressObjectProps,
   LabelingFieldAttributes,
   LabelingFieldValues,
-} from "../../../editors/types";
-import { Box3dValue } from "../../../editors/types/box3d";
-import { HoverTooltip } from "../../../visualization/components/hoverTooltip";
-import { BoxNewSideWidth } from "../../constants";
-import { getLabelText } from "../../functions";
+} from "../../editors/types";
+import { Box3dValue } from "../../editors/types/box3d";
+import { HoverTooltip } from "../../visualization/components/hoverTooltip";
+import { BoxNewSideWidth } from "../constants";
+import { getLabelText } from "../functions";
 import { BoxLeaf } from "../shapes/boxLeaf";
 import { BoxSide, BoxSideShapeProps } from "../shapes/boxSide";
 import { Rectangle, RectangleShapeProps } from "../shapes/rectangle";

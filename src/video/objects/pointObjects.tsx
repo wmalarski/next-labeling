@@ -2,18 +2,18 @@ import Konva from "konva";
 import { KonvaEventObject } from "konva/types/Node";
 import React, { useEffect, useRef } from "react";
 import { Circle, Text } from "react-konva";
-import { PointBuilderStage } from "../../../editors/builders/pointBuilder";
-import { getFieldValues } from "../../../editors/functions";
+import { PointBuilderStage } from "../../editors/builders/pointBuilder";
+import { getFieldValues } from "../../editors/functions";
 import {
   FieldType,
   FinishedObjectProps,
   InProgressObjectProps,
   LabelingFieldAttributes,
   LabelingFieldValues,
-} from "../../../editors/types";
-import { HoverTooltip } from "../../../visualization/components/hoverTooltip";
-import { FontSize } from "../../constants";
-import { getLabelText, getShapeStyle } from "../../functions";
+} from "../../editors/types";
+import { HoverTooltip } from "../../visualization/components/hoverTooltip";
+import { FontSize } from "../constants";
+import { getLabelText, getShapeStyle } from "../functions";
 
 export interface PointProps {
   x: number;

@@ -3,18 +3,18 @@ import { KonvaEventObject } from "konva/types/Node";
 import range from "lodash/range";
 import React, { useRef } from "react";
 import { Circle, Line } from "react-konva";
-import { EyeBuilderStage } from "../../../editors/builders/eyeBuilder";
-import { getFieldValues } from "../../../editors/functions";
+import { EyeBuilderStage } from "../../editors/builders/eyeBuilder";
+import { getFieldValues } from "../../editors/functions";
 import {
   FieldType,
   FinishedObjectProps,
   InProgressObjectProps,
   LabelingFieldAttributes,
   LabelingFieldValues,
-} from "../../../editors/types";
-import { HoverTooltip } from "../../../visualization/components/hoverTooltip";
-import { PointRadius } from "../../constants";
-import { getLabelText, getShapeStyle } from "../../functions";
+} from "../../editors/types";
+import { HoverTooltip } from "../../visualization/components/hoverTooltip";
+import { PointRadius } from "../constants";
+import { getLabelText, getShapeStyle } from "../functions";
 
 export interface EyeShapeProps {
   points: number[];

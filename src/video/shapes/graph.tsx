@@ -6,15 +6,15 @@ import { Circle, Group, Line } from "react-konva";
 import {
   getEventRelativePosition,
   getPointDistance,
-} from "../../../visualization/functions";
-import { LabelingObject } from "../../../workspace/types/client";
+} from "../../visualization/functions";
+import { LabelingObject } from "../../workspace/types/client";
 import {
   HoverFill,
   HoverOpacity,
   PointBoundaryRadius,
   PointRadius,
-} from "../../constants";
-import { getShapeStyle } from "../../functions";
+} from "../constants";
+import { getShapeStyle } from "../functions";
 
 export interface GraphShapeNode {
   x: number;

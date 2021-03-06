@@ -1,7 +1,7 @@
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import React, { useEffect, useState } from "react";
-import FieldEditor from "../../../editors/components/fieldEditor";
+import FieldEditorSwitch from "../../../editors/components/fieldEditorSwitch";
 import { FieldType, LabelingFieldValues } from "../../../editors/types";
 import { useFieldDetailsStyles } from "../../styles";
 import { FieldSchema } from "../../types";
@@ -46,7 +46,7 @@ export default function FieldDetails(
       <Typography variant="h5">{fieldSchema.name}</Typography>
       <Typography variant="subtitle2">{`Per frame: ${fieldSchema.perFrame}`}</Typography>
       <Paper className={classes.paper}>
-        <FieldEditor
+        <FieldEditorSwitch
           frame={0}
           field={{
             fieldSchema,
