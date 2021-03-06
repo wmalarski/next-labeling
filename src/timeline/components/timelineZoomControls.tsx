@@ -3,6 +3,8 @@ import Slider from "@material-ui/core/Slider";
 import ZoomInIcon from "@material-ui/icons/ZoomIn";
 import ZoomOutIcon from "@material-ui/icons/ZoomOut";
 import React, { useCallback } from "react";
+import { useSelector } from "react-redux";
+import { currentFrameSelector } from "../../workspace/redux/selectors";
 import {
   TimelineDefaultZoom,
   TimelineMaxZoom,
@@ -13,31 +15,32 @@ import { UseXZoomResult } from "../hooks/useXZoom";
 
 export interface TimelineZoomControlsProps {
   zoom: UseXZoomResult;
-  index: number;
 }
 
 export function TimelineZoomControls(
   props: TimelineZoomControlsProps,
 ): JSX.Element {
-  const { zoom, index } = props;
+  const { zoom } = props;
   const { scaleX, handleSetScaleX, handleZoomIn, handleZoomOut } = zoom;
 
-  const onZoomInClicked = useCallback(() => handleZoomIn(index), [
-    index,
+  const currentFrame = useSelector(currentFrameSelector);
+
+  const onZoomInClicked = useCallback(() => handleZoomIn(currentFrame), [
+    currentFrame,
     handleZoomIn,
   ]);
 
-  const onZoomOutClicked = useCallback(() => handleZoomOut(index), [
-    index,
+  const onZoomOutClicked = useCallback(() => handleZoomOut(currentFrame), [
+    currentFrame,
     handleZoomOut,
   ]);
 
   const onZoomChanged = useCallback(
     (_event: React.ChangeEvent<any>, value: number | number[]): void => {
       if (Array.isArray(value)) return;
-      handleSetScaleX(value, index);
+      handleSetScaleX(value, currentFrame);
     },
-    [index, handleSetScaleX],
+    [currentFrame, handleSetScaleX],
   );
 
   return (

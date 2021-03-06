@@ -47,11 +47,6 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
   const selected = useSelector(selectedObjectSelector);
   const currentFrame = useSelector(currentFrameSelector);
 
-  const filteredObjects = useMemo(
-    () => objects.filter(labelingFilter(filters)),
-    [objects, filters],
-  );
-
   const handleSelect = useCallback(
     (object: LabelingObject, reset: boolean, fieldId?: string): void =>
       void dispatch(selectObject({ object, reset, fieldId })),
@@ -77,6 +72,11 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
   const handleToggle = useCallback(
     (id: string): void => void dispatch(setToggled(id)),
     [dispatch],
+  );
+
+  const filteredObjects = useMemo(
+    () => objects.filter(labelingFilter(filters)),
+    [objects, filters],
   );
 
   const configs = useMemo(

@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 import SearchInput from "../../common/components/searchInput";
 import { useRootDispatch } from "../../common/redux/store";
 import {
-  currentFrameSelector,
   filtersSelector,
   schemaSelector,
 } from "../../workspace/redux/selectors";
@@ -26,7 +25,6 @@ export function TimelineFilterControls(
   const { zoom } = props;
 
   const dispatch = useRootDispatch();
-  const index = useSelector(currentFrameSelector);
   const filters = useSelector(filtersSelector);
   const schema = useSelector(schemaSelector);
 
@@ -86,7 +84,7 @@ export function TimelineFilterControls(
         })}
       </Grid>
       <Grid item xs={2}>
-        <TimelineZoomControls zoom={zoom} index={index} />
+        <TimelineZoomControls zoom={zoom} />
       </Grid>
     </Grid>
   );

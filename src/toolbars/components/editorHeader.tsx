@@ -16,8 +16,9 @@ import {
 } from "../../workspace/redux/selectors";
 import { ExternalDocument } from "../../workspace/types/database";
 import UndoRedoButtons from "./undoRedoButtons";
+import UndoRedoPopper from "./undoRedoPopper";
 
-export default function EditorHeader(): JSX.Element {
+function EditorHeader(): JSX.Element {
   const router = useRouter();
 
   const { saveLabeling, removeLabeling } = useLabelingContext();
@@ -34,6 +35,7 @@ export default function EditorHeader(): JSX.Element {
   return (
     <ButtonGroup size="small" color="inherit" variant="text">
       <UndoRedoButtons />
+      <UndoRedoPopper />
       <Button startIcon={<SaveIcon />} onClick={saveCallback}>
         Save
       </Button>
@@ -49,3 +51,5 @@ export default function EditorHeader(): JSX.Element {
     </ButtonGroup>
   );
 }
+
+export default React.memo(EditorHeader);
