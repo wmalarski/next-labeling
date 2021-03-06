@@ -2,12 +2,6 @@ import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../../common/redux/store";
 import { Schema } from "../../schema/types";
 import {
-  FilterFieldsResultPair,
-  filterSelectedFields,
-  inFrameFilter,
-  labelingFilter,
-} from "../functions";
-import {
   LabelingDisplayFilters,
   LabelingDocument,
   LabelingObject,
@@ -52,25 +46,6 @@ export const currentFrameSelector = createSelector(
 export const objectsSelector = createSelector(
   currentDocumentSelector,
   (doc): LabelingObject[] => doc.objects,
-);
-
-export const filteredObjectSelector = createSelector(
-  filtersSelector,
-  objectsSelector,
-  (filters, objects): LabelingObject[] =>
-    objects.filter(labelingFilter(filters)),
-);
-
-export const filteredInFrameObjectSelector = createSelector(
-  filteredObjectSelector,
-  currentFrameSelector,
-  (filteredObjects, currentFrame): LabelingObject[] =>
-    filteredObjects.filter(inFrameFilter(currentFrame)),
-);
-
-export const selectedFieldsSelector = createSelector(
-  currentDocumentSelector,
-  (state): FilterFieldsResultPair[] => filterSelectedFields(state),
 );
 
 export const selectedObjectSelector = createSelector(

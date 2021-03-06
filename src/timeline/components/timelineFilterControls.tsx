@@ -7,26 +7,14 @@ import { useSelector } from "react-redux";
 import SearchInput from "../../common/components/searchInput";
 import { useRootDispatch } from "../../common/redux/store";
 import {
-  currentFrameSelector,
   filtersSelector,
   schemaSelector,
 } from "../../workspace/redux/selectors";
 import { setFilters } from "../../workspace/redux/slice";
 import { IsDoneFilterValue } from "../../workspace/types/client";
-import { UseXZoomResult } from "../hooks/useXZoom";
-import { TimelineZoomControls } from "./timelineZoomControls";
 
-export interface TimelineFilterControlsProps {
-  zoom: UseXZoomResult;
-}
-
-export function TimelineFilterControls(
-  props: TimelineFilterControlsProps,
-): JSX.Element {
-  const { zoom } = props;
-
+function TimelineFilterControls(): JSX.Element {
   const dispatch = useRootDispatch();
-  const index = useSelector(currentFrameSelector);
   const filters = useSelector(filtersSelector);
   const schema = useSelector(schemaSelector);
 
@@ -85,9 +73,8 @@ export function TimelineFilterControls(
           );
         })}
       </Grid>
-      <Grid item xs={2}>
-        <TimelineZoomControls zoom={zoom} index={index} />
-      </Grid>
     </Grid>
   );
 }
+
+export default React.memo(TimelineFilterControls);

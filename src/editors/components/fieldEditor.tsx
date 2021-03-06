@@ -1,53 +1,44 @@
-import Typography from "@material-ui/core/Typography";
-import React from "react";
-import { getFieldValues } from "../functions";
-import { FieldEditorProps, FieldType } from "../types";
-import CheckBoxEditor from "./checkBoxEditor";
-import ComboBoxEditor from "./comboBoxEditor";
-import MultiSelectEditor from "./multiSelectEditor";
-import NumericEditor from "./numericEditor";
-import SelectEditor from "./selectEditor";
-import TextEditor from "./textEditor";
+import React, { useCallback } from "react";
+import { useSelector } from "react-redux";
+import { useRootDispatch } from "../../common/redux/store";
+import { currentFrameSelector } from "../../workspace/redux/selectors";
+import { setAttribute } from "../../workspace/redux/slice";
+import { LabelingField, LabelingObject } from "../../workspace/types/client";
+import { LabelingFieldValues } from "../types";
+import FieldEditorSwitch from "./fieldEditorSwitch";
 
-function DefaultEditor(props: FieldEditorProps): JSX.Element | null {
-  const { field, frame } = props;
+export interface FieldObjectEditorProps {
+  object: LabelingObject;
+  field: LabelingField;
+}
 
-  const frameValues = getFieldValues({
-    frame,
-    perFrame: field.fieldSchema.perFrame,
-    values: field.values,
-  });
-  const frameValue = Object.values(frameValues ?? {})[0];
-  if (!frameValue) return null;
-  const value = frameValue[0].value;
+export function FieldEditor(props: FieldObjectEditorProps): JSX.Element {
+  const { object, field } = props;
+
+  const dispatch = useRootDispatch();
+
+  const currentFrame = useSelector(currentFrameSelector);
+
+  const handleChange = useCallback(
+    (newValues: LabelingFieldValues) =>
+      dispatch(
+        setAttribute({
+          objectId: object.id,
+          fieldId: field.id,
+          values: newValues,
+        }),
+      ),
+    [dispatch],
+  );
+
   return (
-    frameValue && (
-      <>
-        <Typography variant="overline">{field.fieldSchema.name}</Typography>
-        <Typography>{JSON.stringify(value, null, 2)}</Typography>
-      </>
-    )
+    <FieldEditorSwitch
+      field={field}
+      disabled={object.isDone}
+      frame={currentFrame}
+      onChange={handleChange}
+    />
   );
 }
 
-export default function FieldEditor(props: FieldEditorProps): JSX.Element {
-  const { field } = props;
-  const type = Object.keys(field.fieldSchema.attributes)[0];
-
-  switch (type) {
-    case FieldType.CHECKBOX:
-      return <CheckBoxEditor {...props} />;
-    case FieldType.TEXT:
-      return <TextEditor {...props} />;
-    case FieldType.NUMERIC:
-      return <NumericEditor {...props} />;
-    case FieldType.COMBOBOX:
-      return <ComboBoxEditor {...props} />;
-    case FieldType.SELECT:
-      return <SelectEditor {...props} />;
-    case FieldType.MULSELECT:
-      return <MultiSelectEditor {...props} />;
-    default:
-      return <DefaultEditor {...props} />;
-  }
-}
+export default React.memo(FieldEditor);

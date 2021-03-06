@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { Layer, Stage } from "react-konva";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../common/redux/store";
@@ -8,9 +8,11 @@ import { LabelingFieldValues } from "../../editors/types";
 import { getEventRelativePosition } from "../../visualization/functions";
 import { UseZoomResult } from "../../visualization/hooks/useZoom";
 import { MouseButton } from "../../visualization/types";
+import { inFrameFilter, labelingFilter } from "../../workspace/functions";
 import {
   currentFrameSelector,
-  filteredInFrameObjectSelector,
+  filtersSelector,
+  objectsSelector,
   selectedObjectSelector,
 } from "../../workspace/redux/selectors";
 import {
@@ -27,7 +29,7 @@ import {
 import {
   FinishedObject,
   InProgressObject,
-} from "./objects/visualizationObject";
+} from "../objects/visualizationObject";
 import VideoView from "./videoView";
 
 export interface VideoStageProps {
@@ -41,7 +43,8 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
   const { handleWheel, stageScale, stageX, stageY } = zoom;
 
   const dispatch = useRootDispatch();
-  const filteredObjects = useSelector(filteredInFrameObjectSelector);
+  const filters = useSelector(filtersSelector);
+  const objects = useSelector(objectsSelector);
   const currentFrame = useSelector(currentFrameSelector);
   const toolType = useSelector(toolTypeSelector);
   const selected = useSelector(selectedObjectSelector);
@@ -79,6 +82,14 @@ export default function VideoStage(props: VideoStageProps): JSX.Element {
         }),
       ),
     [dispatch],
+  );
+
+  const filteredObjects = useMemo(
+    () =>
+      objects
+        .filter(labelingFilter(filters))
+        .filter(inFrameFilter(currentFrame)),
+    [objects, filters, currentFrame],
   );
 
   return (

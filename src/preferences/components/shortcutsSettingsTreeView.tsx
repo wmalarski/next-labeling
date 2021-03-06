@@ -13,7 +13,7 @@ import { setShortcut } from "../../workspace/redux/slice";
 import { shortcutCategories } from "../../workspace/shortcuts";
 import { shortcutsSelector } from "../redux/selectors";
 
-export default function ShortcutsSettingsTreeView(): JSX.Element {
+function ShortcutsSettingsTreeView(): JSX.Element {
   const dispatch = useRootDispatch();
   const shortcuts = useSelector(shortcutsSelector);
 
@@ -77,3 +77,5 @@ export default function ShortcutsSettingsTreeView(): JSX.Element {
     </TreeView>
   );
 }
+
+export default React.memo(ShortcutsSettingsTreeView);

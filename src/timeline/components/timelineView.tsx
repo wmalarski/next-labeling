@@ -5,11 +5,12 @@ import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../common/redux/store";
 import { TooltipLabel } from "../../visualization/components/tooltipLabel";
 import { useTooltipLabel } from "../../visualization/hooks/useTooltipLabel";
-import { frameToRange } from "../../workspace/functions";
+import { frameToRange, labelingFilter } from "../../workspace/functions";
 import {
   currentFrameSelector,
   durationSelector,
-  filteredObjectSelector,
+  filtersSelector,
+  objectsSelector,
   selectedObjectSelector,
   toggledObjectSelector,
 } from "../../workspace/redux/selectors";
@@ -22,8 +23,8 @@ import {
 import { LabelingObject } from "../../workspace/types/client";
 import { TimelineRowHeight, TimelineVerticalLineWidth } from "../constants";
 import { getTimelineObjectConfigs } from "../functions";
-import TimelineLabel from "./shapes/timelineLabel";
-import TimelineObject from "./shapes/timelineObject";
+import TimelineLabel from "../shapes/timelineLabel";
+import TimelineObject from "../shapes/timelineObject";
 
 export interface TimelineViewProps {
   width: number;
@@ -31,7 +32,7 @@ export interface TimelineViewProps {
   stageX: number;
 }
 
-export default function TimelineView(props: TimelineViewProps): JSX.Element {
+function TimelineView(props: TimelineViewProps): JSX.Element {
   const { width, scaleX, stageX } = props;
 
   const theme = useTheme();
@@ -40,7 +41,8 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
 
   const dispatch = useRootDispatch();
   const duration = useSelector(durationSelector);
-  const filteredObjects = useSelector(filteredObjectSelector);
+  const filters = useSelector(filtersSelector);
+  const objects = useSelector(objectsSelector);
   const toggled = useSelector(toggledObjectSelector);
   const selected = useSelector(selectedObjectSelector);
   const currentFrame = useSelector(currentFrameSelector);
@@ -70,6 +72,11 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
   const handleToggle = useCallback(
     (id: string): void => void dispatch(setToggled(id)),
     [dispatch],
+  );
+
+  const filteredObjects = useMemo(
+    () => objects.filter(labelingFilter(filters)),
+    [objects, filters],
   );
 
   const configs = useMemo(
@@ -149,3 +156,5 @@ export default function TimelineView(props: TimelineViewProps): JSX.Element {
     </Stage>
   );
 }
+
+export default React.memo(TimelineView);

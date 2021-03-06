@@ -10,16 +10,15 @@ import {
   TimelineZoomStep,
 } from "../constants";
 import useXZoom from "../hooks/useXZoom";
-import { TimelineFilterControls } from "./timelineFilterControls";
+import TimelineFilterControls from "./timelineFilterControls";
 import TimelineView from "./timelineView";
+import TimelineZoomControls from "./timelineZoomControls";
 
 export interface TimelineViewCardProps {
   view: GridLayout.Layout;
 }
 
-export default function TimelineViewCard(
-  props: TimelineViewCardProps,
-): JSX.Element | null {
+function TimelineViewCard(props: TimelineViewCardProps): JSX.Element | null {
   const { view } = props;
 
   const zoom = useXZoom({
@@ -35,9 +34,16 @@ export default function TimelineViewCard(
       view={view}
       title="Timeline"
       isClosable
-      toolbar={<TimelineFilterControls zoom={zoom} />}
+      toolbar={
+        <>
+          <TimelineFilterControls />
+          <TimelineZoomControls zoom={zoom} />
+        </>
+      }
     >
       <TimelineView width={1000} scaleX={scaleX} stageX={stageX} />
     </LabelingViewCard>
   );
 }
+
+export default React.memo(TimelineViewCard);

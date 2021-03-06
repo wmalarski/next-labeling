@@ -2,6 +2,7 @@ import isNull from "lodash/isNull";
 import { useEffect, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../common/redux/store";
+import { currentFrameSelector } from "../../workspace/redux/selectors";
 import { addObject, setToolType } from "../../workspace/redux/slice";
 import { DrawingTool, ToolType } from "../../workspace/types/client";
 import getCoordsBuilders from "../builders/getCoordsBuilder";
@@ -16,6 +17,7 @@ export interface UseDrawingToolResult {
 export default function useDrawingTool(): UseDrawingToolResult {
   const dispatch = useRootDispatch();
   const drawingTool = useSelector(drawingToolSelector);
+  const currentFrame = useSelector(currentFrameSelector);
 
   const builder = useMemo(
     () => (!isNull(drawingTool) ? getCoordsBuilders(drawingTool) : null),
@@ -25,13 +27,14 @@ export default function useDrawingTool(): UseDrawingToolResult {
   const { builderState, resetEdit } = builderResult;
 
   useEffect(() => {
-    if (!builderState.isEnded || !builderState.lastValue) return;
+    if (!builderState.isEnded || !builderState.lastValue || !drawingTool)
+      return;
     dispatch(setToolType(ToolType.ZOOM_AND_PANE));
     resetEdit();
     const values = builderState.lastValue?.value;
     if (!values) return;
 
-    dispatch(addObject({ values }));
+    dispatch(addObject({ values, currentFrame, drawingTool }));
   }, [builderState.isEnded, builderState.lastValue, dispatch, resetEdit]);
 
   return { result: builderResult, tool: drawingTool };

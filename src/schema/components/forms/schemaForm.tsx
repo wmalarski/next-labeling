@@ -4,8 +4,8 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
+import { nanoid } from "@reduxjs/toolkit";
 import React, { useCallback } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { SchemaState } from "../../hooks/useSchemaHistory";
 import { useSchemaFormStyles } from "../../styles";
 import { Schema } from "../../types";
@@ -97,7 +97,7 @@ export default function SchemaForm(props: SchemaFormProps): JSX.Element {
                 objects: [
                   ...sch.objects,
                   {
-                    id: uuidv4(),
+                    id: nanoid(),
                     name: `Object ${sch.objects.length + 1}`,
                     description: "",
                     fields: [],

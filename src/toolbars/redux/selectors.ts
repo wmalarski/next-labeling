@@ -5,14 +5,9 @@ import {
   WorkspaceSnapshotMessage,
 } from "../../workspace/redux/state";
 
-export const messagesSelector = createSelector(
+export const historySelector = createSelector(
   workspaceSelector,
-  (state): WorkspaceSnapshotMessage[] =>
-    state.history.map(pair => ({
-      message: pair.message,
-      id: pair.id,
-      action: pair.action,
-    })),
+  (state): WorkspaceSnapshotMessage[] => state.history,
 );
 
 export const currentSnapshotSelector = createSelector(
