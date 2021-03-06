@@ -1,7 +1,7 @@
 import { snapshotPrepare } from "../../../common/redux/functions";
 import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { getLastFrame } from "../../../workspace/functions";
-import setCurrentFrameAction from "../../../workspace/redux/actions/setCurrentFrameAction";
+import setCurrentFrameAction from "../../../workspace/redux/reducers/setCurrentFrameReducer";
 import { currentDocumentSelector } from "../../../workspace/redux/selectors";
 import { WorkspaceState } from "../../../workspace/redux/state";
 

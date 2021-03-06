@@ -2,7 +2,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { WorkspaceState } from "../../../workspace/redux/state";
 import { DrawingTool } from "../../../workspace/types/client";
 
-export default function setDrawingToolAction(
+export default function setDrawingToolReducer(
   state: WorkspaceState,
   action: PayloadAction<DrawingTool | null>,
 ): WorkspaceState {

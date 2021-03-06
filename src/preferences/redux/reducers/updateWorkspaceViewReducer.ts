@@ -8,7 +8,7 @@ export interface UpdateWorkspaceViewActionPayload {
   options?: Partial<GridLayout.Layout>;
 }
 
-export default function updateWorkspaceViewAction(
+export default function updateWorkspaceViewReducer(
   state: WorkspaceState,
   action: PayloadAction<UpdateWorkspaceViewActionPayload>,
 ): WorkspaceState {

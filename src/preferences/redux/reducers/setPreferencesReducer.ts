@@ -4,7 +4,7 @@ import {
   WorkspaceState,
 } from "../../../workspace/redux/state";
 
-export default function setPreferencesAction(
+export default function setPreferencesReducer(
   state: WorkspaceState,
   action: PayloadAction<Partial<PreferencesState>>,
 ): WorkspaceState {

@@ -2,7 +2,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { WorkspaceState } from "../../../workspace/redux/state";
 import { toggleView } from "../../../workspace/views";
 
-export default function toggleWorkspaceViewAction(
+export default function toggleWorkspaceViewReducer(
   state: WorkspaceState,
   action: PayloadAction<string>,
 ): WorkspaceState {

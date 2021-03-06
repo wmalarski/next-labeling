@@ -7,7 +7,7 @@ export interface SetShortcutActionPayload {
   key: string;
 }
 
-export default function setShortcutAction(
+export default function setShortcutReducer(
   state: WorkspaceState,
   action: PayloadAction<SetShortcutActionPayload>,
 ): WorkspaceState {

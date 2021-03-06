@@ -3,7 +3,7 @@ import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { LabelingObject } from "../../types/client";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
-import setSelectedAction from "./setSelectedAction";
+import setSelectedAction from "./setSelectedReducer";
 
 export interface SelectObjectPayload {
   object: LabelingObject;

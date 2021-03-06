@@ -1,7 +1,7 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { WorkspaceState } from "../../../workspace/redux/state";
 
-export default function setSnapshotIdAction(
+export default function setSnapshotIdReducer(
   state: WorkspaceState,
   action: PayloadAction<string>,
 ): WorkspaceState {

@@ -1,10 +1,10 @@
 import { WorkspaceState } from "../../../workspace/redux/state";
 
-export default function undoLabelingAction(
+export default function redoLabelingReducer(
   state: WorkspaceState,
 ): WorkspaceState {
   return {
     ...state,
-    index: Math.max(state.index - 1, 0),
+    index: Math.min(state.index + 1, state.history.length - 1),
   };
 }

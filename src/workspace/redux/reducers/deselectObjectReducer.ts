@@ -3,7 +3,7 @@ import { snapshotPrepare } from "../../../common/redux/functions";
 import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
-import setSelectedAction from "./setSelectedAction";
+import setSelectedAction from "./setSelectedReducer";
 
 export interface DeselectObjectPayload {
   objectId: string;

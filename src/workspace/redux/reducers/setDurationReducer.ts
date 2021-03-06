@@ -1,7 +1,7 @@
 import { PayloadAction } from "@reduxjs/toolkit";
 import { WorkspaceState } from "../state";
 
-export default function setDurationAction(
+export default function setDurationReducer(
   state: WorkspaceState,
   action: PayloadAction<number>,
 ): WorkspaceState {
