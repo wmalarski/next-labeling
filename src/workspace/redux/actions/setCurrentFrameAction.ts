@@ -1,5 +1,5 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
+import { snapshotPrepare } from "../../../common/redux/functions";
+import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { unpackValues } from "../../../editors/functions";
 import { frameToRange } from "../../functions";
 import { LabelingAction } from "../../types/client";
@@ -7,13 +7,13 @@ import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 
-export interface SetCurrentFrameActionPayload {
+export interface SetCurrentFramePayload {
   nextFrame: number;
 }
 
-export default function setCurrentFrameAction(
+export function reducer(
   state: WorkspaceState,
-  action: PayloadAction<SetCurrentFrameActionPayload>,
+  action: SnapshotPayloadAction<SetCurrentFramePayload>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
   const { nextFrame } = action.payload;
@@ -30,7 +30,7 @@ export default function setCurrentFrameAction(
 
   if (Math.abs(changeStep) !== propagationStep)
     return addSnapshot(state, {
-      id: uuidv4(),
+      id: action.meta.snapshotId,
       message,
       action: actionIcon,
       data: { ...data, currentFrame: nextFrameInRange },
@@ -76,9 +76,14 @@ export default function setCurrentFrameAction(
   });
 
   return addSnapshot(state, {
-    id: uuidv4(),
+    id: action.meta.snapshotId,
     message,
     action: actionIcon,
     data: { ...data, currentFrame: nextFrameInRange, objects: newObjects },
   });
 }
+
+export default {
+  reducer,
+  prepare: (payload: SetCurrentFramePayload) => snapshotPrepare(payload),
+};

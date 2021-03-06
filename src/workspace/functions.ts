@@ -1,6 +1,6 @@
+import { nanoid } from "@reduxjs/toolkit";
 import compact from "lodash/compact";
 import uniqueId from "lodash/uniqueId";
-import { v4 as uuidv4 } from "uuid";
 import { unpackValues } from "../editors/functions";
 import { LabelingFieldValues } from "../editors/types";
 import { ObjectSchema, Schema } from "../schema/types";
@@ -15,7 +15,7 @@ import {
 import { ExternalDocument, ExternalObject } from "./types/database";
 
 export interface CreateObjectFields {
-  fieldId: string;
+  fieldSchemaId: string;
   values: LabelingFieldValues;
 }
 
@@ -28,7 +28,7 @@ export interface CreateObjectProps {
 export function createObject(props: CreateObjectProps): LabelingObject {
   const { currentFrame, defaultFields, objectSchema } = props;
   return {
-    id: uuidv4(),
+    id: nanoid(),
     isTracked: true,
     name: uniqueId(`${objectSchema.name} `),
     isDone: false,
@@ -38,10 +38,10 @@ export function createObject(props: CreateObjectProps): LabelingObject {
     fields: objectSchema.fields.map(fieldSchema => {
       const [key, value] = Object.entries(fieldSchema.attributes)[0];
       const defaultValues = defaultFields.find(
-        pair => pair.fieldId === fieldSchema.id,
+        pair => pair.fieldSchemaId === fieldSchema.id,
       )?.values;
       return {
-        id: uuidv4(),
+        id: nanoid(),
         fieldSchema,
         fieldSchemaId: fieldSchema.id,
         values: defaultValues ?? {
@@ -59,11 +59,11 @@ export function copyObject(
   const copy = JSON.parse(JSON.stringify(object)) as LabelingObject;
   return {
     ...copy,
-    id: uuidv4(),
+    id: nanoid(),
     name: `${object.name}${suffix ?? " - Copy"}`,
     fields: object.fields.map(field => ({
       ...field,
-      id: uuidv4(),
+      id: nanoid(),
     })),
   };
 }

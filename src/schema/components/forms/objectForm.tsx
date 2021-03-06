@@ -14,8 +14,8 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import RemoveIcon from "@material-ui/icons/Remove";
+import { nanoid } from "@reduxjs/toolkit";
 import React, { memo, useCallback } from "react";
-import { v4 as uuidv4 } from "uuid";
 import { FieldType } from "../../../editors/types";
 import { labelingFieldAttributesDefaults } from "../../defaults";
 import { useObjectFormStyles } from "../../styles";
@@ -152,7 +152,7 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
                           ...object.fields,
                           {
                             ...field,
-                            id: uuidv4(),
+                            id: nanoid(),
                           },
                         ],
                       },
@@ -206,7 +206,7 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
                   fields: [
                     ...object.fields,
                     {
-                      id: uuidv4(),
+                      id: nanoid(),
                       name: "New field",
                       perFrame: true,
                       attributes: {
@@ -246,7 +246,7 @@ function ObjectFormPrivate(props: ObjectFormProps): JSX.Element {
           startIcon={<FileCopyIcon />}
           onClick={() =>
             onCopy({
-              id: uuidv4(),
+              id: nanoid(),
               name: `${name} - Copy`,
               description,
               fields,

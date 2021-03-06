@@ -1,18 +1,18 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
+import { snapshotPrepare } from "../../../common/redux/functions";
+import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { LabelingAction, LabelingObject } from "../../types/client";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 
-export interface SetIsDoneActionPayload {
+export interface SetIsDonePayload {
   object: LabelingObject;
   checked: boolean;
 }
 
-export default function setIsDoneAction(
+export function reducer(
   state: WorkspaceState,
-  action: PayloadAction<SetIsDoneActionPayload>,
+  action: SnapshotPayloadAction<SetIsDonePayload>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
   const { object, checked } = action.payload;
@@ -21,9 +21,14 @@ export default function setIsDoneAction(
   const objects = [...data.objects];
   objects[objectIndex] = { ...objects[objectIndex], isDone: checked };
   return addSnapshot(state, {
-    id: uuidv4(),
+    id: action.meta.snapshotId,
     message: `Done value changed to ${checked}`,
     action: LabelingAction.SET_IS_DONE,
     data: { ...data, objects },
   });
 }
+
+export default {
+  reducer,
+  prepare: (payload: SetIsDonePayload) => snapshotPrepare(payload),
+};

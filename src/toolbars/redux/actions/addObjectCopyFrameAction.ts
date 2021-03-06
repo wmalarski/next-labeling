@@ -1,62 +1,78 @@
+import { nanoid } from "@reduxjs/toolkit";
 import compact from "lodash/compact";
-import { v4 as uuidv4 } from "uuid";
+import {
+  SnapshotPayloadAction,
+  SnapshotPrepareAction,
+} from "../../../common/redux/types";
 import { getFieldValues, unpackValues } from "../../../editors/functions";
-import { createObject } from "../../../workspace/functions";
+import { createObject, CreateObjectFields } from "../../../workspace/functions";
 import { addSnapshot } from "../../../workspace/redux/functions";
 import { currentDocumentSelector } from "../../../workspace/redux/selectors";
 import { WorkspaceState } from "../../../workspace/redux/state";
-import { LabelingAction } from "../../../workspace/types/client";
+import {
+  LabelingAction,
+  LabelingObject,
+} from "../../../workspace/types/client";
 
-export default function addObjectCopyFrameAction(
+export function reducer(
   state: WorkspaceState,
+  action: SnapshotPayloadAction<LabelingObject[]>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
-  const { currentFrame } = data;
-
-  const ids = data.selected
-    .filter(object => object.objectSelected)
-    .map(object => object.objectId);
 
   return addSnapshot(state, {
-    id: uuidv4(),
+    id: action.meta.snapshotId,
     message: "Objects frame copied",
     action: LabelingAction.ADD_OBJECT_COPY,
     data: {
       ...data,
-      objects: data.objects.flatMap(object => {
-        if (!ids.includes(object.id)) return [object];
-        const newObject = createObject({
-          objectSchema: object.objectSchema,
-          currentFrame,
-          defaultFields: [],
-        });
-        return [
-          object,
-          {
-            ...newObject,
-            fields: compact(
-              object.fields.map(field => {
-                const currentValue = getFieldValues({
-                  values: field.values,
-                  perFrame: field.fieldSchema.perFrame,
-                  frame: currentFrame,
-                });
-                const unpacked = currentValue && unpackValues(currentValue);
-                if (!unpacked) return null;
-
-                const value = unpacked.pairs[0]?.value;
-                if (!value) return null;
-
-                return {
-                  ...field,
-                  id: uuidv4(),
-                  values: { [unpacked.type]: [{ frame: currentFrame, value }] },
-                };
-              }),
-            ),
-          },
-        ];
-      }),
+      objects: [...data.objects, ...action.payload],
     },
   });
 }
+
+export interface AddObjectCopyFramePayload {
+  objects: LabelingObject[];
+  currentFrame: number;
+}
+
+export function prepare(
+  payload: AddObjectCopyFramePayload,
+): SnapshotPrepareAction<LabelingObject[]> {
+  const { currentFrame, objects } = payload;
+
+  const newObjects = objects.map(object => {
+    const defaultFields: CreateObjectFields[] = compact(
+      object.fields.map(field => {
+        const currentValue = getFieldValues({
+          values: field.values,
+          perFrame: field.fieldSchema.perFrame,
+          frame: currentFrame,
+        });
+        const unpacked = currentValue && unpackValues(currentValue);
+        if (!unpacked) return null;
+
+        const value = unpacked.pairs[0]?.value;
+        if (!value) return null;
+
+        return {
+          fieldSchemaId: field.fieldSchemaId,
+          values: { [unpacked.type]: [{ frame: currentFrame, value }] },
+        };
+      }),
+    );
+
+    return createObject({
+      objectSchema: object.objectSchema,
+      currentFrame,
+      defaultFields,
+    });
+  });
+
+  return {
+    payload: newObjects,
+    meta: { snapshotId: nanoid() },
+  };
+}
+
+export default { reducer, prepare };

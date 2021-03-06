@@ -1,18 +1,19 @@
-import { PayloadAction } from "@reduxjs/toolkit";
+import { snapshotPrepare } from "../../../common/redux/functions";
+import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { LabelingObject } from "../../types/client";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 import setSelectedAction from "./setSelectedAction";
 
-export interface SelectObjectActionPayload {
+export interface SelectObjectPayload {
   object: LabelingObject;
   reset: boolean;
   fieldId?: string;
 }
 
-export default function selectObjectAction(
+export function reducer(
   state: WorkspaceState,
-  action: PayloadAction<SelectObjectActionPayload>,
+  action: SnapshotPayloadAction<SelectObjectPayload>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
   const { selected } = data;
@@ -20,7 +21,7 @@ export default function selectObjectAction(
 
   const index = selected.findIndex(sel => sel.objectId === object.id);
   if (index === -1)
-    return setSelectedAction(state, {
+    return setSelectedAction.reducer(state, {
       ...action,
       payload: [
         ...(reset ? [] : selected),
@@ -47,9 +48,17 @@ export default function selectObjectAction(
         }),
   };
   if (reset)
-    return setSelectedAction(state, { ...action, payload: [newSelection] });
+    return setSelectedAction.reducer(state, {
+      ...action,
+      payload: [newSelection],
+    });
 
   const newSelected = [...selected];
   newSelected.splice(index, 1, newSelection);
-  return setSelectedAction(state, { ...action, payload: newSelected });
+  return setSelectedAction.reducer(state, { ...action, payload: newSelected });
 }
+
+export default {
+  reducer,
+  prepare: (payload: SelectObjectPayload) => snapshotPrepare(payload),
+};

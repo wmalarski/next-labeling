@@ -1,5 +1,5 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
+import { snapshotPrepare } from "../../../common/redux/functions";
+import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { addSnapshot } from "../../../workspace/redux/functions";
 import { currentDocumentSelector } from "../../../workspace/redux/selectors";
 import { WorkspaceState } from "../../../workspace/redux/state";
@@ -7,18 +7,20 @@ import { LabelingAction } from "../../../workspace/types/client";
 import { calculateNewValues } from "../../functions";
 import { LabelingFieldValues } from "../../types";
 
-export interface SetAttributeActionPayload {
+export interface SetAttributePayload {
   objectId: string;
   fieldId: string;
   values: LabelingFieldValues;
 }
 
-export default function setAttributeAction(
+export function reducer(
   state: WorkspaceState,
-  action: PayloadAction<SetAttributeActionPayload>,
+  action: SnapshotPayloadAction<SetAttributePayload>,
 ): WorkspaceState {
+  const { payload, meta } = action;
+  const { fieldId, objectId, values } = payload;
+
   const data = currentDocumentSelector.resultFunc(state);
-  const { fieldId, objectId, values } = action.payload;
 
   const objectIndex = data.objects.findIndex(obj => obj.id === objectId);
   const objects = [...data.objects];
@@ -37,9 +39,14 @@ export default function setAttributeAction(
   fields[fieldIndex] = { ...field, values: newValues };
   objects[objectIndex] = { ...object, fields };
   return addSnapshot(state, {
-    id: uuidv4(),
+    id: meta.snapshotId,
     message: `Attribute ${field.fieldSchema.name} changed`,
     action: LabelingAction.SET_ATTRIBUTE,
     data: { ...data, objects },
   });
 }
+
+export default {
+  reducer,
+  prepare: (payload: SetAttributePayload) => snapshotPrepare(payload),
+};

@@ -16,6 +16,7 @@ import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import ViewListIcon from "@material-ui/icons/ViewList";
 import clsx from "clsx";
+import compact from "lodash/compact";
 import React, { useCallback, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
@@ -27,6 +28,8 @@ import {
   shortcutsSelector,
 } from "../../preferences/redux/selectors";
 import {
+  currentFrameSelector,
+  objectsSelector,
   schemaSelector,
   selectedObjectSelector,
 } from "../../workspace/redux/selectors";
@@ -62,12 +65,17 @@ export default function EditorSidebar(): JSX.Element {
   const selected = useSelector(selectedObjectSelector);
   const views = useSelector(labelingViewsSelector);
   const shortcuts = useSelector(shortcutsSelector);
+  const objects = useSelector(objectsSelector);
+  const currentFrame = useSelector(currentFrameSelector);
 
-  const selectedObjects = selected.filter(
-    object => !object.singleton && object.objectSelected,
+  const selectedObjects = compact(
+    selected
+      .filter(object => !object.singleton && object.objectSelected)
+      .map(selection => objects.find(obj => obj.id === selection.objectId)),
   );
-  const selectedObjectsIds = selectedObjects.map(object => object.objectId);
+
   const isSelected = selectedObjects.length !== 0;
+
   const [open, setOpen] = useState(true);
 
   const handleSetObjectDone = useCallback(
@@ -76,8 +84,11 @@ export default function EditorSidebar(): JSX.Element {
   );
 
   const handleCopyFrames = useCallback(
-    (): void => void dispatch(addObjectCopyFrame()),
-    [dispatch],
+    (): void =>
+      void dispatch(
+        addObjectCopyFrame({ currentFrame, objects: selectedObjects }),
+      ),
+    [dispatch, currentFrame, selectedObjects],
   );
 
   const handleDeleteObjects = useCallback(
@@ -96,13 +107,17 @@ export default function EditorSidebar(): JSX.Element {
   );
 
   const handleSplitObjects = useCallback(
-    (): void => void dispatch(addObjectSplit()),
-    [dispatch],
+    (): void =>
+      void dispatch(addObjectSplit({ currentFrame, objects: selectedObjects })),
+    [dispatch, currentFrame, selectedObjects],
   );
 
   const handleMergeObjects = useCallback(
-    (): void => void dispatch(addObjectMerge()),
-    [dispatch],
+    (): void =>
+      void dispatch(
+        addObjectMerge({ currentFrame, objectsToMerge: selectedObjects }),
+      ),
+    [dispatch, currentFrame, selectedObjects],
   );
 
   const handleSelectAll = useCallback(
@@ -194,9 +209,7 @@ export default function EditorSidebar(): JSX.Element {
           <ListItem
             disabled={!isSelected}
             button
-            onClick={(): void =>
-              void dispatch(addObjectCopy(selectedObjectsIds))
-            }
+            onClick={(): void => void dispatch(addObjectCopy(selectedObjects))}
           >
             <ListItemIcon>
               <FileCopyIcon />

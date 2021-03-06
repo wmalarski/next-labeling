@@ -1,14 +1,14 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
+import { snapshotPrepare } from "../../../common/redux/functions";
+import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { getFrames } from "../../functions";
 import { LabelingAction, ObjectSelection } from "../../types/client";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 
-export default function setSelectedAction(
+export function reducer(
   state: WorkspaceState,
-  action: PayloadAction<ObjectSelection[]>,
+  action: SnapshotPayloadAction<ObjectSelection[]>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
   const { payload: selected } = action;
@@ -26,9 +26,14 @@ export default function setSelectedAction(
       : Math.min(...frames);
 
   return addSnapshot(state, {
-    id: uuidv4(),
+    id: action.meta.snapshotId,
     message: "Selection changed",
     action: LabelingAction.SELECTION_CHANGE,
     data: { ...data, selected, currentFrame: newFrame },
   });
 }
+
+export default {
+  reducer,
+  prepare: (payload: ObjectSelection[]) => snapshotPrepare(payload),
+};

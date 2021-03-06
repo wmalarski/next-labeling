@@ -1,19 +1,19 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
+import { snapshotPrepare } from "../../../common/redux/functions";
+import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { LabelingAction } from "../../types/client";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 
-export default function setSelectedObjectAction(
+export function reducer(
   state: WorkspaceState,
-  action: PayloadAction<string | null>,
+  action: SnapshotPayloadAction<string | null>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
-  const { payload: selectedId } = action;
+  const { payload: selectedId, meta } = action;
 
   return addSnapshot(state, {
-    id: uuidv4(),
+    id: meta.snapshotId,
     message: "Selection changed",
     action: LabelingAction.SELECTION_CHANGE,
     data: {
@@ -33,3 +33,8 @@ export default function setSelectedObjectAction(
     },
   });
 }
+
+export default {
+  reducer,
+  prepare: (payload: string | null) => snapshotPrepare(payload),
+};

@@ -1,11 +1,13 @@
-import { v4 as uuidv4 } from "uuid";
+import { snapshotPrepare } from "../../../common/redux/functions";
+import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { LabelingAction } from "../../types/client";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 
-export default function deleteObjectsAction(
+export function reducer(
   state: WorkspaceState,
+  action: SnapshotPayloadAction<{}>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
 
@@ -13,7 +15,7 @@ export default function deleteObjectsAction(
     .filter(object => object.objectSelected)
     .map(object => object.objectId);
   return addSnapshot(state, {
-    id: uuidv4(),
+    id: action.meta.snapshotId,
     message: "Objects removed",
     action: LabelingAction.DELETE_OBJECTS,
     data: {
@@ -22,3 +24,8 @@ export default function deleteObjectsAction(
     },
   });
 }
+
+export default {
+  reducer,
+  prepare: () => snapshotPrepare({}),
+};

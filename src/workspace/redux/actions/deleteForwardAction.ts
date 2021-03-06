@@ -1,13 +1,15 @@
 import compact from "lodash/compact";
-import { v4 as uuidv4 } from "uuid";
+import { snapshotPrepare } from "../../../common/redux/functions";
+import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { deleteObjectForward } from "../../functions";
 import { LabelingAction } from "../../types/client";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 
-export default function deleteForwardAction(
+export function reducer(
   state: WorkspaceState,
+  action: SnapshotPayloadAction<{}>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
   const { currentFrame } = data;
@@ -17,7 +19,7 @@ export default function deleteForwardAction(
     .map(object => object.objectId);
 
   return addSnapshot(state, {
-    id: uuidv4(),
+    id: action.meta.snapshotId,
     message: "Objects deleted forward",
     action: LabelingAction.DELETE_FORWARD,
     data: {
@@ -32,3 +34,8 @@ export default function deleteForwardAction(
     },
   });
 }
+
+export default {
+  reducer,
+  prepare: () => snapshotPrepare({}),
+};

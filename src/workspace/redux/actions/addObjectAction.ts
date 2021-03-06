@@ -1,38 +1,30 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
-import { drawingToolSelector } from "../../../editors/redux/selectors";
+import { nanoid } from "@reduxjs/toolkit";
+import {
+  SnapshotPayloadAction,
+  SnapshotPrepareAction,
+} from "../../../common/redux/types";
 import { LabelingFieldValues } from "../../../editors/types";
 import { createObject } from "../../functions";
-import { LabelingAction } from "../../types/client";
+import {
+  DrawingTool,
+  LabelingAction,
+  LabelingObject,
+} from "../../types/client";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 
-export interface AddObjectUpdatePayload {
-  values: LabelingFieldValues;
-}
-
-export default function addObjectAction(
+export function reducer(
   state: WorkspaceState,
-  action: PayloadAction<AddObjectUpdatePayload>,
+  action: SnapshotPayloadAction<LabelingObject>,
 ): WorkspaceState {
+  const { payload: object, meta } = action;
+
   const data = currentDocumentSelector.resultFunc(state);
-  const drawingTool = drawingToolSelector.resultFunc(state);
-  if (!drawingTool) return state;
+  const { objects } = data;
 
-  const { currentFrame, objects } = data;
-  const { fieldSchema, objectSchema } = drawingTool;
-  const { values } = action.payload;
-
-  if (!objectSchema) return state;
-
-  const object = createObject({
-    objectSchema,
-    currentFrame,
-    defaultFields: [{ fieldId: fieldSchema.id, values }],
-  });
   return addSnapshot(state, {
-    id: uuidv4(),
+    id: meta.snapshotId,
     message: `${object.name} created`,
     action: LabelingAction.ADD_OBJECT,
     data: {
@@ -43,9 +35,35 @@ export default function addObjectAction(
           fieldIds: [],
           objectId: object.id,
           objectSelected: true,
-          singleton: objectSchema.singleton,
+          singleton: object.objectSchema.singleton,
         },
       ],
     },
   });
 }
+
+export interface AddObjectPayload {
+  values: LabelingFieldValues;
+  drawingTool: DrawingTool;
+  currentFrame: number;
+}
+
+export function prepare(
+  payload: AddObjectPayload,
+): SnapshotPrepareAction<LabelingObject> {
+  const { values, currentFrame, drawingTool } = payload;
+  const { fieldSchema, objectSchema } = drawingTool;
+
+  const object = createObject({
+    objectSchema,
+    currentFrame,
+    defaultFields: [{ fieldSchemaId: fieldSchema.id, values }],
+  });
+
+  return {
+    payload: object,
+    meta: { snapshotId: nanoid() },
+  };
+}
+
+export default { reducer, prepare };

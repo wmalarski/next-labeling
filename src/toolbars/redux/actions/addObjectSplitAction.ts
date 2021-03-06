@@ -1,5 +1,9 @@
+import { nanoid } from "@reduxjs/toolkit";
 import compact from "lodash/compact";
-import { v4 as uuidv4 } from "uuid";
+import {
+  SnapshotPayloadAction,
+  SnapshotPrepareAction,
+} from "../../../common/redux/types";
 import {
   copyObject,
   deleteObjectBackward,
@@ -8,31 +12,61 @@ import {
 import { addSnapshot } from "../../../workspace/redux/functions";
 import { currentDocumentSelector } from "../../../workspace/redux/selectors";
 import { WorkspaceState } from "../../../workspace/redux/state";
-import { LabelingAction } from "../../../workspace/types/client";
+import {
+  LabelingAction,
+  LabelingObject,
+} from "../../../workspace/types/client";
 
-export default function addObjectSplitAction(
+export interface AddObjectSplitActionPairs {
+  original: LabelingObject;
+  copy: LabelingObject;
+}
+
+export function reducer(
   state: WorkspaceState,
+  action: SnapshotPayloadAction<AddObjectSplitActionPairs[]>,
 ): WorkspaceState {
-  const data = currentDocumentSelector.resultFunc(state);
-  const { currentFrame } = data;
+  const { payload: pairs, meta } = action;
 
-  const ids = data.selected
-    .filter(object => object.objectSelected)
-    .map(object => object.objectId);
+  const data = currentDocumentSelector.resultFunc(state);
 
   return addSnapshot(state, {
-    id: uuidv4(),
+    id: meta.snapshotId,
     message: "Objects splited",
     action: LabelingAction.ADD_OBJECT,
     data: {
       ...data,
       objects: data.objects.flatMap(object => {
-        if (!ids.includes(object.id)) return [object];
-        return compact([
-          deleteObjectForward(object, currentFrame),
-          deleteObjectBackward(copyObject(object), currentFrame),
-        ]);
+        const pair = pairs.find(iPair => iPair.original.id === object.id);
+        if (!pair) return [object];
+        return compact([pair.original, pair.copy]);
       }),
     },
   });
 }
+
+export interface AddObjectSplitPayload {
+  objects: LabelingObject[];
+  currentFrame: number;
+}
+
+export function prepare(
+  payload: AddObjectSplitPayload,
+): SnapshotPrepareAction<AddObjectSplitActionPairs[]> {
+  const { objects, currentFrame } = payload;
+
+  const pairs: AddObjectSplitActionPairs[] = compact(
+    objects.map(object => {
+      const original = deleteObjectForward(object, currentFrame);
+      const copy = deleteObjectBackward(copyObject(object), currentFrame);
+      return !original || !copy ? null : { original, copy };
+    }),
+  );
+
+  return {
+    payload: pairs,
+    meta: { snapshotId: nanoid() },
+  };
+}
+
+export default { reducer, prepare };

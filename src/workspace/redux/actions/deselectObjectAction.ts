@@ -1,18 +1,19 @@
-import { PayloadAction } from "@reduxjs/toolkit";
 import compact from "lodash/compact";
+import { snapshotPrepare } from "../../../common/redux/functions";
+import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 import setSelectedAction from "./setSelectedAction";
 
-export interface DeselectObjectActionPayload {
+export interface DeselectObjectPayload {
   objectId: string;
   reset: boolean;
   fieldId?: string;
 }
 
-export default function deselectObjectAction(
+export function reducer(
   state: WorkspaceState,
-  action: PayloadAction<DeselectObjectActionPayload>,
+  action: SnapshotPayloadAction<DeselectObjectPayload>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
   const { payload } = action;
@@ -32,5 +33,10 @@ export default function deselectObjectAction(
           }),
         );
 
-  return setSelectedAction(state, { ...action, payload: selected });
+  return setSelectedAction.reducer(state, { ...action, payload: selected });
 }
+
+export default {
+  reducer,
+  prepare: (payload: DeselectObjectPayload) => snapshotPrepare(payload),
+};

@@ -1,20 +1,25 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
+import { snapshotPrepare } from "../../../common/redux/functions";
+import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { createLabelingDocument } from "../../functions";
 import { ExternalDocument } from "../../types/database";
 import { WorkspaceState } from "../state";
 
-export default function resetLabelingAction(
+export function reducer(
   state: WorkspaceState,
-  action: PayloadAction<ExternalDocument>,
+  action: SnapshotPayloadAction<ExternalDocument>,
 ): WorkspaceState {
   const { payload: initial } = action;
   const data = createLabelingDocument(initial);
 
   return {
     ...state,
-    history: [{ id: uuidv4(), data, message: "LabelingLoaded" }],
+    history: [{ id: action.meta.snapshotId, data, message: "LabelingLoaded" }],
     index: 0,
     initial,
   };
 }
+
+export default {
+  reducer,
+  prepare: (payload: ExternalDocument) => snapshotPrepare(payload),
+};

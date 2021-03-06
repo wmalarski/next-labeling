@@ -1,5 +1,4 @@
-import { v4 as uuidv4 } from "uuid";
-
+import { nanoid } from "@reduxjs/toolkit";
 import { FieldType, LabelingFieldAttributes } from "../editors/types";
 import { Schema } from "./types";
 
@@ -8,13 +7,13 @@ export const defaultLabelingSchema: Schema = {
   description: "My first schema.",
   objects: [
     {
-      id: uuidv4(),
+      id: nanoid(),
       name: "Car",
       description: "Tip: Only moving vehicles",
       singleton: false,
       fields: [
         {
-          id: uuidv4(),
+          id: nanoid(),
           name: "Direction",
           perFrame: true,
           attributes: {

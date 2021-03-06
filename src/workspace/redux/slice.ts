@@ -1,5 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
+import { createSlice, nanoid } from "@reduxjs/toolkit";
 import setAttributeAction from "../../editors/redux/actions/setAttributeAction";
 import setDrawingToolAction from "../../editors/redux/actions/setDrawingToolAction";
 import setToolTypeAction from "../../editors/redux/actions/setToolTypeAction";
@@ -54,7 +53,7 @@ const initialState: WorkspaceState = {
   toolType: ToolType.ZOOM_AND_PANE,
   history: [
     {
-      id: uuidv4(),
+      id: nanoid(),
       message: "",
       data: {
         objects: [],

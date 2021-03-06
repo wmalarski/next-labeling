@@ -1,16 +1,18 @@
-import { v4 as uuidv4 } from "uuid";
+import { snapshotPrepare } from "../../../common/redux/functions";
+import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { LabelingAction } from "../../types/client";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 
-export default function setSelectedAllAction(
+export function reducer(
   state: WorkspaceState,
+  action: SnapshotPayloadAction<{}>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
 
   return addSnapshot(state, {
-    id: uuidv4(),
+    id: action.meta.snapshotId,
     message: "Selection changed",
     action: LabelingAction.SELECTION_CHANGE,
     data: {
@@ -24,3 +26,8 @@ export default function setSelectedAllAction(
     },
   });
 }
+
+export default {
+  reducer,
+  prepare: () => snapshotPrepare({}),
+};

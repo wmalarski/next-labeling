@@ -1,12 +1,13 @@
-import { PayloadAction } from "@reduxjs/toolkit";
+import { snapshotPrepare } from "../../../common/redux/functions";
+import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { getFirstFrame } from "../../../workspace/functions";
 import setCurrentFrameAction from "../../../workspace/redux/actions/setCurrentFrameAction";
 import { currentDocumentSelector } from "../../../workspace/redux/selectors";
 import { WorkspaceState } from "../../../workspace/redux/state";
 
-export default function setObjectFirstFrameAction(
+export function reducer(
   state: WorkspaceState,
-  action: PayloadAction,
+  action: SnapshotPayloadAction<{}>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
   const { selected } = data;
@@ -18,9 +19,14 @@ export default function setObjectFirstFrameAction(
   const nextFrame = getFirstFrame(data, selectedObjectsIds);
 
   return nextFrame
-    ? setCurrentFrameAction(state, {
+    ? setCurrentFrameAction.reducer(state, {
         ...action,
         payload: { nextFrame },
       })
     : state;
 }
+
+export default {
+  reducer,
+  prepare: () => snapshotPrepare({}),
+};

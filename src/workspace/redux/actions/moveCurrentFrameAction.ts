@@ -1,15 +1,16 @@
-import { PayloadAction } from "@reduxjs/toolkit";
+import { snapshotPrepare } from "../../../common/redux/functions";
+import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 import setCurrentFrameAction from "./setCurrentFrameAction";
 
-export interface MoveCurrentFrameActionPayload {
+export interface MoveCurrentFramePayload {
   step: number;
 }
 
-export default function moveCurrentFrameAction(
+export function reducer(
   state: WorkspaceState,
-  action: PayloadAction<MoveCurrentFrameActionPayload>,
+  action: SnapshotPayloadAction<MoveCurrentFramePayload>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
   const { currentFrame } = data;
@@ -17,8 +18,13 @@ export default function moveCurrentFrameAction(
   const propagationStep = state.preferences.frameChangeStep;
   const nextFrame = currentFrame + Number(step) * propagationStep;
 
-  return setCurrentFrameAction(state, {
+  return setCurrentFrameAction.reducer(state, {
     ...action,
     payload: { nextFrame },
   });
 }
+
+export default {
+  reducer,
+  prepare: (payload: MoveCurrentFramePayload) => snapshotPrepare(payload),
+};

@@ -1,18 +1,18 @@
-import { PayloadAction } from "@reduxjs/toolkit";
-import { v4 as uuidv4 } from "uuid";
+import { snapshotPrepare } from "../../../common/redux/functions";
+import { SnapshotPayloadAction } from "../../../common/redux/types";
 import { LabelingAction, LabelingObject } from "../../types/client";
 import { addSnapshot } from "../functions";
 import { currentDocumentSelector } from "../selectors";
 import { WorkspaceState } from "../state";
 
-export interface SetNameActionPayload {
+export interface SetNamePayload {
   object: LabelingObject;
   name: string;
 }
 
-export default function setNameAction(
+export function reducer(
   state: WorkspaceState,
-  action: PayloadAction<SetNameActionPayload>,
+  action: SnapshotPayloadAction<SetNamePayload>,
 ): WorkspaceState {
   const data = currentDocumentSelector.resultFunc(state);
   const { object, name } = action.payload;
@@ -21,9 +21,14 @@ export default function setNameAction(
   const objects = [...data.objects];
   objects[objectIndex] = { ...objects[objectIndex], name };
   return addSnapshot(state, {
-    id: uuidv4(),
+    id: action.meta.snapshotId,
     message: `Name '${object.name}' changed to '${name}'`,
     action: LabelingAction.SET_NAME,
     data: { ...data, objects },
   });
 }
+
+export default {
+  reducer,
+  prepare: (payload: SetNamePayload) => snapshotPrepare(payload),
+};
