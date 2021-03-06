@@ -2,12 +2,14 @@ import Checkbox from "@material-ui/core/Checkbox";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../common/redux/store";
+import { filterSelectedFields } from "../../workspace/functions";
 import {
   currentFrameSelector,
-  selectedFieldsSelector,
+  objectsSelector,
+  selectedObjectSelector,
 } from "../../workspace/redux/selectors";
 import {
   setAttribute,
@@ -21,8 +23,19 @@ import FieldEditor from "./fieldEditor";
 
 export default function EditorTable(): JSX.Element {
   const dispatch = useRootDispatch();
-  const filteredObjects = useSelector(selectedFieldsSelector);
+  const selected = useSelector(selectedObjectSelector);
+  const objects = useSelector(objectsSelector);
   const currentFrame = useSelector(currentFrameSelector);
+
+  const filteredObjects = useMemo(
+    () =>
+      filterSelectedFields({
+        currentFrame,
+        objects,
+        selected,
+      }),
+    [currentFrame, objects, selected],
+  );
 
   const handleChange = useCallback(
     (

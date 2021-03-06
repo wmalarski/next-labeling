@@ -12,7 +12,7 @@ import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import ChangeHistoryIcon from "@material-ui/icons/ChangeHistory";
 import RedoIcon from "@material-ui/icons/Redo";
 import UndoIcon from "@material-ui/icons/Undo";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useSelector } from "react-redux";
 import { useRootDispatch } from "../../common/redux/store";
@@ -25,7 +25,7 @@ import {
 import actionIcons from "../actionIcons";
 import {
   currentSnapshotSelector,
-  messagesSelector,
+  historySelector,
   redoMessageSelector,
   undoMessageSelector,
 } from "../redux/selectors";
@@ -35,7 +35,7 @@ export default function UndoRedoButtons(): JSX.Element {
   const { id: currentId, message } = useSelector(currentSnapshotSelector);
   const undoMessage = useSelector(undoMessageSelector);
   const redoMessage = useSelector(redoMessageSelector);
-  const messages = useSelector(messagesSelector);
+  const history = useSelector(historySelector);
   const shortcuts = useSelector(shortcutsSelector);
 
   const handleUndoLabeling = useCallback(
@@ -45,6 +45,15 @@ export default function UndoRedoButtons(): JSX.Element {
   const handleRedoLabeling = useCallback(
     (): void => void dispatch(redoLabeling()),
     [dispatch],
+  );
+  const messages = useMemo(
+    () =>
+      history.map(pair => ({
+        message: pair.message,
+        id: pair.id,
+        action: pair.action,
+      })),
+    [history],
   );
 
   const [open, setOpen] = useState(false);

@@ -10,6 +10,7 @@ import {
   LabelingDocument,
   LabelingField,
   LabelingObject,
+  ObjectSelection,
 } from "./types/client";
 import { ExternalDocument, ExternalObject } from "./types/database";
 
@@ -258,10 +259,16 @@ export interface FilterFieldsResultPair {
   fields: LabelingField[];
 }
 
+export interface FilterSelectedFieldsProps {
+  objects: LabelingObject[];
+  currentFrame: number;
+  selected: ObjectSelection[];
+}
+
 export function filterSelectedFields(
-  data: LabelingDocument,
+  props: FilterSelectedFieldsProps,
 ): FilterFieldsResultPair[] {
-  const { selected, objects, currentFrame } = data;
+  const { selected, objects, currentFrame } = props;
   const frameFilter = inFrameFilter(currentFrame);
   return compact(
     selected.map(selection => {
